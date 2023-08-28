@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>OSU Code Club</title>
+<link>https://osu-codeclub.github.io/index.html</link>
+<atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 28 Aug 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Making a new website - first steps</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_01_initiation/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
+<ul>
+<li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
+<li>have a blog where you post about whatever it is you want to post about</li>
+<li>share your research or data</li>
+</ul>
+<p>Some of you may already have a simple free or paid website for yourself, that you made through <a href="https://u.osu.edu/">www.u.osu.edu</a>, <a href="https://www.squarespace.com/">Squarespace</a>, or <a href="https://sites.google.com/">Google Sites</a>. These tools don’t require you to be able to code, and allow you to create a website with different levels of customization and interactivity.</p>
+<p>For the next few sessions, we are going to go over making a website using <a href="https://quarto.org/">Quarto</a>. Quarto can be used as an open-source publishing system and you can integrate content from Jupyter notebooks, plain text markdown, Python, R, Julia and others. We are going to use Quarto integrated with R.</p>
+<blockquote class="blockquote">
+<p>Take a look at a <a href="https://quarto.org/docs/gallery/#websites">gallery of Quarto website examples</a>.</p>
+</blockquote>
+<p>We picked this particular platform to go over in Code Club since its lightweight, customizable, free, and integrates with R which you’re probably learning anyway. I am going to start going through an example that will be my personal website. I picked this example because I thought this might be of interest to most of you.</p>
+</section>
+<section id="initiating-your-website-project" class="level2">
+<h2 class="anchored" data-anchor-id="initiating-your-website-project">Initiating your website project</h2>
+<p>The first step to getting a website is to open up a new project in RStudio.</p>
+<p>Start by going to <em>File</em> &gt; <em>New Project</em> &gt; <em>New Directory</em>. When asked which Project Type you want, pick <em>Quarto Website</em>. Note that you can also initiate a <em>Quarto Blog</em> which is a type of <em>Quarto Website</em> - since the website template is simpler we are going to start there, and can change back in the future if you want. If you want to read ahead, here is a nice website about <a href="https://samanthacsik.github.io/posts/2022-10-24-quarto-blogs/">making your Quarto website into a blog</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/project-type.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
+</figure>
+</div>
+<p>You will then be asked where you want this website to live in your computer. Under <em>Directory Name</em> pick the name of the folder you want your content to be in, and <em>Create project as subdirectory of</em> as where you want the location on your computer. I have used the Knitr engine for website building.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/create-quarto-website.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
+</figure>
+</div>
+<p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
+<p>Once you do this basically you have all the bones of a website! Congratulations 🥳</p>
+</section>
+<section id="orienting-to-your-website" class="level2">
+<h2 class="anchored" data-anchor-id="orienting-to-your-website">Orienting to your website</h2>
+<p>A new RStudio window should have opened (since we checked the box in the previous step <em>Open in new session</em>) that has your new R project opened.</p>
+<p>We now see the four quadrants of RStudio:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/orienting.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of four quadrants of rstudio</figcaption>
+</figure>
+</div>
+<ul>
+<li>the top left where the two website files <code>index.qmd</code> and <code>_quarto.yml</code> are open</li>
+<li>the bottom left where we see the console</li>
+<li>the top right where we see the tabs: Environment (which is currently empty), History (which we won’t use), Connections (which we won’t use), Tutorial (which we won’t use), and a new one Build (which is how we render our site)</li>
+<li>the bottom right where we see Files (which houses the new files that populate our website), Plots (which you’ve seen before and where plots can be rendered if you don’t like them inline), Packages (which shows all the packages loaded in your R), Help (which you’ve seen before, and where you can get help), Viewer (a new one where we can see a preview rendering of our website), and Presentation (where we can see a preview rendering a presentation but we aren’t doing that right now).</li>
+</ul>
+</section>
+<section id="building-your-site" class="level2">
+<h2 class="anchored" data-anchor-id="building-your-site">Building your site</h2>
+<p>Let’s see what our website looks like before we’ve done anything. If you go to the Build tab in the top right quadrant and click <em>Render Website</em> your site will render and show up in the Viewer in the bottom right.</p>
+</section>
+<section id="looking-around" class="level2">
+<h2 class="anchored" data-anchor-id="looking-around">Looking around</h2>
+<p>You can now click around in your new and very unexciting website. Let’s look around and then we will go through the file structure to see how the two are related.</p>
+<p>Along the top, or if you click the three lines in the top right (depending on the size of your browser page) you can see by default we get a Home and About page. If we click ‘website’ at the top, we go back to Home. We also have a search bar that allows us to search on our site.</p>
+<p>Now that we know what information we see on our site, we can look at the files that are used to build the site and try and interpret them.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/files.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
+</figure>
+</div>
+<p>Before we open the files, let’s talk about the file extensions and what they mean:</p>
+<ul>
+<li><code>.yml</code> is a <a href="https://quarto.org/docs/projects/quarto-projects.html#shared-metadata">YAML</a> or the file that indicates how the website will be configured</li>
+<li><code>.qmd</code> is a <a href="https://quarto.org/docs/get-started/hello/rstudio.html">Quarto markdown document</a>, and if you’re familiar with RMarkdown <code>.Rmd</code> documents its very similar. It contains both text written in markdown and executable code.</li>
+<li><code>.css</code> is a <a href="https://www.w3schools.com/css/css_intro.asp#:~:text=CSS%20stands%20for%20Cascading%20Style,are%20stored%20in%20CSS%20files">Cascading Style Sheets</a> file that indicates the way to style an HTML document (i.e., your website)</li>
+<li><code>.Rproj</code> is a <a href="https://bookdown.org/ndphillips/YaRrr/projects-in-rstudio.html">R Project</a> file that designates your working directory</li>
+</ul>
+<p>We also have a folder <code>_site</code> which houses the knitted website files. More about this later.</p>
+</section>
+<section id="index.qmd" class="level2">
+<h2 class="anchored" data-anchor-id="index.qmd">index.qmd</h2>
+<p>This <code>index.qmd</code> file indicates what the home page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/index.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the index.qmd file</figcaption>
+</figure>
+</div>
+<p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
+<p>Play around with adding text, code, headers, images, whatever you might want on your website homepage.</p>
+</section>
+<section id="about.qmd" class="level2">
+<h2 class="anchored" data-anchor-id="about.qmd">about.qmd</h2>
+<p>This <code>about.qmd</code> file indicates what the about page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/about.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the about.qmd file</figcaption>
+</figure>
+</div>
+<p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
+</section>
+<section id="quarto.yml" class="level2">
+<h2 class="anchored" data-anchor-id="quarto.yml">_quarto.yml</h2>
+<p>The YAML file indicates how the site should be configured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/yaml.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the _quarto.yml file</figcaption>
+</figure>
+</div>
+<p>You’re probably not familiar with these <code>.yml</code> files but still its not horribly difficult to figure out what the different bits do.</p>
+<p>At the top, project type is indicated as website. We don’t want to change that now.</p>
+<p>In the next section beginning at line 4, we can have some specific information for how the website populates. The title is listed as “website” - we can change that to what we want at the top of our website. There is also a specification for what are the items in your navitation bar - here we have that the Home text will link to the <code>index.qmd</code>, and the next link is <code>about.qmd</code>. You can make more .qmd files that have other information and refer to them here and they will also populate in your navigation bar.</p>
+<p>In the third section at line 12, we can see some information on the setting of the website format. We have a html site, the theme is something called “cosmo” (see <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a> for some other options), we are using the styles.css file for css theming (actually that file is currently blank but thats ok), and we are indicating toc (or table of contents) as true, therefore we have a table of contents.</p>
+<p>Here you can find some <a href="https://quarto.org/docs/reference/projects/websites.html#section">documentation</a> about all the different stuff you can put in your YAML for a website.</p>
+</section>
+<section id="playing-around" class="level2">
+<h2 class="anchored" data-anchor-id="playing-around">Playing around</h2>
+<p>Now that we have a general understanding of whats in our site, try playing around to begin customization to be how you want. We will do this for the rest of the session and please ask any questions on problems you come across, or share cool things you find!</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>website</category>
+  <guid>https://osu-codeclub.github.io/posts/website_01_initiation/index.html</guid>
+  <pubDate>Mon, 28 Aug 2023 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Welcome to the new Code Club website!</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/welcome/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<p>Code Club has a new website, made with Quarto!</p>
+<p>We were previously on the <a href="https://biodash.github.io">“BioDASH” website</a>, which also contained some educational bioinformatics material unrelated to Code Club.</p>
+<p>That website was created using R Markdown and “<a href="https://gohugo.io/">Hugo</a>”. A lot has happened in the realm of R Markdown websites in the meantime, and even R Markdown itself now has a successor: <a href="https://quarto.org/">Quarto</a>.</p>
+<p>In the AU23 semester, we will teach making a website with Quarto, and we therefore think it is fitting that the Code Club website itself is also made with Quarto. Additionally, we think it will be nice to have a website just for Code Club content.</p>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>news</category>
+  <guid>https://osu-codeclub.github.io/posts/welcome/index.html</guid>
+  <pubDate>Fri, 18 Aug 2023 04:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
