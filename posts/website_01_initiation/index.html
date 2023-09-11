@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.3.450">
+<meta name="generator" content="quarto-1.3.433">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jessica Cooperstone">
 <meta name="dcterms.date" content="2023-08-28">
 
-<title>OSU Code Club - Making a new website - first steps</title>
+<title>OSU Code Club - Quarto website 1: Making a new website - first steps</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -32,6 +66,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
+<link href="../../{{< iconify fa cc >}}" rel="icon">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -66,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
 <link rel="stylesheet" href="../../styles.css">
 </head>
 
-<body class="nav-fixed fullcontent">
+<body class="nav-fixed">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -117,12 +152,27 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">About</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/osu-codeclub/osu-codeclub.github.io" rel="" target=""><i class="bi bi-github" role="img">
+    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
 </i> 
  <span class="menu-text"></span></a>
   </li>  
 </ul>
             <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
 </div>
           </div> <!-- /navcollapse -->
       </div> <!-- /container-fluid -->
@@ -132,13 +182,30 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2</span> Installation</a></li>
+  <li><a href="#initiating-your-website-project" id="toc-initiating-your-website-project" class="nav-link" data-scroll-target="#initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</a></li>
+  <li><a href="#orienting-to-your-website" id="toc-orienting-to-your-website" class="nav-link" data-scroll-target="#orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</a></li>
+  <li><a href="#building-your-site" id="toc-building-your-site" class="nav-link" data-scroll-target="#building-your-site"><span class="header-section-number">5</span> Building your site</a></li>
+  <li><a href="#looking-around" id="toc-looking-around" class="nav-link" data-scroll-target="#looking-around"><span class="header-section-number">6</span> Looking around</a></li>
+  <li><a href="#index.qmd" id="toc-index.qmd" class="nav-link" data-scroll-target="#index.qmd"><span class="header-section-number">7</span> index.qmd</a></li>
+  <li><a href="#about.qmd" id="toc-about.qmd" class="nav-link" data-scroll-target="#about.qmd"><span class="header-section-number">8</span> about.qmd</a></li>
+  <li><a href="#quarto.yml" id="toc-quarto.yml" class="nav-link" data-scroll-target="#quarto.yml"><span class="header-section-number">9</span> _quarto.yml</a></li>
+  <li><a href="#playing-around" id="toc-playing-around" class="nav-link" data-scroll-target="#playing-around"><span class="header-section-number">10</span> Playing around</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/website_01_initiation/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Making a new website - first steps</h1>
+<h1 class="title">Quarto website 1: Making a new website - first steps</h1>
   <div class="quarto-categories">
     <div class="quarto-category">website</div>
   </div>
@@ -170,8 +237,8 @@ ul.task-list li input[type="checkbox"] {
 
 <hr>
 <p><br></p>
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
 <p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
 <ul>
 <li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
@@ -185,8 +252,22 @@ ul.task-list li input[type="checkbox"] {
 </blockquote>
 <p>We picked this particular platform to go over in Code Club since its lightweight, customizable, free, and integrates with R which you’re probably learning anyway. I am going to start going through an example that will be my personal website. I picked this example because I thought this might be of interest to most of you.</p>
 </section>
-<section id="initiating-your-website-project" class="level2">
-<h2 class="anchored" data-anchor-id="initiating-your-website-project">Initiating your website project</h2>
+<section id="installation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="installation"><span class="header-section-number">2</span> Installation</h2>
+<p>To render your website in RStudio, you will need to have the <em>rmarkdown</em> R package installed. You can do so by typing (or copying) the following into your R Console inside RStudio:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>While not necessary for basic website building inside RStudio, it will also be a good idea to have Quarto installed moving forward. This is not an R package, but is a separate piece of software. To install it, go to <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a> and the correct installer for your operating system should be highlighted in a blue box. Click on that box to download and once downloaded, click on the installer to install Quarto.</p>
+<p align="center">
+<img style="border:1px solid gray;" src="img/install_quarto.png" width="75%">
+</p><figcaption>
+The blue box should highlight the installer for your operating system.
+</figcaption>
+<p></p>
+</section>
+<section id="initiating-your-website-project" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</h2>
 <p>The first step to getting a website is to open up a new project in RStudio.</p>
 <p>Start by going to <em>File</em> &gt; <em>New Project</em> &gt; <em>New Directory</em>. When asked which Project Type you want, pick <em>Quarto Website</em>. Note that you can also initiate a <em>Quarto Blog</em> which is a type of <em>Quarto Website</em> - since the website template is simpler we are going to start there, and can change back in the future if you want. If you want to read ahead, here is a nice website about <a href="https://samanthacsik.github.io/posts/2022-10-24-quarto-blogs/">making your Quarto website into a blog</a>.</p>
 <div class="quarto-figure quarto-figure-center">
@@ -205,8 +286,8 @@ ul.task-list li input[type="checkbox"] {
 <p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
 <p>Once you do this basically you have all the bones of a website! Congratulations 🥳</p>
 </section>
-<section id="orienting-to-your-website" class="level2">
-<h2 class="anchored" data-anchor-id="orienting-to-your-website">Orienting to your website</h2>
+<section id="orienting-to-your-website" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</h2>
 <p>A new RStudio window should have opened (since we checked the box in the previous step <em>Open in new session</em>) that has your new R project opened.</p>
 <p>We now see the four quadrants of RStudio:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -222,12 +303,12 @@ ul.task-list li input[type="checkbox"] {
 <li>the bottom right where we see Files (which houses the new files that populate our website), Plots (which you’ve seen before and where plots can be rendered if you don’t like them inline), Packages (which shows all the packages loaded in your R), Help (which you’ve seen before, and where you can get help), Viewer (a new one where we can see a preview rendering of our website), and Presentation (where we can see a preview rendering a presentation but we aren’t doing that right now).</li>
 </ul>
 </section>
-<section id="building-your-site" class="level2">
-<h2 class="anchored" data-anchor-id="building-your-site">Building your site</h2>
+<section id="building-your-site" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="building-your-site"><span class="header-section-number">5</span> Building your site</h2>
 <p>Let’s see what our website looks like before we’ve done anything. If you go to the Build tab in the top right quadrant and click <em>Render Website</em> your site will render and show up in the Viewer in the bottom right.</p>
 </section>
-<section id="looking-around" class="level2">
-<h2 class="anchored" data-anchor-id="looking-around">Looking around</h2>
+<section id="looking-around" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="looking-around"><span class="header-section-number">6</span> Looking around</h2>
 <p>You can now click around in your new and very unexciting website. Let’s look around and then we will go through the file structure to see how the two are related.</p>
 <p>Along the top, or if you click the three lines in the top right (depending on the size of your browser page) you can see by default we get a Home and About page. If we click ‘website’ at the top, we go back to Home. We also have a search bar that allows us to search on our site.</p>
 <p>Now that we know what information we see on our site, we can look at the files that are used to build the site and try and interpret them.</p>
@@ -246,8 +327,8 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>We also have a folder <code>_site</code> which houses the knitted website files. More about this later.</p>
 </section>
-<section id="index.qmd" class="level2">
-<h2 class="anchored" data-anchor-id="index.qmd">index.qmd</h2>
+<section id="index.qmd" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="index.qmd"><span class="header-section-number">7</span> index.qmd</h2>
 <p>This <code>index.qmd</code> file indicates what the home page of the site will look like.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -258,8 +339,8 @@ ul.task-list li input[type="checkbox"] {
 <p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
 <p>Play around with adding text, code, headers, images, whatever you might want on your website homepage.</p>
 </section>
-<section id="about.qmd" class="level2">
-<h2 class="anchored" data-anchor-id="about.qmd">about.qmd</h2>
+<section id="about.qmd" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="about.qmd"><span class="header-section-number">8</span> about.qmd</h2>
 <p>This <code>about.qmd</code> file indicates what the about page of the site will look like.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -269,8 +350,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
 </section>
-<section id="quarto.yml" class="level2">
-<h2 class="anchored" data-anchor-id="quarto.yml">_quarto.yml</h2>
+<section id="quarto.yml" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="quarto.yml"><span class="header-section-number">9</span> _quarto.yml</h2>
 <p>The YAML file indicates how the site should be configured.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -284,14 +365,14 @@ ul.task-list li input[type="checkbox"] {
 <p>In the third section at line 12, we can see some information on the setting of the website format. We have a html site, the theme is something called “cosmo” (see <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a> for some other options), we are using the styles.css file for css theming (actually that file is currently blank but thats ok), and we are indicating toc (or table of contents) as true, therefore we have a table of contents.</p>
 <p>Here you can find some <a href="https://quarto.org/docs/reference/projects/websites.html#section">documentation</a> about all the different stuff you can put in your YAML for a website.</p>
 </section>
-<section id="playing-around" class="level2">
-<h2 class="anchored" data-anchor-id="playing-around">Playing around</h2>
+<section id="playing-around" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="playing-around"><span class="header-section-number">10</span> Playing around</h2>
 <p>Now that we have a general understanding of whats in our site, try playing around to begin customization to be how you want. We will do this for the rest of the session and please ask any questions on problems you come across, or share cool things you find!</p>
 
 
 </section>
 
-</main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

@@ -1,0 +1,861 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss  xmlns:atom="http://www.w3.org/2005/Atom" 
+      xmlns:media="http://search.yahoo.com/mrss/" 
+      xmlns:content="http://purl.org/rss/1.0/modules/content/" 
+      xmlns:dc="http://purl.org/dc/elements/1.1/" 
+      version="2.0">
+<channel>
+<title>OSU Code Club</title>
+<link>https://osu-codeclub.github.io/index.html</link>
+<atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
+<description></description>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 11 Sep 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Quarto website 2</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_02/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<p>In today’s session, you will add a new page to the website that you created in the first session.</p>
+<p>Then, we will talk about the “YAML” markup mini-language that is used to configure your website, and will make some changes to the YAML header for your new page <em>and</em> the YAML in the <code>_quarto.yml</code> file with site-wide settings.</p>
+<p><br></p>
+<section id="adding-a-new-page-to-your-site" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="adding-a-new-page-to-your-site"><span class="header-section-number">1</span> Adding a new page to your site</h2>
+<p>Let’s create a new page for your site. If you already have an idea for a page that you would like to add to your site, you can go with that. Otherwise, you can follow along with my example, which will be <strong>a page about research projects on a personal website</strong>.</p>
+<p>Each page on your website has a corresponding <code>.qmd</code> source document. Currently, we just have two pages:</p>
+<ul>
+<li>A home page, for which <code>index.qmd</code> is the source.</li>
+<li>An “about page”, for which <code>about.qmd</code> is the source.</li>
+</ul>
+<p><strong>So, to create a new page, we will create a new Quarto document</strong> — in RStudio, click <code>File</code> =&gt; <code>New File</code> =&gt; <code>Quarto Document</code>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/new_file.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption">The window to create a new Quarto document</figcaption>
+</figure>
+</div>
+<p>Unlike last week, make sure the <strong>“Use visual markdown editor” box is checked</strong>, and then click the “Create Empty Document” button in the bottom left.</p>
+<p>Once the file has been created, let’s save it straight away: press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>S</kbd>. <strong>Save it in the top-level folder for your website</strong>, i.e.&nbsp;the same folder that contains <code>index.qmd</code> and <code>about.qmd</code>. If you’re making a page for which you have your own ideas, you can name it accordingly — otherwise, save it as <strong><code>research.qmd</code></strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/new_page.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">Your near-empty document should look something like this</figcaption>
+</figure>
+</div>
+<p>The newly created document will only contain a few lines, as shown in the screenshot above. This is the so-called “<strong>YAML header</strong>”.</p>
+<p>We talked a bit about the YAML “markup language” last week, mostly in the context of the <code>_quarto.yml</code> file, which consists <em>only</em> of YAML content, unlike this <code>.qmd</code> file. Let’s dive a little deeper into YAML, because it’s one of the key components of your website’s source.</p>
+<p><br></p>
+</section>
+<section id="a-little-more-about-yaml" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="a-little-more-about-yaml"><span class="header-section-number">2</span> A little more about YAML</h2>
+<p>YAML (“YAML Ain’t Markup Language”, a silly joke of a name) is a simple format commonly used for <strong>configuration</strong>. In the source files for your website, there is a lot of YAML content straight away.</p>
+<p>First, you have the <code>_quarto.yml</code> file that configures your website, including its navigation elements that are visible on every page of the site, like the “navbar” at the top. But there is also YAML in the headers of all <code>.qmd</code> files. For example, the top of our newly created <code>research.qmd</code> should read:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Untitled"</span></span>
+<span id="cb1-3"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>As opposed to the <code>_quarto.yml</code> file, this YAML header:</p>
+<ul>
+<li>Is surrounded by lines that only contain three dashes <code>---</code>, that mark the beginning and the end of this YAML header.</li>
+<li>Configures just <em>this individual page</em>, whereas the YAML in <code>_quarto.yml</code> specifies <em>site-wide configurations</em>.</li>
+</ul>
+<p><br></p>
+<p><strong>YAML consists of entries of key-value pairs</strong>: in the example above, <code>title</code> is the key that determines what the document’s title will be, and <code>"Untitled"</code> is the current value.</p>
+<p>Valid YAML <strong>keys</strong> are limited to what has been pre-defined by others (i.e., in this case, the developers of Quarto), and the list of possible keys depends on the document type. The Quarto website has <a href="https://quarto.org/docs/reference/projects/websites.html">a full list of valid YAML keys for the <code>_quarto.yml</code> file</a> as well as a <a href="https://quarto.org/docs/reference/formats/html.html">a list for HTML pages</a>, which is the kind of output that your <code>.qmd</code> files will produce when rendered.</p>
+<p>Depending on the key, the <strong>value</strong> can be:</p>
+<ul>
+<li>A “<em>free-form string</em>” of text, like for a title</li>
+<li><em>Constrained to a series of possible values</em>, like for the <code>theme</code> key, which can set the overall look of a page to one of a few dozen available “themes”</li>
+<li>An <em>on/off switch</em> using <code>true</code>/<code>false</code>, like whether to show a Table of Contents using the <code>toc</code> key.</li>
+</ul>
+<p><br></p>
+<section id="yamls-structure" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="yamls-structure"><span class="header-section-number">2.1</span> YAML’s structure</h3>
+<p>YAML’s structure is quite simple, but it does have a few rules. Each entry is generally on its own line. It has a <em>hierarchical structure</em> in that many values can itself be given key-value pairs to specify additional options. For example, see this section from your <code>_quarto.yml</code> file:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> cosmo</span></span>
+<span id="cb2-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">css</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> styles.css</span></span>
+<span id="cb2-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span></span></code></pre></div>
+<ul>
+<li><p>Note how the values for <em>keys that simply take a value</em> (above: <code>theme</code>, <code>css</code>, and <code>toc</code>) and have no “child keys” are on the same line as the key.</p></li>
+<li><p>In contrast, keys whose values are really “<em>child keys</em>” (above: <code>format</code> and <code>html</code>):</p>
+<ul>
+<li><p>Are followed by a colon <code>:</code></p></li>
+<li><p>Are on a line by themselves</p></li>
+<li><p>Have their child keys on the next line(s), <strong>indented</strong> one more level.</p></li>
+</ul></li>
+<li><p>Indentation in YAML has to use <em>either two or four spaces</em> (no tabs!) per indentation level, and YAML is <em>sensitive to indentation errors</em>. (Note that RStudio will by default insert multiple spaces instead of a true tab when you press the <kbd>Tab</kbd> key, so you can still use that just fine.)</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Site-wide vs.&nbsp;page-specific configuration
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This <code>format</code> =&gt; <code>html</code> section in the <code>_quarto.yml</code> file will set defaults for the formatting of individual pages on your website. You can use the same keys (e.g.&nbsp;<code>theme</code>, <code>css</code>, and <code>toc</code> shown above) in the YAML header of your <code>qmd</code> files, which would override these site-wide settings.</p>
+</div>
+</div>
+<p><br></p>
+<p>A final component of YAML syntax, with lists of entries, is used in the <code>website</code> section of <code>_quarto.yml</code>:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Lucy's adventures in science"</span></span>
+<span id="cb3-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> index.qmd</span></span>
+<span id="cb3-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Home</span></span>
+<span id="cb3-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> about.qmd</span></span></code></pre></div>
+<p>Here, each entry (= each page on your website) is preceded by a dash <code>-</code>, and:</p>
+<ul>
+<li><p>The top entry, for the homepage, has an <code>href</code> key pointing to the relevant file, as well as a <code>text</code> key (<strong>note: same indentation level, no additional dash</strong>) that will set what text is being displayed for this link.</p></li>
+<li><p>The bottom entry uses an alternative specification method, with just a pointer to the file. When you do this, the displayed test on the website would be the same as the file name without the <code>.qmd</code> extension, namely “About”.</p></li>
+</ul>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+YAML errors (Click to expand)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If you made a mistake in the YAML, you will see an ominous-looking box like this pop up:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/yaml_error.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption">You’ll see this error if you specified an invalid key in your YAML. Don’t panic! If you don’t already know what’s wrong, carefully read the error which is quite informative.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="modifying-the-yaml-header-of-our-new-page" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="modifying-the-yaml-header-of-our-new-page"><span class="header-section-number">3</span> Modifying the YAML header of our new page</h2>
+<p>Let’s start by <strong>changing the page’s title</strong> to <code>title: "My Research"</code>.</p>
+<p>Then, we can <strong>add a few new YAML entries</strong> to further populate the “title block” (top part) of your page:</p>
+<ul>
+<li><p><code>subtitle: "These are my ongoing and past research projects"</code></p></li>
+<li><p><code>date: 2023-09-11</code></p></li>
+<li><p><code>author: "Lucy T. Hedgehog"</code>, or for multiple authors, use the following syntax:</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb4-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Lucy T. Hedgehog</span></span>
+<span id="cb4-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Lucy T. Hedgehog's advisor </span></span></code></pre></div></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+YAML auto-complete and quoting (Click to expand)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li>Note that when you type a new entry in the YAML header, RStudio will have an auto-completion feature with information boxes:</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/autocomplete.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+<ul>
+<li>In the examples above, we have <strong>double-quoted</strong> (“…”) free-form YAML values like <code>title</code>. This is optional: as long as your title doesn’t contain any special characters, it would also work without quotes.</li>
+</ul>
+</div>
+</div>
+</div>
+<p><br></p>
+<p>Here are a few of the <a href="https://quarto.org/docs/reference/formats/html.html">many other <strong>possible HTML page YAML keys</strong></a> that are particularly useful:</p>
+<ul>
+<li><p><code>date-modified</code>: If you wrote a page originally on a certain date, but made some modifications afterwards, you can get a separate date entry for the modifications. Useful for e.g.&nbsp;blog posts and reports.</p></li>
+<li><p><code>title-block-banner: true</code>: Put the title block (title and subtitle) in a “banner” by adding a background color.</p></li>
+<li><p><code>number-sections: true</code>: Number sections (as determined using headers and their levels) hierarchically.</p></li>
+<li><p><code>toc-location</code>: Where the Table of Contents should show up — one of <code>left</code>, <code>right</code> (default), or <code>body</code></p></li>
+</ul>
+</section>
+<section id="exercises-i" class="level2 exercise" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">4</span> Exercises I</h2>
+<section id="experiment-with-yaml-header-options" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="experiment-with-yaml-header-options">Experiment with YAML header options</h4>
+<p><br></p>
+<p>On your new page:</p>
+<ul>
+<li><p>Try adding the <code>title-block-banner</code> and see if you like that kind of format.</p></li>
+<li><p>Add a few headers of different levels (start with “Header 2”, the title is basically the one level 1 header) — you can do so by clicking the dropdown menu that will say Normal:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/add_headers.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div></li>
+<li><p>Try turning on <code>number-sections</code> and play around with the <code>toc-location</code> (Your <code>_quarto.yml</code> has an entry <code>toc: true</code>, so a table of contents will by default be shown on very page).</p></li>
+</ul>
+</section>
+</section>
+<p><br></p>
+<section id="modifying-the-_quarto.yml-file" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="modifying-the-_quarto.yml-file"><span class="header-section-number">5</span> Modifying the <code>_quarto.yml</code> file</h2>
+<p>As mentioned above, the <code>_quarto.yml</code> file solely consists of YAML configurations, and these settings apply to the entire website.</p>
+<p>The two most important “sections” in this file are:</p>
+<ul>
+<li><p><code>website</code>, where we can control things like the site’s navigation elements that will show up on every page</p></li>
+<li><p><code>format</code> =&gt; <code>html</code>, where we can specify page-level formatting settings. Here, we can use the same YAML keys that we could use in the YAML header of our new page (and any other page), except that the settings will be applied across all pages on the site.</p></li>
+</ul>
+<p><br></p>
+<section id="the-website-section" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="the-website-section"><span class="header-section-number">5.1</span> The <code>website</code> section</h3>
+<p>In my example, this section currently reads as follows – yours should be the same except for the title unless you did some customization yourself already:</p>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb5-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Lucy's adventures in science"</span></span>
+<span id="cb5-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb5-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb5-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> index.qmd</span></span>
+<span id="cb5-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Home</span></span>
+<span id="cb5-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> about.qmd</span></span></code></pre></div>
+<p>The <code>navbar</code> key represents <strong>a navigation bar that is always shown across the top of the site</strong>, which should be a good default for most websites. But if you want a website navigation bar on the side, or combined top and side navigation (the latter is useful for sites with a lot of contents, and is used for example on <a href="https://quarto.org/">Quarto’s own documentation website</a>), this is possible: see <a href="https://quarto.org/docs/websites/website-navigation.html">Quarto’s Website Navigation docs</a>.</p>
+<p>Any entries under the <strong><code>left</code> key</strong> will be left-aligned on the navbar, i.e.&nbsp;consecutive entries start on the left-hand side of the navbar, moving rightward with every added entry. We could also add right-aligned entries with a <strong><code>right</code> key</strong> (see the exercise below).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Navbar auto-collapse (Click to expand)
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If the width of your viewing window is narrow (like it often is in RStudio’s “Viewer”, as well as on phones), the navbar will be automatically collapsed into a “Hamburger menu:”</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/hamburger_menu.png" class="img-fluid figure-img" style="width:65.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<p><strong>If we want our new page to show up in the navbar</strong>, we’ll have to add it as a new entry:</p>
+<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb6-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Lucy's adventures in science"</span></span>
+<span id="cb6-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb6-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb6-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> index.qmd</span></span>
+<span id="cb6-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Home</span></span>
+<span id="cb6-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> about.qmd</span></span>
+<span id="cb6-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> research.qmd</span></span>
+<span id="cb6-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> My Research</span></span></code></pre></div>
+<p><br></p>
+<p><strong>Some other useful keys for the <code>website</code> section</strong> include (see this <a href="https://quarto.org/docs/reference/projects/websites.html">Quarto docs page</a> for a full list):</p>
+<ul>
+<li><p><code>back-to-top-navigation</code> (a child key of <code>website</code>): When set to <code>true</code>, this will show a “Back to top” button once you reach the bottom of a page.</p></li>
+<li><p><code>favicon</code> (a child key of <code>website</code>): A favicon is an icon or small image that shows up in your browser next to the name of the website, see the icons shown in screenshot:</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/favicon.png" class="img-fluid figure-img" style="width:65.0%"></p>
+</figure>
+</div>
+<ul>
+<li><code>icon</code> (a navbar entry like <code>href</code> and <code>text</code>): This will allow you to show an icon instead of (default for external links) or in addition to text (default for internal links) for a link in your navbar. See <a href="https://icons.getbootstrap.com/">here</a> for a list of available icons. For example:</li>
+</ul>
+<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb7-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb7-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> index.qmd</span></span>
+<span id="cb7-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Home</span></span>
+<span id="cb7-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">icon</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> house</span></span></code></pre></div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/home_icon.png" class="img-fluid figure-img" style="width:65.0%"></p>
+</figure>
+</div>
+<p><br></p>
+</section>
+<section id="the-html-format-section" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="the-html-format-section"><span class="header-section-number">5.2</span> The <code>html</code> <code>format</code> section</h3>
+<p>Here is what the <code>format</code> section of your <code>_quarto.yaml</code> should look like:</p>
+<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb8-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> cosmo</span></span>
+<span id="cb8-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">css</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> styles.css</span></span>
+<span id="cb8-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span></span></code></pre></div>
+<p>As mentioned before, the configuration done in this section can use the same keys as those in the YAML header for individual pages, but the settings done in <code>_quarto.yaml</code> will apply across the entire website.</p>
+<p>For now, we’ll only talk about one key: <strong><code>theme</code></strong>. This will change the overall look of your website to a number of preset themes, each with different fonts and colors. While you can also completely customize your website’s look yourself, using one of these themes should work well for most of us.</p>
+<p>You can see a visual list of available themes at <a href="https://bootswatch.com/" class="uri">https://bootswatch.com/</a>. The default theme is <code>cosmo</code>, as you can see above. As an example, if we change Lucie’s website theme to <code>lux</code>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_02/img/lux_theme.png" class="img-fluid figure-img" style="width:65.0%"></p>
+</figure>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-ii" class="level2 exercise" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">6</span> Exercises II</h2>
+<section id="site-wide-configuration" class="level4 unnumbered">
+<h4 class="unnumbered anchored" data-anchor-id="site-wide-configuration">Site-wide configuration</h4>
+<p><br></p>
+<p><strong>Modify your <code>_quarto.yml</code> to configure your website</strong>. You can play around with whatever you prefer, but here are some suggestions:</p>
+<ul>
+<li><p>Try several different themes and pick one for your website.</p></li>
+<li><p>Move the navbar entry for the <code>about.qmd</code> page to the right-hand side.</p></li>
+<li><p>Add one more icons to the Navbar, for example:</p>
+<ul>
+<li>Add a link to your Twitter account and use the <code>twitter</code> icon</li>
+<li>If you have one, add a link to your GitHub account and use the <code>github</code> icon</li>
+<li>Add e.g.&nbsp;a question mark icon to your About page link (search for one <a href="https://icons.getbootstrap.com">here</a>).</li>
+<li>Take a look at the <a href="https://icons.getbootstrap.com">visual list of possible icons</a> and see if there are some that you’d like to use.</li>
+</ul></li>
+<li><p>Add a favicon for your <code>website</code>.</p></li>
+</ul>
+</section>
+</section>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+RStudio’s visual editor
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The visual editor should give you some easy-to-use, Word-processor like options to format the content on your website, add images, and so on — feel free to add some more content to your website!</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Check out the Code Club site source code
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you’re wondering how certain elements or configuration of the Code Club website was done, feel free to look at source code for the Code Club website, which is at: <a href="https://github.com/osu-codeclub/osu-codeclub.github.io" class="uri">https://github.com/osu-codeclub/osu-codeclub.github.io</a>.</p>
+</div>
+</div>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>website</category>
+  <guid>https://osu-codeclub.github.io/posts/website_02/index.html</guid>
+  <pubDate>Mon, 11 Sep 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/website_02/img/lux_theme.png" medium="image" type="image/png" height="30" width="144"/>
+</item>
+<item>
+  <title>Quarto website 1: Making a new website - first steps</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_01_initiation/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
+<ul>
+<li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
+<li>have a blog where you post about whatever it is you want to post about</li>
+<li>share your research or data</li>
+</ul>
+<p>Some of you may already have a simple free or paid website for yourself, that you made through <a href="https://u.osu.edu/">www.u.osu.edu</a>, <a href="https://www.squarespace.com/">Squarespace</a>, or <a href="https://sites.google.com/">Google Sites</a>. These tools don’t require you to be able to code, and allow you to create a website with different levels of customization and interactivity.</p>
+<p>For the next few sessions, we are going to go over making a website using <a href="https://quarto.org/">Quarto</a>. Quarto can be used as an open-source publishing system and you can integrate content from Jupyter notebooks, plain text markdown, Python, R, Julia and others. We are going to use Quarto integrated with R.</p>
+<blockquote class="blockquote">
+<p>Take a look at a <a href="https://quarto.org/docs/gallery/#websites">gallery of Quarto website examples</a>.</p>
+</blockquote>
+<p>We picked this particular platform to go over in Code Club since its lightweight, customizable, free, and integrates with R which you’re probably learning anyway. I am going to start going through an example that will be my personal website. I picked this example because I thought this might be of interest to most of you.</p>
+</section>
+<section id="installation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="installation"><span class="header-section-number">2</span> Installation</h2>
+<p>To render your website in RStudio, you will need to have the <em>rmarkdown</em> R package installed. You can do so by typing (or copying) the following into your R Console inside RStudio:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"rmarkdown"</span>)</span></code></pre></div>
+</div>
+<p>While not necessary for basic website building inside RStudio, it will also be a good idea to have Quarto installed moving forward. This is not an R package, but is a separate piece of software. To install it, go to <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a> and the correct installer for your operating system should be highlighted in a blue box. Click on that box to download and once downloaded, click on the installer to install Quarto.</p>
+<p align="center">
+<img style="border:1px solid gray;" src="https://osu-codeclub.github.io/posts/website_01_initiation/img/install_quarto.png" width="75%">
+</p><figcaption>
+The blue box should highlight the installer for your operating system.
+</figcaption>
+<p></p>
+</section>
+<section id="initiating-your-website-project" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</h2>
+<p>The first step to getting a website is to open up a new project in RStudio.</p>
+<p>Start by going to <em>File</em> &gt; <em>New Project</em> &gt; <em>New Directory</em>. When asked which Project Type you want, pick <em>Quarto Website</em>. Note that you can also initiate a <em>Quarto Blog</em> which is a type of <em>Quarto Website</em> - since the website template is simpler we are going to start there, and can change back in the future if you want. If you want to read ahead, here is a nice website about <a href="https://samanthacsik.github.io/posts/2022-10-24-quarto-blogs/">making your Quarto website into a blog</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/project-type.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
+</figure>
+</div>
+<p>You will then be asked where you want this website to live in your computer. Under <em>Directory Name</em> pick the name of the folder you want your content to be in, and <em>Create project as subdirectory of</em> as where you want the location on your computer. I have used the Knitr engine for website building.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/create-quarto-website.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
+</figure>
+</div>
+<p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
+<p>Once you do this basically you have all the bones of a website! Congratulations 🥳</p>
+</section>
+<section id="orienting-to-your-website" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</h2>
+<p>A new RStudio window should have opened (since we checked the box in the previous step <em>Open in new session</em>) that has your new R project opened.</p>
+<p>We now see the four quadrants of RStudio:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/orienting.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of four quadrants of rstudio</figcaption>
+</figure>
+</div>
+<ul>
+<li>the top left where the two website files <code>index.qmd</code> and <code>_quarto.yml</code> are open</li>
+<li>the bottom left where we see the console</li>
+<li>the top right where we see the tabs: Environment (which is currently empty), History (which we won’t use), Connections (which we won’t use), Tutorial (which we won’t use), and a new one Build (which is how we render our site)</li>
+<li>the bottom right where we see Files (which houses the new files that populate our website), Plots (which you’ve seen before and where plots can be rendered if you don’t like them inline), Packages (which shows all the packages loaded in your R), Help (which you’ve seen before, and where you can get help), Viewer (a new one where we can see a preview rendering of our website), and Presentation (where we can see a preview rendering a presentation but we aren’t doing that right now).</li>
+</ul>
+</section>
+<section id="building-your-site" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="building-your-site"><span class="header-section-number">5</span> Building your site</h2>
+<p>Let’s see what our website looks like before we’ve done anything. If you go to the Build tab in the top right quadrant and click <em>Render Website</em> your site will render and show up in the Viewer in the bottom right.</p>
+</section>
+<section id="looking-around" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="looking-around"><span class="header-section-number">6</span> Looking around</h2>
+<p>You can now click around in your new and very unexciting website. Let’s look around and then we will go through the file structure to see how the two are related.</p>
+<p>Along the top, or if you click the three lines in the top right (depending on the size of your browser page) you can see by default we get a Home and About page. If we click ‘website’ at the top, we go back to Home. We also have a search bar that allows us to search on our site.</p>
+<p>Now that we know what information we see on our site, we can look at the files that are used to build the site and try and interpret them.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/files.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
+</figure>
+</div>
+<p>Before we open the files, let’s talk about the file extensions and what they mean:</p>
+<ul>
+<li><code>.yml</code> is a <a href="https://quarto.org/docs/projects/quarto-projects.html#shared-metadata">YAML</a> or the file that indicates how the website will be configured</li>
+<li><code>.qmd</code> is a <a href="https://quarto.org/docs/get-started/hello/rstudio.html">Quarto markdown document</a>, and if you’re familiar with RMarkdown <code>.Rmd</code> documents its very similar. It contains both text written in markdown and executable code.</li>
+<li><code>.css</code> is a <a href="https://www.w3schools.com/css/css_intro.asp#:~:text=CSS%20stands%20for%20Cascading%20Style,are%20stored%20in%20CSS%20files">Cascading Style Sheets</a> file that indicates the way to style an HTML document (i.e., your website)</li>
+<li><code>.Rproj</code> is a <a href="https://bookdown.org/ndphillips/YaRrr/projects-in-rstudio.html">R Project</a> file that designates your working directory</li>
+</ul>
+<p>We also have a folder <code>_site</code> which houses the knitted website files. More about this later.</p>
+</section>
+<section id="index.qmd" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="index.qmd"><span class="header-section-number">7</span> index.qmd</h2>
+<p>This <code>index.qmd</code> file indicates what the home page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/index.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the index.qmd file</figcaption>
+</figure>
+</div>
+<p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
+<p>Play around with adding text, code, headers, images, whatever you might want on your website homepage.</p>
+</section>
+<section id="about.qmd" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="about.qmd"><span class="header-section-number">8</span> about.qmd</h2>
+<p>This <code>about.qmd</code> file indicates what the about page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/about.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the about.qmd file</figcaption>
+</figure>
+</div>
+<p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
+</section>
+<section id="quarto.yml" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="quarto.yml"><span class="header-section-number">9</span> _quarto.yml</h2>
+<p>The YAML file indicates how the site should be configured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_01_initiation/img/yaml.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the _quarto.yml file</figcaption>
+</figure>
+</div>
+<p>You’re probably not familiar with these <code>.yml</code> files but still its not horribly difficult to figure out what the different bits do.</p>
+<p>At the top, project type is indicated as website. We don’t want to change that now.</p>
+<p>In the next section beginning at line 4, we can have some specific information for how the website populates. The title is listed as “website” - we can change that to what we want at the top of our website. There is also a specification for what are the items in your navitation bar - here we have that the Home text will link to the <code>index.qmd</code>, and the next link is <code>about.qmd</code>. You can make more .qmd files that have other information and refer to them here and they will also populate in your navigation bar.</p>
+<p>In the third section at line 12, we can see some information on the setting of the website format. We have a html site, the theme is something called “cosmo” (see <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a> for some other options), we are using the styles.css file for css theming (actually that file is currently blank but thats ok), and we are indicating toc (or table of contents) as true, therefore we have a table of contents.</p>
+<p>Here you can find some <a href="https://quarto.org/docs/reference/projects/websites.html#section">documentation</a> about all the different stuff you can put in your YAML for a website.</p>
+</section>
+<section id="playing-around" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="playing-around"><span class="header-section-number">10</span> Playing around</h2>
+<p>Now that we have a general understanding of whats in our site, try playing around to begin customization to be how you want. We will do this for the rest of the session and please ask any questions on problems you come across, or share cool things you find!</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>website</category>
+  <guid>https://osu-codeclub.github.io/posts/website_01_initiation/index.html</guid>
+  <pubDate>Mon, 28 Aug 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/website_01_initiation/img/create-quarto-website.png" medium="image" type="image/png" height="104" width="144"/>
+</item>
+<item>
+  <title>Welcome to the new Code Club website!</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/welcome/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<p>Code Club has a new website, made with Quarto!</p>
+<p>We were previously on the <a href="https://biodash.github.io">“BioDASH” website</a>, which also contained some educational bioinformatics material unrelated to Code Club.</p>
+<p>That website was created using R Markdown and “<a href="https://gohugo.io/">Hugo</a>”. A lot has happened in the realm of R Markdown websites in the meantime, and even R Markdown itself now has a successor: <a href="https://quarto.org/">Quarto</a>.</p>
+<p>In the AU23 semester, we will teach making a website with Quarto, and we therefore think it is fitting that the Code Club website itself is also made with Quarto. Additionally, we think it will be nice to have a website just for Code Club content.</p>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>news</category>
+  <guid>https://osu-codeclub.github.io/posts/welcome/index.html</guid>
+  <pubDate>Fri, 18 Aug 2023 04:00:00 GMT</pubDate>
+</item>
+</channel>
+</rss>
