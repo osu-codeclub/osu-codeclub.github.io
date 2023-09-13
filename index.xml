@@ -9,8 +9,205 @@
 <link>https://osu-codeclub.github.io/index.html</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Mon, 11 Sep 2023 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Mon, 18 Sep 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Quarto website 3: Deploying your website with Github</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_03_deploy-github/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
+<ul>
+<li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
+<li>have a blog where you post about whatever it is you want to post about</li>
+<li>share your research or data</li>
+</ul>
+<p>So far, we have already gone through:</p>
+<ol type="1">
+<li>How to <a href="https://osu-codeclub.github.io/posts/website_01_initiation/">initiate your site</a></li>
+<li>How to <a href="https://osu-codeclub.github.io/posts/website_02/#adding-a-new-page-to-your-site">add content</a></li>
+<li>How to <a href="https://osu-codeclub.github.io/posts/website_02/#modifying-the-yaml-header-of-our-new-page">customize its look</a></li>
+</ol>
+<p>Today, we are going to take our website live, with the help of GitHub, Github Desktop, and Github Pages.</p>
+<section id="what-is-github" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="what-is-github"><span class="header-section-number">1.1</span> What is GitHub?</h2>
+</section>
+<section id="what-is-github-pages" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="what-is-github-pages"><span class="header-section-number">1.2</span> What is GitHub Pages?</h2>
+</section>
+<section id="what-is-github-desktop" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="what-is-github-desktop"><span class="header-section-number">1.3</span> What is GitHub Desktop?</h2>
+</section>
+</section>
+<section id="set-output-directory-in-yaml-to-docs" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Set output directory in YAML to docs</h1>
+<p>The first thing we want to do, is make a change in your <code>_quarto.yml</code> file to what the output directory of the site is, so it is more compatible with GitHub Pages.</p>
+<p>Go into your <code>_quarto.yml</code> and under <code>project:</code>, set <code>output-dir: docs</code>, like this:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">project</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">type</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> website</span></span>
+<span id="cb1-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">output-dir</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> docs</span></span>
+<span id="cb1-5"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>What this does is change where the compiled website goes.</p>
+<p>There are <a href="https://quarto.org/docs/publishing/github-pages.html">three different ways you can publish Quarto websites to GitHub pages</a>, but the one I am going over here is the simplest.</p>
+<p>Be sure to build you page now by going to the Build tab in the top right quadrant, and click Render Website.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/render-website.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the Build tab in RStudio</figcaption>
+</figure>
+</div>
+</section>
+<section id="download-git" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Download Git</h1>
+<p>If you don’t already have Git, download it: <a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a>.</p>
+</section>
+<section id="create-a-github-account" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Create a GitHub account</h1>
+<p>In order to connect have your site hosted with GitHub and GitHub Pages, you need a GitHub account.</p>
+<p>Create a GitHub account by going to <a href="https://github.com/join">github.com/join</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/create-gh-account.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of getting a GitHub account</figcaption>
+</figure>
+</div>
+<p>You will have to pick a username - remember that other people will see that username so use one you’d feel comfortable with other people seeing. <a href="https://happygitwithr.com/github-acct.html">Here</a> is some advice for picking a username.</p>
+</section>
+<section id="download-github-desktop-and-link-it-to-your-account" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Download GitHub Desktop and link it to your account</h1>
+<p>We are going to interface with GitHub via Github Desktop because I think this is the easiest way to do it. It is definitely not the only way.</p>
+<p>First download GitHub Desktop: <a href="https://desktop.github.com/" class="uri">https://desktop.github.com/</a></p>
+<p>Open GitHub Desktop and log into your GitHub account.</p>
+</section>
+<section id="create-your-website-repository-on-github.com" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Create your website repository on GitHub.com</h1>
+<p>We are going to create the repository that will house our website on GitHub using our web browser. Open up a browser and navigate to <a href="https://github.com/new" class="uri">https://github.com/new</a>. Be sure you are logged in.</p>
+<p>You will need to:</p>
+<ul>
+<li>indicate a repository name - this will be the suffix on your website (mine says it is taken since I had already made the website when I took this screenshot - it will not be this way for you)</li>
+<li>provide a description of the repo so someone can know what it contains</li>
+<li>make your repo public</li>
+<li>add a readme</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/gh-repo.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of adding a GitHub repo</figcaption>
+</figure>
+</div>
+<p>I will skip adding the gitignore (a document that tells git which files to ignore when you deploy) and the license but you can add these if you want. Then click the green button at the bottom to <code>Create repository</code>.</p>
+<p>Once you have done this you will now have a repo where you can put your website.</p>
+</section>
+<section id="clone-your-repository-in-github-desktop" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Clone your repository in GitHub Desktop</h1>
+<p>Now we are going to link this repo with GitHub Desktop.</p>
+<p>In your newly created repo on the GitHub web portal click on the green Code button to copy the HTTPS link to your repo.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/gh-clone-url.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of grabbing the HTTPS url for your repo</figcaption>
+</figure>
+</div>
+<p>With this link in your clipboard, open up GitHub Desktop and go to <code>File</code> &gt; <code>Clone Repository</code>.</p>
+<p>Click the refresh button on the side, and select your newly created repo, and where you want this directory to be. I am going to put this folder inside the directory of my original website, to make copying files over later easy.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/gh-desktop-clone-repo.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of cloning our newly created repo in GitHub desktop</figcaption>
+</figure>
+</div>
+</section>
+<section id="move-the-files-from-your-website-project-into-your-new-directory" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Move the files from your website project into your new directory</h1>
+<p>Open up your Finder or Windows Explorer on your computer and navigate to where you have your website directory/new repo. Copy all of the files from your original website directory <strong>except for your .Rproj</strong> and paste them into your repo directory. You should now have all your files together and we will be ready to commit and then push them to GitHub.</p>
+</section>
+<section id="commit-and-push-your-website-to-github" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Commit and push your website to GitHub</h1>
+<p>Go back to GitHub desktop at click the refresh button on the top middle. You should see a bunch of files (all those that comprise your website) under Changes in the tab on the left side.</p>
+<p>We are going to now commit our files by entering a comment on what we are doing in the bottom left of GitHub desktop, and then press Commit to main.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/initial-commit.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the initial commit in GitHub desktop</figcaption>
+</figure>
+</div>
+<p>Once you’ve done that, click <code>Push origin</code> in the top right.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/push-origin.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of pushing to origin in GitHub desktop</figcaption>
+</figure>
+</div>
+<p>Nice! Now we should be able to see our website in our GitHub repo. Navigate there in your browser and check. The website files should be there.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/gh-repo-created.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of what our repo looks like on GitHub.com</figcaption>
+</figure>
+</div>
+</section>
+<section id="set-github-pages-to-deploy-from-docs" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Set GitHub Pages to deploy from docs</h1>
+<p>The last thing we need to do to get our website to render is to change some settings for GitHub Pages.</p>
+<p>In your repo, click on the Settings button in the top right of the page. Then click on the Pages tab on the left. Under Branch, we want to set our page to build from main, and then from the /docs folder. Then click Save.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/gh-settings-pages.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+</figure>
+</div>
+<p>Refresh your page and you should now be able to visit your site! There will be a link at the top of the page. You did it!! Check out your new site.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/visit-site.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+</figure>
+</div>
+</section>
+<section id="updating-your-website" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Updating your website</h1>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>website</category>
+  <guid>https://osu-codeclub.github.io/posts/website_03_deploy-github/index.html</guid>
+  <pubDate>Mon, 18 Sep 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/github-cartoon.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Quarto website 2</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
