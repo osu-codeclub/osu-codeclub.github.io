@@ -28,7 +28,7 @@ The book [Happy Git and GitHub for the useR](https://happygitwithr.com/) is a su
 
 ## What is Git?
 
-[Git](https://git-scm.com/) is a version control system that allows materials (mostly code) to exist on the internet (either publicly or privately) in an organized way where changes are tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.
+[Git](https://git-scm.com/) is a version control system that allows materials (mostly code), in an organized way where changes are tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.
 
 We are going to use Git (combined with GitHub, more on that in a second) to deploy our website, but it can also be used to share and make code available to collaborators or the wider data science community. You could even use Git for just yourself because it would allow you to always revert back to a previous version of any of your files in case you make a big mistake.
 
@@ -44,7 +44,7 @@ knitr::include_graphics("img/github-cartoon.png")
 
 ## What is GitHub Pages?
 
-[GitHub Pages](https://pages.github.com/) is a tool allows you to host your website directlry from a GitHub repository.
+[GitHub Pages](https://pages.github.com/) is a tool allows you to host your website directly from a GitHub repository.
 
 ## What is GitHub Desktop?
 
@@ -68,13 +68,13 @@ What this does is change where the compiled website goes.
 
 There are [three different ways you can publish Quarto websites to GitHub pages](https://quarto.org/docs/publishing/github-pages.html), but the one I am going over here is the simplest.
 
-Be sure to build you page now by going to the Build tab in the top right quadrant, and click Render Website.
+Be sure to build your page now by going to the Build tab in the top right quadrant, and click Render Website.
 
 ![a screenshot of the Build tab in RStudio](img/render-website.png)
 
-# Download Git
+# Install Git
 
-If you don't already have Git, download it: <https://git-scm.com/downloads>.
+If you don't already have Git, download and install it: <https://git-scm.com/downloads>.
 
 # Create a GitHub account
 
@@ -86,58 +86,38 @@ Create a GitHub account by going to [github.com/join](https://github.com/join).
 
 You will have to pick a username - remember that other people will see this username so use one you'd feel comfortable with. [Here](https://happygitwithr.com/github-acct.html) is some advice for picking a username.
 
-# Download GitHub Desktop and link it to your account
+# Install GitHub Desktop and link it to your account
 
 We are going to interface with GitHub via Github Desktop because I think this is the easiest way to do it. It is definitely not the only way.
 
-First download GitHub Desktop: <https://desktop.github.com/>
+First download GitHub Desktop and install it: <https://desktop.github.com/>
 
 Open GitHub Desktop and log into your GitHub account.
 
-# Create your website repository on GitHub.com
+# Add version control to your website project
 
-We are going to create the repository that will house our website on GitHub using our web browser. Open up a browser and navigate to <https://github.com/new>. Be sure you are logged in.
+Make sure that your website project is open in RStudio. Then go to `Tools` > `Version Control` > `Project Setup`. We will use Git as our version control system, and will confirm a new git repository.
 
-You will need to:
+![a screenshot of adding a GitHub repo](img/add-version-control.png)
 
--   indicate a repository name - this will be the suffix on your website (mine says it is taken since I had already made the website when I took this screenshot - it will not be this way for you)
--   provide a description of the repo so someone can know what it contains
--   make your repo public
--   add a readme
+# Add your repository in GitHub Desktop and publish it
 
-![a screenshot of adding a GitHub repo](img/gh-repo.png)
+Now we are going to link this project that has version control with GitHub Desktop.
 
-I will skip adding the gitignore (a document that tells git which files to ignore when you deploy) and the license but you can add these if you want. Then click the green button at the bottom to `Create repository`.
+In GitHub Desktop, click `File` > `Add Local Repository`, select your website’s top-level folder, and click `Add Repository`. This repo is now added to GitHub desktop. 
+Still in GitHub Desktop, click the large `Publish repository` button towards the top. Uncheck the `Keep this code private` box and click `Publish Repository`. 
 
-Once you have done this you will now have a repo where you can put your website.
-
-# Clone your repository in GitHub Desktop
-
-Now we are going to link this repo with GitHub Desktop.
-
-In your newly created repo on the GitHub web portal click on the green Code button to copy the HTTPS link to your repo.
-
-![a screenshot of grabbing the HTTPS url for your repo](img/gh-clone-url.png)
-
-With this link in your clipboard, open up GitHub Desktop and go to `File` \> `Clone Repository`.
-
-Click the refresh button on the side, and select your newly created repo, and where you want this directory to be. I am going to put this folder inside the directory of my original website, to make copying files over later easy.
-
-![a screenshot of cloning our newly created repo in GitHub desktop](img/gh-desktop-clone-repo.png)
-
-# Move the files from your website project into your new directory
-
-Open up Finder or Windows Explorer on your computer and navigate to where you have your website directory/new repo. Copy all of the files from your original website directory **except for your .Rproj** and paste them into your repo directory. You should now have all your files together and we will be ready to commit and then push them to GitHub.
+![a screenshot of publishing your repo in Github desktop](img/publish_repo.png)
 
 # Commit and push your website to GitHub
 
-Go back to GitHub desktop at click the refresh button at the top middle. You should see a bunch of files (all those that comprise your website) under Changes in the tab on the left side.
+Still in GitHub Desktop,r click the refresh button at the top middle. You should see a bunch of files (all those that comprise your website) under Changes in the tab on the left side.
 
-We are going to now commit our files along with a comment on what we are doing in the bottom left of GitHub desktop. Once you've written your comment, press Commit to main. This sends your files to your GitHub repo.
+We are going to now commit our files along with a comment on what we are doing in the bottom left of GitHub desktop. Once you've written your comment, press Commit to main. This sends your files to your local repo.
 
 ![a screenshot of the initial commit in GitHub desktop](img/initial-commit.png)
 
-Once you've done that, click `Push origin` in the top right. Note that in the screenshot below there are no files indicated under changes, since I've already committed them.
+Once you've done that, click `Push origin` in the top right. This sends your files from your local repository to GitHub. Note that in the screenshot below there are no files indicated under changes, since I've already committed them.
 
 ![a screenshot of pushing to origin in GitHub desktop](img/push-origin.png)
 
