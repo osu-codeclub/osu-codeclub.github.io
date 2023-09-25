@@ -245,18 +245,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>How to <a href="../../posts/website_02/#modifying-the-yaml-header-of-our-new-page">customize your site’s look</a></li>
 <li>How to <a href="../../posts/website_03_deploy-github/">publish your site using Git and GitHub</a></li>
 </ul>
-<p><strong>Today</strong>, we are going to focus on interacting with our GitHub repository:</p>
+<p><strong>Today</strong>, we are going to focus on interacting with our GitHub repository (or “repo” for short):</p>
 <ul>
 <li>We’ll start with a recap on Git and GitHub repositories</li>
 <li>For those of you who would like to have a shorter URL for your website, we’ll change your GitHub repository name</li>
 <li>We’ll add some info to our repository, including a README file</li>
-<li>We’ll practice with getting your saving you local updates and pushing them to remote</li>
+<li>We’ll practice with saving your local updates and pushing them to remote</li>
 <li>If time allows, we’ll add links to your repo on your website</li>
 </ul>
 <p><br></p>
 <section id="git-and-github-repository-recap" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="git-and-github-repository-recap"><span class="header-section-number">1</span> Git and GitHub repository recap</h2>
-<p>Now that you have actually created a local Git and a remote GitHub repository (or “repo” for short) for your website, let’s revisit this illustration that Jess explained last week:</p>
+<p>Now that you have actually created a local Git and a remote GitHub repository for your website, let’s revisit this illustration that Jess explained last week:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -267,7 +267,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Let’s go through the three different “areas” in this illustration and how they interact, again:</p>
+<p>And here is a graphic depicting our workflow more specifically, where we basically have a fourth area: the actual website.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github_overview.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s go through the four different “areas” in this illustration and how they interact:</p>
 <ul>
 <li>Your <strong>working directory<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></strong> (bottom right in the illustration) is the folder on your computer that contains all the files for your website. Within that folder:
 <ul>
@@ -285,8 +295,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <li><p>Your <strong>remote GitHub repo</strong> (top in the illustration) is simply the <em>online counterpart of your local repo</em>.</p>
 <p>Just like changes to your working dir aren’t automatically saved to your local repo, new snapshots in your local repo aren’t automatically published to your remote repo: to do so, we have to <code>push</code> our changes online. (The counterpart to <code>push</code> is <code>pull</code>, which we won’t talk more about here, will pull in changes from the online repo to your local repo.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>)</p>
 <p>Just like for committing, we will use <strong>GitHub Desktop</strong> to push our changes online.</p></li>
-<li><p>In our use case, where our repository contains a website, we basically have a fourth area: the <strong>actual website</strong>.</p>
-<p>We “activated” this area last week using some settings for the online repo. Therefore, we don’t have to think much about this aspect – there basically is an <em>automatic connection between the remote repo and the website</em>: GitHub will detect whenever we’ve changed our online repo, and will update the website for us.</p></li>
+<li><p>We “activated” the <strong>website</strong> area last week using some settings for the online repo. Therefore, we don’t have to think much about this aspect – there basically is an <em>automatic connection between the remote repo and the website</em>: GitHub will detect whenever we’ve changed our online repo, and will update the website for us.</p></li>
 </ul>
 <p><strong>In summary,</strong> <strong>when you have made changes to your website that you would like to put online,</strong> <strong>go to GitHub Desktop to save a snapshot to your local repo (i.e., to commit)</strong> <strong>and then push those changes to your remote (online) repo.</strong> GitHub will then detect the changes to your online repo and update your website.</p>
 <p>We will practice this routine today.</p>
@@ -301,13 +310,13 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 </ul>
 <p>For instance, the Code Club practice website is under the GitHub username <code>osu-codeclub</code> and the repository name <code>practice-website</code>, and therefore, it has the following URLs:</p>
 <ul>
-<li>Website: <a href="https://osu-codeclub.github.io/practice-website" class="uri">https://osu-codeclub.github.io/practice-website</a></li>
 <li>GitHub repo: <a href="https://github.com/osu-codeclub/practice-website" class="uri">https://github.com/osu-codeclub/practice-website</a></li>
+<li>Website: <a href="https://osu-codeclub.github.io/practice-website" class="uri">https://osu-codeclub.github.io/practice-website</a></li>
 </ul>
 <p>However, the main Code Club website has a shorter URL that only contains the GitHub username: <a href="https://osu-codeclub.github.io" class="uri">https://osu-codeclub.github.io</a>. How can you make that happen for your website? <strong>You can do so by giving your GitHub repo the same name as your GitHub username.</strong></p>
 <p>So, for whoever would like to have the shorter URL format, let’s change the GitHub repo name to your GitHub username.</p>
 <ul>
-<li>If you’re making a personal website, you’ll likely want to make that change.</li>
+<li>If you’re making a personal website, you’ll likely want to make this change.</li>
 <li>If you’re making a website covering a specific topic or project, and could see yourself making other similar websites, this URL change doesn’t make as much sense.</li>
 </ul>
 <p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> In your GitHub repository, click “Settings”:</p>
@@ -320,7 +329,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 </div>
 </div>
 </div>
-<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Then, right at the top of the General page (the one that should open by default), click inside the “Repository name” box and you’ll notice that you can type to change the name. Give the repo the same name as your GitHub username (which should e.g.&nbsp;show in the URL to your repo), and then click the “Rename” button:</p>
+<p>Then, right at the top of the General page (the one that should open by default), click inside the “Repository name” box and you’ll notice that you can type to change the name. Give the repo the same name as your GitHub username (which should e.g.&nbsp;show in the URL to your repo), and then click the “Rename” button:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -349,7 +358,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <section id="about" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="about"><span class="header-section-number">3.1</span> About</h3>
 <p>While we’re making edits on GitHub, let’s first add a very brief description of our repo, and the URL to the website, to the “About” section on the main page of your repo.</p>
-<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Click the cog wheel icon shown below:</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Click the cog wheel icon shown below, and then:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -360,8 +369,8 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 </div>
 </div>
 <ul>
-<li><p>Enter a one-sentence description of your repo in the “Description” box —</p></li>
-<li><p>Below “Website”, you can simply check the box “Use your GitHub Pages website” to add your website’s URL to this About section.</p></li>
+<li><p>Enter a one-sentence description of your repo in the “<em>Description</em>” box.</p></li>
+<li><p>Below “<em>Website</em>”, you can simply check the box “<em>Use your GitHub Pages website</em>” to add your website’s URL to this About section.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -387,20 +396,22 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <section id="readme" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="readme"><span class="header-section-number">3.2</span> README</h3>
 <p>Next, let’s add a README file to our repo.</p>
-<p>If we create a file that is called e.g.&nbsp;<code>README</code> or <code>README.md</code> in the top-level folder of our repo, GitHub will automatically show it (in <em>rendered</em> form, if the file is written in Markdown) on the main page of our repository.</p>
-<p>Unlike the changes we made so far today (our website URL, the About info), <strong>creating a README file will actually modify the contents of our repo</strong>. Therefore, it will be easiest to create this file on our own computer, commit it to our local repo, and push the changes to the remote repo. (Alternatively, we could create and write this file directly on the GitHub website, but if we would do this, we would need to “pull” in these changes from remote, which is something we won’t cover here.)</p>
-<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> To create our README file:</p>
+<p>If we create a file that is called e.g.&nbsp;<code>README</code> or <code>README.md</code> in the top-level folder of our repo, GitHub will automatically show it (in <em>rendered</em> form, if the file is written in Markdown) on the main page of our repository. Besides the About section, this is another customary way you can make it clear to people that visit your repo on GitHub, what this repo is all about.</p>
+<p>Unlike the changes we made so far today (our website URL, the About info), <strong>creating a README file will actually modify the contents of our repo</strong>. Therefore, it will be easiest to create this file on our own computer, commit it to our local repo, and push the changes to the remote repo<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<section id="your-turn-create-a-readme-file-for-your-websites-repo" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="your-turn-create-a-readme-file-for-your-websites-repo">Your turn: Create a README file for your website’s repo</h4>
 <ul>
-<li><p>Switch to your RStudio window with oyur website RStudio project open, then click on “File” =&gt; “New File” =&gt; “Markdown File” (halfway down).</p></li>
+<li><p>Switch to your RStudio window with your website RStudio project open, then click on “File” =&gt; “New File” =&gt; “Markdown File” (halfway down).</p></li>
 <li><p>If the new file doesn’t automatically open in “Visual” mode, you can click the “Visual” button to do so, unless you would like to practice with Markdown syntax.</p></li>
-<li><p>Let’s <strong>save the file</strong> straight away as <code>README.md</code>, in the top-level folder where you also have, e.g., the <code>_quarto.yml</code> file.</p></li>
-<li><p><strong>Add some text</strong> to the README, which can be as long or short as you want; you’ll mostly just want to make it clear (again) that this repo is the source for your website. For example, I’ll add for this practice website:</p></li>
+<li><p><strong>Save the file</strong> straight away as <code>README.md</code>, in the top-level folder where you also have, e.g., the <code>_quarto.yml</code> file.</p></li>
+<li><p><strong>Add some text</strong> to the file, which can be as long or short as you want; you’ll mostly just want to make it clear (again) that this repo is the source for your website. For example, I’ll add for this practice website:</p></li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## This is the repository for a practice website part of OSU's Code Club</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>OSU Code Club: <span class="ot">&lt;https://osu-codeclub.github.io&gt;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>OSU Code Club practice website: <span class="ot">&lt;https://osu-codeclub.github.io/practice-website&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
 <p><br></p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -413,8 +424,9 @@ Your README plain Markdown file
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><p>“README” doesn’t have to be in all-caps, but this is customary.</p></li>
-<li><p>The <code>.md</code> extension stands for (plain) Markdown, as opposed to Quarto Markdown (<code>.qmd</code>) or R Markdown (<code>.Rmd</code>). The difference between plain Markfown and Quarto/R Markdown files is that the latter can <em>execute code</em> (usually but not limited to R code).</p></li>
+<li><p>The “README” in the filename doesn’t have to be in all-caps, but this is customary.</p></li>
+<li><p>The <code>.md</code> extension stands for (plain) Markdown, as opposed to Quarto Markdown (<code>.qmd</code>) or R Markdown (<code>.Rmd</code>). The difference between plain Markfown and Quarto/R Markdown files is that the latter can <em>execute code</em> (usually but not limited to R code).</p>
+<p>An interesting side note is that the conversion of a <code>.qmd</code>/<code>.Rmd</code> file to the final output file (HTML in our case, could e.g.&nbsp;also be PDF) takes place in <em>two steps</em>: first, it is rendered to <code>.md</code>, which is then rendered to the final output format.</p></li>
 </ul>
 </div>
 </div>
@@ -425,7 +437,7 @@ Your README plain Markdown file
 <h2 data-number="4" class="anchored" data-anchor-id="updating-the-online-repo"><span class="header-section-number">4</span> Updating the online repo</h2>
 <p>Now that we have made changes to our “working directory” by adding a README file, we should commit these changes to our local repo and then push them to the remote repo. For that, we’ll <strong>switch to GitHub Desktop</strong>.</p>
 <p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> When you open GitHub Desktop, it should automatically focus on your website’s repo, and you should see a bunch of changes listed in the left-hand panel.</p>
-<p>To commit all of these changes at once, focus on the bottom-left part, where you can leave the “Description” box empty, but you <strong>have to</strong> fill out something in the “Summary (required)” box, which should ideally summarize the changes you just made, e.g.:</p>
+<p>To commit all of these changes at once, focus on the bottom-left part, where you can leave the “<em>Description</em>” box empty, but you <strong>have to</strong> fill out something in the “<em>Summary (required)</em>” box, which should ideally summarize the changes you just made, e.g.:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -436,8 +448,8 @@ Your README plain Markdown file
 </div>
 </div>
 </div>
-<p>Then, click on the large blue “Commit to main” box (this box may also say “Commit to master”) to commit your changes to your local repo.</p>
-<p>Next, the following should appear in the main GitHub Desktop pane, and you can click “Push origin”:</p>
+<p>Then, click on the large blue “<em>Commit to main</em>” button (this button may also say “<em>Commit to master</em>”) to commit your changes to your local repo.</p>
+<p>Next, the following should appear in the main GitHub Desktop pane, and you can click “<em>Push origin</em>”:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -464,7 +476,9 @@ Git terminology
 </ul>
 </div>
 </div>
-<p>Let’s switch to our repo page on GitHub in our browser, where you should immediately see your new commit referenced at the top:</p>
+<p><br></p>
+<hr>
+<p>Let’s switch to our repo page on GitHub in our browser, where we should immediately see our new commit referenced at the top:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -534,12 +548,12 @@ Git terminology
 <section id="your-turn-update-_quarto.yml-and-get-the-changes-to-your-website" class="level4 unnumbered exercise">
 <h4 class="unnumbered anchored" data-anchor-id="your-turn-update-_quarto.yml-and-get-the-changes-to-your-website">Your turn: update <code>_quarto.yml</code> and get the changes to your website</h4>
 <ol type="1">
-<li><p>Make some or all of the suggested changes to your <code>_quarto.yml</code> file</p></li>
-<li><p>Render your website, so the changes will be included in the website’s HTML files in your <code>docs</code> folder</p></li>
-<li><p>Go to GitHub Desktop and commit the changes to your local repo</p></li>
-<li><p>Still in GitHub Desktop, push the changes to your remote repo</p></li>
-<li><p>Go to you GitHub repo, and check that you see your most recent push</p></li>
-<li><p>Go to / refresh your website, and see if the changes are there. You may have to wait a minute or so.a</p></li>
+<li><p>Make some or all of the suggested changes to your <code>_quarto.yml</code> file.</p></li>
+<li><p>Render your website, so the changes will be included in the website’s HTML files in your <code>docs</code> folder.</p></li>
+<li><p>Go to GitHub Desktop and commit the changes to your local repo.</p></li>
+<li><p>Still in GitHub Desktop, push the changes to your remote repo.</p></li>
+<li><p>Go to you GitHub repo, and check that you see your most recent push.</p></li>
+<li><p>Go to / refresh your website, and see if the changes are there. (You may have to wait a minute or so.)</p></li>
 </ol>
 </section>
 <p><br></p>
@@ -554,6 +568,7 @@ Git terminology
 <li id="fn1"><p>Directory (or “dir” for short) is just another word for a folder on your computer.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>It is also possible to save to a snapshot with only <em>some</em> of the changes that you’ve made to your working dir: you can <code>add</code> changed files individually rather than all at once, too.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>Pulling in changes from the online repo is only relevant either when you are collaborating with others on a repo, such that sharing of changes happens via the online repo, or when you have made changes directly to the online repo (this is possible but generally not recommended).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Alternatively, we could create and write this file directly on the GitHub website, but if we would do this, we would need to “pull” in these changes from remote, which is something we won’t cover here.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
