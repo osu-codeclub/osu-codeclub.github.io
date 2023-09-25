@@ -9,8 +9,419 @@
 <link>https://osu-codeclub.github.io/index.html</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 18 Sep 2023 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.433</generator>
+<lastBuildDate>Mon, 25 Sep 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Quarto website 4</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_04/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<p>We are continuing this semester’s Code Club series on making yourself a website. <strong>So far</strong>, we have gone through:</p>
+<ul>
+<li>How to <a href="../../posts/website_01_initiation/">create your site</a></li>
+<li>How to <a href="../../posts/website_02/#adding-a-new-page-to-your-site">add a page to your site</a></li>
+<li>How to <a href="../../posts/website_02/#modifying-the-yaml-header-of-our-new-page">customize your site’s look</a></li>
+<li>How to <a href="../../posts/website_03_deploy-github/">publish your site using Git and GitHub</a></li>
+</ul>
+<p><strong>Today</strong>, we are going to focus on interacting with our GitHub repository:</p>
+<ul>
+<li>We’ll start with a recap on Git and GitHub repositories</li>
+<li>For those of you who would like to have a shorter URL for your website, we’ll change your GitHub repository name</li>
+<li>We’ll add some info to our repository, including a README file</li>
+<li>We’ll practice with getting your saving you local updates and pushing them to remote</li>
+<li>If time allows, we’ll add links to your repo on your website</li>
+</ul>
+<p><br></p>
+<section id="git-and-github-repository-recap" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="git-and-github-repository-recap"><span class="header-section-number">1</span> Git and GitHub repository recap</h2>
+<p>Now that you have actually created a local Git and a remote GitHub repository (or “repo” for short) for your website, let’s revisit this illustration that Jess explained last week:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">Figure by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Let’s go through the three different “areas” in this illustration and how they interact, again:</p>
+<ul>
+<li>Your <strong>working directory<sup>1</sup></strong> (bottom right in the illustration) is the folder on your computer that contains all the files for your website. Within that folder:
+<ul>
+<li>The <code>docs</code> folder contains HTML and other files representing your <em>rendered website</em></li>
+<li>Everything else (<code>.qmd</code>, <code>.yml</code> etc.) is the <em>source code for your website</em></li>
+</ul>
+In the workflow we are showing you here, you’re modifying the files in your working directory predominantly <strong>using RStudio</strong>.</li>
+</ul>
+<ul>
+<li><p>Your <strong>local Git repo</strong> (bottom left in the illustration) contains one or more saved snapshots (versions through time) of your working directory.</p>
+<p>The most recent snapshot of the local repo does not <em>necessarily</em> correspond to the state of your working directory: there is purposefully no auto-saving, so saving a snapshot (i.e.&nbsp;<code>commit</code>ing) is something you always have to actively do<sup>2</sup>.</p>
+<p>Saving a snapshot of the current state of your working dir can be done in a number of ways, such as using Git commands in a terminal (the <code>add</code> and <code>commit</code> verbs in the illustration) or using the Git pane in RStudio, but the method we have shown you here uses the <strong>GitHub Desktop app</strong>.</p></li>
+</ul>
+<ul>
+<li><p>Your <strong>remote GitHub repo</strong> (top in the illustration) is simply the <em>online counterpart of your local repo</em>.</p>
+<p>Just like changes to your working dir aren’t automatically saved to your local repo, new snapshots in your local repo aren’t automatically published to your remote repo: to do so, we have to <code>push</code> our changes online. (The counterpart to <code>push</code> is <code>pull</code>, which we won’t talk more about here, will pull in changes from the online repo to your local repo.<sup>3</sup>)</p>
+<p>Just like for committing, we will use <strong>GitHub Desktop</strong> to push our changes online.</p></li>
+<li><p>In our use case, where our repository contains a website, we basically have a fourth area: the <strong>actual website</strong>.</p>
+<p>We “activated” this area last week using some settings for the online repo. Therefore, we don’t have to think much about this aspect – there basically is an <em>automatic connection between the remote repo and the website</em>: GitHub will detect whenever we’ve changed our online repo, and will update the website for us.</p></li>
+</ul>
+<p><strong>In summary,</strong> <strong>when you have made changes to your website that you would like to put online,</strong> <strong>go to GitHub Desktop to save a snapshot to your local repo (i.e., to commit)</strong> <strong>and then push those changes to your remote (online) repo.</strong> GitHub will then detect the changes to your online repo and update your website.</p>
+<p>We will practice this routine today.</p>
+<p><br></p>
+</section>
+<section id="changing-the-url-to-your-website" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="changing-the-url-to-your-website"><span class="header-section-number">2</span> Changing the URL to your website</h2>
+<p>The URLs to your repository and website are automatically determined based on your GitHub username and repo name as follows:</p>
+<ul>
+<li>Website: <code>https://&lt;github-username&gt;.github.io/&lt;github-repo-name&gt;</code></li>
+<li>GitHub repo: <code>https://github.com/&lt;github-username&gt;/&lt;github-repo-name&gt;</code></li>
+</ul>
+<p>For instance, the Code Club practice website is under the GitHub username <code>osu-codeclub</code> and the repository name <code>practice-website</code>, and therefore, it has the following URLs:</p>
+<ul>
+<li>Website: <a href="https://osu-codeclub.github.io/practice-website" class="uri">https://osu-codeclub.github.io/practice-website</a></li>
+<li>GitHub repo: <a href="https://github.com/osu-codeclub/practice-website" class="uri">https://github.com/osu-codeclub/practice-website</a></li>
+</ul>
+<p>However, the main Code Club website has a shorter URL that only contains the GitHub username: <a href="https://osu-codeclub.github.io" class="uri">https://osu-codeclub.github.io</a>. How can you make that happen for your website? <strong>You can do so by giving your GitHub repo the same name as your GitHub username.</strong></p>
+<p>So, for whoever would like to have the shorter URL format, let’s change the GitHub repo name to your GitHub username.</p>
+<ul>
+<li>If you’re making a personal website, you’ll likely want to make that change.</li>
+<li>If you’re making a website covering a specific topic or project, and could see yourself making other similar websites, this URL change doesn’t make as much sense.</li>
+</ul>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> In your GitHub repository, click “Settings”:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/settings.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Then, right at the top of the General page (the one that should open by default), click inside the “Repository name” box and you’ll notice that you can type to change the name. Give the repo the same name as your GitHub username (which should e.g.&nbsp;show in the URL to your repo), and then click the “Rename” button:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/rename.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption class="figure-caption">You can type directly in the box to change the repo’s name</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>That should send you back to your repository’s main page, and if all went well, your URL should have been updated immediately. To check this, you can go back to your repo’s settings and then click on “Pages” on the left-hand side, as shown below:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/check_pages.png" class="img-fluid figure-img" style="width:95.0%"></p>
+<figcaption class="figure-caption">On the GitHub Pages page, you can check the URL to your site</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="adding-about-info-and-a-readme" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="adding-about-info-and-a-readme"><span class="header-section-number">3</span> Adding About info and a README</h2>
+<section id="about" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="about"><span class="header-section-number">3.1</span> About</h3>
+<p>While we’re making edits on GitHub, let’s first add a very brief description of our repo, and the URL to the website, to the “About” section on the main page of your repo.</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Click the cog wheel icon shown below:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/about1.png" class="img-fluid figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>Enter a one-sentence description of your repo in the “Description” box —</p></li>
+<li><p>Below “Website”, you can simply check the box “Use your GitHub Pages website” to add your website’s URL to this About section.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/about2.png" class="img-fluid figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now, your About section should look something like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/about3.png" class="img-fluid figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="readme" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="readme"><span class="header-section-number">3.2</span> README</h3>
+<p>Next, let’s add a README file to our repo.</p>
+<p>If we create a file that is called e.g.&nbsp;<code>README</code> or <code>README.md</code> in the top-level folder of our repo, GitHub will automatically show it (in <em>rendered</em> form, if the file is written in Markdown) on the main page of our repository.</p>
+<p>Unlike the changes we made so far today (our website URL, the About info), <strong>creating a README file will actually modify the contents of our repo</strong>. Therefore, it will be easiest to create this file on our own computer, commit it to our local repo, and push the changes to the remote repo. (Alternatively, we could create and write this file directly on the GitHub website, but if we would do this, we would need to “pull” in these changes from remote, which is something we won’t cover here.)</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> To create our README file:</p>
+<ul>
+<li><p>Switch to your RStudio window with oyur website RStudio project open, then click on “File” =&gt; “New File” =&gt; “Markdown File” (halfway down).</p></li>
+<li><p>If the new file doesn’t automatically open in “Visual” mode, you can click the “Visual” button to do so, unless you would like to practice with Markdown syntax.</p></li>
+<li><p>Let’s <strong>save the file</strong> straight away as <code>README.md</code>, in the top-level folder where you also have, e.g., the <code>_quarto.yml</code> file.</p></li>
+<li><p><strong>Add some text</strong> to the README, which can be as long or short as you want; you’ll mostly just want to make it clear (again) that this repo is the source for your website. For example, I’ll add for this practice website:</p></li>
+</ul>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">## This is the repository for a practice website part of OSU's Code Club</span></span>
+<span id="cb1-2"></span>
+<span id="cb1-3"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span>OSU Code Club: <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;https://osu-codeclub.github.io&gt;</span></span>
+<span id="cb1-4"></span>
+<span id="cb1-5"><span class="ss" style="color: #20794D;
+background-color: null;
+font-style: inherit;">- </span>OSU Code Club practice website: <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;https://osu-codeclub.github.io/practice-website&gt;</span></span></code></pre></div>
+<p><br></p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Your README plain Markdown file
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>“README” doesn’t have to be in all-caps, but this is customary.</p></li>
+<li><p>The <code>.md</code> extension stands for (plain) Markdown, as opposed to Quarto Markdown (<code>.qmd</code>) or R Markdown (<code>.Rmd</code>). The difference between plain Markfown and Quarto/R Markdown files is that the latter can <em>execute code</em> (usually but not limited to R code).</p></li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="updating-the-online-repo" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="updating-the-online-repo"><span class="header-section-number">4</span> Updating the online repo</h2>
+<p>Now that we have made changes to our “working directory” by adding a README file, we should commit these changes to our local repo and then push them to the remote repo. For that, we’ll <strong>switch to GitHub Desktop</strong>.</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> When you open GitHub Desktop, it should automatically focus on your website’s repo, and you should see a bunch of changes listed in the left-hand panel.</p>
+<p>To commit all of these changes at once, focus on the bottom-left part, where you can leave the “Description” box empty, but you <strong>have to</strong> fill out something in the “Summary (required)” box, which should ideally summarize the changes you just made, e.g.:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/commit.png" class="img-fluid figure-img" style="width:55.0%"></p>
+<figcaption class="figure-caption">After entering something in the Summary box, click ‘Commit to main’</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Then, click on the large blue “Commit to main” box (this box may also say “Commit to master”) to commit your changes to your local repo.</p>
+<p>Next, the following should appear in the main GitHub Desktop pane, and you can click “Push origin”:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/push.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<figcaption class="figure-caption">Click ‘Push origin’ to push your local repo changes to remote</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Git terminology
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>The “master” or “main” in e.g.&nbsp;“<strong>Commit to main</strong>” refers to a specific so-called branch of your repository. With Git version control, it is for example common to work on experimental changes in your code in a separate (non-main) branch, so that your code in main keeps working in the meantime.</p></li>
+<li><p>“Origin” is the default name that is given to the default connection with your remote repo, so “<strong>Push origin</strong>” means push to the default remote repo.</p></li>
+</ul>
+</div>
+</div>
+<p>Let’s switch to our repo page on GitHub in our browser, where you should immediately see your new commit referenced at the top:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/commit_on_gh.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">You should see your changes referred to in the online repo</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>And if you scroll down, the <code>README.md</code> should appear in rendered form below the file listing:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/readme.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">GitHub will render and display a README file in your repo automatically</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Finally, a couple of things to note about what we just did:</p>
+<ul>
+<li><p>Unlike most changes you’ll make to your repo, this change did not affect our website at all.</p></li>
+<li><p>We can freely change our GitHub repo name without having to change the name of our folder with the website: these two can be the same, but they can also differ.</p></li>
+</ul>
+<p><br></p>
+</section>
+<section id="referencing-our-repo-on-the-website" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="referencing-our-repo-on-the-website"><span class="header-section-number">5</span> Referencing our repo on the website</h2>
+<p>Finally, we can <strong>reference our GitHub repo on our website</strong> in two ways, by making changes in our <code>_quarto.yml</code>.</p>
+<p>First, we can add a GitHub icon to the right-hand end of our top navigation bar, which will link to our GitHub repom as follows:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">right</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/osu-codeclub/practice-website"</span></span>
+<span id="cb2-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">icon</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> github</span></span></code></pre></div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/repo_link.png" class="img-fluid figure-img" style="width:40.0%"></p>
+<figcaption class="figure-caption">Making the change above should produce this icon in the navbar on your website</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Second, we can add one or two “repo actions” links to the Table of Contents that on each page on our website, which will allow people to:</p>
+<ul>
+<li><p>Action <code>issue</code>: Report an “issue” on GitHub, e.g.&nbsp;report that a link on your site is broken. This will open a new so-called <em>issue for your repo</em> – you should get an email when this happens.</p></li>
+<li><p>Action <code>edit</code>: Make a suggestion for a change (“Edit this page”), e.g.&nbsp;fix the broken link. This will open a new so-called <em>pull request for your repo</em>, and you can choose whether you want to accept this request, in which case it should automatically update your repo and website.</p></li>
+</ul>
+<p>If you want both of these type of links, you should add the following to your <code>_quarto.yml</code>:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo-url</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/osu-codeclub/osu-codeclub.github.io</span></span>
+<span id="cb3-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo-actions</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">edit</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> issue</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span></code></pre></div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_04/img/repo_actions.png" class="img-fluid figure-img" style="width:40.0%"></p>
+<figcaption class="figure-caption">Making the change above should produce these entries in the TOC of every page on your website</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<section id="your-turn-update-_quarto.yml-and-get-the-changes-to-your-website" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="your-turn-update-_quarto.yml-and-get-the-changes-to-your-website">Your turn: update <code>_quarto.yml</code> and get the changes to your website</h4>
+<ol type="1">
+<li><p>Make some or all of the suggested changes to your <code>_quarto.yml</code> file</p></li>
+<li><p>Render your website, so the changes will be included in the website’s HTML files in your <code>docs</code> folder</p></li>
+<li><p>Go to GitHub Desktop and commit the changes to your local repo</p></li>
+<li><p>Still in GitHub Desktop, push the changes to your remote repo</p></li>
+<li><p>Go to you GitHub repo, and check that you see your most recent push</p></li>
+<li><p>Go to / refresh your website, and see if the changes are there. You may have to wait a minute or so.a</p></li>
+</ol>
+</section>
+<p><br></p>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Directory (or “dir” for short) is just another word for a folder on your computer.↩︎</p></li>
+<li id="fn2"><p>It is also possible to save to a snapshot with only <em>some</em> of the changes that you’ve made to your working dir: you can <code>add</code> changed files individually rather than all at once, too.↩︎</p></li>
+<li id="fn3"><p>Pulling in changes from the online repo is only relevant either when you are collaborating with others on a repo, such that sharing of changes happens via the online repo, or when you have made changes directly to the online repo (this is possible but generally not recommended).↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>website</category>
+  <guid>https://osu-codeclub.github.io/posts/website_04/index.html</guid>
+  <pubDate>Mon, 25 Sep 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/website_04/img/repo_link.png" medium="image" type="image/png" height="57" width="144"/>
+</item>
 <item>
   <title>Quarto website 3: Deploying your website with GitHub 🐱</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
