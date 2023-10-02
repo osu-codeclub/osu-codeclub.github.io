@@ -26,7 +26,8 @@ Today we are going to continue customizing our website by:
 
 1. Making a fancy about page
 2. Learning how to make multi-level drop down menu headers
-3. Doing some light (S)CSS styling to change the visuals of our site
+3. Changing our website themeing in `_quarto.yml`
+4. Doing some light (S)CSS styling to change the visuals of our site
 
 Then, we will push our changes to GitHub using GitHub Desktop. But first: 
 
@@ -110,7 +111,37 @@ Looking at this we can see what code is used for make drop down headers. You can
 
 Remember that when you link to new pages, you will need to have material for that page to populate. If we look at the example above, the "Computer setup for Code Club" material is in a file called `setup.qmd` in a folder called `pages` in the home directory of the website.
 
+# Altering website styling in `_quarto.yml`
+
+Making simpler changes, like setting your background colors and fonts, you can do by altering your `_quarto.yml` file under the `format` header. For example, we could make the following changes to our practice-website.
+
+```yaml
+website:
+  navbar:
+    background: "#06280C" # foresty green
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    number-sections: true
+    mainfont: Proxima Nova
+    backgroundcolor: "#CFDAD3" # light grey
+    monobackgroundcolor: "#CFDAD3" # light grey
+    title-block-banner: "#06280C" # foresty green
+    title-block-banner-color: "#CFDAD3" # light grey
+    fontcolor: "#06280C" # foresty green
+    linkcolor: "#0E11E2" # hyperlink blue
+
+```
+
+You don't need to comment on what your colors are, I just like to do this since I have no connection between hexadecimal codes and actual colors, and this helps me to remember what is what. You can see all of the html options you can change within your YAML [here](https://quarto.org/docs/reference/formats/html.html)
+
+Once you made changes, render your website to see what they look like.
+
 # Altering (S)CSS code to change website styling
+
+Sometimes you might want to make more changes that what you can do using the avaiable keys in your YAML. When that is the case, you can make additional alterations by creating a `.scss` theme file.
 
 CSS stands for Cascading Style Sheets and it is used to format the layout of a webpage. By learning how to modify existing CSS files, it is relatively simple to change how your website looks. SCSS is Sassy CSS and the difference is not really important right now, but I think the `.scss` files are a little easier to modify, and are the default in Quarto, so we are going to work from those.
 
@@ -119,3 +150,11 @@ The Quarto website built in themes use [Bootswatch](https://bootswatch.com/) and
 ![](img/download-scss.png)
 
 Let's open it in RStudio. We will play around with making some changes.
+
+One thing you might want to change first are the colors. Quarto accepts color information as hexadecimal codes. If you want to know the hexadecimal 6 digit code for any color you can go to [www.htmlcolorcodes.com](https://htmlcolorcodes.com/) to find the color/code pair that you want.
+
+In the [Quarto documentation](https://quarto.org/docs/output-formats/html-themes.html#sass-variables), you can find information about the Sass variables that can be specified within your `.scss.` file what what they mean.
+
+# Commit and push to GitHub
+
+Once you are happy with your changes, the last step is to commit and push them to GitHub so the changes can be reflected on your website. You can do this in GitHub desktop by entering a comment in the bottom left, committing to main (or master), and then push to origin.
