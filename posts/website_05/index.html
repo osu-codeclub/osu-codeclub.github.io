@@ -189,7 +189,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
   <li><a href="#updating-our-about-page" id="toc-updating-our-about-page" class="nav-link" data-scroll-target="#updating-our-about-page"><span class="header-section-number">2</span> Updating our About page</a></li>
   <li><a href="#creating-multi-level-drop-down-menu-headers" id="toc-creating-multi-level-drop-down-menu-headers" class="nav-link" data-scroll-target="#creating-multi-level-drop-down-menu-headers"><span class="header-section-number">3</span> Creating multi-level drop down menu headers</a></li>
-  <li><a href="#altering-scss-code-to-change-website-styling" id="toc-altering-scss-code-to-change-website-styling" class="nav-link" data-scroll-target="#altering-scss-code-to-change-website-styling"><span class="header-section-number">4</span> Altering (S)CSS code to change website styling</a></li>
+  <li><a href="#altering-website-styling-in-_quarto.yml" id="toc-altering-website-styling-in-_quarto.yml" class="nav-link" data-scroll-target="#altering-website-styling-in-_quarto.yml"><span class="header-section-number">4</span> Altering website styling in <code>_quarto.yml</code></a></li>
+  <li><a href="#altering-scss-code-to-change-website-styling" id="toc-altering-scss-code-to-change-website-styling" class="nav-link" data-scroll-target="#altering-scss-code-to-change-website-styling"><span class="header-section-number">5</span> Altering (S)CSS code to change website styling</a></li>
+  <li><a href="#commit-and-push-to-github" id="toc-commit-and-push-to-github" class="nav-link" data-scroll-target="#commit-and-push-to-github"><span class="header-section-number">6</span> Commit and push to GitHub</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/website_05/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -248,6 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li>Making a fancy about page</li>
 <li>Learning how to make multi-level drop down menu headers</li>
+<li>Changing our website themeing in <code>_quarto.yml</code></li>
 <li>Doing some light (S)CSS styling to change the visuals of our site</li>
 </ol>
 <p>Then, we will push our changes to GitHub using GitHub Desktop. But first:</p>
@@ -321,12 +324,41 @@ Please share!
 <p>Looking at this we can see what code is used for make drop down headers. You can copy this code into your <code>_quarto.yml</code> and then modify the text and href to be appropriate for your site.</p>
 <p>Remember that when you link to new pages, you will need to have material for that page to populate. If we look at the example above, the “Computer setup for Code Club” material is in a file called <code>setup.qmd</code> in a folder called <code>pages</code> in the home directory of the website.</p>
 </section>
-<section id="altering-scss-code-to-change-website-styling" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Altering (S)CSS code to change website styling</h1>
+<section id="altering-website-styling-in-_quarto.yml" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Altering website styling in <code>_quarto.yml</code></h1>
+<p>Making simpler changes, like setting your background colors and fonts, you can do by altering your <code>_quarto.yml</code> file under the <code>format</code> header. For example, we could make the following changes to our practice-website.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">website</span><span class="kw">:</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">navbar</span><span class="kw">:</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">background</span><span class="kw">:</span><span class="at"> </span><span class="st">"#06280C"</span><span class="co"> # foresty green</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">theme</span><span class="kw">:</span><span class="at"> flatly</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">number-sections</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">mainfont</span><span class="kw">:</span><span class="at"> Proxima Nova</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">backgroundcolor</span><span class="kw">:</span><span class="at"> </span><span class="st">"#CFDAD3"</span><span class="co"> # light grey</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">monobackgroundcolor</span><span class="kw">:</span><span class="at"> </span><span class="st">"#CFDAD3"</span><span class="co"> # light grey</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">title-block-banner</span><span class="kw">:</span><span class="at"> </span><span class="st">"#06280C"</span><span class="co"> # foresty green</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">title-block-banner-color</span><span class="kw">:</span><span class="at"> </span><span class="st">"#CFDAD3"</span><span class="co"> # light grey</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">fontcolor</span><span class="kw">:</span><span class="at"> </span><span class="st">"#06280C"</span><span class="co"> # foresty green</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">linkcolor</span><span class="kw">:</span><span class="at"> </span><span class="st">"#0E11E2"</span><span class="co"> # hyperlink blue</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You don’t need to comment on what your colors are, I just like to do this since I have no connection between hexadecimal codes and actual colors, and this helps me to remember what is what. You can see all of the html options you can change within your YAML <a href="https://quarto.org/docs/reference/formats/html.html">here</a></p>
+<p>Once you made changes, render your website to see what they look like.</p>
+</section>
+<section id="altering-scss-code-to-change-website-styling" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Altering (S)CSS code to change website styling</h1>
+<p>Sometimes you might want to make more changes that what you can do using the avaiable keys in your YAML. When that is the case, you can make additional alterations by creating a <code>.scss</code> theme file.</p>
 <p>CSS stands for Cascading Style Sheets and it is used to format the layout of a webpage. By learning how to modify existing CSS files, it is relatively simple to change how your website looks. SCSS is Sassy CSS and the difference is not really important right now, but I think the <code>.scss</code> files are a little easier to modify, and are the default in Quarto, so we are going to work from those.</p>
 <p>The Quarto website built in themes use <a href="https://bootswatch.com/">Bootswatch</a> and both the Code Club and practice-website use flatly so let’s start there. You can find <code>.scss.</code> files for each theme in the Quarto GitHub source repo <a href="https://github.com/quarto-dev/quarto-cli/tree/main/src/resources/formats/html/bootstrap/themes">here</a>. I am going to go to the flatly theme and download it using the “Download raw file” button in the top right of the page. Save this file in the home directory of your website.</p>
 <p><img src="img/download-scss.png" class="img-fluid"></p>
 <p>Let’s open it in RStudio. We will play around with making some changes.</p>
+<p>One thing you might want to change first are the colors. Quarto accepts color information as hexadecimal codes. If you want to know the hexadecimal 6 digit code for any color you can go to <a href="https://htmlcolorcodes.com/">www.htmlcolorcodes.com</a> to find the color/code pair that you want.</p>
+<p>In the <a href="https://quarto.org/docs/output-formats/html-themes.html#sass-variables">Quarto documentation</a>, you can find information about the Sass variables that can be specified within your <code>.scss.</code> file what what they mean.</p>
+</section>
+<section id="commit-and-push-to-github" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Commit and push to GitHub</h1>
+<p>Once you are happy with your changes, the last step is to commit and push them to GitHub so the changes can be reflected on your website. You can do this in GitHub desktop by entering a comment in the bottom left, committing to main (or master), and then push to origin.</p>
 
 
 </section>
