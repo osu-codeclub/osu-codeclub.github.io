@@ -9,8 +9,410 @@
 <link>https://osu-codeclub.github.io/index.html</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Mon, 25 Sep 2023 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Mon, 02 Oct 2023 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Quarto website 5: modifying your site</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/website_05/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/website_05/img/quarto-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Artwork from <a href="https://mine.quarto.pub/hello-quarto/">“Hello, Quarto”</a> keynote by <a href="https://jules32.github.io/">Julia Lowndes</a> and <a href="https://mine-cr.com/">Mine Çetinkaya-Rundel</a>, presented at RStudio Conference 2022. Illustrated by <a href="https://allisonhorst.com/allison-horst">Allison Horst</a>.”</p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Today we are going to continue customizing our website by:</p>
+<ol type="1">
+<li>Making a fancy about page</li>
+<li>Learning how to make multi-level drop down menu headers</li>
+<li>Doing some light (S)CSS styling to change the visuals of our site</li>
+</ol>
+<p>Then, we will push our changes to GitHub using GitHub Desktop. But first:</p>
+<div class="callout callout-style-simple callout-none no-icon">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-body-container">
+<h4 class="anchored" data-anchor-id="introduction">
+Are there other things you want to learn how to do with your website?
+</h4>
+<p>
+Please share!
+</p>
+</div>
+</div>
+</div>
+<p>A good way to see what is possible to do with your website is to browse through some other people’s sites. There is a Quarto website gallery <a href="https://quarto.org/docs/gallery/#websites">here</a>. Just like people can access the source code on your website, you can often do the same for others. This means if you see a feature you like, you can go into their website code and try and figure out how its done.</p>
+</section>
+<section id="updating-our-about-page" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Updating our About page</h1>
+<p>Because many people who have a Quarto website will have an About page, there are some special, nicely formatted templates which you can use. You can learn more about fancy about pages <a href="https://quarto.org/docs/websites/website-about.html">here</a>, inclduing seeing what the different templates look like.</p>
+<p>We are going to practie with our Code Club <a href="https://osu-codeclub.github.io/practice-website/">practice-website</a>.</p>
+<p>First, let’s set one of the about templates in the YAML of our <code>about.qmd</code> file. I am going to start with <code>jolla</code>.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"About me"</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">about</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb1-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">template</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> jolla</span></span>
+<span id="cb1-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">image</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> name_of_image.jpg</span></span></code></pre></div>
+<p>Before we render this page, we need to make sure the image we want to appear in this about page is in the home directory of your website. If you want to keep all your images in a subfolder so they’re not just floating around loose, you can. And then your YAML will look like this:</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"About me"</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">about</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb2-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">template</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> jolla</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # could also use trestles, solana, marquee, broadside</span></span>
+<span id="cb2-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">image</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> img/name_of_image.jpg</span></span></code></pre></div>
+<p>If you want to use some of the other templates, like <code>trestles</code>, <code>solana</code>, <code>marquee</code>, and <code>broadside</code>, you will want to have other information in your <code>about.qmd</code>, perhaps sections on Education and Experience.</p>
+<p>Check out using these different templates and pick the one you like the most if you want to customize your about page.</p>
+</section>
+<section id="creating-multi-level-drop-down-menu-headers" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Creating multi-level drop down menu headers</h1>
+<p>Earlier I mentioned we can go into other websites to see how different features are coded. We are going to do this on the <a href="https://osu-codeclub.github.io/">OSU Code Club website</a> to see how it has achieved having multi-level headers. We can also visit the <a href="https://github.com/osu-codeclub/osu-codeclub.github.io/tree/main">source repository</a> on GitHub to see how this website is formatted.</p>
+<p>If you look at the Code Club website homepage, you can see that the header “New here?” has a drop down, and allows you to choose from a few different options.</p>
+<p><img src="https://osu-codeclub.github.io/posts/website_05/img/new-here.png" class="img-fluid"></p>
+<p>How was that done? If you remember back a few sessions ago, <a href="https://osu-codeclub.github.io/posts/website_02/#modifying-the-_quarto.yml-file">we set what our headers were going</a> to be in the <code>_quarto.yml</code> file. Let’s see what that file looks like from the Code Club source repo.</p>
+<p>The <code>_quarto.yml</code> looks like this:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">project</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-2"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">type</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> website</span></span>
+<span id="cb3-3"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">preview</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span></span>
+<span id="cb3-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navigate</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">false</span></span>
+<span id="cb3-5"></span>
+<span id="cb3-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"OSU Code Club"</span></span>
+<span id="cb3-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">site-url</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://osu-codeclub.github.io/</span></span>
+<span id="cb3-9"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo-url</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://github.com/osu-codeclub/osu-codeclub.github.io</span></span>
+<span id="cb3-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">repo-actions</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">[</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">edit</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">,</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> issue</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">]</span></span>
+<span id="cb3-11"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">page-navigation</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb3-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">back-to-top-navigation</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb3-13"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-15"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pages/schedule.qmd</span></span>
+<span id="cb3-16"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Schedule</span></span>
+<span id="cb3-17"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pages/previous.qmd</span></span>
+<span id="cb3-18"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Previous sessions</span></span>
+<span id="cb3-19"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> New here?</span></span>
+<span id="cb3-20"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">menu</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb3-21"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Computer setup for Code Club</span></span>
+<span id="cb3-22"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pages/setup.qmd</span></span>
+<span id="cb3-23"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> R resources for beginners</span></span>
+<span id="cb3-24"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> pages/r_resources.qmd</span></span>
+<span id="cb3-25"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">        </span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">-</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> Sign up!</span></span>
+<span id="cb3-26"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">          </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> https://forms.gle/eYkMvmJShrcANUrt5</span></span></code></pre></div>
+<p>Looking at this we can see what code is used for make drop down headers. You can copy this code into your <code>_quarto.yml</code> and then modify the text and href to be appropriate for your site.</p>
+<p>Remember that when you link to new pages, you will need to have material for that page to populate. If we look at the example above, the “Computer setup for Code Club” material is in a file called <code>setup.qmd</code> in a folder called <code>pages</code> in the home directory of the website.</p>
+</section>
+<section id="altering-scss-code-to-change-website-styling" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Altering (S)CSS code to change website styling</h1>
+<p>CSS stands for Cascading Style Sheets and it is used to format the layout of a webpage. By learning how to modify existing CSS files, it is relatively simple to change how your website looks. SCSS is Sassy CSS and the difference is not really important right now, but I think the <code>.scss</code> files are a little easier to modify, and are the default in Quarto, so we are going to work from those.</p>
+<p>The Quarto website built in themes use <a href="https://bootswatch.com/">Bootswatch</a> and both the Code Club and practice-website use flatly so let’s start there. You can find <code>.scss.</code> files for each theme in the Quarto GitHub source repo <a href="https://github.com/quarto-dev/quarto-cli/tree/main/src/resources/formats/html/bootstrap/themes">here</a>. I am going to go to the flatly theme and download it using the “Download raw file” button in the top right of the page. Save this file in the home directory of your website.</p>
+<p><img src="https://osu-codeclub.github.io/posts/website_05/img/download-scss.png" class="img-fluid"></p>
+<p>Let’s open it in RStudio. We will play around with making some changes.</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>website</category>
+  <category>git</category>
+  <guid>https://osu-codeclub.github.io/posts/website_05/index.html</guid>
+  <pubDate>Mon, 02 Oct 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/website_05/img/quarto-cartoon.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
 <item>
   <title>Quarto website 4</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
@@ -96,13 +498,13 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <li>GitHub repo: <a href="https://github.com/osu-codeclub/practice-website" class="uri">https://github.com/osu-codeclub/practice-website</a></li>
 <li>Website: <a href="https://osu-codeclub.github.io/practice-website" class="uri">https://osu-codeclub.github.io/practice-website</a></li>
 </ul>
-<p>However, the main Code Club website has a shorter URL that only contains the GitHub username: <a href="https://osu-codeclub.github.io" class="uri">https://osu-codeclub.github.io</a>. You, too, can change your website’s URL so that it only contains your GitHub username.</p>
+<p>However, the main Code Club website has a shorter URL that only contains the GitHub username: <a href="https://osu-codeclub.github.io" class="uri">https://osu-codeclub.github.io</a>. How can you make that happen for your website? <strong>You can do so by giving your GitHub repo the same name as your GitHub username.</strong></p>
+<p>So, for whoever would like to have the shorter URL format, let’s change the GitHub repo name to your GitHub username.</p>
 <ul>
 <li>If you’re making a personal website, you’ll likely want to make this change.</li>
 <li>If you’re making a website covering a specific topic or project, and could see yourself making other similar websites, this URL change doesn’t make as much sense.</li>
 </ul>
-<p>How can you get such an URL for your website? <strong>You can do so by giving your GitHub repo the name <code>&lt;github-username&gt;.github.io</code>.</strong></p>
-<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> So, for whoever would like to have the shorter URL format, let’s change the GitHub repo name to your GitHub username. In your GitHub repository, click “Settings”:</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> In your GitHub repository, click “Settings”:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -112,7 +514,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 </div>
 </div>
 </div>
-<p>Then, right at the top of the General page (the one that should open by default), click inside the “Repository name” box, and you’ll notice that you can type to change the name. The new name of the repo should by your GitHub username (which should e.g.&nbsp;show in the URL to your repo) followed by <code>.github.io</code>. For example, if your username is <code>lucy</code>, your new repo name should be <code>lucy.github.io</code>. After you’ve typed the new name, click the “Rename” button:xxx</p>
+<p>Then, right at the top of the General page (the one that should open by default), click inside the “Repository name” box and you’ll notice that you can type to change the name. Give the repo the same name as your GitHub username (which should e.g.&nbsp;show in the URL to your repo), and then click the “Rename” button:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -410,7 +812,7 @@ font-style: inherit;">]</span></span></code></pre></div>
 <h4 class="unnumbered anchored" data-anchor-id="your-turn-update-_quarto.yml-and-get-the-changes-to-your-website">Your turn: update <code>_quarto.yml</code> and get the changes to your website</h4>
 <ol type="1">
 <li><p>Make some or all of the suggested changes to your <code>_quarto.yml</code> file.</p></li>
-<li><p>Render your <em>entire website</em>, so the changes will be included in the website’s HTML files in your <code>docs</code> folder. (Recall that to render your full website, as opposed to a single document, click the “Render Website” button in <strong>RStudio’s “Build” Tab</strong>.)</p></li>
+<li><p>Render your website, so the changes will be included in the website’s HTML files in your <code>docs</code> folder.</p></li>
 <li><p>Go to GitHub Desktop and commit the changes to your local repo.</p></li>
 <li><p>Still in GitHub Desktop, push the changes to your remote repo.</p></li>
 <li><p>Go to you GitHub repo, and check that you see your most recent push.</p></li>
