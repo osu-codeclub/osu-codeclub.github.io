@@ -31,27 +31,38 @@ A common use case for stand-alone Quarto documents is a **digital notebook or re
 
 Because it's straightforward to make the output look polished, and because you can include citations too, it is also a good option for more **formal reports** and even **manuscripts**. As mentioned last week, you can also output a **slide deck**, and it is even possible to include these directly on your website since the output format for slides can be HTML.
 
-We will continue to use RStudio's Visual Editor, and will basically make our way through the options in the bar that is right above your main editor window:
+We will continue to use RStudio's **Visual Editor**, and will basically make our way through the options in the bar that is right above your main editor window (but only when you're in "Visual" mode):
 
 ![](img/menu.png){fig-align="center" width="90%"}
 
+### Creating a document for practice
+
+I will start by creating a new Quarto document to practice using these features.
+If you want to follow along:
+
+- In RStudio, click "File" => "New File" => "Quarto Document".
+- Check the box "Use visual markdown editor", and optionally add a Title and an Author.
+
 <br>
 
-## Basic formatting options {#sec-introduction}
+## Basic formatting {#sec-introduction}
 
 ### Options from the "Format" dropdown menu
 
 The following options are available under the "Format" dropdown:
 
--   "Code" formatting `looks like this` and can be used for e.g. code snippets, file names, and software names.
+-   "**Code**" formatting `looks like this` and can be used for e.g. code snippets, file names, and software names.
 
--   Under "Text": **Bold**, *italic*, [underlined]{.underline}, ~~Strikeout~~, ^superscript^, ~subscript~ , [small caps]{.smallcaps}
+-   **Bold**, *italic*, [underlined]{.underline}, ~~Strikeout~~, ^superscript^, ~subscript~ , [small caps]{.smallcaps} (some of these are under the "Text" subheading)
 
--   Bullet lists and numbered lists, which can optionally be in a "tight" layout: press the `…` at the top-right.
+-   **Bullet lists and numbered lists**, which can optionally be in a "tight" layout: press the `…` at the top-right.
 
--   [ ] Within a list, you can have an "Item Checkbox" to make a checklist...
+    -   [ ] Within a list, you can have an "Item Checkbox" to make a checklist...
+    -   [x] ...and these boxes can be checked.
 
--   [x] ...and these boxes can be checked.
+-   "Blockquotes", which can be used to provide a quote or even to highlight a bit of text in a different format:
+
+> "Blockquotes are great" --- J. Doe
 
 Several of these items are also present as separate buttons directly in the top bar.
 
@@ -75,19 +86,17 @@ You can use regular hyperlinks (see below) to refer to different pages and speci
 
 <br>
 
-### Simple options from the "Insert" dropdown
+### Options from the "Insert" dropdown
 
 -   "***Link***" to include a clickable [link](https://quarto.org/docs/reference/formats/html.html) with custom text.
 
 -   ***Footnote***[^1], which shows up as a superscripted number in the main text, with the full footnote printed at the bottom of the page. Best of all, you can also *hover over the superscripted number* to see the footnote text.
 
-[^1]: ***After reading this footnote, you'll be exceptionally well-informed***
-
-<!-- -->
-
 -   "Special characters" =\> "Insert ***Emoji***" =\> 🤓.
 
 -   "***Horizontal rule***", which can be nice to break up your content:
+
+[^1]: ***After reading this footnote, you'll be exceptionally well-informed***
 
 ------------------------------------------------------------------------
 
@@ -95,7 +104,7 @@ You can use regular hyperlinks (see below) to refer to different pages and speci
 
 ## Citations
 
-Addings citations is also possible via the Insert drop-down menu. Any citation you add will be automatically included in a reference list at the bottom of the document! In the text, the citation will show up as a link to the reference list and you can also hover over the link to see the full reference: [@m.horst2022].
+Addings citations is also possible via the "Insert" drop-down menu. Any citation you add will be automatically included in a reference list at the bottom of the document! In the text, the citation will show up as a link to the reference list and you can also hover over the link to see the full reference: [@m.horst2022].
 
 ![A reference list is automatically added to the end of the document](img/reflist.png){fig-align="center" width="90%"}
 
@@ -124,23 +133,19 @@ To ***format your citations***, both in terms of how they appear in the text and
 
 <br>
 
-:::{.exercise}
-#### Your turn: Try to use some of the features discussed above {-}
+::: exercise
+#### Your turn: Try to use some of the features discussed above {.unnumbered}
 
-- If you didn't already do so,
-  it probably makes sense to create a new Quarto document for this experimentation.
+-   If you didn't already do so, it probably makes sense to create a new Quarto document for this experimentation.
 
-- After you've used a couple of features,
-  switch from "Visual" to "Source" editor mode,
-  and check what the syntax is for these features!
-
+-   After you've used a couple of features, switch from "Visual" to "Source" editor mode, and check what the syntax is for these features!
 :::
 
 <br>
 
-## Code blocks and chunks
+## Code blocks and chunks {#sec-chunks}
 
-Still under the "Insert" drop-down menu, the "**Code block**" item will insert a block (one or more lines) of code-formatted text --- but code in this type of block will not be executed. When the pop-up window asks you to type the name of a language, you can type "R", but this information is only used for code *formatting* purposes. These kind of blocks can be useful if you just want to demonstrate/explain some code:
+Both under the "Format" and "Insert" drop-down menus, you can find the "**Code block**" item, which will insert a block (one or more lines) of code-formatted text --- but code in this type of block will not be executed. When the pop-up window asks you to type the name of a language, you can type "R", but this information is only used for code *formatting* purposes. These kind of blocks can be useful if you just want to demonstrate/explain some code:
 
 ``` r
 x <- 5
@@ -205,7 +210,7 @@ Above, we saw that we can create plots and include them in the document. Of cour
 
 ![](img/insert_figure.png){fig-align="center" width="60%"}
 
-Somewhat oddly, the options for the figure ***size*** only show up once you've clicked OK to insert the figure --- you'll see this box below the figure:
+Somewhat oddly, the options for the figure **size** only show up once you've clicked OK to insert the figure --- you'll see this box below the figure:
 
 ![](img/size_figure.png){fig-align="center" width="50%"}
 
@@ -217,14 +222,15 @@ When Clicking "Insert Table" in the "Table" dropdown menu in the top bar, you'll
 
 ![](img/table1.png){fig-align="center" width="50%"}
 
-This will then produce a table skeleton like the one shown below that you can then fill out:
+This will produce a table skeleton like the one shown below,
+which you can then fill out:
 
 ![](img/table2.png){fig-align="center" width="70%"}
 
 Here is an example of what a rendered table will look like, with previous Code Club sessions this semester:
 
 | Session | Date    | Presenter | Link                                                                          |
-|-------------|-------------|-------------|-----------------------------------|
+|-----------------|-----------------|-----------------|----------------------|
 | S06E01  | Aug 28  | Jess      | [Quarto website 1: **Initiating a website**](/posts/website_01_initiation/)   |
 | S06E02  | Sep 11  | Jelmer    | [Quarto website 2: **Adding a page & YAML formatting**](/posts/website_02/)   |
 | S06E03  | Sept 18 | Jess      | [Quarto website 3: **Deploying to GitHub**](/posts/website_03_deploy-github/) |
@@ -241,7 +247,7 @@ These tables are fairly basic in their appearance and there aren't many simple f
 
 ### Tabsets
 
-"Tabsets" create a section with content spread across different "tabs", kind of like tabs in your browser; you saw an example above, in the Citations section. Tabsets can help keep your document clear when you have many outputs, especially when there are alternative or mutually exclusive ways of showing something, like results from alternative statistical models you ran on your data, alternative ways of visualizing the same data, or installation instructions for different operating systems.
+"Tabsets" create a section with content spread across different "tabs", kind of like tabs in your browser; you saw an example above, in the Citations section. Tabsets can help keep your document clear when you have many outputs, especially when there are **alternative or mutually exclusive ways of showing something**, like results from alternative statistical models you ran on your data, alternative ways of visualizing the same data, or installation instructions for different operating systems.
 
 When you click "Insert" =\> "Tabset...", you can first enter names for two or more tabs, and doing this will also determine how many tabs you'll get (up to 6):
 
@@ -317,8 +323,13 @@ In all Markdown flavors, including Quarto, whitespace is dealt with differently 
 
 <br>
 
-:::{.exercise}
-#### Your turn: Again, try to use some of the features discussed above {-}
+::: exercise
+#### Your turn: Again, try to use some of the features discussed above {.unnumbered}
+
+-   If you have time after trying some of the features we discussed,
+    then read about ways of manipulating code chunk behavior in the
+    box at the end of @sec-chunks, and try some of them.
+
 :::
 
 <br>
