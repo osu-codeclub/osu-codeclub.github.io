@@ -99,9 +99,21 @@ Try rendering this to see what happens.
 
 ![](img/slide-2-rendered.png)
 
-If you click back and forth in your viewer, you will see that both items in the bulleted list appear together. If you want bullets to populate one at a time, you can set `incremental: true` in your YAML, or if you just want the bullets to increment in this slide only, you can set it by clicking on the three dots on the right of your slide, and setting Classes to be `.incremental`. You can learn more about incremental lists [here](https://quarto.org/docs/presentations/revealjs/#incremental-lists).
+If you click back and forth in your viewer, you will see that both items in the bulleted list appear together. If you want bullets to populate one at a time, you can set `incremental: true` in your YAML, or if you just want the bullets to increment in this slide only, you can set it by clicking on the three dots on the right of your slide, and setting Classes to be `.incremental`. You can learn more about incremental lists [here](https://quarto.org/docs/presentations/revealjs/#incremental-lists). If you toggle between the visual and source editor, you can see what code you'd need to type to get your bullets to be incremental.
 
 ![](img/incremental.png)
+
+This is what your incremented slide would look like in the source editor.
+
+```
+## The title of my second slide
+
+::: incremental
+-   The first item in my list
+-   A second item in my list
+:::
+```
+
 
 One of the main reasons you might want to create a Quarto presentation is because you want to show code. Just like we talked about last week, you can add a code chunk by clicking `Insert` > `Executable cell` >    `R` to add an R code chunk.
 
@@ -128,6 +140,27 @@ When this renders, it looks like this:
 ![](img/penguins-1.png)
 
 ![](img/penguins-2.png)
+
+We can also make it so that the code is collapsable, like this:
+
+```r
+#| code-fold: true
+#| code-summary: "Click for the full code"
+
+penguins %>%
+  ggplot(aes(x = species, y = flipper_length_mm, color = species)) +
+  geom_boxplot() +
+  geom_jitter() + 
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(x = "Penguin species",
+       y = "Flipper length, in mm",
+       title = "Penguin flipper length by species")
+```
+
+When rendered, it looks like this:
+
+![](img/penguins-hide-code.png)
 
 ::: callout-note
 ## Let's all try playing around with creating slides and modifying them. Is there anything specific anyone wants to know how to do?
