@@ -22,6 +22,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -152,7 +186,21 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#what-is-shiny" id="toc-what-is-shiny" class="nav-link active" data-scroll-target="#what-is-shiny"><span class="header-section-number">1</span> What is Shiny?</a></li>
+  <li><a href="#the-basic-structure-of-a-shiny-app" id="toc-the-basic-structure-of-a-shiny-app" class="nav-link" data-scroll-target="#the-basic-structure-of-a-shiny-app"><span class="header-section-number">2</span> The Basic Structure of a Shiny App</a>
+  <ul class="collapse">
+  <li><a href="#the-user-interface-section-structure" id="toc-the-user-interface-section-structure" class="nav-link" data-scroll-target="#the-user-interface-section-structure"><span class="header-section-number">2.1</span> The User Interface Section Structure</a></li>
+  <li><a href="#the-server-section-structure" id="toc-the-server-section-structure" class="nav-link" data-scroll-target="#the-server-section-structure"><span class="header-section-number">2.2</span> The Server Section Structure</a></li>
+  <li><a href="#how-to-run-a-shiny-app" id="toc-how-to-run-a-shiny-app" class="nav-link" data-scroll-target="#how-to-run-a-shiny-app"><span class="header-section-number">2.3</span> How to Run a Shiny App</a></li>
+  <li><a href="#how-to-stop-a-shiny-app" id="toc-how-to-stop-a-shiny-app" class="nav-link" data-scroll-target="#how-to-stop-a-shiny-app"><span class="header-section-number">2.4</span> How to Stop a Shiny App</a></li>
+  </ul></li>
+  <li><a href="#lets-build-our-first-shiny-app" id="toc-lets-build-our-first-shiny-app" class="nav-link" data-scroll-target="#lets-build-our-first-shiny-app"><span class="header-section-number">3</span> Let’s Build Our First Shiny App</a>
+  <ul class="collapse">
+  <li><a href="#lets-complete-each-section." id="toc-lets-complete-each-section." class="nav-link" data-scroll-target="#lets-complete-each-section."><span class="header-section-number">3.1</span> Let’s Complete Each Section.</a></li>
+  <li><a href="#lets-make-some-modifications." id="toc-lets-make-some-modifications." class="nav-link" data-scroll-target="#lets-make-some-modifications."><span class="header-section-number">3.2</span> Let’s Make Some Modifications.</a></li>
+  <li><a href="#lets-include-text-input" id="toc-lets-include-text-input" class="nav-link" data-scroll-target="#lets-include-text-input"><span class="header-section-number">3.3</span> Let’s Include Text Input</a></li>
+  </ul></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">4</span> Summary</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/shiny_01/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -164,7 +212,7 @@ ul.task-list li input[type="checkbox"] {
 <h1 class="title">Shiny 01: Intro to Shiny</h1>
 <p class="subtitle lead">What is Shiny? The Basic Structure of a Shiny App.</p>
   <div class="quarto-categories">
-    <div class="quarto-category">Shiny</div>
+    <div class="quarto-category">shiny</div>
     <div class="quarto-category">quarto</div>
   </div>
   </div>
@@ -193,11 +241,201 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>The source documents for your website’s pages are in the Quarto (<code>.qmd</code>) format. Today, we will learn more about options to format Quarto documents, and to include code and its output.</p>
+<p>Welcome to our <code>shiny</code> app development class! Throughout this session, we will dive into the world of Shiny and explore its incredible potential for creating interactive web applications.</p>
+<p>By the end of this session, you will have a solid understanding of what Shiny is and how it can be utilized to build dynamic apps. We will also focus on mastering the basic structure of a Shiny app, equipping you with the necessary skills to create your own customized applications.</p>
+<section id="what-is-shiny" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> What is Shiny?</h1>
+<p>Shiny is an R package (<code>shiny</code>) and web framework that allows users to build interactive web applications using R. With the Shiny package, users can easily share their models, plots, or tables with others who can then access and interact with them on the web. This allows anyone to input values and obtain estimates for outcomes without having to perform any calculations themselves.</p>
+<p>The <a href="https://shiny.posit.co">Shiny</a> package and <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html">accompanying teaching materials</a> are designed to make building web applications manageable even for those with limited programming experience. Before we get started today, check out the <a href="https://shiny.posit.co/r/gallery/">Shiny Gallery</a>! Here, you will discover numerous Shiny apps that can inspire and educate you.</p>
+</section>
+<section id="the-basic-structure-of-a-shiny-app" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The Basic Structure of a Shiny App</h1>
+<p>A Shiny app has two sections, as seen in the diagram below:</p>
+<ul>
+<li><p>the <strong><em>user interface (ui)</em></strong> section which accepts inputs from users, and displays output values to users</p></li>
+<li><p>the <strong><em>server section</em></strong>, which ingests the input, processes the data, renders output values to HTML, and sends these back to the user interface (ui).</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="img/shiny-input-flow.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">The basic structure of a Shiny App. (Higgins 2023)</figcaption>
+</figure>
+</div>
+<section id="the-user-interface-section-structure" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-user-interface-section-structure"><span class="header-section-number">2.1</span> The User Interface Section Structure</h2>
+<p>The user interface, commonly referred to as the “front end” of an application, is the visual and interactive aspect that users encounter. It is typically organized into several sections: <code>titlePanel()</code>, <code>sidebarPanel()</code>, and <code>mainPanel()</code>. In order to establish this structure, the code must be organized into sections that are constructed with functions, as demonstrated below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="img/shiny-ui-structure.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+<p>The code required to achieve this follows a similar hierarchy, as depicted in the figure below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="img/shiny-ui-hierarchy.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-server-section-structure" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-server-section-structure"><span class="header-section-number">2.2</span> The Server Section Structure</h2>
+<p>The server section of an app, also known as the “back end”, is where data processing takes place. Users don’t see this part but it handles inputs from the user and generates outputs such as model predictions or tables. These results are rendered to HTML and assigned to unique output values.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="img/shiny-server-structure.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Basic server code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-to-run-a-shiny-app" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="how-to-run-a-shiny-app"><span class="header-section-number">2.3</span> How to Run a Shiny App</h2>
+<p>The code required to run a Shiny app is always the same and quite straightforward. The <code>shinyApp()</code> function takes two arguments: the user interface (ui) and the server code (server) that are being used.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="img/shiny-run-code.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Executing and running a Shiny App (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-to-stop-a-shiny-app" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="how-to-stop-a-shiny-app"><span class="header-section-number">2.4</span> How to Stop a Shiny App</h2>
+<p>To stop your app, you have several options:</p>
+<ol type="1">
+<li>Click the stop sign icon located on the toolbar of the R Console pane.</li>
+<li>Close the Shiny app window.</li>
+<li>Click within the Console pane and then press Esc (or Ctrl-C if using the command line) to halt it.</li>
+</ol>
+</section>
+</section>
+<section id="lets-build-our-first-shiny-app" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Let’s Build Our First Shiny App</h1>
+<p>To begin, make sure you have the <code>shiny</code> package installed. If not, go ahead and install it now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'shiny'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Secondly, let’s assemble the three fundamental structures of a Shiny App.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (shiny)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ui<span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Input () functions</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Output () functions</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># *Layout () functions</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>server<span class="ot">&lt;-</span> <span class="cf">function</span>(input, output){</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># render * () functions with R expressions inside</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># reactive () expressions</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span> (<span class="at">ui=</span>ui, <span class="at">server=</span>server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="lets-complete-each-section." class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="lets-complete-each-section."><span class="header-section-number">3.1</span> Let’s Complete Each Section.</h2>
+<ol type="1">
+<li>Call <code>shiny</code> into R environment</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (shiny)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Let’s complete some of the sections:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ui <span class="ot">&lt;-</span> <span class="fu">fluidPage</span>( </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="at">title =</span> <span class="st">"This is my First Shiny App"</span>), </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>( </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(<span class="st">"This is the sidebar panel."</span>), </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(<span class="st">"This is the main panel, where output is displayed."</span>) </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>We have no input, so, we just need the basic server function.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>server <span class="ot">&lt;-</span> <span class="fu">shinyServer</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(input,output){ </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    } </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Let’s run our Shiny App!</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span> (<span class="at">ui=</span>ui, <span class="at">server=</span>server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lets-make-some-modifications." class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="lets-make-some-modifications."><span class="header-section-number">3.2</span> Let’s Make Some Modifications.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#1. Load your library, always.</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#2. Let’s fill some of the sections</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>ui<span class="ot">&lt;-</span><span class="fu">fluidPage</span>(</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="at">title =</span> <span class="st">"This is my First Shiny App"</span>), </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(<span class="at">position =</span> <span class="st">"right"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                <span class="fu">sidebarPanel</span>(<span class="fu">h3</span>(<span class="st">"This is sidebar panel."</span>), <span class="fu">h4</span>(<span class="st">"Notice the sidebar is displayed on the right."</span>), <span class="fu">h5</span>(<span class="st">"But looked better on the left side."</span>)),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                <span class="fu">mainPanel</span>(<span class="fu">h4</span>(<span class="st">"This is the main panel, where output is displayed."</span>),</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">h5</span>(<span class="st">"This is additional explanation about the output."</span>))</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co">#3. We have no input, so, we just need the basic server function</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>server<span class="ot">&lt;-</span><span class="fu">shinyServer</span>(</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>(input,output){</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co">#4. Let’s run the app</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span> (<span class="at">ui=</span>ui, <span class="at">server=</span>server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="lets-include-text-input" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="lets-include-text-input"><span class="header-section-number">3.3</span> Let’s Include Text Input</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>ui<span class="ot">&lt;-</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">titlePanel</span>(<span class="st">"Our First Shiny App"</span>), </span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sidebarLayout</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sidebarPanel</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">textInput</span>(<span class="st">"name"</span>, <span class="st">"Enter your first and last name"</span>),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">textInput</span>(<span class="st">"email"</span>, <span class="st">"Enter your email"</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">selectInput</span>(<span class="st">"country"</span>, <span class="st">"Select the country you live in"</span>, <span class="at">choices =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"Australia"</span>, <span class="st">"Germany"</span>, <span class="st">"India"</span>, <span class="st">"Paraguay"</span>, <span class="st">"UK"</span>, <span class="st">"USA"</span>))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mainPanel</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste</span>(<span class="st">"Your contact information"</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">textOutput</span>(<span class="st">"name"</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">textOutput</span>(<span class="st">"email"</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>      <span class="fu">textOutput</span>(<span class="st">"country"</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    ) </span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  )  </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>server<span class="ot">&lt;-</span> <span class="fu">shinyServer</span>(<span class="cf">function</span>(input, output){</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>name<span class="ot">&lt;-</span> <span class="fu">renderText</span>({</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(input<span class="sc">$</span>name)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>email<span class="ot">&lt;-</span><span class="fu">renderText</span>({</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(input<span class="sc">$</span>email)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>  output<span class="sc">$</span>country<span class="ot">&lt;-</span><span class="fu">renderText</span>({</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste</span>(input<span class="sc">$</span>country)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  })</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(<span class="at">ui=</span>ui, <span class="at">server =</span> server)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="summary" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Summary</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="img/shiny-ui-sections.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
+</figure>
+</div>
 
 
 </section>

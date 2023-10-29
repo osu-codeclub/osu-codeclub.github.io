@@ -19,20 +19,447 @@
 
 
 
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>The source documents for your website’s pages are in the Quarto (<code>.qmd</code>) format. Today, we will learn more about options to format Quarto documents, and to include code and its output.</p>
+<p>Welcome to our <code>shiny</code> app development class! Throughout this session, we will dive into the world of Shiny and explore its incredible potential for creating interactive web applications.</p>
+<p>By the end of this session, you will have a solid understanding of what Shiny is and how it can be utilized to build dynamic apps. We will also focus on mastering the basic structure of a Shiny app, equipping you with the necessary skills to create your own customized applications.</p>
+<section id="what-is-shiny" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> What is Shiny?</h1>
+<p>Shiny is an R package (<code>shiny</code>) and web framework that allows users to build interactive web applications using R. With the Shiny package, users can easily share their models, plots, or tables with others who can then access and interact with them on the web. This allows anyone to input values and obtain estimates for outcomes without having to perform any calculations themselves.</p>
+<p>The <a href="https://shiny.posit.co">Shiny</a> package and <a href="https://shiny.posit.co/r/getstarted/shiny-basics/lesson1/index.html">accompanying teaching materials</a> are designed to make building web applications manageable even for those with limited programming experience. Before we get started today, check out the <a href="https://shiny.posit.co/r/gallery/">Shiny Gallery</a>! Here, you will discover numerous Shiny apps that can inspire and educate you.</p>
+</section>
+<section id="the-basic-structure-of-a-shiny-app" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> The Basic Structure of a Shiny App</h1>
+<p>A Shiny app has two sections, as seen in the diagram below:</p>
+<ul>
+<li><p>the <strong><em>user interface (ui)</em></strong> section which accepts inputs from users, and displays output values to users</p></li>
+<li><p>the <strong><em>server section</em></strong>, which ingests the input, processes the data, renders output values to HTML, and sends these back to the user interface (ui).</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-input-flow.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">The basic structure of a Shiny App. (Higgins 2023)</figcaption>
+</figure>
+</div>
+<section id="the-user-interface-section-structure" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="the-user-interface-section-structure"><span class="header-section-number">2.1</span> The User Interface Section Structure</h2>
+<p>The user interface, commonly referred to as the “front end” of an application, is the visual and interactive aspect that users encounter. It is typically organized into several sections: <code>titlePanel()</code>, <code>sidebarPanel()</code>, and <code>mainPanel()</code>. In order to establish this structure, the code must be organized into sections that are constructed with functions, as demonstrated below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-ui-structure.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+<p>The code required to achieve this follows a similar hierarchy, as depicted in the figure below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-ui-hierarchy.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="the-server-section-structure" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="the-server-section-structure"><span class="header-section-number">2.2</span> The Server Section Structure</h2>
+<p>The server section of an app, also known as the “back end”, is where data processing takes place. Users don’t see this part but it handles inputs from the user and generates outputs such as model predictions or tables. These results are rendered to HTML and assigned to unique output values.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-server-structure.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Basic server code structure (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-to-run-a-shiny-app" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="how-to-run-a-shiny-app"><span class="header-section-number">2.3</span> How to Run a Shiny App</h2>
+<p>The code required to run a Shiny app is always the same and quite straightforward. The <code>shinyApp()</code> function takes two arguments: the user interface (ui) and the server code (server) that are being used.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-run-code.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Executing and running a Shiny App (Higgins 2023)</figcaption>
+</figure>
+</div>
+</section>
+<section id="how-to-stop-a-shiny-app" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="how-to-stop-a-shiny-app"><span class="header-section-number">2.4</span> How to Stop a Shiny App</h2>
+<p>To stop your app, you have several options:</p>
+<ol type="1">
+<li>Click the stop sign icon located on the toolbar of the R Console pane.</li>
+<li>Close the Shiny app window.</li>
+<li>Click within the Console pane and then press Esc (or Ctrl-C if using the command line) to halt it.</li>
+</ol>
+</section>
+</section>
+<section id="lets-build-our-first-shiny-app" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Let’s Build Our First Shiny App</h1>
+<p>To begin, make sure you have the <code>shiny</code> package installed. If not, go ahead and install it now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">'shiny'</span>)</span></code></pre></div>
+</div>
+<p>Secondly, let’s assemble the three fundamental structures of a Shiny App.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span> (shiny)</span>
+<span id="cb2-2">ui<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fluidPage</span>(</span>
+<span id="cb2-3">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># *Input () functions</span></span>
+<span id="cb2-4">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># *Output () functions</span></span>
+<span id="cb2-5">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># *Layout () functions</span></span>
+<span id="cb2-6">)</span>
+<span id="cb2-7">server<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(input, output){</span>
+<span id="cb2-8">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># render * () functions with R expressions inside</span></span>
+<span id="cb2-9">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># reactive () expressions</span></span>
+<span id="cb2-10">}</span>
+<span id="cb2-11"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyApp</span> (<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ui=</span>ui, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">server=</span>server)</span></code></pre></div>
+</div>
+<section id="lets-complete-each-section." class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="lets-complete-each-section."><span class="header-section-number">3.1</span> Let’s Complete Each Section.</h2>
+<ol type="1">
+<li>Call <code>shiny</code> into R environment</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span> (shiny)</span></code></pre></div>
+</div>
+<ol start="2" type="1">
+<li>Let’s complete some of the sections:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">ui <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fluidPage</span>( </span>
+<span id="cb4-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">titlePanel</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my First Shiny App"</span>), </span>
+<span id="cb4-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarLayout</span>( </span>
+<span id="cb4-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarPanel</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is the sidebar panel."</span>), </span>
+<span id="cb4-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mainPanel</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is the main panel, where output is displayed."</span>) </span>
+<span id="cb4-6">    ) </span>
+<span id="cb4-7">  )</span></code></pre></div>
+</div>
+<ol start="3" type="1">
+<li>We have no input, so, we just need the basic server function.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">server <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyServer</span>(</span>
+<span id="cb5-2">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(input,output){ </span>
+<span id="cb5-3">    } </span>
+<span id="cb5-4">  )</span></code></pre></div>
+</div>
+<ol start="4" type="1">
+<li>Let’s run our Shiny App!</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyApp</span> (<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ui=</span>ui, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">server=</span>server)</span></code></pre></div>
+</div>
+</section>
+<section id="lets-make-some-modifications." class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="lets-make-some-modifications."><span class="header-section-number">3.2</span> Let’s Make Some Modifications.</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#1. Load your library, always.</span></span>
+<span id="cb7-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(shiny)</span>
+<span id="cb7-3"></span>
+<span id="cb7-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#2. Let’s fill some of the sections</span></span>
+<span id="cb7-5">ui<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fluidPage</span>(</span>
+<span id="cb7-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">titlePanel</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my First Shiny App"</span>), </span>
+<span id="cb7-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarLayout</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"right"</span>,</span>
+<span id="cb7-8">                <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarPanel</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">h3</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is sidebar panel."</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">h4</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Notice the sidebar is displayed on the right."</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">h5</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"But looked better on the left side."</span>)),</span>
+<span id="cb7-9">                <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mainPanel</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">h4</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is the main panel, where output is displayed."</span>),</span>
+<span id="cb7-10">                          <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">h5</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is additional explanation about the output."</span>))</span>
+<span id="cb7-11">  )</span>
+<span id="cb7-12">)</span>
+<span id="cb7-13"></span>
+<span id="cb7-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#3. We have no input, so, we just need the basic server function</span></span>
+<span id="cb7-15">server<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyServer</span>(</span>
+<span id="cb7-16">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(input,output){</span>
+<span id="cb7-17">  }</span>
+<span id="cb7-18">)</span>
+<span id="cb7-19"></span>
+<span id="cb7-20"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#4. Let’s run the app</span></span>
+<span id="cb7-21"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyApp</span> (<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ui=</span>ui, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">server=</span>server)</span></code></pre></div>
+</div>
+</section>
+<section id="lets-include-text-input" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="lets-include-text-input"><span class="header-section-number">3.3</span> Let’s Include Text Input</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(shiny)</span>
+<span id="cb8-2"></span>
+<span id="cb8-3">ui<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">fluidPage</span>(</span>
+<span id="cb8-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">titlePanel</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Our First Shiny App"</span>), </span>
+<span id="cb8-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarLayout</span>(</span>
+<span id="cb8-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sidebarPanel</span>(</span>
+<span id="cb8-7">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textInput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"name"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Enter your first and last name"</span>),</span>
+<span id="cb8-8">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textInput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"email"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Enter your email"</span>),</span>
+<span id="cb8-9">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">selectInput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"country"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Select the country you live in"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">choices =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Australia"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Germany"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"India"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Paraguay"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"UK"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"USA"</span>))</span>
+<span id="cb8-10">    ),</span>
+<span id="cb8-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mainPanel</span>(</span>
+<span id="cb8-12">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Your contact information"</span>),</span>
+<span id="cb8-13">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textOutput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"name"</span>),</span>
+<span id="cb8-14">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textOutput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"email"</span>),</span>
+<span id="cb8-15">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">textOutput</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"country"</span>)</span>
+<span id="cb8-16">    ) </span>
+<span id="cb8-17">  )  </span>
+<span id="cb8-18">)</span>
+<span id="cb8-19"></span>
+<span id="cb8-20">server<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyServer</span>(<span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(input, output){</span>
+<span id="cb8-21">  output<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>name<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">renderText</span>({</span>
+<span id="cb8-22">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(input<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>name)</span>
+<span id="cb8-23">  })</span>
+<span id="cb8-24">  output<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>email<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">renderText</span>({</span>
+<span id="cb8-25">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(input<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>email)</span>
+<span id="cb8-26">  })</span>
+<span id="cb8-27">  output<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>country<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">renderText</span>({</span>
+<span id="cb8-28">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">paste</span>(input<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>country)</span>
+<span id="cb8-29">  })</span>
+<span id="cb8-30">})</span>
+<span id="cb8-31"></span>
+<span id="cb8-32"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">shinyApp</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ui=</span>ui, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">server =</span> server)</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="summary" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Summary</h1>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/shiny_01/img/shiny-ui-sections.png" class="img-fluid figure-img"></a></p>
+<figcaption class="figure-caption">Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
+</figure>
+</div>
 
 
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>Shiny</category>
+  <category>shiny</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/shiny_01/index.html</guid>
   <pubDate>Mon, 30 Oct 2023 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/shiny_01/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Quarto website 7: making a presentation</title>
