@@ -1,0 +1,115 @@
+---
+title: "Shiny 02: Intro to Shiny (cont.)"
+subtitle: Explore additional features in Shiny App.
+author: "Horacio Lopez-Nicora"
+date: "2023-11-06"
+categories: [shiny, quarto]
+title-block-banner: false
+image: img/shiny_logo.png
+df-print: kable
+code-fold: false
+---
+
+Welcome to our `shiny` app development class! Throughout this session, we will continue diving into the world of Shiny and explore its incredible potential for creating interactive web applications. Today we will use the function `reactiveVal`.
+
+The `reactiveVal` function is utilized to create a "reactive value" object which has special capabilities for reactive programming. It serves as a variable that allows both reading and writing of values. Whenever the value is read from a `reactiveVal` object, the calling reactive expression becomes dependent on it. Similarly, when the value is altered, any reactives that were previously dependent on it are notified.
+
+Let's make a `shiny` app and see how this works!  
+
+```{r}
+#| eval: false
+
+library(shiny)
+library(DT)
+
+# Initialize an empty data frame to store the collected data
+collected_data <- data.frame(
+  Treatment = character(0),
+  PlotNumber = numeric(0),
+  StandCount = numeric(0),
+  PlantHeight = numeric(0),
+  Severity = numeric(0)
+)
+
+# Create a variable to store the selected rows
+selected_rows <- reactiveVal()
+
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Soybean Field Data Collection"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("treatment", "Select Treatment:", c("T1", "T2", "T3")),
+      numericInput("plot", "Enter Plot Number:", value = 101, min = 101, max = 304),
+      numericInput("stand_count", "Enter Stand Count:", value = 0),
+      numericInput("plant_height", "Enter Plant Height (in cm):", value = 0),
+      numericInput("severity", "Enter Severity Rating:", value = 0),
+      actionButton("submit", "Submit Data"),
+      actionButton("delete", "Delete Selected Row"),
+      downloadButton("downloadData", "Download Data")
+    ),
+    
+    mainPanel(
+      DTOutput("dataTable")
+    )
+  )
+)
+
+# Define the server
+server <- function(input, output, session) {
+  collected_data_reactive <- reactiveVal(NULL)
+  
+  observeEvent(input$submit, {
+    new_entry <- data.frame(
+      Treatment = input$treatment,
+      PlotNumber = input$plot,
+      StandCount = input$stand_count,
+      PlantHeight = input$plant_height,
+      Severity = input$severity
+    )
+    # Append the new entry to the collected data
+    collected_data <- rbind(collected_data_reactive(), new_entry)
+    collected_data_reactive(collected_data)
+    
+    # Reset input fields
+    updateSelectInput(session, "treatment", selected = "T1")
+    updateNumericInput(session, "plot", value = 101)
+    updateNumericInput(session, "stand_count", value = 0)
+    updateNumericInput(session, "plant_height", value = 0)
+    updateNumericInput(session, "severity", value = 0)
+  })
+  
+  observeEvent(input$delete, {
+    # Get the selected row(s) and remove them from the collected data
+    selected_rows(input$dataTable_rows_selected)
+    if (length(selected_rows()) > 0) {
+      collected_data <- collected_data_reactive()
+      collected_data <- collected_data[-selected_rows(), ]
+      collected_data_reactive(collected_data)
+    }
+  })
+  
+  output$dataTable <- renderDT({
+    datatable(collected_data_reactive(), options = list(select = "multi"))
+  })
+  
+  # Download data as a CSV file
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      "collected_data.csv"
+    },
+    content = function(file) {
+      write.csv(collected_data_reactive(), file)
+    }
+  )
+}
+
+# Run the app
+shinyApp(ui, server)
+
+```
+
+
+
+
