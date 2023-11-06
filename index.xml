@@ -569,39 +569,31 @@ font-style: inherit;">"Plots"</span>, <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plotOutput</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"plot"</span>),</span>
-<span id="cb2-28">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">actionButton</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"downloadPlot"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Download as PDF"</span>)</span>
-<span id="cb2-29">        )</span>
-<span id="cb2-30">      )</span>
-<span id="cb2-31">    )</span>
-<span id="cb2-32">  )</span>
-<span id="cb2-33">)</span>
-<span id="cb2-34"></span>
-<span id="cb2-35"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">"plot"</span>))</span>
+<span id="cb2-28">      )</span>
+<span id="cb2-29">    )</span>
+<span id="cb2-30">  )</span>
+<span id="cb2-31">)</span>
+<span id="cb2-32"></span>
+<span id="cb2-33"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Define server</span></span>
-<span id="cb2-36">server <span class="ot" style="color: #003B4F;
+<span id="cb2-34">server <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(input, output) {</span>
-<span id="cb2-37">  data <span class="ot" style="color: #003B4F;
+<span id="cb2-35">  data <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">reactive</span>({</span>
-<span id="cb2-38">    inFile <span class="ot" style="color: #003B4F;
+<span id="cb2-36">    inFile <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>file</span>
-<span id="cb2-39">    <span class="cf" style="color: #003B4F;
+<span id="cb2-37">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -610,22 +602,22 @@ background-color: null;
 font-style: inherit;">return</span>(<span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NULL</span>)</span>
-<span id="cb2-40">    <span class="fu" style="color: #4758AB;
+<span id="cb2-38">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read.csv</span>(inFile<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>datapath)</span>
-<span id="cb2-41">  })</span>
-<span id="cb2-42">  </span>
-<span id="cb2-43">  <span class="co" style="color: #5E5E5E;
+<span id="cb2-39">  })</span>
+<span id="cb2-40">  </span>
+<span id="cb2-41">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Define plot_type in the global scope</span></span>
-<span id="cb2-44">  plot_type <span class="ot" style="color: #003B4F;
+<span id="cb2-42">  plot_type <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">reactive</span>({</span>
-<span id="cb2-45">    <span class="cf" style="color: #003B4F;
+<span id="cb2-43">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -634,17 +626,17 @@ background-color: null;
 font-style: inherit;">is.null</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data</span>())) {</span>
-<span id="cb2-46">      <span class="cf" style="color: #003B4F;
+<span id="cb2-44">      <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">switch</span>(input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>plotType,</span>
-<span id="cb2-47">             <span class="st" style="color: #20794D;
+<span id="cb2-45">             <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Box-violin Plot"</span> <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">=</span> {</span>
-<span id="cb2-48">               ggstatsplot<span class="sc" style="color: #5E5E5E;
+<span id="cb2-46">               ggstatsplot<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -659,8 +651,8 @@ background-color: null;
 font-style: inherit;">messages =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">FALSE</span>)</span>
-<span id="cb2-49">             },</span>
-<span id="cb2-50">             <span class="st" style="color: #20794D;
+<span id="cb2-47">             },</span>
+<span id="cb2-48">             <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Box Plot"</span> <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -679,12 +671,12 @@ background-color: null;
 font-style: inherit;">fill =</span> AEZ)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-51">               <span class="fu" style="color: #4758AB;
+<span id="cb2-49">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-52">               <span class="fu" style="color: #4758AB;
+<span id="cb2-50">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -693,7 +685,7 @@ background-color: null;
 font-style: inherit;">"Set1"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-53">               <span class="fu" style="color: #4758AB;
+<span id="cb2-51">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -704,7 +696,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisTickLabelSize),</span>
-<span id="cb2-54">                     <span class="at" style="color: #657422;
+<span id="cb2-52">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.text.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -713,7 +705,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisTickLabelSize),</span>
-<span id="cb2-55">                     <span class="at" style="color: #657422;
+<span id="cb2-53">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -722,7 +714,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisLabelSize),</span>
-<span id="cb2-56">                     <span class="at" style="color: #657422;
+<span id="cb2-54">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -731,8 +723,8 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisLabelSize))</span>
-<span id="cb2-57">             ,</span>
-<span id="cb2-58">             <span class="st" style="color: #20794D;
+<span id="cb2-55">             ,</span>
+<span id="cb2-56">             <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Violin Plot"</span> <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -751,12 +743,12 @@ background-color: null;
 font-style: inherit;">fill =</span> AEZ)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-59">               <span class="fu" style="color: #4758AB;
+<span id="cb2-57">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_violin</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-60">               <span class="fu" style="color: #4758AB;
+<span id="cb2-58">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -783,7 +775,7 @@ background-color: null;
 font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-61">               <span class="fu" style="color: #4758AB;
+<span id="cb2-59">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">stat_summary</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -802,7 +794,7 @@ background-color: null;
 font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-62">               <span class="fu" style="color: #4758AB;
+<span id="cb2-60">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -811,7 +803,7 @@ background-color: null;
 font-style: inherit;">"Set2"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb2-63">               <span class="fu" style="color: #4758AB;
+<span id="cb2-61">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -822,7 +814,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisTickLabelSize),</span>
-<span id="cb2-64">                     <span class="at" style="color: #657422;
+<span id="cb2-62">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.text.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -831,7 +823,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisTickLabelSize),</span>
-<span id="cb2-65">                     <span class="at" style="color: #657422;
+<span id="cb2-63">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.title.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -840,7 +832,7 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisLabelSize),</span>
-<span id="cb2-66">                     <span class="at" style="color: #657422;
+<span id="cb2-64">                     <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">axis.title.y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -849,18 +841,18 @@ background-color: null;
 font-style: inherit;">size =</span> input<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>axisLabelSize))</span>
-<span id="cb2-67">      )</span>
-<span id="cb2-68">    }</span>
-<span id="cb2-69">  })</span>
-<span id="cb2-70">  </span>
-<span id="cb2-71">  output<span class="sc" style="color: #5E5E5E;
+<span id="cb2-65">      )</span>
+<span id="cb2-66">    }</span>
+<span id="cb2-67">  })</span>
+<span id="cb2-68">  </span>
+<span id="cb2-69">  output<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>summaryTable <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">renderTable</span>({</span>
-<span id="cb2-72">    <span class="cf" style="color: #003B4F;
+<span id="cb2-70">    <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -871,32 +863,32 @@ background-color: null;
 font-style: inherit;">return</span>(<span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NULL</span>)</span>
-<span id="cb2-73">    summary_stats <span class="ot" style="color: #003B4F;
+<span id="cb2-71">    summary_stats <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb2-74">      <span class="fu" style="color: #4758AB;
+<span id="cb2-72">      <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">group_by</span>(AEZ) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb2-75">      <span class="fu" style="color: #4758AB;
+<span id="cb2-73">      <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarize</span>(</span>
-<span id="cb2-76">        <span class="at" style="color: #657422;
+<span id="cb2-74">        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">Mean =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(RF),</span>
-<span id="cb2-77">        <span class="at" style="color: #657422;
+<span id="cb2-75">        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">Standard_Deviation =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sd</span>(RF),</span>
-<span id="cb2-78">        <span class="at" style="color: #657422;
+<span id="cb2-76">        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">Standard_Error =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -907,91 +899,29 @@ background-color: null;
 font-style: inherit;">sqrt</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">n</span>())</span>
-<span id="cb2-79">      )</span>
-<span id="cb2-80">    <span class="fu" style="color: #4758AB;
+<span id="cb2-77">      )</span>
+<span id="cb2-78">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">as.data.frame</span>(summary_stats)</span>
-<span id="cb2-81">  })</span>
-<span id="cb2-82">  </span>
-<span id="cb2-83">  output<span class="sc" style="color: #5E5E5E;
+<span id="cb2-79">  })</span>
+<span id="cb2-80">  </span>
+<span id="cb2-81">  output<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">$</span>plot <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">renderPlot</span>({</span>
-<span id="cb2-84">    <span class="fu" style="color: #4758AB;
+<span id="cb2-82">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">plot_type</span>()</span>
-<span id="cb2-85">  })</span>
-<span id="cb2-86">  </span>
-<span id="cb2-87">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">observeEvent</span>(input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>downloadPlot, {</span>
-<span id="cb2-88">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Generate a temporary file path with the PDF extension</span></span>
-<span id="cb2-89">    tmp_file <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"plot.pdf"</span>)</span>
-<span id="cb2-90">    </span>
-<span id="cb2-91">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Save the plot using ggsave</span></span>
-<span id="cb2-92">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggsave</span>(tmp_file, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">plot_type</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>plot, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">device =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pdf"</span>)</span>
-<span id="cb2-93">    </span>
-<span id="cb2-94">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Provide a download link</span></span>
-<span id="cb2-95">    output<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>downloadLink <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">downloadHandler</span>(</span>
-<span id="cb2-96">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">filename =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>() {</span>
-<span id="cb2-97">        <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"plot.pdf"</span></span>
-<span id="cb2-98">      },</span>
-<span id="cb2-99">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">content =</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(file) {</span>
-<span id="cb2-100">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">file.copy</span>(tmp_file, file)</span>
-<span id="cb2-101">      }</span>
-<span id="cb2-102">    )</span>
-<span id="cb2-103">  })</span>
-<span id="cb2-104">}</span>
-<span id="cb2-105"></span>
-<span id="cb2-106"><span class="co" style="color: #5E5E5E;
+<span id="cb2-83">  })</span>
+<span id="cb2-84">}</span>
+<span id="cb2-85"></span>
+<span id="cb2-86"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Run the application</span></span>
-<span id="cb2-107"><span class="fu" style="color: #4758AB;
+<span id="cb2-87"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 </div>
