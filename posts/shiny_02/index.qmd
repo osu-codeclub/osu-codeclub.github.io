@@ -148,9 +148,7 @@ ui <- fluidPage(
     mainPanel(
       tabsetPanel(
         tabPanel("Summary Statistics", tableOutput("summaryTable")),
-        tabPanel("Plots", plotOutput("plot"),
-                 actionButton("downloadPlot", "Download as PDF")
-        )
+        tabPanel("Plots", plotOutput("plot"))
       )
     )
   )
@@ -206,24 +204,6 @@ server <- function(input, output) {
   
   output$plot <- renderPlot({
     plot_type()
-  })
-  
-  observeEvent(input$downloadPlot, {
-    # Generate a temporary file path with the PDF extension
-    tmp_file <- paste0("plot.pdf")
-    
-    # Save the plot using ggsave
-    ggsave(tmp_file, plot_type()$plot, device = "pdf")
-    
-    # Provide a download link
-    output$downloadLink <- downloadHandler(
-      filename = function() {
-        "plot.pdf"
-      },
-      content = function(file) {
-        file.copy(tmp_file, file)
-      }
-    )
   })
 }
 
