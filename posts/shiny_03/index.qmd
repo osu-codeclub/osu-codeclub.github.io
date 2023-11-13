@@ -39,7 +39,7 @@ First [download the following files](https://github.com/osu-codeclub/osu-codeclu
 ```{r}
 #| eval: false
 #import libraries used in the APP
-setwd("C:/Users/Sandip/Desktop/Shiny/Class_Map")  ### Please make sure to use your own working directory
+#setwd("...map_data/")  ### Please make sure to use your own working directory
 library(shiny)
 library(sf)
 library(leaflet)
@@ -49,7 +49,7 @@ library(htmlwidgets)
 library(htmltools)
 library(ggplot2)
 library(bslib)
-us <- st_read("OH_IN_PA.shp") 
+us <- st_read("data/map_data/OH_IN_PA.shp") 
 us <- us %>% filter(STATE_A=='OH'| STATE_A=='IN'| STATE_A =='PA')  ### Ohio, Indiana, Pennsylvania
 us <- st_transform(us, crs=4326)
 class(us)
