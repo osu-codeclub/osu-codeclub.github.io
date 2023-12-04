@@ -17,11 +17,58 @@ format:
       - shinylive-sw.js
 filters: 
   - shinylive
-
 ---
-Welcome to our `shiny` app development class! We are now ready to deploy our `shiny` app to our website!
 
-There are many options to deploy a `shiny` app. We will leverage on our knowledge of using `quarto` website to do so.
+Welcome to our `shiny` app development class! We are now fully prepared to deploy our `shiny` app to our website.
+
+There are several options available for deploying a `shiny` app, and we will utilize our knowledge of using the `quarto` website to accomplish this task.
+
+# Deploying Shiny App using Quarto with R Shinylive
+
+We are going to use the following tutorial: *Using r-shinylive for Serverless Shiny Apps in Quarto Documents*
+
+-   [Creating a Serverless R Shiny App using Quarto with R Shinylive](https://www.youtube.com/watch?v=6y2FnAugP8E)
+-   Links:
+    -   [Github Repo](https://github.com/coatless-quarto/r-shinylive-demo)
+    -   [R-shinylive app in Quarto!](https://quarto.thecoatlessprofessor.com/r-shinylive-demo/)
+
+## Step 1
+
+To begin, you'll need to install the `r-shinylive` R package. This package is currently hosted on GitHub and can be easily obtained from the R console by executing the following command:
+
+```{r}
+#| eval: false
+# Install the 'pak' package manager if you haven't already
+install.packages("pak")
+# Install 'r-shinylive' using 'pak'
+pak::pak("posit-dev/r-shinylive")
+```
+
+## Step 2
+
+To install the Quarto extension for `shinylive`, follow these steps:
+
+1. Open the Terminal tab.
+2. Run the following command:
+
+```{r}
+#| eval: false
+# quarto add quarto-ext/shinylive
+```
+
+## Step 3
+
+To include a Shiny app directly in your `Quarto` file (.qmd), you need to add a filter key for `shinylive` at the top of the desired `Quarto` file. Open your `Quarto` file and insert the following YAML header:
+
+```{r}
+#| eval: false
+filters:
+  - shinylive
+```
+
+## Step 4
+
+Here is an example of a 'shiny' app deployed on our website!
 
 ```{shinylive-r}
 #| standalone: true
@@ -89,3 +136,15 @@ shinyApp(ui = ui, server = server)
 
 ```
 
+## Step 5
+
+If you have encountered issues with the `quarto publish` function, you can easily resolve them by adding the following steps:
+
+```{r}
+#| eval: false
+
+format:
+  html:
+    resources: 
+      - shinylive-sw.js
+```
