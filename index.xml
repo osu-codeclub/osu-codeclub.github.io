@@ -83,7 +83,96 @@ font-style: inherit;">-</span> shinylive</span></code></pre></div>
 </section>
 <section id="step-4" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="step-4"><span class="header-section-number">1.4</span> Step 4</h2>
-<p>Here is an example of a ‘shiny’ app deployed on our website!</p>
+<p>You can include the code for a Shiny application in a code block indicated by {shinylive-r}. Here is an example of how your code block could appear:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb4-2">title<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Our first r-shinylive Quarto document!"</span></span>
+<span id="cb4-3">filters<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb4-4">  <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> shinylive</span>
+<span id="cb4-5"><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb4-6"></span>
+<span id="cb4-7"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">```</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">{shinylive-r}</span></span>
+<span id="cb4-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">#| standalone: true</span></span>
+<span id="cb4-9"></span>
+<span id="cb4-10"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">#library(shiny)</span></span>
+<span id="cb4-11"></span>
+<span id="cb4-12"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"># Define your Shiny UI here</span></span>
+<span id="cb4-13"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">#ui &lt;- fluidPage(</span></span>
+<span id="cb4-14"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  # Your UI components go here</span></span>
+<span id="cb4-15"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">)</span></span>
+<span id="cb4-16"></span>
+<span id="cb4-17"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"># Define your Shiny server logic here</span></span>
+<span id="cb4-18"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">#server &lt;- function(input, output, session) {</span></span>
+<span id="cb4-19"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  # Your server code goes here</span></span>
+<span id="cb4-20"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">}</span></span>
+<span id="cb4-21"></span>
+<span id="cb4-22"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"># Create and launch the Shiny app</span></span>
+<span id="cb4-23"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">#shinyApp(ui, server)</span></span></code></pre></div>
+</div>
+</section>
+<section id="step-5" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="step-5"><span class="header-section-number">1.5</span> Step 5</h2>
+<p>If you have encountered issues with the <code>quarto publish</code> function, you can easily resolve them by adding the following steps:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">format<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb5-2">  html<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb5-3">    resources<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span> </span>
+<span id="cb5-4">      <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> shinylive<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>sw.js</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="here-is-an-example-of-a-shiny-app-deployed-on-our-website" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Here is an example of a ‘shiny’ app deployed on our website!</h1>
 <pre class="shinylive-r" data-engine="r"><code>#| standalone: true
 #| viewerHeight: 600
 
@@ -147,29 +236,8 @@ server &lt;- function(input, output) {
 # Create Shiny app ----
 shinyApp(ui = ui, server = server)
 </code></pre>
-</section>
-<section id="step-5" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="step-5"><span class="header-section-number">1.5</span> Step 5</h2>
-<p>If you have encountered issues with the <code>quarto publish</code> function, you can easily resolve them by adding the following steps:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">format<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb5-2">  html<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb5-3">    resources<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span> </span>
-<span id="cb5-4">      <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> shinylive<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span>sw.js</span></code></pre></div>
-</div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>

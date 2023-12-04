@@ -199,6 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#step-4" id="toc-step-4" class="nav-link" data-scroll-target="#step-4"><span class="header-section-number">1.4</span> Step 4</a></li>
   <li><a href="#step-5" id="toc-step-5" class="nav-link" data-scroll-target="#step-5"><span class="header-section-number">1.5</span> Step 5</a></li>
   </ul></li>
+  <li><a href="#here-is-an-example-of-a-shiny-app-deployed-on-our-website" id="toc-here-is-an-example-of-a-shiny-app-deployed-on-our-website" class="nav-link" data-scroll-target="#here-is-an-example-of-a-shiny-app-deployed-on-our-website"><span class="header-section-number">2</span> Here is an example of a ‘shiny’ app deployed on our website!</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/shiny_04/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -283,7 +284,46 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="step-4" class="level2" data-number="1.4">
 <h2 data-number="1.4" class="anchored" data-anchor-id="step-4"><span class="header-section-number">1.4</span> Step 4</h2>
-<p>Here is an example of a ‘shiny’ app deployed on our website!</p>
+<p>You can include the code for a Shiny application in a code block indicated by {shinylive-r}. Here is an example of how your code block could appear:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="sc">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>title<span class="sc">:</span> <span class="st">"Our first r-shinylive Quarto document!"</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>filters<span class="sc">:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">-</span> shinylive</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="sc">---</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">{shinylive-r}</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="at">#| standalone: true</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">#library(shiny)</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="at"># Define your Shiny UI here</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="at">#ui &lt;- fluidPage(</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="at">  # Your UI components go here</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="at">)</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="at"># Define your Shiny server logic here</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="at">#server &lt;- function(input, output, session) {</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="at">  # Your server code goes here</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="at">}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="at"># Create and launch the Shiny app</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="at">#shinyApp(ui, server)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-5" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="step-5"><span class="header-section-number">1.5</span> Step 5</h2>
+<p>If you have encountered issues with the <code>quarto publish</code> function, you can easily resolve them by adding the following steps:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>format<span class="sc">:</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  html<span class="sc">:</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    resources<span class="sc">:</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="sc">-</span> shinylive<span class="sc">-</span>sw.js</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="here-is-an-example-of-a-shiny-app-deployed-on-our-website" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Here is an example of a ‘shiny’ app deployed on our website!</h1>
 <pre class="shinylive-r" data-engine="r"><code>#| standalone: true
 #| viewerHeight: 600
 
@@ -347,19 +387,8 @@ server &lt;- function(input, output) {
 # Create Shiny app ----
 shinyApp(ui = ui, server = server)
 </code></pre>
-</section>
-<section id="step-5" class="level2" data-number="1.5">
-<h2 data-number="1.5" class="anchored" data-anchor-id="step-5"><span class="header-section-number">1.5</span> Step 5</h2>
-<p>If you have encountered issues with the <code>quarto publish</code> function, you can easily resolve them by adding the following steps:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>format<span class="sc">:</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  html<span class="sc">:</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    resources<span class="sc">:</span> </span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="sc">-</span> shinylive<span class="sc">-</span>sw.js</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 
 
-</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
