@@ -68,7 +68,50 @@ filters:
 
 ## Step 4
 
-Here is an example of a 'shiny' app deployed on our website!
+You can include the code for a Shiny application in a code block indicated by {shinylive-r}. Here is an example of how your code block could appear:
+
+```{r, eval=FALSE}
+
+---
+title: "Our first r-shinylive Quarto document!"
+filters:
+  - shinylive
+---
+
+```{shinylive-r}
+#| standalone: true
+
+#library(shiny)
+
+# Define your Shiny UI here
+#ui <- fluidPage(
+  # Your UI components go here
+)
+
+# Define your Shiny server logic here
+#server <- function(input, output, session) {
+  # Your server code goes here
+}
+
+# Create and launch the Shiny app
+#shinyApp(ui, server)
+
+```
+
+## Step 5
+
+If you have encountered issues with the `quarto publish` function, you can easily resolve them by adding the following steps:
+
+```{r}
+#| eval: false
+
+format:
+  html:
+    resources: 
+      - shinylive-sw.js
+```
+
+# Here is an example of a 'shiny' app deployed on our website!
 
 ```{shinylive-r}
 #| standalone: true
@@ -136,15 +179,3 @@ shinyApp(ui = ui, server = server)
 
 ```
 
-## Step 5
-
-If you have encountered issues with the `quarto publish` function, you can easily resolve them by adding the following steps:
-
-```{r}
-#| eval: false
-
-format:
-  html:
-    resources: 
-      - shinylive-sw.js
-```
