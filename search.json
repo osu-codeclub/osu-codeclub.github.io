@@ -221,7 +221,42 @@
     "href": "posts/shiny_04/index.html",
     "title": "Shiny 04: Deploying Shiny App",
     "section": "",
-    "text": "Welcome to our shiny app development class! We are now ready to deploy our shiny app to our website!\nThere are many options to deploy a shiny app. We will leverage on our knowledge of using quarto website to do so.\n#| standalone: true\n#| viewerHeight: 600\n\nlibrary(shiny)\n\n# Define UI for app that draws a histogram ----\nui &lt;- fluidPage(\n\n  # App title ----\n  titlePanel(\"Hello Shiny!\"),\n\n  # Sidebar layout with input and output definitions ----\n  sidebarLayout(\n\n    # Sidebar panel for inputs ----\n    sidebarPanel(\n\n      # Input: Slider for the number of bins ----\n      sliderInput(inputId = \"bins\",\n                  label = \"Number of bins:\",\n                  min = 1,\n                  max = 50,\n                  value = 30)\n\n    ),\n\n    # Main panel for displaying outputs ----\n    mainPanel(\n\n      # Output: Histogram ----\n      plotOutput(outputId = \"distPlot\")\n\n    )\n  )\n)\n\n# Define server logic required to draw a histogram ----\nserver &lt;- function(input, output) {\n\n  # Histogram of the Old Faithful Geyser Data ----\n  # with requested number of bins\n  # This expression that generates a histogram is wrapped in a call\n  # to renderPlot to indicate that:\n  #\n  # 1. It is \"reactive\" and therefore should be automatically\n  #    re-executed when inputs (input$bins) change\n  # 2. Its output type is a plot\n  output$distPlot &lt;- renderPlot({\n\n    x    &lt;- faithful$waiting\n    bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)\n\n    hist(x, breaks = bins, col = \"#75AADB\", border = \"white\",\n         xlab = \"Waiting time to next eruption (in mins)\",\n         main = \"Histogram of waiting times\")\n\n    })\n\n}\n\n# Create Shiny app ----\nshinyApp(ui = ui, server = server)\n\n\n\n\n Back to top"
+    "text": "Welcome to our shiny app development class! We are now fully prepared to deploy our shiny app to our website.\nThere are several options available for deploying a shiny app, and we will utilize our knowledge of using the quarto website to accomplish this task."
+  },
+  {
+    "objectID": "posts/shiny_04/index.html#step-1",
+    "href": "posts/shiny_04/index.html#step-1",
+    "title": "Shiny 04: Deploying Shiny App",
+    "section": "1.1 Step 1",
+    "text": "1.1 Step 1\nTo begin, you’ll need to install the r-shinylive R package. This package is currently hosted on GitHub and can be easily obtained from the R console by executing the following command:\n\n# Install the 'pak' package manager if you haven't already\ninstall.packages(\"pak\")\n# Install 'r-shinylive' using 'pak'\npak::pak(\"posit-dev/r-shinylive\")"
+  },
+  {
+    "objectID": "posts/shiny_04/index.html#step-2",
+    "href": "posts/shiny_04/index.html#step-2",
+    "title": "Shiny 04: Deploying Shiny App",
+    "section": "1.2 Step 2",
+    "text": "1.2 Step 2\nTo install the Quarto extension for shinylive, follow these steps:\n\nOpen the Terminal tab.\nRun the following command:\n\n\n# quarto add quarto-ext/shinylive"
+  },
+  {
+    "objectID": "posts/shiny_04/index.html#step-3",
+    "href": "posts/shiny_04/index.html#step-3",
+    "title": "Shiny 04: Deploying Shiny App",
+    "section": "1.3 Step 3",
+    "text": "1.3 Step 3\nTo include a Shiny app directly in your Quarto file (.qmd), you need to add a filter key for shinylive at the top of the desired Quarto file. Open your Quarto file and insert the following YAML header:\n\nfilters:\n  - shinylive"
+  },
+  {
+    "objectID": "posts/shiny_04/index.html#step-4",
+    "href": "posts/shiny_04/index.html#step-4",
+    "title": "Shiny 04: Deploying Shiny App",
+    "section": "1.4 Step 4",
+    "text": "1.4 Step 4\nHere is an example of a ‘shiny’ app deployed on our website!\n#| standalone: true\n#| viewerHeight: 600\n\nlibrary(shiny)\n\n# Define UI for app that draws a histogram ----\nui &lt;- fluidPage(\n\n  # App title ----\n  titlePanel(\"Hello Shiny!\"),\n\n  # Sidebar layout with input and output definitions ----\n  sidebarLayout(\n\n    # Sidebar panel for inputs ----\n    sidebarPanel(\n\n      # Input: Slider for the number of bins ----\n      sliderInput(inputId = \"bins\",\n                  label = \"Number of bins:\",\n                  min = 1,\n                  max = 50,\n                  value = 30)\n\n    ),\n\n    # Main panel for displaying outputs ----\n    mainPanel(\n\n      # Output: Histogram ----\n      plotOutput(outputId = \"distPlot\")\n\n    )\n  )\n)\n\n# Define server logic required to draw a histogram ----\nserver &lt;- function(input, output) {\n\n  # Histogram of the Old Faithful Geyser Data ----\n  # with requested number of bins\n  # This expression that generates a histogram is wrapped in a call\n  # to renderPlot to indicate that:\n  #\n  # 1. It is \"reactive\" and therefore should be automatically\n  #    re-executed when inputs (input$bins) change\n  # 2. Its output type is a plot\n  output$distPlot &lt;- renderPlot({\n\n    x    &lt;- faithful$waiting\n    bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)\n\n    hist(x, breaks = bins, col = \"#75AADB\", border = \"white\",\n         xlab = \"Waiting time to next eruption (in mins)\",\n         main = \"Histogram of waiting times\")\n\n    })\n\n}\n\n# Create Shiny app ----\nshinyApp(ui = ui, server = server)"
+  },
+  {
+    "objectID": "posts/shiny_04/index.html#step-5",
+    "href": "posts/shiny_04/index.html#step-5",
+    "title": "Shiny 04: Deploying Shiny App",
+    "section": "1.5 Step 5",
+    "text": "1.5 Step 5\nIf you have encountered issues with the quarto publish function, you can easily resolve them by adding the following steps:\n\nformat:\n  html:\n    resources: \n      - shinylive-sw.js"
   },
   {
     "objectID": "posts/website_01_initiation/index.html#introduction",
