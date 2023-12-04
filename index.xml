@@ -10,7 +10,90 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 13 Nov 2023 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 04 Dec 2023 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Shiny 04: Deploying Shiny App</title>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/shiny_04/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<p>Welcome to our <code>shiny</code> app development class! We are now ready to deploy our <code>shiny</code> app to our website!</p>
+<p>There are many options to deploy a <code>shiny</code> app. We will leverage on our knowledge of using <code>quarto</code> website to do so.</p>
+<pre class="shinylive-r" data-engine="r"><code>#| standalone: true
+#| viewerHeight: 600
+
+library(shiny)
+
+# Define UI for app that draws a histogram ----
+ui &lt;- fluidPage(
+
+  # App title ----
+  titlePanel("Hello Shiny!"),
+
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Slider for the number of bins ----
+      sliderInput(inputId = "bins",
+                  label = "Number of bins:",
+                  min = 1,
+                  max = 50,
+                  value = 30)
+
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Histogram ----
+      plotOutput(outputId = "distPlot")
+
+    )
+  )
+)
+
+# Define server logic required to draw a histogram ----
+server &lt;- function(input, output) {
+
+  # Histogram of the Old Faithful Geyser Data ----
+  # with requested number of bins
+  # This expression that generates a histogram is wrapped in a call
+  # to renderPlot to indicate that:
+  #
+  # 1. It is "reactive" and therefore should be automatically
+  #    re-executed when inputs (input$bins) change
+  # 2. Its output type is a plot
+  output$distPlot &lt;- renderPlot({
+
+    x    &lt;- faithful$waiting
+    bins &lt;- seq(min(x), max(x), length.out = input$bins + 1)
+
+    hist(x, breaks = bins, col = "#75AADB", border = "white",
+         xlab = "Waiting time to next eruption (in mins)",
+         main = "Histogram of waiting times")
+
+    })
+
+}
+
+# Create Shiny app ----
+shinyApp(ui = ui, server = server)
+</code></pre>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>shiny</category>
+  <category>quarto</category>
+  <guid>https://osu-codeclub.github.io/posts/shiny_04/index.html</guid>
+  <pubDate>Mon, 04 Dec 2023 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/shiny_04/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
 <item>
   <title>Shiny 03: Map viz. in Shiny</title>
   <dc:creator>Sandip Mondal and Horacio Lopez-Nicora</dc:creator>
