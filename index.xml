@@ -9,8 +9,391 @@
 <link>https://osu-codeclub.github.io/index.html</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Sun, 03 Dec 2023 23:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Fri, 12 Jan 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>R Basics - 01 Getting Started</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/basics_01/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>We are going to begin this semester’s Code Club right from the beginning in working in R. This session does not assume any prior knowledge of R or other programming languages.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/r-line-graph.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+</section>
+<section id="why-use-r" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="why-use-r"><span class="header-section-number">2</span> Why use R?</h2>
+<p>Since you’re here, I can assume you don’t need to be convinced that learning R is useful. R is a programming language that is used widely by data and other scientists. Most people get into R to conduct statistics, though its a top way to make <a href="https://www.rdataviz.com/">data visualizations</a> and do lots of other things. Since R is open source, there are endlessly available free resource to learn how to do practically whatever you want on the internet.</p>
+</section>
+<section id="installing-r-and-rstudio" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="installing-r-and-rstudio"><span class="header-section-number">3</span> Installing R and RStudio</h2>
+<p>But first, what is the difference between R and RStudio? R is a programming language while RStudio has a graphical user interface (GUI) that allows you to more easily use R. You can run R just using the R console (i.e., standalone R) but it is really easier and you will find additional functionality if you use RStudio. We need to download both R and RStudio.</p>
+<section id="downloadinginstalling-r" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="downloadinginstalling-r"><span class="header-section-number">3.1</span> Downloading/installing R</h3>
+<p>We will download R first. At the time of me writing this (January 2024) the most updated version of R is <code>R-4.3.2</code>.</p>
+<ul>
+<li>You can download R for Windows, Mac, or UNIX. https://www.r-project.org/</li>
+<li>Pick your preferred <a href="https://cran.r-project.org/mirrors.html">CRAN mirror</a>, I like to use the one from <a href="https://cran.case.edu/">Case Western Reserve University</a> since it’s the closest to us in Ohio I think it’s probably the fastest, though any mirror will work.</li>
+<li>Download R for Linux, Windows, or Mac, depending on what type of operating system you are running. You can use these direct links to download 4.3.2.
+<ul>
+<li><a href="https://cran.case.edu/bin/windows/base/R-4.3.2-win.exe">Windows</a></li>
+<li><a href="https://cran.case.edu/bin/macosx/big-sur-arm64/base/R-4.3.2-arm64.pkg">M1/M2 Mac</a>, requires <a href="https://www.xquartz.org/">Xquartz</a></li>
+<li><a href="https://cran.case.edu/bin/macosx/big-sur-x86_64/base/R-4.3.2-x86_64.pkg">Older Macs</a>, requires <a href="https://www.xquartz.org/">Xquartz</a></li>
+</ul></li>
+</ul>
+<p>Navigate to where you’ve downloaded your executable R file, and install it.</p>
+<p>You can also <a href="https://osu-codeclub.github.io/pages/setup.html#osc">use R and RStudio through the Ohio Supercomputing Center</a>. If you want to do this, connect with Jelmer and he can add you to our Code Club project.</p>
+<p>As of January 2024, the most recent version of R is 4.3.2. If you already have R and it is version &gt;4.2, no need to do anything.</p>
+<blockquote class="blockquote">
+<p>If you’ve already installed R and just need to update, and want to make sure you keep all your downloaded packages, follow <a href="https://www.r-bloggers.com/2017/05/upgrade-r-without-losing-your-packages/">these instructions</a>. Updating only RStudio doesn’t do anything to your packages.</p>
+</blockquote>
+</section>
+<section id="downloadinginstalling-rstudio" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="downloadinginstalling-rstudio"><span class="header-section-number">3.2</span> Downloading/installing RStudio</h3>
+<p>Once you have R, you can download RStudio. <a href="https://posit.co/download/rstudio-desktop/#download">Here</a> you can download the version of RStudio</p>
+<p>Navigate to where you’ve downloaded your executable RStudio file, and install it.</p>
+<p>Once you’ve downloaded both R and RStudio, you can open RStudio.</p>
+</section>
+</section>
+<section id="orienting-to-rstudio" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="orienting-to-rstudio"><span class="header-section-number">4</span> Orienting to RStudio</h2>
+<p>The RStudio integrated development environment (IDE) has four quadrants.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/rstudio-ide-clip.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A screenshot of the RStudio IDE</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Top left</strong>: your source editor. Here you can open, edit, and send code to be executed from files like <code>.R</code>, <code>.Rmd</code>, <code>.qmd</code> or others.</li>
+<li><strong>Bottom left</strong>: by default this is your console. If you’ve used standalone R, this is the same thing. It is here where your code will be actually executed. You can also type here directly to execute code. There are also two additional tabs, terminal and background jobs which we won’t talk about now.</li>
+<li><strong>Top right</strong>: by default this is your environment. It will show you all the objects that are active in your R environment. Here, you can also see history, connections, build a website, use git, or open tutorials but we won’t talk about those now.</li>
+<li><strong>Bottom right</strong>: by default this shows the files in your working directory (more about that next). There are also additional tabs which show plots, packages, help, viewers, presentations but we won’t talk about those now.</li>
+</ul>
+<p>There is an RStudio cheatsheet for the IDE which is very useful, and you can find it <a href="https://rstudio.github.io/cheatsheets/html/rstudio-ide.html">here</a>.</p>
+</section>
+<section id="working-directories" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="working-directories"><span class="header-section-number">5</span> Working directories</h2>
+<section id="what-is-a-directory-and-a-working-directory" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="what-is-a-directory-and-a-working-directory"><span class="header-section-number">5.1</span> What is a directory and a working directory?</h3>
+<p>The concept of a directories and your working directory is an important one when coding. The directory of your computer is a system of files with a defined structure. Each file has a specific directory, or path. Directories are hierarchical, and slightly different on different operating systems (e.g., Mac, Windows, Linux). If you open up your Finder (Mac) or File Explorer (Windows), you can navigate around the different locations on your computer.</p>
+<p>Your working directory is just as it sounds - it’s the location/path on your computer where you are currently working. This is important as your files will be by default read in, stored, and saved to this location. This means you need to know where this is.</p>
+</section>
+<section id="absolute-vs.-relative-paths" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="absolute-vs.-relative-paths"><span class="header-section-number">5.2</span> Absolute vs.&nbsp;relative paths</h3>
+</section>
+<section id="find-your-working-directory" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="find-your-working-directory"><span class="header-section-number">5.3</span> Find your working directory</h3>
+<p>We can figure out where our working directory is by typing into the console the function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">getwd</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "/Users/jessicacooperstone/Library/CloudStorage/OneDrive-TheOhioStateUniversity/BuckeyeBox Data/JLC_Files/OSU/research/code club/osu-codeclub.github.io/posts/basics_01"</code></pre>
+</div>
+</div>
+<p>You can see that the output path is <strong>MY</strong> working directory - yours will be different as the set up of your computer organization structure is different from mine. I am also using a Mac so you can see my path as forward slashes <code>/</code> while Windows machines will have backslashes<code>\</code>.</p>
+<p>You can also use the RStudio GUI to navigate to your working directory by going to the Files quadrant (bottom right), click the gear, and select <code>Go To Working Directory</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/getwd-gui.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Go to your working directory by clicking</figcaption>
+</figure>
+</div>
+</section>
+<section id="set-your-working-directory" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="set-your-working-directory"><span class="header-section-number">5.4</span> Set your working directory</h3>
+<p>If your working directory is not where you want to store your files for code club, you can change it. We can do that using the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/getwd"><code>setwd()</code></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">setwd</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</span></code></pre></div>
+</div>
+<p>Alternatively, you can set your working directory by navigating in the Files (bottom right) quadrant to the location you want your working directory to be, then clicking the gear, and clicking <code>Set As Working Directory</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/setwd-gui.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Set your working directory by clicking</figcaption>
+</figure>
+</div>
+</section>
+<section id="avoid-all-working-directory-nonsense-with-a-.rproj" class="level3" data-number="5.5">
+<h3 data-number="5.5" class="anchored" data-anchor-id="avoid-all-working-directory-nonsense-with-a-.rproj"><span class="header-section-number">5.5</span> Avoid all working directory nonsense with a <code>.RProj</code></h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/rproj.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+<p>Using an Rproject (<code>.RProj</code>) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc.</p>
+<p>We will make a new Rproject for all your code club files. You can create a project by navigating to <code>File</code> &gt; <code>New Project</code>. You can put your file in a <code>New Directory</code> (i.e., make a new folder where your code club files will live), or you can indicate an <code>Existing Directory</code> (i.e., the folder you already have where your code club files are located). I’m going to assume you don’t have already a code club folder, so we will pick: <code>New Directory</code> &gt; <code>New Project</code>. You can navigate to where you want the directory to be on your computer (best to put it somewhere static and not in your downloads or on your desktop), and give it a meaningful name, like <code>code-club</code>.</p>
+</section>
+</section>
+<section id="practice" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="practice"><span class="header-section-number">6</span> Practice</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Check where the working directory is for your computer">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Check where the working directory is for your computer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Type the code below into your console (bottom left quadrant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">getwd</span>()</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Try changing the working directory to your desktop">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Try changing the working directory to your desktop
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>It’s important you know the path for your desktop. You can open your Finder or File Explorer, right click on Desktop and find the path.</p>
+<ul>
+<li>Mac: Right click on Desktop in your Finder, click Get Info, and in General, copy the path listed next to Where. On my Mac, my Desktop path is <code>"/Users/jessicacooperstone/Desktop"</code>.</li>
+<li>Windows: Right click on Desktop in your File Explorer, click Properties, and in Location you will see your path. On one of our lab computers, my Desktop path is <code>"C:Users\cooperstone.1\Desktop"</code>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">setwd</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"path-to-your-desktop"</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Create yourself a new Rproject in a static location where your code club files will reside.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Create yourself a new Rproject in a static location where your code club files will reside.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Use the instructions <a href="">here</a> to create a Rproject.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="using-r-like-a-calculator" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="using-r-like-a-calculator"><span class="header-section-number">7</span> Using R like a calculator</h2>
+<p>Now that we are a bit oriented to RStudio, we can begin actually using it. We aren’t going to be using any scripts today, simply working in the console (bottom left quadrant).</p>
+<p>In the bottom left part of the console you should see a greater than sign (<code>&gt;</code>). This is where you will start typing. If you don’t see this <code>&gt;</code> it means your console is not ready to receive commands. You can press <kbd>Esc</kbd> once or a couple times to get back to your <code>&gt;</code>.</p>
+<p>Let’s start by typing the following code into your console:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>When we ask R to calculate this sum we get the answer, 7. Note that this number is simply printed into our console. You’ll also note that there is also a [1] next to the answer of 7 since R is telling us that 7 is the first value in our vector. More about this another time.</p>
+<p>What if now, instead of asking R to calculate what <code>2 + 5</code> is and print the result we want to save this output as a variable stored within R? We can do that by assigning it to a variable. Here, I am going to assign the output to <code>x</code> and do this using the assignment operator <code>&lt;-</code> which looks like an arrow pointing to the left.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span></code></pre></div>
+</div>
+<p>You will see when you do this in your console, you no longer see the answer 7. You only see the code you typed in, and your <code>&gt;</code> indicating R is ready for more.</p>
+<p>This is because we have asked R to store this output as the variable <code>x</code> and we have not asked R to show us what <code>x</code> is. We can do that by simply typing:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">x</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 7</code></pre>
+</div>
+</div>
+<p>Now we see the answer 7.</p>
+<p>We can also now see that the variable <code>x</code> is stored in our Environment (top right quadrant). This is where all of the objects that are active in your environment will live.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/environment-x.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">A screenshot of our Environment tab (top right quadrant) now that we have assigned the sum of 2 and 5 to x</figcaption>
+</figure>
+</div>
+<p>If we ask R for something that is not in our environment, like <code>y</code> we will get an error.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">y</span></code></pre></div>
+</div>
+<p><img src="https://osu-codeclub.github.io/posts/basics_01/img/y.png" class="img-fluid"></p>
+<p>But, now that we have <code>x</code> in our environment, we can use it to create new objects. If we wanted to create a new object <code>y</code> that was the result of <code>x * 3</code>, we could simply do:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">y <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span></span></code></pre></div>
+</div>
+<p>And if we want to see the answer, we type <code>y</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">y</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 21</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Remember that R uses classic mathematical order of operations, so do mind your parentheses.</p>
+</blockquote>
+</section>
+<section id="practice-1" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">8</span> Practice</h2>
+<div class="callout callout-style-default callout-tip callout-titled" title="Create a new variable z which has the result of 10 divided by 5. Print your answer.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Create a new variable z which has the result of 10 divided by 5. Print your answer.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Type the code below into your console (bottom left quadrant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">z <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span>
+<span id="cb15-2"></span>
+<span id="cb15-3">z</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Multiple the sum of 3 and 4 by the subtraction of 4 from 10. Don't save it to a variable, just print it to your console.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Multiple the sum of 3 and 4 by the subtraction of 4 from 10. Don’t save it to a variable, just print it to your console.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Type the code below into your console (bottom left quadrant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 42</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Try setting the sum of 1 and 2 to x. What does this do to the value of x stored in your environment?.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Try setting the sum of 1 and 2 to x. What does this do to the value of x stored in your environment?.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Type the code below into your console (bottom left quadrant).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb19-2"></span>
+<span id="cb19-3">x</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+</div>
+<p>Be careful about writing over variables!</p>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>r-basics</category>
+  <guid>https://osu-codeclub.github.io/posts/basics_01/index.html</guid>
+  <pubDate>Fri, 12 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/basics_01/img/rstudio-ide-clip.png" medium="image" type="image/png" height="100" width="144"/>
+</item>
 <item>
   <title>Shiny 04: Deploying Shiny App</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
@@ -244,7 +627,7 @@ shinyApp(ui = ui, server = server)
   <category>shiny</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/shiny_04/index.html</guid>
-  <pubDate>Sun, 03 Dec 2023 23:00:00 GMT</pubDate>
+  <pubDate>Mon, 04 Dec 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/shiny_04/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
@@ -1342,7 +1725,7 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
   <category>shiny</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/shiny_03/index.html</guid>
-  <pubDate>Sun, 12 Nov 2023 23:00:00 GMT</pubDate>
+  <pubDate>Mon, 13 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/shiny_03/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
@@ -2267,7 +2650,7 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
   <category>shiny</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/shiny_02/index.html</guid>
-  <pubDate>Sun, 05 Nov 2023 23:00:00 GMT</pubDate>
+  <pubDate>Mon, 06 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/shiny_02/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
@@ -2718,7 +3101,7 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
   <category>shiny</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/shiny_01/index.html</guid>
-  <pubDate>Sun, 29 Oct 2023 23:00:00 GMT</pubDate>
+  <pubDate>Mon, 30 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/shiny_01/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
@@ -3080,7 +3463,7 @@ Let’s all try playing around with creating slides and modifying them. Is there
   <category>website</category>
   <category>quarto presentations</category>
   <guid>https://osu-codeclub.github.io/posts/website_07_presentation/index.html</guid>
-  <pubDate>Sun, 15 Oct 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 16 Oct 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Quarto website 6: Quarto features</title>
@@ -3618,7 +4001,7 @@ M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“
   <category>website</category>
   <category>quarto</category>
   <guid>https://osu-codeclub.github.io/posts/website_06/index.html</guid>
-  <pubDate>Sun, 08 Oct 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 09 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_06/img/crossref.png" medium="image" type="image/png" height="42" width="144"/>
 </item>
 <item>
@@ -4190,7 +4573,7 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
   <category>website</category>
   <category>git</category>
   <guid>https://osu-codeclub.github.io/posts/website_05/index.html</guid>
-  <pubDate>Sun, 01 Oct 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 02 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_05/img/quarto-cartoon.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
@@ -4616,7 +4999,7 @@ font-style: inherit;">]</span></span></code></pre></div>
 </section></div> ]]></description>
   <category>website</category>
   <guid>https://osu-codeclub.github.io/posts/website_04/index.html</guid>
-  <pubDate>Sun, 24 Sep 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 25 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_04/img/github_overview.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
@@ -4809,7 +5192,7 @@ font-style: inherit;">---</span></span></code></pre></div>
   <category>website</category>
   <category>git</category>
   <guid>https://osu-codeclub.github.io/posts/website_03_deploy-github/index.html</guid>
-  <pubDate>Sun, 17 Sep 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 18 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_03_deploy-github/img/github-cartoon.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
@@ -5476,7 +5859,7 @@ Check out the Code Club site source code
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <guid>https://osu-codeclub.github.io/posts/website_02/index.html</guid>
-  <pubDate>Sun, 10 Sep 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 11 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_02/img/lux_theme.png" medium="image" type="image/png" height="30" width="144"/>
 </item>
 <item>
@@ -5631,7 +6014,7 @@ The blue box should highlight the installer for your operating system.
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <guid>https://osu-codeclub.github.io/posts/website_01_initiation/index.html</guid>
-  <pubDate>Sun, 27 Aug 2023 22:00:00 GMT</pubDate>
+  <pubDate>Mon, 28 Aug 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/website_01_initiation/img/create-quarto-website.png" medium="image" type="image/png" height="104" width="144"/>
 </item>
 <item>
@@ -5657,7 +6040,7 @@ The blue box should highlight the installer for your operating system.
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>news</category>
   <guid>https://osu-codeclub.github.io/posts/welcome/index.html</guid>
-  <pubDate>Thu, 17 Aug 2023 22:00:00 GMT</pubDate>
+  <pubDate>Fri, 18 Aug 2023 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>
