@@ -5,7 +5,7 @@ author:
 date: "2024-01-12"
 categories: [r-basics]
 title-block-banner: false
-image: img/rstudio-ide-clip.png
+image: img/rstudio-ide-simplified.png
 ---
 
 ```{r knitr_options, echo=FALSE}
@@ -28,7 +28,7 @@ Since you're here, I can assume you don't need to be convinced that learning R i
 
 ## Installing R and RStudio
 
-But first, what is the difference between R and RStudio? R is a programming language while RStudio has a graphical user interface (GUI) that allows you to more easily use R. You can run R just using the R console (i.e., standalone R) but it is really easier and you will find additional functionality if you use RStudio. We need to download both R and RStudio.
+But first, what is the difference between R and RStudio? R is a programming language while RStudio has a graphical user interface (GUI) that allows you to more easily use R. RStudio is an Integrated Development Environment (IDE), meaning its a separate program that has an interface designed for running R. You can run R just using the R console (i.e., standalone R) but it is really easier and you will find additional functionality if you use RStudio. We need to download both R and RStudio.
 
 ### Downloading/installing R
 
@@ -61,7 +61,7 @@ Once you've downloaded both R and RStudio, you can open RStudio.
 
 The RStudio integrated development environment (IDE) has four quadrants.
 
-![A screenshot of the RStudio IDE](img/rstudio-ide-clip.png)
+![A screenshot of the RStudio IDE](img/rstudio-ide-simplified.png)
 
 -   **Top left**: your source editor. Here you can open, edit, and send code to be executed from files like `.R`, `.Rmd`, `.qmd` or others.
 -   **Bottom left**: by default this is your console. If you've used standalone R, this is the same thing. It is here where your code will be actually executed. You can also type here directly to execute code. There are also two additional tabs, terminal and background jobs which we won't talk about now.
@@ -74,11 +74,9 @@ There is an RStudio cheatsheet for the IDE which is very useful, and you can fin
 
 ### What is a directory and a working directory?
 
-The concept of a directories and your working directory is an important one when coding. The directory of your computer is a system of files with a defined structure. Each file has a specific directory, or path. Directories are hierarchical, and slightly different on different operating systems (e.g., Mac, Windows, Linux). If you open up your Finder (Mac) or File Explorer (Windows), you can navigate around the different locations on your computer.
+The concept of a directories and your working directory is an important one when coding. You can think of a directory as a synonym for a folder. Each file is contained within a directory, these folders have physical locations on your computer, or a defined path. Directories are hierarchical, and slightly different on different operating systems (e.g., Mac, Windows, Linux). If you open up your Finder (Mac) or File Explorer (Windows), you can navigate around the different locations on your computer.
 
 Your working directory is just as it sounds - it's the location/path on your computer where you are currently working. This is important as your files will be by default read in, stored, and saved to this location. This means you need to know where this is.
-
-### Absolute vs. relative paths
 
 ### Find your working directory
 
@@ -110,9 +108,11 @@ Alternatively, you can set your working directory by navigating in the Files (bo
 
 ![Artwork by [\@allison_horst](https://twitter.com/allison_horst)](img/rproj.png)
 
-Using an Rproject (`.RProj`) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc.
+Using an Rproject (`.RProj`) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc. What it does is set the location of the working directory to be the same place as where your Rproject is located. 
 
 We will make a new Rproject for all your code club files. You can create a project by navigating to `File` \> `New Project`. You can put your file in a `New Directory` (i.e., make a new folder where your code club files will live), or you can indicate an `Existing Directory` (i.e., the folder you already have where your code club files are located). I'm going to assume you don't have already a code club folder, so we will pick: `New Directory` \> `New Project`. You can navigate to where you want the directory to be on your computer (best to put it somewhere static and not in your downloads or on your desktop), and give it a meaningful name, like `code-club`.
+
+Now, as long as I have the code-club Rproject open in RStudio, R knows to set the working directory to be the location you picked. This means if you want to load data, you should put it in that same folder, and when you write out results, they will also be by default in that same place.
 
 ## Practice
 
