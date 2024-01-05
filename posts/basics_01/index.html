@@ -205,10 +205,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#working-directories" id="toc-working-directories" class="nav-link" data-scroll-target="#working-directories"><span class="header-section-number">5</span> Working directories</a>
   <ul class="collapse">
   <li><a href="#what-is-a-directory-and-a-working-directory" id="toc-what-is-a-directory-and-a-working-directory" class="nav-link" data-scroll-target="#what-is-a-directory-and-a-working-directory"><span class="header-section-number">5.1</span> What is a directory and a working directory?</a></li>
-  <li><a href="#absolute-vs.-relative-paths" id="toc-absolute-vs.-relative-paths" class="nav-link" data-scroll-target="#absolute-vs.-relative-paths"><span class="header-section-number">5.2</span> Absolute vs.&nbsp;relative paths</a></li>
-  <li><a href="#find-your-working-directory" id="toc-find-your-working-directory" class="nav-link" data-scroll-target="#find-your-working-directory"><span class="header-section-number">5.3</span> Find your working directory</a></li>
-  <li><a href="#set-your-working-directory" id="toc-set-your-working-directory" class="nav-link" data-scroll-target="#set-your-working-directory"><span class="header-section-number">5.4</span> Set your working directory</a></li>
-  <li><a href="#avoid-all-working-directory-nonsense-with-a-.rproj" id="toc-avoid-all-working-directory-nonsense-with-a-.rproj" class="nav-link" data-scroll-target="#avoid-all-working-directory-nonsense-with-a-.rproj"><span class="header-section-number">5.5</span> Avoid all working directory nonsense with a <code>.RProj</code></a></li>
+  <li><a href="#find-your-working-directory" id="toc-find-your-working-directory" class="nav-link" data-scroll-target="#find-your-working-directory"><span class="header-section-number">5.2</span> Find your working directory</a></li>
+  <li><a href="#set-your-working-directory" id="toc-set-your-working-directory" class="nav-link" data-scroll-target="#set-your-working-directory"><span class="header-section-number">5.3</span> Set your working directory</a></li>
+  <li><a href="#avoid-all-working-directory-nonsense-with-a-.rproj" id="toc-avoid-all-working-directory-nonsense-with-a-.rproj" class="nav-link" data-scroll-target="#avoid-all-working-directory-nonsense-with-a-.rproj"><span class="header-section-number">5.4</span> Avoid all working directory nonsense with a <code>.RProj</code></a></li>
   </ul></li>
   <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice"><span class="header-section-number">6</span> Practice</a></li>
   <li><a href="#using-r-like-a-calculator" id="toc-using-r-like-a-calculator" class="nav-link" data-scroll-target="#using-r-like-a-calculator"><span class="header-section-number">7</span> Using R like a calculator</a></li>
@@ -269,7 +268,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="installing-r-and-rstudio" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="installing-r-and-rstudio"><span class="header-section-number">3</span> Installing R and RStudio</h2>
-<p>But first, what is the difference between R and RStudio? R is a programming language while RStudio has a graphical user interface (GUI) that allows you to more easily use R. You can run R just using the R console (i.e., standalone R) but it is really easier and you will find additional functionality if you use RStudio. We need to download both R and RStudio.</p>
+<p>But first, what is the difference between R and RStudio? R is a programming language while RStudio has a graphical user interface (GUI) that allows you to more easily use R. RStudio is an Integrated Development Environment (IDE), meaning its a separate program that has an interface designed for running R. You can run R just using the R console (i.e., standalone R) but it is really easier and you will find additional functionality if you use RStudio. We need to download both R and RStudio.</p>
 <section id="downloadinginstalling-r" class="level3" data-number="3.1">
 <h3 data-number="3.1" class="anchored" data-anchor-id="downloadinginstalling-r"><span class="header-section-number">3.1</span> Downloading/installing R</h3>
 <p>We will download R first. At the time of me writing this (January 2024) the most updated version of R is <code>R-4.3.2</code>.</p>
@@ -302,7 +301,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The RStudio integrated development environment (IDE) has four quadrants.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/rstudio-ide-clip.png" class="img-fluid figure-img"></p>
+<p><img src="img/rstudio-ide-simplified.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">A screenshot of the RStudio IDE</figcaption>
 </figure>
 </div>
@@ -318,14 +317,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="5" class="anchored" data-anchor-id="working-directories"><span class="header-section-number">5</span> Working directories</h2>
 <section id="what-is-a-directory-and-a-working-directory" class="level3" data-number="5.1">
 <h3 data-number="5.1" class="anchored" data-anchor-id="what-is-a-directory-and-a-working-directory"><span class="header-section-number">5.1</span> What is a directory and a working directory?</h3>
-<p>The concept of a directories and your working directory is an important one when coding. The directory of your computer is a system of files with a defined structure. Each file has a specific directory, or path. Directories are hierarchical, and slightly different on different operating systems (e.g., Mac, Windows, Linux). If you open up your Finder (Mac) or File Explorer (Windows), you can navigate around the different locations on your computer.</p>
+<p>The concept of a directories and your working directory is an important one when coding. You can think of a directory as a synonym for a folder. Each file is contained within a directory, these folders have physical locations on your computer, or a defined path. Directories are hierarchical, and slightly different on different operating systems (e.g., Mac, Windows, Linux). If you open up your Finder (Mac) or File Explorer (Windows), you can navigate around the different locations on your computer.</p>
 <p>Your working directory is just as it sounds - it’s the location/path on your computer where you are currently working. This is important as your files will be by default read in, stored, and saved to this location. This means you need to know where this is.</p>
 </section>
-<section id="absolute-vs.-relative-paths" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="absolute-vs.-relative-paths"><span class="header-section-number">5.2</span> Absolute vs.&nbsp;relative paths</h3>
-</section>
-<section id="find-your-working-directory" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="find-your-working-directory"><span class="header-section-number">5.3</span> Find your working directory</h3>
+<section id="find-your-working-directory" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="find-your-working-directory"><span class="header-section-number">5.2</span> Find your working directory</h3>
 <p>We can figure out where our working directory is by typing into the console the function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -342,8 +338,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </section>
-<section id="set-your-working-directory" class="level3" data-number="5.4">
-<h3 data-number="5.4" class="anchored" data-anchor-id="set-your-working-directory"><span class="header-section-number">5.4</span> Set your working directory</h3>
+<section id="set-your-working-directory" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="set-your-working-directory"><span class="header-section-number">5.3</span> Set your working directory</h3>
 <p>If your working directory is not where you want to store your files for code club, you can change it. We can do that using the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/getwd"><code>setwd()</code></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">"/this/should/be/your/working-directory/path"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -356,16 +352,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </figure>
 </div>
 </section>
-<section id="avoid-all-working-directory-nonsense-with-a-.rproj" class="level3" data-number="5.5">
-<h3 data-number="5.5" class="anchored" data-anchor-id="avoid-all-working-directory-nonsense-with-a-.rproj"><span class="header-section-number">5.5</span> Avoid all working directory nonsense with a <code>.RProj</code></h3>
+<section id="avoid-all-working-directory-nonsense-with-a-.rproj" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="avoid-all-working-directory-nonsense-with-a-.rproj"><span class="header-section-number">5.4</span> Avoid all working directory nonsense with a <code>.RProj</code></h3>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/rproj.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
-<p>Using an Rproject (<code>.RProj</code>) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc.</p>
+<p>Using an Rproject (<code>.RProj</code>) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc. What it does is set the location of the working directory to be the same place as where your Rproject is located.</p>
 <p>We will make a new Rproject for all your code club files. You can create a project by navigating to <code>File</code> &gt; <code>New Project</code>. You can put your file in a <code>New Directory</code> (i.e., make a new folder where your code club files will live), or you can indicate an <code>Existing Directory</code> (i.e., the folder you already have where your code club files are located). I’m going to assume you don’t have already a code club folder, so we will pick: <code>New Directory</code> &gt; <code>New Project</code>. You can navigate to where you want the directory to be on your computer (best to put it somewhere static and not in your downloads or on your desktop), and give it a meaningful name, like <code>code-club</code>.</p>
+<p>Now, as long as I have the code-club Rproject open in RStudio, R knows to set the working directory to be the location you picked. This means if you want to load data, you should put it in that same folder, and when you write out results, they will also be by default in that same place.</p>
 </section>
 </section>
 <section id="practice" class="level2" data-number="6">
