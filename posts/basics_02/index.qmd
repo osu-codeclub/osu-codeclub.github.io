@@ -5,6 +5,7 @@ date: "2024-01-19"
 categories: [r-basics]
 title-block-banner: false
 number-depth: 3
+image: img/r_environment.png
 ---
 
 ------------------------------------------------------------------------
@@ -19,7 +20,7 @@ Last week, we installed R and RStudio, learned about the distinction between the
 
 #### Learning objectives for today
 
--   A little more basic interaction with R: **missing prompts** and **character strings**
+-   A little more basic interaction with R: **missing prompts** and **data types**
 
 -   Writing code in **R scripts** instead of the console, and **commenting** your code
 
@@ -65,15 +66,15 @@ You should notice that your prompt turned into a **`+`**.
 
 **R is waiting for you to finish the command, since you typed an incomplete command**: something has to follow the division sign `/`.
 
-While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so. Most commonly, you'll have done things like forgetting a closing parenthesis `)` or accidentally using an (extra) opening parenthesis `(`.
-
 </details>
 
-To get out of this situation, one option is to try and finish the command (by typing another number) — but here, let's practice another option: **aborting** **the command by pressing** <kbd>**Esc**</kbd>.
+To get out of this situation, one option is to try and finish the command (in this case, by typing another number) — but here, let's practice another option: **aborting** **the command by pressing** <kbd>**Esc**</kbd>.
+
+While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so (typical cases include forgetting a closing parenthesis `)`). Aborting and fixing the command in full is often the way to go, especially if you're writing code in a script (as we'll do below).
 
 <br>
 
-### Letting R print things back to us, and numbers versus characters
+### R data types
 
 If we just type a **number** and press <kbd>Enter</kbd>...
 
@@ -83,15 +84,24 @@ If we just type a **number** and press <kbd>Enter</kbd>...
 
 ... then R will simply **print the number back to us**.
 
-It turns out that this is the default, implicit action R will perform on anything you type: under the hood, it is calling a *function* called `print()` (we'll talk about functions in one of the next few sessions).
+Under the hood, R is calling a *function* called `print()`[^1], and we saw an example of this last week, too — typing the name of an object will print it's value:
 
-What if we want R to print back to us some **text**, which in programming lingo is called a "**character string**"?
+[^1]: We'll talk about functions soon, likely next week.
+
+```{r}
+x <- 5
+x
+```
+
+Rather than a number, what if we want R to print back to us some **text**, which in programming lingo is called a "**character string**"?
 
 ```{r eval=TRUE, results='show', error=TRUE}
 Fantastic
 ```
 
-<details><summary><b>What seems to be going wrong?</b> (Click for the answer)</summary>
+<details>
+
+<summary><b>What seems to be going wrong?</b> (Click for the answer)</summary>
 
 Whenever you type a character string, **R expects to find an *object* with that name** (we saw our first object `x` last week, and will talk more about them today).
 
@@ -107,13 +117,117 @@ We *can* get R to print character strings back to us, and use them in other ways
 "Code Club"
 ```
 
-So, R treats numbers and character strings differently: **unlike numbers, character strings need to be quoted.** This avoids confusion with objects and allows for special characters like spaces.
+So, R treats numbers and character strings differently: **unlike numbers, character strings need to be quoted.** This avoids confusion with objects because unquoted character strings are assumed to be objects, and also allows for special characters like spaces.
+
+A little more on R's main "data types":
 
 -   Numbers are by default of the data type **`numeric`** (and can also be `integer` - whole numbers only)
 
 -   Character strings are by default of the data type **`character`** (and can also be `factor` - categorical data)
 
--   (The final main data type is `logical`, which can be either `TRUE` or `FALSE`.)
+-   The final main data type is `logical`, which can be either `TRUE` or `FALSE`.
+
+<br>
+
+<br>
+
+## Exercises 1
+
+**A)** Which of the following do you think would work:
+
+```{r}
+session_topic <- "introduction"
+```
+
+```{r, eval=FALSE}
+session_topic <- introduction
+```
+
+Try both to see which works and what error you get for the other one.
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+The first of the two options was the correct one. In general, keep in mind that **unquoted character strings represent objects** whereas quoted character strings are "literals".
+
+Here, we wanted to assign the literal string `"introduction"` to the object `session_topic` — so the former should be quoted and the latter not.
+
+An error is produced when you run the second option, because the object `introduction` does not exist:
+
+```{r, results='show', error=TRUE}
+session_topic <- introduction
+```
+
+</details>
+
+**B)** Having run the code above, which of the following would make R print `"introduction"`?
+
+```{r, eval=FALSE}
+"session_topic"
+```
+
+```{r, eval=FALSE}
+session_topic
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+The second option is the correct one: here, we want to have R print the value of the **object `session_topic`**, so we shouldn't use quotes.
+
+```{r}
+session_topic
+```
+
+</details>
+
+**C)** Do you think the following code would successfully add `5` and `7`? If not, what might happen instead?
+
+```{r, eval=FALSE}
+"5" + "7"
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+In the code above, the "numbers" are saved not as numbers (in R lingo: as a `numeric`) but as character strings (`character`).
+
+R can't add character strings, so it will return an error:
+
+```{r eval=TRUE, results='show', error=TRUE}
+"5" + "7"
+```
+
+(Perhaps you expected it to combine/"concatenate" the two strings in some way — this is in fact what Python would do.)
+
+</details>
+
+**D) (Bonus)** Execute the following code and check its output:
+
+```{r}
+TRUE + FALSE
+```
+
+Had you expected this result? If not, can you make sense of it (the fact that it works and the specific results; and the lack of quotes in the code)? Based on that, what would the following return:
+
+```{r, eval=FALSE}
+TRUE + TRUE
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+-   Logicals (`TRUE` and `FALSE`) can be used as numbers, in which case `TRUE` is equivalent to 1, and `FALSE` is equivalent to 0.
+
+-   Therefore, `TRUE + FALSE` will return `1`, and `TRUE + TRUE` will therefore return `2`.
+
+-   Logicals (`TRUE` and `FALSE`) are made up of letters but are **not** character strings, so they shouldn't be quoted.
+
+</details>
 
 <br>
 
@@ -185,13 +299,15 @@ The code will be *copied to the R console and executed* (so you should see the r
 203 / 2.54
 ```
 
-Alternatively, you could click the `Run` button in the bar right above your script to execute a line of code, but we recommend using the keyboard shortcut.
-
 ::: callout-tip
-## Execution behavior
+## More on sending code to the console
 
-Note that it *doesn't matter where on the line your cursor is*: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> and the `Run` button will always **execute the entire line** unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)
+Note that it *doesn't matter where on the line your cursor is*: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> will always **execute the entire line** unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)
+
+To execute a line of code, an alternative to the keyboard shortcut is to **click the `Run` button** in the bar right above your script, but we recommend using the keyboard shortcut — it is much faster, at least once you get used to it.
 :::
+
+For the rest of this Code Club session, try to write your code in your script, and send it to the console using the keyboard shortcut.
 
 <br>
 
@@ -201,7 +317,7 @@ You can use **`#` signs** to comment your code — see the example below:
 
 -   Anything to the right of a `#` is ignored by R, meaning it won't be executed
 
--   You can use `#` both at the start of a line or anywhere in a line following code
+-   You can use `#` both **at the start of a line** (entire line is a comment) or anywhere in a line **following code** (rest of the line is a comment)
 
 -   In your R script, comments are formatted differently so you can clearly distinguish them from code
 
@@ -210,9 +326,7 @@ You can use **`#` signs** to comment your code — see the example below:
 203 / 2.54    # Original measurement was in cm
 ```
 
-Comments are a great way to describe what your code does within the code itself, so **use lots of comments in your R scripts**!
-
-Comments are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.
+**Use lots of comments in your R scripts**! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.
 
 <br>
 
@@ -220,9 +334,13 @@ Comments are useful not only for others that you may share your code with, but a
 
 ### Assigning stuff to R objects
 
-As we briefly saw last week, we can assign a value to an object with the **assignment operator `<-`** (a smaller-than sign `<` followed by a dash `-`)[^1] — for example:
+As we've seen a couple of times now, we can assign a value to an object with the **assignment operator `<-`**[^2] — a few more examples:
 
-[^1]: In RStudio, typing <kbd>Alt</kbd> + <kbd>-</kbd> will write `<-` in a single keystroke. Note that you can also use `=` as an assignment operator (the common symbol in other programming languages!), but that symbol can have other meanings, so we recommend sticking with the `<-` combination.
+[^2]: This is smaller-than sign `<` followed by a dash `-`.
+
+    Typing <kbd>Alt</kbd> + <kbd>-</kbd> will write `<-` in a single keystroke.
+
+    Note that you can also use `=` as an assignment operator (the common symbol in other programming languages!), but that symbol can have other meanings, so we recommend sticking with the `<-` combination.
 
 ```{r assign, eval=TRUE}
 wingspan_cm <- 203
@@ -246,17 +364,17 @@ wingspan_inch <- wingspan_cm / conversion
 wingspan_inch
 ```
 
-When you execute code with objects, then under the hood, R substitutes the object name that you provide by its contents. In other words, *the object is just a reference to the underlying value(s)*.
+This illustrates that when you execute code with objects, R substitutes the object name that you provide by its contents under the hood. In other words, *the object is just a reference to the underlying value(s)*.
 
 "Object" is a general term that encompasses R items of any size or complexity:
 
--   Objects can also contain character strings, or **collections** of numbers or character strings (including in table or matrix format), and functions.
+-   Objects can also contain character strings, collections of numbers or character strings (including in table or matrix format), and functions.
 
 -   The above does not mean that "anything goes" — R distinguishes between a limited number of "**data structures**", each with their own defined structure. We'll learn about the most important ones next week.
 
--   Technically, the objects we created so far are **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^2].
+-   The objects we created so far are called **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^3].
 
-[^2]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
+[^3]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
 
 ::: callout-tip
 ## How the Environment tab shows your objects
@@ -274,21 +392,21 @@ Objects can be given almost any name such as `x`, `current_temperature`, or `sub
 
 -   Because R is **case sensitive**, `wingspan_inch` is different from `Wingspan_inch`!
 
--   An object name **cannot contain spaces** — so for readability, you can *separate words* using:
+-   An object name **cannot contain spaces** — so for readability, you should *separate words* using:
 
     -   **Underscores:** `wingspan_inch` (this is called "snake case", which we often use in Code Club)
     -   **Periods**: `wingspan.inch`
     -   **Capitalization:** `wingspanInch` or `WingspanInch` ("camel case")
 
--   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^3]
+-   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^4]
 
--   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^4].)
+-   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^5].)
 
 -   Make object names descriptive yet not too long — this is not always easy!
 
-[^3]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
+[^4]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
 
-[^4]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list).
+[^5]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list).
 
     In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
 
@@ -298,9 +416,9 @@ Objects can be given almost any name such as `x`, `current_temperature`, or `sub
 
 Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:
 
-> *"Save workspace image to \~/.RData?"*.
+![](img/rdata-popup.png){fig-align="center" width="55%"}
 
-When you do so, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don't do this.
+When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don't do this.
 
 <details>
 
@@ -332,21 +450,37 @@ To do so, you don't need to close and reopen RStudio itself: under `Session` in 
 
 <br>
 
-## Exercises
+## Exercises 2
 
-### Exercise 1
-
-What do you think the value of `y` will be after executing the following lines in R?
-
--   `100`
--   `160`
+**A)** Why do the following bits of code fail?
 
 ```{r, eval=FALSE}
-x <- 50       # x is now 50
-y <- x * 2    # y is now 100
-x <- 80       # x is now 80, but what is y?
+session number <- 2
+```
 
-y
+```{r, eval=FALSE}
+Expert_Level <- 3
+Expert_level
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+The first fails because an object name cannot contain a space.
+
+The second fails because of a difference in capitalization (`Level` vs `level)`: recall that R is case sensitive.
+
+</details>
+
+**B)** What do you think the value of `distance_miles` will be after executing the following lines in R: `31` or `62`?
+
+```{r, eval=FALSE}
+distance_km <- 50
+distance_miles <- distance_km * 0.62    # distance_miles is now 31 
+distance_km <- 100
+
+distance_miles                          # What is the value of distance_miles now?
 ```
 
 Come up with an expectation, then run the code above and see if you were right. What does this tell you about "linkage" between objects in R?
@@ -357,79 +491,17 @@ Come up with an expectation, then run the code above and see if you were right. 
 
 Objects don't get "linked" to each other at all in R.
 
-In other words, `y` was really assigned **the outcome** of `x * 2`, which is `100`, rather than its "formula".
+In other words, `distance_miles` was really assigned **the outcome** of `distance_km * 2`, which is `31`, rather than its "formula".
 
-Therefore, `y` wasn't (and couldn't be!) "updated" after we changed the value of `x`, and continued to be `100`.
-
-</details>
-
-<br>
-
-### Exercise 2
-
-Given what you learned about printing unquoted character strings (e.g., running the "command" `Fantastic` will return an error), which of the following do you think would work:
+Therefore, `distance_miles` wasn't (and couldn't be!) "updated" after we changed the value of `distance_km`, and continued to be `31`:
 
 ```{r}
-session_topic <- "introduction"
+distance_km <- 50
+distance_miles <- distance_km * 0.62    # distance_miles is now 31.07 
+distance_km <- 100
+
+distance_miles                          # What is the value of distance_miles now?
 ```
-
-```{r, eval=FALSE}
-session_topic <- introduction
-```
-
-Try both to see which works and what error you get for the other one.
-
-<details>
-
-<summary><b>Solution</b> (click here)</summary>
-
-The first of the two options was the correct one. In general, keep in mind that **unquoted character strings represent objects** whereas quoted character strings are "literals".
-
-Here, we wanted to assign the literal string `"introduction"` to the object `session_topic` — so the former should be quoted and the latter not.
-
-An error is produced when you run the second option, because the object `introduction` does not exist.
-
-</details>
-
-<br>
-
-Having run the code above, which of the following would have R print `introduction`?
-
-```{r, eval=FALSE}
-"session_topic"
-```
-
-```{r, eval=FALSE}
-session_topic
-```
-
-<details>
-
-<summary><b>Solution</b> (click here)</summary>
-
-The second option is the correct one: here, we want to have R print the value of the **object `session_topic`**, so we shouldn't use quotes.
-
-</details>
-
-<br>
-
-Finally, do you think the following code would successfully add `5` and `7`? If not, what might happen instead?
-
-```{r, eval=FALSE}
-x <- "5"
-y <- "7"
-x + y
-```
-
-<details>
-
-<summary><b>Solution</b> (click here)</summary>
-
-In the code above, the "numbers" are saved not as numbers (in R lingo: as a `numeric`) but as character strings.
-
-R can't add character strings, so it will return an error. (Perhaps you expected it to combine/"concatenate" the two strings in some way — this is in fact what Python would do.)
-
-By the way, in case you were wondering: the code above is completely equivalent to simply running `"5" + "7"`.
 
 </details>
 
