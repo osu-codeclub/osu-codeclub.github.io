@@ -30,7 +30,7 @@
 <section id="learning-objectives-for-today" class="level4">
 <h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
 <ul>
-<li><p>A little more basic interaction with R: <strong>missing prompts</strong> and <strong>character strings</strong></p></li>
+<li><p>A little more basic interaction with R: <strong>missing prompts</strong> and <strong>data types</strong></p></li>
 <li><p>Writing code in <strong>R scripts</strong> instead of the console, and <strong>commenting</strong> your code</p></li>
 <li><p>Using and naming <strong>R objects</strong>, and (not) saving your <strong>environment</strong></p></li>
 </ul>
@@ -79,13 +79,13 @@ font-style: inherit;">/</span></span></code></pre></div>
 <b>What is going on here?</b> (Click for the answer)
 </summary>
 <p><strong>R is waiting for you to finish the command, since you typed an incomplete command</strong>: something has to follow the division sign <code>/</code>.</p>
-<p>While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so. Most commonly, you’ll have done things like forgetting a closing parenthesis <code>)</code> or accidentally using an (extra) opening parenthesis <code>(</code>.</p>
 </details>
-<p>To get out of this situation, one option is to try and finish the command (by typing another number) — but here, let’s practice another option: <strong>aborting</strong> <strong>the command by pressing</strong> <kbd><strong>Esc</strong></kbd>.</p>
+<p>To get out of this situation, one option is to try and finish the command (in this case, by typing another number) — but here, let’s practice another option: <strong>aborting</strong> <strong>the command by pressing</strong> <kbd><strong>Esc</strong></kbd>.</p>
+<p>While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so (typical cases include forgetting a closing parenthesis <code>)</code>). Aborting and fixing the command in full is often the way to go, especially if you’re writing code in a script (as we’ll do below).</p>
 <p><br></p>
 </section>
-<section id="letting-r-print-things-back-to-us-and-numbers-versus-characters" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="letting-r-print-things-back-to-us-and-numbers-versus-characters"><span class="header-section-number">2.2</span> Letting R print things back to us, and numbers versus characters</h3>
+<section id="r-data-types" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="r-data-types"><span class="header-section-number">2.2</span> R data types</h3>
 <p>If we just type a <strong>number</strong> and press <kbd>Enter</kbd>…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="dv" style="color: #AD0000;
@@ -96,10 +96,21 @@ font-style: inherit;">203</span></span></code></pre></div>
 </div>
 </div>
 <p>… then R will simply <strong>print the number back to us</strong>.</p>
-<p>It turns out that this is the default, implicit action R will perform on anything you type: under the hood, it is calling a <em>function</em> called <code>print()</code> (we’ll talk about functions in one of the next few sessions).</p>
-<p>What if we want R to print back to us some <strong>text</strong>, which in programming lingo is called a “<strong>character string</strong>”?</p>
+<p>Under the hood, R is calling a <em>function</em> called <code>print()</code><sup>1</sup>, and we saw an example of this last week, too — typing the name of an object will print it’s value:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">Fantastic</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span></span>
+<span id="cb4-2">x</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>Rather than a number, what if we want R to print back to us some <strong>text</strong>, which in programming lingo is called a “<strong>character string</strong>”?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">Fantastic</span></code></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in eval(expr, envir, enclos): object 'Fantastic' not found</code></pre>
 </div>
@@ -113,32 +124,152 @@ font-style: inherit;">203</span></span></code></pre></div>
 </details>
 <p>We <em>can</em> get R to print character strings back to us, and use them in other ways, as long as they are quoted:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="st" style="color: #20794D;
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Fantastic"</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Fantastic"</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="st" style="color: #20794D;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Code Club"</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] "Code Club"</code></pre>
 </div>
 </div>
-<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This avoids confusion with objects and allows for special characters like spaces.</p>
+<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This avoids confusion with objects because unquoted character strings are assumed to be objects, and also allows for special characters like spaces.</p>
+<p>A little more on R’s main “data types”:</p>
 <ul>
-<li><p>Numbers are of the data type <strong><code>numeric</code></strong> (which can be subdivided into <code>integer</code> and <code>double</code>)</p></li>
-<li><p>Character strings are of the data type <strong><code>character</code></strong></p></li>
-<li><p>There are a couple more data types, which we’ll go over soon.</p></li>
+<li><p>Numbers are by default of the data type <strong><code>numeric</code></strong> (and can also be <code>integer</code> - whole numbers only)</p></li>
+<li><p>Character strings are by default of the data type <strong><code>character</code></strong> (and can also be <code>factor</code> - categorical data)</p></li>
+<li><p>The final main data type is <code>logical</code>, which can be either <code>TRUE</code> or <code>FALSE</code>.</p></li>
 </ul>
+<p><br></p>
 <p><br></p>
 </section>
 </section>
-<section id="r-scripts" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="r-scripts"><span class="header-section-number">3</span> R scripts</h2>
-<section id="the-editor-pane" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="the-editor-pane"><span class="header-section-number">3.1</span> The editor pane</h3>
+<section id="exercises-1" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="exercises-1"><span class="header-section-number">3</span> Exercises 1</h2>
+<p><strong>A)</strong> Which of the following do you think would work:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">session_topic <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"introduction"</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">session_topic <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> introduction</span></code></pre></div>
+</div>
+<p>Try both to see which works and what error you get for the other one.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The first of the two options was the correct one. In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas quoted character strings are “literals”.</p>
+<p>Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
+<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">session_topic <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> introduction</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'introduction' not found</code></pre>
+</div>
+</div>
+</details>
+<p><strong>B)</strong> Having run the code above, which of the following would make R print <code>"introduction"</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"session_topic"</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">session_topic</span></code></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong>, so we shouldn’t use quotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">session_topic</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "introduction"</code></pre>
+</div>
+</div>
+</details>
+<p><strong>C)</strong> Do you think the following code would successfully add <code>5</code> and <code>7</code>? If not, what might happen instead?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"5"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"7"</span></span></code></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>In the code above, the “numbers” are saved not as numbers (in R lingo: as a <code>numeric</code>) but as character strings (<code>character</code>).</p>
+<p>R can’t add character strings, so it will return an error:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"5"</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"7"</span></span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in "5" + "7": non-numeric argument to binary operator</code></pre>
+</div>
+</div>
+<p>(Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do.)</p>
+</details>
+<p><strong>D) (Bonus)</strong> Execute the following code and check its output:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1</code></pre>
+</div>
+</div>
+<p>Had you expected this result? If not, can you make sense of it (the fact that it works and the specific results; and the lack of quotes in the code)? Based on that, what would the following return:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span></span></code></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<ul>
+<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) can be used as numbers, in which case <code>TRUE</code> is equivalent to 1, and <code>FALSE</code> is equivalent to 0.</p></li>
+<li><p>Therefore, <code>TRUE + FALSE</code> will return <code>1</code>, and <code>TRUE + TRUE</code> will therefore return <code>2</code>.</p></li>
+<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) are made up of letters but are <strong>not</strong> character strings, so they shouldn’t be quoted.</p></li>
+</ul>
+</details>
+<p><br></p>
+</section>
+<section id="r-scripts" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="r-scripts"><span class="header-section-number">4</span> R scripts</h2>
+<section id="the-editor-pane" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-editor-pane"><span class="header-section-number">4.1</span> The editor pane</h3>
 <p>Jess showed us the four quadrants of RStudio last week:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -151,8 +282,8 @@ font-style: inherit;">"Code Club"</span></span></code></pre></div>
 </blockquote>
 <p><br></p>
 </section>
-<section id="why-use-a-script" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="why-use-a-script"><span class="header-section-number">3.2</span> Why use a script?</h3>
+<section id="why-use-a-script" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="why-use-a-script"><span class="header-section-number">4.2</span> Why use a script?</h3>
 <p>An R script is a text file that contains R code.</p>
 <p>So far, we have been typing commands directly into the R console. But it’s a good idea to write and save most of our code in scripts.</p>
 <p>This helps us <strong>keep track of what we’ve been doing</strong>, especially in the longer run, and to <strong>re-run our code</strong> after modifying input data or one of the lines of code.</p>
@@ -172,8 +303,8 @@ Interactive scripts
 </div>
 <p><br></p>
 </section>
-<section id="saving-the-script" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="saving-the-script"><span class="header-section-number">3.3</span> Saving the script</h3>
+<section id="saving-the-script" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="saving-the-script"><span class="header-section-number">4.3</span> Saving the script</h3>
 <p>Let’s save this new script right away…</p>
 <blockquote class="blockquote">
 <p><strong>Click <code>File</code> &gt; <code>Save As</code></strong></p>
@@ -195,12 +326,12 @@ File extensions
 </div>
 <p><br></p>
 </section>
-<section id="sending-code-to-the-console" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="sending-code-to-the-console"><span class="header-section-number">3.4</span> Sending code to the console</h3>
+<section id="sending-code-to-the-console" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="sending-code-to-the-console"><span class="header-section-number">4.4</span> Sending code to the console</h3>
 <p>If you write most of our code in a script in the Editor, as we recommended above, wouldn’t it be a hassle to execute it? Do we need to copy-and-paste the code into the console? Luckily not.</p>
 <p>Start by by typing another simple calculation, this time <strong>in your R script</strong>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="dv" style="color: #AD0000;
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">203</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -215,35 +346,36 @@ font-style: inherit;">2.54</span></span></code></pre></div>
 <pre><code>[1] 79.92126</code></pre>
 </div>
 </div>
-<p>Alternatively, you could click the <code>Run</code> button in the bar right above your script to execute a line of code, but we recommend using the keyboard shortcut.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Execution behavior
+More on sending code to the console
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Note that it <em>doesn’t matter where on the line your cursor is</em>: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> and the <code>Run</code> button will always <strong>execute the entire line</strong> unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)</p>
+<p>Note that it <em>doesn’t matter where on the line your cursor is</em>: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> will always <strong>execute the entire line</strong> unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)</p>
+<p>To execute a line of code, an alternative to the keyboard shortcut is to <strong>click the <code>Run</code> button</strong> in the bar right above your script, but we recommend using the keyboard shortcut — it is much faster, at least once you get used to it.</p>
 </div>
 </div>
+<p>For the rest of this Code Club session, try to write your code in your script, and send it to the console using the keyboard shortcut.</p>
 <p><br></p>
 </section>
-<section id="commenting" class="level3" data-number="3.5">
-<h3 data-number="3.5" class="anchored" data-anchor-id="commenting"><span class="header-section-number">3.5</span> Commenting</h3>
+<section id="commenting" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="commenting"><span class="header-section-number">4.5</span> Commenting</h3>
 <p>You can use <strong><code>#</code> signs</strong> to comment your code — see the example below:</p>
 <ul>
 <li><p>Anything to the right of a <code>#</code> is ignored by R, meaning it won’t be executed</p></li>
-<li><p>You can use <code>#</code> both at the start of a line or anywhere in a line following code</p></li>
+<li><p>You can use <code>#</code> both <strong>at the start of a line</strong> (entire line is a comment) or anywhere in a line <strong>following code</strong> (rest of the line is a comment)</p></li>
 <li><p>In your R script, comments are formatted differently so you can clearly distinguish them from code</p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Divide by 2.54 to get the wingspan in inches:</span></span>
-<span id="cb12-2"><span class="dv" style="color: #AD0000;
+<span id="cb28-2"><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">203</span> <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -253,23 +385,22 @@ font-style: inherit;">2.54</span>    <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Original measurement was in cm</span></span></code></pre></div>
 </div>
-<p>Comments are a great way to describe what your code does within the code itself, so <strong>use lots of comments in your R scripts</strong>!</p>
-<p>Comments are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.</p>
+<p><strong>Use lots of comments in your R scripts</strong>! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.</p>
 <p><br></p>
 </section>
 </section>
-<section id="r-objects" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="r-objects"><span class="header-section-number">4</span> R Objects</h2>
-<section id="assigning-stuff-to-r-objects" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="assigning-stuff-to-r-objects"><span class="header-section-number">4.1</span> Assigning stuff to R objects</h3>
-<p>As we briefly saw last week, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong> (a smaller-than sign <code>&lt;</code> followed by a dash <code>-</code>)<sup>1</sup> — for example:</p>
+<section id="r-objects" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="r-objects"><span class="header-section-number">5</span> R Objects</h2>
+<section id="assigning-stuff-to-r-objects" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="assigning-stuff-to-r-objects"><span class="header-section-number">5.1</span> Assigning stuff to R objects</h3>
+<p>As we’ve seen a couple of times now, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong><sup>2</sup> — a few more examples:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">wingspan_cm <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">wingspan_cm <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">203</span></span>
-<span id="cb13-2">conversion <span class="ot" style="color: #003B4F;
+<span id="cb29-2">conversion <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
 background-color: null;
@@ -279,7 +410,7 @@ font-style: inherit;">2.54</span></span></code></pre></div>
 <p>Recall also that the objects you create get added to your “environment”, which RStudio shows in the <strong>Environment tab</strong> in the top-right panel — check that <code>wingspan_cm</code> and <code>conversion</code> are indeed there.</p>
 <p>After you’ve assigned a number to an object, you can use it in calculations like so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">wingspan_cm <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">wingspan_cm <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span> conversion</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -288,22 +419,22 @@ font-style: inherit;">/</span> conversion</span></code></pre></div>
 </div>
 <p>Or, similarly:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">wingspan_inch <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">wingspan_inch <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> wingspan_cm <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span> conversion</span>
-<span id="cb16-2">wingspan_inch</span></code></pre></div>
+<span id="cb32-2">wingspan_inch</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 79.92126</code></pre>
 </div>
 </div>
-<p>When you execute code with objects, then under the hood, R substitutes the object name that you provide by its contents. In other words, <em>the object is just a reference to the underlying value(s)</em>.</p>
+<p>This illustrates that when you execute code with objects, R substitutes the object name that you provide by its contents under the hood. In other words, <em>the object is just a reference to the underlying value(s)</em>.</p>
 <p>“Object” is a general term that encompasses R items of any size or complexity:</p>
 <ul>
-<li><p>Objects can also contain character strings, or <strong>collections</strong> of numbers or character strings (including in table or matrix format), and functions.</p></li>
+<li><p>Objects can also contain character strings, collections of numbers or character strings (including in table or matrix format), and functions.</p></li>
 <li><p>The above does not mean that “anything goes” — R distinguishes between a limited number of “<strong>data structures</strong>”, each with their own defined structure. We’ll learn about the most important ones next week.</p></li>
-<li><p>Technically, the objects we created so far are <strong>vectors</strong>, which are more commonly thought of as containing a <em>series of values</em>, but in R, can have a length of one<sup>2</sup>.</p></li>
+<li><p>The objects we created so far are called <strong>vectors</strong>, which are more commonly thought of as containing a <em>series of values</em>, but in R, can have a length of one<sup>3</sup>.</p></li>
 </ul>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -321,30 +452,32 @@ How the Environment tab shows your objects
 </div>
 <p><br></p>
 </section>
-<section id="object-names" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="object-names"><span class="header-section-number">4.2</span> Object names</h3>
+<section id="object-names" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="object-names"><span class="header-section-number">5.2</span> Object names</h3>
 <p>Objects can be given almost any name such as <code>x</code>, <code>current_temperature</code>, or <code>subject_id</code>. Some pointers on object names:</p>
 <ul>
 <li><p>Because R is <strong>case sensitive</strong>, <code>wingspan_inch</code> is different from <code>Wingspan_inch</code>!</p></li>
-<li><p>An object name <strong>cannot contain spaces</strong> — so for readability, you can <em>separate words</em> using:</p>
+<li><p>An object name <strong>cannot contain spaces</strong> — so for readability, you should <em>separate words</em> using:</p>
 <ul>
 <li><strong>Underscores:</strong> <code>wingspan_inch</code> (this is called “snake case”, which we often use in Code Club)</li>
 <li><strong>Periods</strong>: <code>wingspan.inch</code></li>
 <li><strong>Capitalization:</strong> <code>wingspanInch</code> or <code>WingspanInch</code> (“camel case”)</li>
 </ul></li>
-<li><p>You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like “snake case.”<sup>3</sup></p></li>
-<li><p>Object names can <em>contain</em> but cannot <em>start</em> with a number: <code>x2</code> is valid but <code>2x</code> is not. (There are also some other restrictions that are beyond the scope of this introduction<sup>4</sup>.)</p></li>
+<li><p>You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like “snake case.”<sup>4</sup></p></li>
+<li><p>Object names can <em>contain</em> but cannot <em>start</em> with a number: <code>x2</code> is valid but <code>2x</code> is not. (There are also some other restrictions that are beyond the scope of this introduction<sup>5</sup>.)</p></li>
 <li><p>Make object names descriptive yet not too long — this is not always easy!</p></li>
 </ul>
 <p><br></p>
 </section>
-<section id="saving-the-environment" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="saving-the-environment"><span class="header-section-number">4.3</span> Saving the environment</h3>
+<section id="saving-the-environment" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="saving-the-environment"><span class="header-section-number">5.3</span> Saving the environment</h3>
 <p>Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:</p>
-<blockquote class="blockquote">
-<p><em>“Save workspace image to ~/.RData?”</em>.</p>
-</blockquote>
-<p>When you do so, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/basics_02/img/rdata-popup.png" class="img-fluid figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+<p>When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
 <details>
 <summary>
 <b>Can you think of a reason why automatically saving and reloading your workspace may not be a good idea?</b> (Click for the answer)
@@ -378,41 +511,56 @@ Restarting R
 <p><br></p>
 </section>
 </section>
-<section id="exercises" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="exercises"><span class="header-section-number">5</span> Exercises</h2>
-<section id="exercise-1" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="exercise-1"><span class="header-section-number">5.1</span> Exercise 1</h3>
-<p>What do you think the value of <code>y</code> will be after executing the following lines in R?</p>
-<ul>
-<li><code>100</code></li>
-<li><code>160</code></li>
-</ul>
+<section id="exercises-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exercises-2"><span class="header-section-number">6</span> Exercises 2</h2>
+<p><strong>A)</strong> Why do the following bits of code fail?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">x <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">session number <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">50</span>       <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># x is now 50</span></span>
-<span id="cb18-2">y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># y is now 100</span></span>
-<span id="cb18-3">x <span class="ot" style="color: #003B4F;
+font-style: inherit;">2</span></span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">Expert_Level <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">80</span>       <span class="co" style="color: #5E5E5E;
+font-style: inherit;">3</span></span>
+<span id="cb35-2">Expert_level</span></code></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The first fails because an object name cannot contain a space.</p>
+<p>The second fails because of a difference in capitalization (<code>Level</code> vs <code>level)</code>: recall that R is case sensitive.</p>
+</details>
+<p><strong>B)</strong> What do you think the value of <code>distance_miles</code> will be after executing the following lines in R: <code>31</code> or <code>62</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">distance_km <span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;"># x is now 80, but what is y?</span></span>
-<span id="cb18-4"></span>
-<span id="cb18-5">y</span></code></pre></div>
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span></span>
+<span id="cb36-2">distance_miles <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> distance_km <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.62</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># distance_miles is now 31 </span></span>
+<span id="cb36-3">distance_km <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span></span>
+<span id="cb36-4"></span>
+<span id="cb36-5">distance_miles                          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># What is the value of distance_miles now?</span></span></code></pre></div>
 </div>
 <p>Come up with an expectation, then run the code above and see if you were right. What does this tell you about “linkage” between objects in R?</p>
 <details>
@@ -420,75 +568,36 @@ font-style: inherit;"># x is now 80, but what is y?</span></span>
 <b>Solution</b> (click here)
 </summary>
 <p>Objects don’t get “linked” to each other at all in R.</p>
-<p>In other words, <code>y</code> was really assigned <strong>the outcome</strong> of <code>x * 2</code>, which is <code>100</code>, rather than its “formula”.</p>
-<p>Therefore, <code>y</code> wasn’t (and couldn’t be!) “updated” after we changed the value of <code>x</code>, and continued to be <code>100</code>.</p>
-</details>
-<p><br></p>
-</section>
-<section id="exercise-2" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="exercise-2"><span class="header-section-number">5.2</span> Exercise 2</h3>
-<p>Given what you learned about printing unquoted character strings (e.g., running the “command” <code>Fantastic</code> will return an error), which of the following do you think would work:</p>
+<p>In other words, <code>distance_miles</code> was really assigned <strong>the outcome</strong> of <code>distance_km * 2</code>, which is <code>31</code>, rather than its “formula”.</p>
+<p>Therefore, <code>distance_miles</code> wasn’t (and couldn’t be!) “updated” after we changed the value of <code>distance_km</code>, and continued to be <code>31</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">session_topic <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">distance_km <span class="ot" style="color: #003B4F;
 background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">"introduction"</span></span></code></pre></div>
+font-style: inherit;">50</span></span>
+<span id="cb37-2">distance_miles <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> distance_km <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.62</span>    <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># distance_miles is now 31.07 </span></span>
+<span id="cb37-3">distance_km <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span></span>
+<span id="cb37-4"></span>
+<span id="cb37-5">distance_miles                          <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># What is the value of distance_miles now?</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31</code></pre>
 </div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">session_topic <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> introduction</span></code></pre></div>
 </div>
-<p>Try both to see which works and what error you get for the other one.</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>The first of the two options was the correct one. In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas quoted character strings are “literals”.</p>
-<p>Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
-<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist.</p>
-</details>
-<p><br></p>
-<p>Having run the code above, which of the following would have R print <code>introduction</code>?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"session_topic"</span></span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">session_topic</span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong>, so we shouldn’t use quotes.</p>
-</details>
-<p><br></p>
-<p>Finally, do you think the following code would successfully add <code>5</code> and <code>7</code>? If not, what might happen instead?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"5"</span></span>
-<span id="cb23-2">y <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"7"</span></span>
-<span id="cb23-3">x <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> y</span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>In the code above, the “numbers” are saved not as numbers (in R lingo: as a <code>numeric</code>) but as character strings.</p>
-<p>R can’t add character strings, so it will return an error. (Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do.)</p>
-<p>By the way, in case you were wondering: the code above is completely equivalent to simply running <code>"5" + "7"</code>.</p>
 </details>
 <p><br></p>
 <hr>
@@ -498,22 +607,25 @@ font-style: inherit;">+</span> y</span></code></pre></div>
 
 
 </section>
-</section>
 
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>In RStudio, typing <kbd>Alt</kbd> + <kbd>-</kbd> will write <code>&lt;-</code> in a single keystroke. Note that you can also use <code>=</code> as an assignment operator (the common symbol in other programming languages!), but that symbol can have other meanings, so we recommend sticking with the <code>&lt;-</code> combination.↩︎</p></li>
-<li id="fn2"><p>Objects that contain a single value are a distinct data structure called “<strong>scalars</strong>” in some languages, and are more informally also called “<strong>variables</strong>”.↩︎</p></li>
-<li id="fn3"><p>It is also recommended to use <em>nouns</em> for variable names, and <em>verbs</em> for function names. For more, two popular R style guides are <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s</a> and <a href="https://google.github.io/styleguide/Rguide.xml">Google’s</a>.↩︎</p></li>
-<li id="fn4"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list).</p>
+<li id="fn1"><p>We’ll talk about functions soon, likely next week.↩︎</p></li>
+<li id="fn2"><p>This is smaller-than sign <code>&lt;</code> followed by a dash <code>-</code>.</p>
+<p>Typing <kbd>Alt</kbd> + <kbd>-</kbd> will write <code>&lt;-</code> in a single keystroke.</p>
+<p>Note that you can also use <code>=</code> as an assignment operator (the common symbol in other programming languages!), but that symbol can have other meanings, so we recommend sticking with the <code>&lt;-</code> combination.↩︎</p></li>
+<li id="fn3"><p>Objects that contain a single value are a distinct data structure called “<strong>scalars</strong>” in some languages, and are more informally also called “<strong>variables</strong>”.↩︎</p></li>
+<li id="fn4"><p>It is also recommended to use <em>nouns</em> for variable names, and <em>verbs</em> for function names. For more, two popular R style guides are <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s</a> and <a href="https://google.github.io/styleguide/Rguide.xml">Google’s</a>.↩︎</p></li>
+<li id="fn5"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list).</p>
 <p>In general, it’s also best not to use the names of existing <strong>functions</strong>, even though this <em>is</em> possible.↩︎</p></li>
 </ol>
 </section></div> ]]></description>
   <category>r-basics</category>
   <guid>https://osu-codeclub.github.io/posts/basics_02/index.html</guid>
   <pubDate>Fri, 19 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/basics_02/img/r_environment.png" medium="image" type="image/png" height="54" width="144"/>
 </item>
 <item>
   <title>R Basics - 01 Getting Started</title>
