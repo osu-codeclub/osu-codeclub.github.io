@@ -123,11 +123,9 @@ A little more on R's main "data types":
 
 -   Numbers are by default of the data type **`numeric`** (and can also be `integer` - whole numbers only)
 
--   Character strings are by default of the data type **`character`** (and can also be `factor` - categorical data)
+-   Character strings are by default of the data type **`character`** (and can also be `factor` for categorical data)
 
 -   The final main data type is `logical`, which can be either `TRUE` or `FALSE`.
-
-<br>
 
 <br>
 
@@ -207,7 +205,7 @@ R can't add character strings, so it will return an error:
 
 **D) (Bonus)** Execute the following code and check its output:
 
-```{r}
+```{r, eval=FALSE}
 TRUE + FALSE
 ```
 
@@ -274,7 +272,7 @@ Let's save this new script right away...
 ::: callout-warning
 ## File extensions
 
-An R script is just a **plain-text file** and you *could* also save it with, for example, a `.txt` extension -- this will not break the file, but does have drawbacks.
+An R script is just a **plain-text file** and you *could* also save it with, for example, a `.txt` extension — this will not break the file, but does have drawbacks.
 
 When you use a `.R` extension, your computer and RStudio alike will recognize it as an R script. In RStudio, this means you'll get some formatting that helps when writing your R code, and it can even recognize and warn you about certain errors in your code.
 :::
@@ -283,7 +281,7 @@ When you use a `.R` extension, your computer and RStudio alike will recognize it
 
 ### Sending code to the console
 
-If you write most of our code in a script in the Editor, as we recommended above, wouldn't it be a hassle to execute it? Do we need to copy-and-paste the code into the console? Luckily not.
+If you write most of your code in a script in the Editor, as we recommended above, wouldn't it be a hassle to execute it? Do you need to copy-and-paste the code into the console? Luckily not.
 
 Start by by typing another simple calculation, this time **in your R script**:
 
@@ -313,7 +311,12 @@ For the rest of this Code Club session, try to write your code in your script, a
 
 ### Commenting
 
-You can use **`#` signs** to comment your code — see the example below:
+You can use **`#` signs** to comment your code:
+
+```{r, eval=FALSE}
+# Divide by 2.54 to get the wingspan in inches:
+203 / 2.54    # Original measurement was in cm
+```
 
 -   Anything to the right of a `#` is ignored by R, meaning it won't be executed
 
@@ -321,12 +324,7 @@ You can use **`#` signs** to comment your code — see the example below:
 
 -   In your R script, comments are formatted differently so you can clearly distinguish them from code
 
-```{r, eval=FALSE}
-# Divide by 2.54 to get the wingspan in inches:
-203 / 2.54    # Original measurement was in cm
-```
-
-**Use lots of comments in your R scripts**! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.
+We recommend that you **use lots of comments in your R scripts**! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.
 
 <br>
 
@@ -334,20 +332,14 @@ You can use **`#` signs** to comment your code — see the example below:
 
 ### Assigning stuff to R objects
 
-As we've seen a couple of times now, we can assign a value to an object with the **assignment operator `<-`**[^2] — a few more examples:
-
-[^2]: This is smaller-than sign `<` followed by a dash `-`.
-
-    Typing <kbd>Alt</kbd> + <kbd>-</kbd> will write `<-` in a single keystroke.
-
-    Note that you can also use `=` as an assignment operator (the common symbol in other programming languages!), but that symbol can have other meanings, so we recommend sticking with the `<-` combination.
+As we've seen a couple of times now, we can assign a value to an object with the **assignment operator `<-`** — a few more examples:
 
 ```{r assign, eval=TRUE}
 wingspan_cm <- 203
 conversion <- 2.54
 ```
 
-Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> to send it to the console (R will not give you any output unless the assignments fail).
+Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> twice to send it to the console.
 
 Recall also that the objects you create get added to your "environment", which RStudio shows in the **Environment tab** in the top-right panel — check that `wingspan_cm` and `conversion` are indeed there.
 
@@ -372,16 +364,16 @@ This illustrates that when you execute code with objects, R substitutes the obje
 
 -   The above does not mean that "anything goes" — R distinguishes between a limited number of "**data structures**", each with their own defined structure. We'll learn about the most important ones next week.
 
--   The objects we created so far are called **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^3].
+-   The objects we created so far are called **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^2].
 
-[^3]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
+[^2]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
 
 ::: callout-tip
-## How the Environment tab shows your objects
+## More on assignment operators
 
-In the Environment tab, RStudio will group your objects. It is listing vectors under a heading with "Values".
+The keyboard shortcut for the assignment operator is <kbd>Alt/Option</kbd> + <kbd>-</kbd>.
 
-More complex data structures like tables (called "data frames" in R) would be under "Data".
+Note that **you can also use `=` as an assignment operator** (like in other programming languages!), but because that symbol can have other meanings, we recommend sticking with the `<-` combination.
 :::
 
 <br>
@@ -398,17 +390,21 @@ Objects can be given almost any name such as `x`, `current_temperature`, or `sub
     -   **Periods**: `wingspan.inch`
     -   **Capitalization:** `wingspanInch` or `WingspanInch` ("camel case")
 
--   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^4]
+-   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^3]
 
--   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^5].)
+-   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^4].)
 
 -   Make object names descriptive yet not too long — this is not always easy!
 
-[^4]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
+[^3]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
 
-[^5]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list).
+[^4]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list).
 
     In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
+
+> There are only two hard things in Computer Science: cache invalidation and naming things.
+>
+> -- Phil Karlton
 
 <br>
 
@@ -424,11 +420,11 @@ When you do save this, the next time you start R, R will reload your environment
 
 <summary><b>Can you think of a reason why automatically saving and reloading your workspace may not be a good idea?</b> (Click for the answer)</summary>
 
-The main reason why this is generally not considered good practice relates to the idea that you should be able to *reproduce your workspace (and more broadly speaking, your analysis) from the code in your script*.
+The main reason why this is generally not considered good practice relates to the idea that you should be able to *reproduce your* environment *(and more broadly speaking, your analysis) from the code in your script*.
 
-Remember that you can modify your workspace either by entering commands in the console directly, or by running them from a script -- or even from multiple different scripts. Also, in practice, you often run lines in the script out of order, or write lines in the script that you don't execute.
+Remember that you can modify your environment either by entering commands in the console directly, or by running them from a script — or even from multiple different scripts. Additionally, it is common to run lines in a script out of order, or write lines in the script that you don't execute.
 
-Therefore, if you "carry around" the same workspace across multiple different sessions, you run a greater risk of not having a reproducible set of steps in your script.
+Therefore, if you "carry around" the same environment across multiple different sessions, you run a greater risk of not having a reproducible set of steps in your script.
 
 </details>
 
@@ -452,7 +448,7 @@ To do so, you don't need to close and reopen RStudio itself: under `Session` in 
 
 ## Exercises 2
 
-**A)** Why do the following bits of code fail?
+**A)** Why do the following bits of code fail with an error?
 
 ```{r, eval=FALSE}
 session number <- 2
@@ -473,7 +469,7 @@ The second fails because of a difference in capitalization (`Level` vs `level)`:
 
 </details>
 
-**B)** What do you think the value of `distance_miles` will be after executing the following lines in R: `31` or `62`?
+**B)** What will be the value of `distance_miles` after executing the following lines in R: `31` or `62`?
 
 ```{r, eval=FALSE}
 distance_km <- 50
