@@ -117,7 +117,13 @@ We *can* get R to print character strings back to us, and use them in other ways
 "Code Club"
 ```
 
-So, R treats numbers and character strings differently: **unlike numbers, character strings need to be quoted.** This avoids confusion with objects because unquoted character strings are assumed to be objects, and also allows for special characters like spaces.
+So, R treats numbers and character strings differently: **unlike numbers, character strings need to be quoted.** This *avoids confusion with objects* because unquoted character strings are assumed to be objects, and also *allows for "special characters"* like spaces.
+
+::: callout-tip
+## Quote types
+
+Double quotes (`"Fantastic"`) and single quotes (`'Fantastic'`) can be used interchangeably in R. Double quotes are preferred by most "style guides".
+:::
 
 A little more on R's main "data types":
 
@@ -131,7 +137,7 @@ A little more on R's main "data types":
 
 ## Exercises 1
 
-**A)** Which of the following do you think would work:
+**A)** Which of the following do you think would work and which would return an error:
 
 ```{r}
 session_topic <- "introduction"
@@ -141,17 +147,17 @@ session_topic <- "introduction"
 session_topic <- introduction
 ```
 
-Try both to see which works and what error you get for the other one.
+Try both to see which works and what error you get for the other one. Also, try to describe in words what the correct line of code is doing.
 
 <details>
 
 <summary><b>Solution</b> (click here)</summary>
 
-The first of the two options was the correct one. In general, keep in mind that **unquoted character strings represent objects** whereas quoted character strings are "literals".
+The first of the two options was correct R code, while the second returns an error.
 
-Here, we wanted to assign the literal string `"introduction"` to the object `session_topic` — so the former should be quoted and the latter not.
+In general, keep in mind that **unquoted character strings represent objects** whereas **quoted character strings are "literals"**. Here, we wanted to assign the literal string `"introduction"` to the object `session_topic` — so the former should be quoted and the latter not.
 
-An error is produced when you run the second option, because the object `introduction` does not exist:
+An error is produced when you run the second option, because the object `introduction` does not exist (unless, of course, you had created an object of that name!):
 
 ```{r, results='show', error=TRUE}
 session_topic <- introduction
@@ -173,7 +179,7 @@ session_topic
 
 <summary><b>Solution</b> (click here)</summary>
 
-The second option is the correct one: here, we want to have R print the value of the **object `session_topic`**, so we shouldn't use quotes.
+The second option is the correct one: here, we want to have R print the value of the **object `session_topic`** (which we had just created in exercise A), so we shouldn't use quotes.
 
 ```{r}
 session_topic
@@ -199,7 +205,7 @@ R can't add character strings, so it will return an error:
 "5" + "7"
 ```
 
-(Perhaps you expected it to combine/"concatenate" the two strings in some way — this is in fact what Python would do.)
+(Perhaps you expected it to combine/"concatenate" the two strings in some way — this is in fact what Python would do. Or to automatically convert the characters to numbers, since you're clearly wanting them to be numbers — but it doesn't do that either.)
 
 </details>
 
@@ -209,7 +215,9 @@ R can't add character strings, so it will return an error:
 TRUE + FALSE
 ```
 
-Had you expected this result? If not, can you make sense of it (the fact that it works and the specific results; and the lack of quotes in the code)? Based on that, what would the following return:
+Had you expected this result? If not, can you make sense of it: the fact that it works, the specific results, and the fact that we are not using quotes in the code.
+
+And based on your deliberations, what do you expect the following code to return?
 
 ```{r, eval=FALSE}
 TRUE + TRUE
@@ -332,7 +340,7 @@ We recommend that you **use lots of comments in your R scripts**! They are usefu
 
 ### Assigning stuff to R objects
 
-As we've seen a couple of times now, we can assign a value to an object with the **assignment operator `<-`** — a few more examples:
+As we've seen a couple of times now, we can assign a value to an object with the **assignment operator `<-`**. A few more examples:
 
 ```{r assign, eval=TRUE}
 wingspan_cm <- 203
@@ -341,7 +349,11 @@ conversion <- 2.54
 
 Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> twice to send it to the console.
 
+::: callout-tip
+## The Environment tab
+
 Recall also that the objects you create get added to your "environment", which RStudio shows in the **Environment tab** in the top-right panel — check that `wingspan_cm` and `conversion` are indeed there.
+:::
 
 After you've assigned a number to an object, you can use it in calculations like so:
 
@@ -373,7 +385,12 @@ This illustrates that when you execute code with objects, R substitutes the obje
 
 The keyboard shortcut for the assignment operator is <kbd>Alt/Option</kbd> + <kbd>-</kbd>.
 
-Note that **you can also use `=` as an assignment operator** (like in other programming languages!), but because that symbol can have other meanings, we recommend sticking with the `<-` combination.
+Note that **you can also use `=` as an assignment operator**, as is common in other programming languages. But because `=` can have other meanings, we recommend sticking with the `<-` combination.
+
+```{r}
+# This also works to assign the value 5 to x (but we recommend using <- instead)
+x = 5
+```
 :::
 
 <br>
@@ -398,9 +415,9 @@ Objects can be given almost any name such as `x`, `current_temperature`, or `sub
 
 [^3]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
 
-[^4]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list).
+[^4]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list). In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
 
-    In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
+<br>
 
 > There are only two hard things in Computer Science: cache invalidation and naming things.
 >
