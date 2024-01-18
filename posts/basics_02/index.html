@@ -358,7 +358,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] "Code Club"</code></pre>
 </div>
 </div>
-<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This avoids confusion with objects because unquoted character strings are assumed to be objects, and also allows for special characters like spaces.</p>
+<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This <em>avoids confusion with objects</em> because unquoted character strings are assumed to be objects, and also <em>allows for “special characters”</em> like spaces.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quote types
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Double quotes (<code>"Fantastic"</code>) and single quotes (<code>'Fantastic'</code>) can be used interchangeably in R. Double quotes are preferred by most “style guides”.</p>
+</div>
+</div>
 <p>A little more on R’s main “data types”:</p>
 <ul>
 <li><p>Numbers are by default of the data type <strong><code>numeric</code></strong> (and can also be <code>integer</code> - whole numbers only)</p></li>
@@ -370,21 +383,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="exercises-1" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="exercises-1"><span class="header-section-number">3</span> Exercises 1</h2>
-<p><strong>A)</strong> Which of the following do you think would work:</p>
+<p><strong>A)</strong> Which of the following do you think would work and which would return an error:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> <span class="st">"introduction"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> introduction</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Try both to see which works and what error you get for the other one.</p>
+<p>Try both to see which works and what error you get for the other one. Also, try to describe in words what the correct line of code is doing.</p>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
-<p>The first of the two options was the correct one. In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas quoted character strings are “literals”.</p>
-<p>Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
-<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist:</p>
+<p>The first of the two options was correct R code, while the second returns an error.</p>
+<p>In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas <strong>quoted character strings are “literals”</strong>. Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
+<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist (unless, of course, you had created an object of that name!):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> introduction</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
@@ -403,7 +416,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>
 <b>Solution</b> (click here)
 </summary>
-<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong>, so we shouldn’t use quotes.</p>
+<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong> (which we had just created in exercise A), so we shouldn’t use quotes.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>session_topic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -427,13 +440,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>Error in "5" + "7": non-numeric argument to binary operator</code></pre>
 </div>
 </div>
-<p>(Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do.)</p>
+<p>(Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do. Or to automatically convert the characters to numbers, since you’re clearly wanting them to be numbers — but it doesn’t do that either.)</p>
 </details>
 <p><strong>D) (Bonus)</strong> Execute the following code and check its output:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">+</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Had you expected this result? If not, can you make sense of it (the fact that it works and the specific results; and the lack of quotes in the code)? Based on that, what would the following return:</p>
+<p>Had you expected this result? If not, can you make sense of it: the fact that it works, the specific results, and the fact that we are not using quotes in the code.</p>
+<p>And based on your deliberations, what do you expect the following code to return?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">+</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -560,13 +574,25 @@ More on sending code to the console
 <h2 data-number="5" class="anchored" data-anchor-id="r-objects"><span class="header-section-number">5</span> R Objects</h2>
 <section id="assigning-stuff-to-r-objects" class="level3" data-number="5.1">
 <h3 data-number="5.1" class="anchored" data-anchor-id="assigning-stuff-to-r-objects"><span class="header-section-number">5.1</span> Assigning stuff to R objects</h3>
-<p>As we’ve seen a couple of times now, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong> — a few more examples:</p>
+<p>As we’ve seen a couple of times now, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong>. A few more examples:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>wingspan_cm <span class="ot">&lt;-</span> <span class="dv">203</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>conversion <span class="ot">&lt;-</span> <span class="fl">2.54</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> twice to send it to the console.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Environment tab
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>Recall also that the objects you create get added to your “environment”, which RStudio shows in the <strong>Environment tab</strong> in the top-right panel — check that <code>wingspan_cm</code> and <code>conversion</code> are indeed there.</p>
+</div>
+</div>
 <p>After you’ve assigned a number to an object, you can use it in calculations like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wingspan_cm <span class="sc">/</span> conversion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -600,7 +626,11 @@ More on assignment operators
 </div>
 <div class="callout-body-container callout-body">
 <p>The keyboard shortcut for the assignment operator is <kbd>Alt/Option</kbd> + <kbd>-</kbd>.</p>
-<p>Note that <strong>you can also use <code>=</code> as an assignment operator</strong> (like in other programming languages!), but because that symbol can have other meanings, we recommend sticking with the <code>&lt;-</code> combination.</p>
+<p>Note that <strong>you can also use <code>=</code> as an assignment operator</strong>, as is common in other programming languages. But because <code>=</code> can have other meanings, we recommend sticking with the <code>&lt;-</code> combination.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This also works to assign the value 5 to x (but we recommend using &lt;- instead)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </div>
 </div>
 <p><br></p>
@@ -620,6 +650,7 @@ More on assignment operators
 <li><p>Object names can <em>contain</em> but cannot <em>start</em> with a number: <code>x2</code> is valid but <code>2x</code> is not. (There are also some other restrictions that are beyond the scope of this introduction<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.)</p></li>
 <li><p>Make object names descriptive yet not too long — this is not always easy!</p></li>
 </ul>
+<p><br></p>
 <blockquote class="blockquote">
 <p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
 <p>– Phil Karlton</p>
@@ -672,11 +703,11 @@ Restarting R
 <h2 data-number="6" class="anchored" data-anchor-id="exercises-2"><span class="header-section-number">6</span> Exercises 2</h2>
 <p><strong>A)</strong> Why do the following bits of code fail with an error?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>session number <span class="ot">&lt;-</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>session number <span class="ot">&lt;-</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>Expert_Level <span class="ot">&lt;-</span> <span class="dv">3</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>Expert_level</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Expert_Level <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>Expert_level</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <details>
 <summary>
@@ -687,11 +718,11 @@ Restarting R
 </details>
 <p><strong>B)</strong> What will be the value of <code>distance_miles</code> after executing the following lines in R: <code>31</code> or <code>62</code>?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31 </span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31 </span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Come up with an expectation, then run the code above and see if you were right. What does this tell you about “linkage” between objects in R?</p>
 <details>
@@ -702,11 +733,11 @@ Restarting R
 <p>In other words, <code>distance_miles</code> was really assigned <strong>the outcome</strong> of <code>distance_km * 2</code>, which is <code>31</code>, rather than its “formula”.</p>
 <p>Therefore, <code>distance_miles</code> wasn’t (and couldn’t be!) “updated” after we changed the value of <code>distance_km</code>, and continued to be <code>31</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31.07 </span></span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31.07 </span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31</code></pre>
 </div>
@@ -728,8 +759,7 @@ Restarting R
 <li id="fn1"><p>We’ll talk about functions soon, likely next week.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Objects that contain a single value are a distinct data structure called “<strong>scalars</strong>” in some languages, and are more informally also called “<strong>variables</strong>”.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn3"><p>It is also recommended to use <em>nouns</em> for variable names, and <em>verbs</em> for function names. For more, two popular R style guides are <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s</a> and <a href="https://google.github.io/styleguide/Rguide.xml">Google’s</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list).</p>
-<p>In general, it’s also best not to use the names of existing <strong>functions</strong>, even though this <em>is</em> possible.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list). In general, it’s also best not to use the names of existing <strong>functions</strong>, even though this <em>is</em> possible.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
