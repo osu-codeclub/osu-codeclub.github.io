@@ -1,11 +1,11 @@
 ---
-title: "R Basics 2: Scripts and Objects"
-author: "Jelmer Poelstra"
-date: "2024-01-19"
+title: "R Basics 3: Built-in functions, Vectors, and Help"
+author: "Horacio Lopez-Nicora"
+date: "2024-01-26"
 categories: [r-basics]
 title-block-banner: false
 number-depth: 3
-image: img/r_environment.png
+image: img/R2D2.png
 ---
 
 ------------------------------------------------------------------------
@@ -16,96 +16,83 @@ image: img/r_environment.png
 
 #### Recap of last week
 
-Last week, we installed R and RStudio, learned about the distinction between the two, familiarized ourselves with RStudio, learned about "working directories" and RStudio Projects, and had our first interactions with R by using it as a calculator.
+Last week, we did a little more basic interaction with R (missing prompts and data types), we wrote code in R scripts (and added comments to our code), and used and named R objects.
+
+Here are some additional tips from our previous session: Go to <kbd>Tools</kbd> and then <kbd>Keyboard Shortcuts Help</kbd>. Identify useful keyboard shortcuts and use them during today's session.
 
 #### Learning objectives for today
 
--   A little more basic interaction with R: **missing prompts** and **data types**
+-   **Built-in Functions**
 
--   Writing code in **R scripts** instead of the console, and **commenting** your code
+-   **Vectors in R**
 
--   Using and naming **R objects**, and (not) saving your **environment**
-
-#### Setting up
-
-If you created an RStudio Project for Code Club last week, then be sure to **have that Project open before we get started**. When you start RStudio, it may well have already opened that project for you (check the top-right corner, and see the screenshots below) — if not, click `File` (top menu bar) \> `Recent Projects`, and select your Project for Code Club from the list.
-
-::: columns
-::: {.column width="45%"}
-![You have an open project "codeclub"](img/project_open.png){fig-align="center" width="50%"}
-:::
-
-::: {.column width="45%"}
-![You have no Project open](img/project_none.png){fig-align="center" width="60%"}
-:::
-:::
-
-If you don't have an RStudio Project, no worries. We'll be saving a file today, but you can always save it in an appropriate directory on the fly.
+-   **Getting Help with R**
 
 <br>
 
-## A little more basic interaction with R
+## Types of Functions in R
 
-### The R prompt, revisited
+Functions are the foundation of almost everything in R. In programming, they are sets of organized instructions designed to perform specific tasks. The purpose of functions is to create self-contained programs that can be called upon as needed.
 
-The **`>`** sign in your console is the R "prompt". It indicates that R is ready for you to type something.
+[![**Fig. 1.** Types of Functions in R](img/Types_of_Functions.png){fig-alt="Types of Functions in R" fig-align="center"}](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&ust=1706296144697000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg)
 
-When you are not seeing the `>` prompt, R is either **busy** (because you asked it to do a longer-running computation) or **waiting** for you to complete an incomplete command.
+### What's in a function?
 
-Type the following into your console, and press <kbd>Enter</kbd> (called <kbd>Return</kbd> on a Mac, but you get the idea):
+What exactly is a function? Let's recall from our math knowledge:
 
-```{r, eval=FALSE}
-203 /
-```
+[![**Fig. 2.** Function Rules](img/function-rules.png){fig-alt="Function Rules" fig-align="center"}](https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&tbnid=_J3drvXZ3dYIPM&vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&docid=Sv_R0La-1wD7kM&w=395&h=278&q=example%20function%20in%20R%20rule&client=safari&ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi)
 
-You should notice that your prompt turned into a **`+`**.
+A function in R is a collection of statements that can be reused in a program. The syntax of a function in R is as follows:
+
+[![**Fig. 3.** R Function Syntax](img/r-function-syntax.png){fig-alt="R Function Syntax" fig-align="center"}](https://www.learnbyexample.org/r-functions/)
 
 <details>
 
-<summary><b>What is going on here?</b> (Click for the answer)</summary>
+<summary><b>Which functions did we cover during our first session?</b> (Click for the answer)</summary>
 
-**R is waiting for you to finish the command, since you typed an incomplete command**: something has to follow the division sign `/`.
+During our first session of Code Club, we examined the `setwd` function. </details>
 
-</details>
+### Types of built-in functions in R?
 
-To get out of this situation, one option is to try and finish the command (in this case, by typing another number) — but here, let's practice another option: **aborting** **the command by pressing** <kbd>**Esc**</kbd>.
+Built-in functions, which are already created or defined in the programming framework, are referred to as built-in functions. R offers a comprehensive collection of functions that can effectively handle almost any task for the user. These built-in functions are categorized based on their functionality as follows.
 
-While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so (typical cases include forgetting a closing parenthesis `)`). Aborting and fixing the command in full is often the way to go, especially if you're writing code in a script (as we'll do below).
+[![**Fig. 4.** Types of built-in functions in R](img/r-built-in-functions.png){fig-alt="Types of built-in functions in R" fig-align="center"}](https://www.javatpoint.com/r-built-in-functions)
 
 <br>
 
-### R data types
+#### Math functions
 
-If we just type a **number** and press <kbd>Enter</kbd>...
+A numeric function in R is defined as a function that can accept either a set of numeric values or a numeric vector (see below) as an input argument to carry out specific tasks. Here are several frequently used numeric functions in R programming.
 
-```{r number, eval=TRUE, results='show'}
-203
-```
+|                                              |                                             |
+|----------------------------------------------|---------------------------------------------|
+| **Function**                                 | **Description**                             |
+| **abs(***x***)**                             | absolute value                              |
+| **sqrt(***x***)**                            | square root                                 |
+| **ceiling(***x***)**                         | ceiling(3.475) is 4                         |
+| **floor(***x***)**                           | floor(3.475) is 3                           |
+| **trunc(***x***)**                           | trunc(5.99) is 5                            |
+| **round(***x* **, digits=** *n***)**         | round(3.475, digits=2) is 3.48              |
+| **signif(***x* **, digits=** *n***)**        | signif(3.475, digits=2) is 3.5              |
+| **cos(***x***), sin(***x***), tan(***x***)** | also acos(*x*), cosh(*x*), acosh(*x*), etc. |
+| **log(***x***)**                             | natural logarithm                           |
+| **log10(***x***)**                           | common logarithm                            |
+| **exp(***x***)**                             | e\^*x*                                      |
 
-... then R will simply **print the number back to us**.
+<details>
 
-Under the hood, R is calling a *function* called `print()`[^1], and we saw an example of this last week, too — typing the name of an object will print it's value:
-
-[^1]: We'll talk about functions soon, likely next week.
+<summary><b>In the field of Plant Pathology, data such as disease incidence or severity is typically collected as a percentage or proportion. To prepare the data for analysis, it is common to apply a data transformation known as the `arc-sine square root`. You have gathered disease severity data from three plots: 0.75 (control), 0.70 (Trt 1), and 0.30 (Trt 2). Apply the transformation mentioned above to your data for analysis. </b> (Click for the answer)</summary>
 
 ```{r}
-x <- 5
-x
+Control <- 0.75
+Trt1 <- 0.70
+Trt2 <- 0.30
+
+asin(sqrt(Control))
+asin(sqrt(Trt1))
+asin(sqrt(Trt2))
+
 ```
-
-Rather than a number, what if we want R to print back to us some **text**, which in programming lingo is called a "**character string**"?
-
-```{r eval=TRUE, results='show', error=TRUE}
-Fantastic
-```
-
-<details>
-
-<summary><b>What seems to be going wrong?</b> (Click for the answer)</summary>
-
-Whenever you type a character string, **R expects to find an *object* with that name** (we saw our first object `x` last week, and will talk more about them today).
-
-When no object exists with that name, R will throw an error.
 
 </details>
 
@@ -380,9 +367,9 @@ This illustrates that when you execute code with objects, R substitutes the obje
 
 -   The above does not mean that "anything goes" — R distinguishes between a limited number of "**data structures**", each with their own defined structure. We'll learn about the most important ones next week.
 
--   The objects we created so far are called **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^2].
+-   The objects we created so far are called **vectors**, which are more commonly thought of as containing a *series of values*, but in R, can have a length of one[^1].
 
-[^2]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
+[^1]: Objects that contain a single value are a distinct data structure called "**scalars**" in some languages, and are more informally also called "**variables**".
 
 ::: callout-tip
 ## More on assignment operators
@@ -411,15 +398,15 @@ Objects can be given almost any name such as `x`, `current_temperature`, or `sub
     -   **Periods**: `wingspan.inch`
     -   **Capitalization:** `wingspanInch` or `WingspanInch` ("camel case")
 
--   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^3]
+-   You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like "snake case."[^2]
 
--   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^4].)
+-   Object names can *contain* but cannot *start* with a number: `x2` is valid but `2x` is not. (There are also some other restrictions that are beyond the scope of this introduction[^3].)
 
 -   Make object names descriptive yet not too long — this is not always easy!
 
-[^3]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
+[^2]: It is also recommended to use *nouns* for variable names, and *verbs* for function names. For more, two popular R style guides are [Hadley Wickham's](http://adv-r.had.co.nz/Style.html) and [Google's](https://google.github.io/styleguide/Rguide.xml).
 
-[^4]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list). In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
+[^3]: For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., `if`, `else`, `for`, see [here](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html) for a complete list). In general, it's also best not to use the names of existing **functions**, even though this *is* possible.
 
 <br>
 
