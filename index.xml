@@ -9,8 +9,701 @@
 <link>https://osu-codeclub.github.io/index.html</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.433</generator>
-<lastBuildDate>Fri, 19 Jan 2024 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.3.450</generator>
+<lastBuildDate>Fri, 26 Jan 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>R Basics 3: Built-in functions, Vectors, and Help</title>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/bascis_03/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-last-week" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-last-week">Recap of last week</h4>
+<p>Last week, we did a little more basic interaction with R (missing prompts and data types), we wrote code in R scripts (and added comments to our code), and used and named R objects.</p>
+<p>Here are some additional tips from our previous session: Go to <kbd>Tools</kbd> and then <kbd>Keyboard Shortcuts Help</kbd>. Identify useful keyboard shortcuts and use them during today’s session.</p>
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<ul>
+<li><p><strong>Built-in Functions</strong></p></li>
+<li><p><strong>Vectors in R</strong></p></li>
+<li><p><strong>Getting Help with R</strong></p></li>
+</ul>
+<p><br></p>
+</section>
+</section>
+<section id="types-of-functions-in-r" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="types-of-functions-in-r"><span class="header-section-number">2</span> Types of Functions in R</h2>
+<p>Functions are the foundation of almost everything in R. In programming, they are sets of organized instructions designed to perform specific tasks. The purpose of functions is to create self-contained programs that can be called upon as needed.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/bascis_03/img/Types_of_Functions.png" class="img-fluid figure-img" alt="Types of Functions in R"></a></p>
+<figcaption class="figure-caption">Fig. 1. Types of Functions in R</figcaption>
+</figure>
+</div>
+<section id="whats-in-a-function" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="whats-in-a-function"><span class="header-section-number">2.1</span> What’s in a function?</h3>
+<p>What exactly is a function? Let’s recall from our math knowledge:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/bascis_03/img/function-rules.png" class="img-fluid figure-img" alt="Function Rules"></a></p>
+<figcaption class="figure-caption">Fig. 2. Function Rules</figcaption>
+</figure>
+</div>
+<p>A function in R is a collection of statements that can be reused in a program. The syntax of a function in R is as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/bascis_03/img/r-function-syntax.png" class="img-fluid figure-img" alt="R Function Syntax"></a></p>
+<figcaption class="figure-caption">Fig. 3. R Function Syntax</figcaption>
+</figure>
+</div>
+<details>
+<summary>
+<b>Which functions did we cover during our first session?</b> (Click for the answer)
+</summary>
+<p>During our first session of Code Club, we examined the <code>setwd</code> function.</p>
+</details>
+</section>
+<section id="types-of-built-in-functions-in-r" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="types-of-built-in-functions-in-r"><span class="header-section-number">2.2</span> Types of built-in functions in R?</h3>
+<p>Built-in functions, which are already created or defined in the programming framework, are referred to as built-in functions. R offers a comprehensive collection of functions that can effectively handle almost any task for the user. These built-in functions are categorized based on their functionality as follows.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/bascis_03/img/r-built-in-functions.png" class="img-fluid figure-img" alt="Types of built-in functions in R"></a></p>
+<figcaption class="figure-caption">Fig. 4. Types of built-in functions in R</figcaption>
+</figure>
+</div>
+<p><br></p>
+<section id="math-functions" class="level4">
+<h4 class="anchored" data-anchor-id="math-functions"><strong>Math functions</strong></h4>
+<p>A numeric function in R is defined as a function that can accept either a set of numeric values or a numeric vector (see below) as an input argument to carry out specific tasks. Here are several frequently used numeric functions in R programming.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 49%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="even">
+<td><strong>abs(</strong><em>x</em><strong>)</strong></td>
+<td>absolute value</td>
+</tr>
+<tr class="odd">
+<td><strong>sqrt(</strong><em>x</em><strong>)</strong></td>
+<td>square root</td>
+</tr>
+<tr class="even">
+<td><strong>ceiling(</strong><em>x</em><strong>)</strong></td>
+<td>ceiling(3.475) is 4</td>
+</tr>
+<tr class="odd">
+<td><strong>floor(</strong><em>x</em><strong>)</strong></td>
+<td>floor(3.475) is 3</td>
+</tr>
+<tr class="even">
+<td><strong>trunc(</strong><em>x</em><strong>)</strong></td>
+<td>trunc(5.99) is 5</td>
+</tr>
+<tr class="odd">
+<td><strong>round(</strong><em>x</em>&nbsp;<strong>, digits=</strong>&nbsp;<em>n</em><strong>)</strong></td>
+<td>round(3.475, digits=2) is 3.48</td>
+</tr>
+<tr class="even">
+<td><strong>signif(</strong><em>x</em>&nbsp;<strong>, digits=</strong>&nbsp;<em>n</em><strong>)</strong></td>
+<td>signif(3.475, digits=2) is 3.5</td>
+</tr>
+<tr class="odd">
+<td><strong>cos(</strong><em>x</em><strong>), sin(</strong><em>x</em><strong>), tan(</strong><em>x</em><strong>)</strong></td>
+<td>also acos(<em>x</em>), cosh(<em>x</em>), acosh(<em>x</em>), etc.</td>
+</tr>
+<tr class="even">
+<td><strong>log(</strong><em>x</em><strong>)</strong></td>
+<td>natural logarithm</td>
+</tr>
+<tr class="odd">
+<td><strong>log10(</strong><em>x</em><strong>)</strong></td>
+<td>common logarithm</td>
+</tr>
+<tr class="even">
+<td><strong>exp(</strong><em>x</em><strong>)</strong></td>
+<td>e^<em>x</em></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="exercises-1" class="level4">
+<h4 class="anchored" data-anchor-id="exercises-1"><strong>Exercises 1</strong></h4>
+<p>A) Let’s explore one function in particular: <code>sum</code></p>
+<p>Last week we used R as a calculator. Add 5 and 7 the way we did last week and then try using the built-in function <code>sum</code>.</p>
+<p>Using R as a calculator to add 5 and 7:</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+</div>
+</details>
+<p>Using the <code>sum</code> built-in function in R, add 5 and 7:</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 12</code></pre>
+</div>
+</div>
+</details>
+<p>B) Now, let’s combine functions by adding 3, 7, 9, and 11. After that, we will multiply the sum by 3. Lastly, we will calculate the square root of this result and round it to the nearest whole number.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sqrt</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">11</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+</div>
+</details>
+<p>C) Below is a very common example in my data analysis.</p>
+<details>
+<summary>
+<b>In the field of Plant Pathology, data such as disease incidence or severity is typically collected as a percentage or proportion. To prepare the data for analysis, it is common to apply a data transformation known as the <code>arc-sine square root</code>. You have gathered disease severity data from three plots: 0.75 (control), 0.70 (Trt 1), and 0.30 (Trt 2). Apply the transformation mentioned above to your data for analysis. </b> (Click for the answer)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">Control <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.75</span></span>
+<span id="cb7-2">Trt1 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.70</span></span>
+<span id="cb7-3">Trt2 <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.30</span></span>
+<span id="cb7-4"></span>
+<span id="cb7-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sqrt</span>(Control))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.047198</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sqrt</span>(Trt1))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.9911566</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sqrt</span>(Trt2))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.5796397</code></pre>
+</div>
+</div>
+</details>
+</section>
+<section id="statistical-probability-functions" class="level4">
+<h4 class="anchored" data-anchor-id="statistical-probability-functions"><strong>Statistical probability functions</strong></h4>
+<p>The table below provides descriptions of functions pertaining to probability distributions.</p>
+<table class="table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 61%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="even">
+<td><strong>dnorm(</strong><em>x</em><strong>)</strong></td>
+<td>normal density function (by default m=0 sd=1)</td>
+</tr>
+<tr class="odd">
+<td><strong>pnorm(</strong><em>q</em><strong>)</strong></td>
+<td>cumulative normal probability for q<br>
+(area under the normal curve to the left of q)<br>
+pnorm(1.96) is 0.975</td>
+</tr>
+<tr class="even">
+<td><strong>qnorm(</strong><em>p</em><strong>)</strong></td>
+<td>normal quantile.&nbsp;<br>
+value at the p percentile of normal distribution<br>
+qnorm(.9) is 1.28 # 90th percentile</td>
+</tr>
+<tr class="odd">
+<td><strong>rnorm(</strong><em>n</em><strong>, m=0, sd=1)</strong></td>
+<td>n random normal deviates with mean m<br>
+and standard deviation sd.</td>
+</tr>
+</tbody>
+</table>
+<p>Let’s generate 10 random normal variates with mean=50, sd=10.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">m=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span>
+<span id="cb13-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(x) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Rounding to the nearest whole number. </span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 50 27 70 44 58 41 48 43 48 51</code></pre>
+</div>
+</div>
+<p>Now let’s do the same thing, but call it <code>y</code> .</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Did you get the same result?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To ensure reproducibility of pseudo-random numbers for the random number generators listed, you can utilize set.seed(1234) or any other integer.</p>
+</div>
+</div>
+<details>
+<summary>
+<b>Example</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1234</span>)</span>
+<span id="cb15-2">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">m=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>))</span>
+<span id="cb15-3">x</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> [1] 38 53 61 27 54 55 44 45 44 41</code></pre>
+</div>
+</div>
+</details>
+</section>
+<section id="other-statistical-and-useful-functions" class="level4">
+<h4 class="anchored" data-anchor-id="other-statistical-and-useful-functions"><strong>Other statistical and useful functions</strong></h4>
+<p>Other useful statistical functions are provided in the following table.</p>
+<table class="table">
+<colgroup>
+<col style="width: 58%">
+<col style="width: 41%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>Function</strong></td>
+<td><strong>Description</strong></td>
+</tr>
+<tr class="even">
+<td><strong>seq(</strong><em>from</em>&nbsp;<strong>,</strong>&nbsp;<em>to</em>&nbsp;<strong>,</strong>&nbsp;<em>by</em><strong>)</strong></td>
+<td>generate a sequence<br>
+indices &lt;- seq(1,10,2)<br>
+#indices is c(1, 3, 5, 7, 9)</td>
+</tr>
+<tr class="odd">
+<td><strong>rep(</strong><em>x</em>&nbsp;<strong>,</strong>&nbsp;<em>ntimes</em><strong>)</strong></td>
+<td>repeat&nbsp;<em>x</em>&nbsp;<em>n</em>&nbsp;times<br>
+y &lt;- rep(1:3, 2)<br>
+# y is c(1, 2, 3, 1, 2, 3)</td>
+</tr>
+</tbody>
+</table>
+<p>Each has the option <code>na.rm</code> to strip missing values before calculations. Otherwise the presence of missing values will lead to a missing result.</p>
+<table class="table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 48%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><strong>mean(</strong><em>x</em>&nbsp;<strong>, trim=</strong><em>0</em><strong>,</strong><br>
+<strong>na.rm=</strong>&nbsp;FALSE&nbsp;<strong>)</strong></td>
+<td>mean of object x</td>
+</tr>
+<tr class="even">
+<td><strong>sd(</strong><em>x</em><strong>)</strong></td>
+<td>standard deviation of object(x).</td>
+</tr>
+<tr class="odd">
+<td><strong>median(</strong><em>x</em><strong>)</strong></td>
+<td>median</td>
+</tr>
+<tr class="even">
+<td><strong>range(</strong><em>x</em><strong>)</strong></td>
+<td>range</td>
+</tr>
+<tr class="odd">
+<td><strong>sum(</strong><em>x</em><strong>)</strong></td>
+<td>sum</td>
+</tr>
+<tr class="even">
+<td><strong>min(</strong><em>x</em><strong>)</strong></td>
+<td>minimum</td>
+</tr>
+<tr class="odd">
+<td><strong>max(</strong><em>x</em><strong>)</strong></td>
+<td>maximum</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<em>Nota bene</em>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Object can be a numeric vector or data frame.</p>
+</div>
+</div>
+</section>
+<section id="exercises-2" class="level4">
+<h4 class="anchored" data-anchor-id="exercises-2"><strong>Exercises 2</strong></h4>
+<p>A) Let’s explore the following functions together using the group of numbers: 5, 7, 3, and 9 (in this order). These functions include: <code>sum</code>, <code>min</code>, <code>max</code>, and <code>range</code></p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">min</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">max</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 9</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3 9</code></pre>
+</div>
+</div>
+</details>
+<p>B) Let’s now get the average, standard deviation, and sort these numbers using <code>mean</code>, <code>sd</code>, and <code>sort</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in sd(5, 7, 3, 9): unused arguments (3, 9)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sort</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in sort(5, 7, 3, 9): 'decreasing' must be a length-1 logical vector.
+Did you intend to set 'partial'?</code></pre>
+</div>
+</div>
+</details>
+<p><br></p>
+</section>
+</section>
+</section>
+<section id="vectors-in-r" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="vectors-in-r"><span class="header-section-number">3</span> Vectors in R</h2>
+<p>Depending on the type of data that one needs to store in R, different data structures can be used. The four most commonly used data types in R are vectors, lists, matrices, and data frames. In this session, we will only be working with vectors.</p>
+<p>The fundamental data structure in R is vectors, which are 1-dimensional data structures that can only contain one type of data (e.g., all entries must have the same mode). To create a vector in R, the <strong>function</strong> <code>c()</code> (concatenate or combine) is used, as shown below.</p>
+<p>Let’s create a vector named “my_vector” with 5 entries.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">my_vector <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">40</span>)</span>
+<span id="cb31-2">my_vector</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10 30 50 20 40</code></pre>
+</div>
+</div>
+<p>The output generated on the previous <code>code chunk</code> displays the entries in your vector, with the 1 in squared brackets indicating the position of the entry to its right in the vector. In this case, 10 is the first entry of the vector.</p>
+<p>If, for any reason, we only wish to extract the value 50 from this vector, we can utilize our knowledge of it being in the third position to do so.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">my_vector[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 50</code></pre>
+</div>
+</div>
+<p>Since a vector can only contain one data type, all its members need to be of the same type. If you attempt to combine data of different types into a vector, R will not provide a warning, but rather <strong>coerce</strong> it to the most flexible type. (The order of flexibility, from least to most, is: logical, integer, double, character). Therefore, if you add a number to a logical vector, the entire vector will be converted to a numeric vector.</p>
+<p>To check what data type an object is, run the R built-in function <code>class()</code>, with the object as the only parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">class</span>(my_vector)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "numeric"</code></pre>
+</div>
+</div>
+<p>If you for any reason want to have more information about any object you have stored in your R session the command&nbsp;<code>str()</code>&nbsp;is very helpful.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str</span>(my_vector)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> num [1:5] 10 30 50 20 40</code></pre>
+</div>
+</div>
+<section id="exercises-3" class="level4">
+<h4 class="anchored" data-anchor-id="exercises-3"><strong>Exercises 3</strong></h4>
+<p>A) Let’s revisit <code>mean</code>, <code>sd</code>, <code>sort</code>, and other basic R operators.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(my_vector)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(my_vector)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 15.81139</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sort</span>(my_vector)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 10 20 30 40 50</code></pre>
+</div>
+</div>
+<p>B) Add 7 to the my_vector, multiply 3 by my_vector, and check which values are greater than 25.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> my_vector</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17 37 57 27 47</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> my_vector</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  30  90 150  60 120</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">25</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1]  TRUE FALSE FALSE  TRUE FALSE</code></pre>
+</div>
+</div>
+</details>
+<p>C) Please create <code>another_vector</code> and add it to <code>my_vector</code>. Next, use the <code>sum</code> function to combine these vectors.</p>
+<p><br></p>
+</section>
+</section>
+<section id="getting-help-with-r" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="getting-help-with-r"><span class="header-section-number">4</span> Getting Help with R</h2>
+<p>Before seeking assistance from others, it is generally advisable for you to attempt to resolve the problem on your own. R provides comprehensive tools for accessing documentation and searching for help.</p>
+<section id="r-help-help-and" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="r-help-help-and"><span class="header-section-number">4.1</span> <strong>R Help: <code>help()</code> and <code>?</code></strong></h3>
+<p>The <code>help()</code> function and <code>?</code> help operator in R offer access to documentation pages for R functions, data sets, and other objects. They provide access to both packages in the standard R distribution and contributed packages.</p>
+<section id="exercises-4" class="level4">
+<h4 class="anchored" data-anchor-id="exercises-4"><strong>Exercises 4</strong></h4>
+<p>A) Can you obtain information about the type of R object that <code>mean()</code> and <code>sum()</code> functions take by using the <code>help()</code> or <code>?</code> functions?</p>
+
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>r-basics</category>
+  <guid>https://osu-codeclub.github.io/posts/bascis_03/index.html</guid>
+  <pubDate>Fri, 26 Jan 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/bascis_03/img/R2D2.png" medium="image" type="image/png" height="108" width="144"/>
+</item>
 <item>
   <title>R Basics 2: Scripts and Objects</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
