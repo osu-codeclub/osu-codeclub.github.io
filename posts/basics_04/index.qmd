@@ -42,7 +42,7 @@ $$
 °F = 1.8 * °C + 32
 $$
 
-With some light rearrangement, we can write the code below:
+With some light rearrangement, we can write the code below so we can plug in a temp in Fahrenheit, and get out a temp in Celsius.
 
 ```{r}
 temps_C <- (temps_F - 32)/1.8
@@ -55,6 +55,7 @@ Here, we simply use the vector `temps_F` as we would any other simpler mathemati
 It is worth mentioning that this is *unique in R* - many other programming languages would require a for loop or similar to do this operation, but because R is a vectorized language, this works easily and simply.
 
 Here is another example. Imagine you have a vector of values and you want to calculate the log base 2 value for each element.
+
 ```{r}
 raw <- c(20, 36, 42, 53)
 
@@ -63,10 +64,9 @@ log2 <- log2(raw)
 log2
 ```
 
-
 This is an example where we apply a formula transformation to a vector, but we can also use vectorized operations with two vectors.
 
-## Vectors by vector operations
+## Vector by vector operations
 
 Let's create some vectors.
 
@@ -76,6 +76,8 @@ vector_1to10 <- c(1:10)
 vector_1to5 <- c(1:5)
 
 vector_1to3 <- c(1:3)
+
+vector_0to4 <- c(0:4)
 ```
 
 ::: {.callout-note title="What do you think will happen if we try and add `vector_1to10` and `vector_1to5`?" collapse="true"}
@@ -85,17 +87,16 @@ vector_1to10 + vector_1to5
 
 We see that `vector_1to5` gets recycled, meaning once the 5 elements in the vector have been used, the addition starts back from the beginning again. If we want to be explicit:
 
-* Element 1 of `vector_1to10` gets added to element 1 of `vector_1to5`
-* Element 2 of `vector_1to10` gets added to element 2 of `vector_1to5`
-* Element 3 of `vector_1to10` gets added to element 3 of `vector_1to5`
-* Element 4 of `vector_1to10` gets added to element 4 of `vector_1to5`
-* Element 5 of `vector_1to10` gets added to element 5 of `vector_1to5`.
-* Element 6 of `vector_1to10` gets added to **element 1** of `vector_1to5`
+-   Element 1 of `vector_1to10` gets added to element 1 of `vector_1to5`
+-   Element 2 of `vector_1to10` gets added to element 2 of `vector_1to5`
+-   Element 3 of `vector_1to10` gets added to element 3 of `vector_1to5`
+-   Element 4 of `vector_1to10` gets added to element 4 of `vector_1to5`
+-   Element 5 of `vector_1to10` gets added to element 5 of `vector_1to5`.
+-   Element 6 of `vector_1to10` gets added to **element 1** of `vector_1to5`
 
 and so on...
 
 **This happens without R explicitly telling you this is happening. We do not get a warning.**
-
 :::
 
 ::: {.callout-note title="What do you think will happen if we try and add `vector_1to10` and `vector_1to3`?" collapse="true"}
@@ -103,10 +104,24 @@ and so on...
 vector_1to10 + vector_1to3
 ```
 
-We see that `vector_1to3` gets recycled, but now we have a warning. We get this because the vector lengths are not divisible by each other to produce an integer. 
-
+We see that `vector_1to3` gets recycled, but now we have a warning. We get this because the vector lengths are not divisible by each other to produce an integer.
 :::
 
+::: {.callout-note title="What do you think will happen if we try and divide `vector_1to10` by `vector_0to4`?" collapse="true"}
+```{r}
+vector_1to10 / vector_0to4
+```
+
+We see that `vector_0to4` gets recycled, but now we have a new output we haven't seen before, `Inf` which stands for infinity/infinite.
+
+If we are then to try and sum this vector:
+
+```{r}
+sum(vector_1to10 / vector_0to4)
+```
+
+We get an answer of infinite. This is because we have at least one infinite value, so including it as part of a sum makes that sum infinite too.
+:::
 
 ## Filtering vectors
 
@@ -149,7 +164,30 @@ You might use the sometimes, but more likely you would want to work using a data
 
 ## Practice
 
+::: {.callout-note title="Create a vector of 10 numbers, beginning at 2, incrementing by 11. Remember, if you call `help()` or put a `?` before a function, you can learn more about its arguments and use." collapse="true"}
+```{r}
+a_vector <- seq(from = 2, by = 11, length.out = 10)
+
+a_vector
+```
+:::
+
+::: {.callout-note title="How many of these values are even? Yes I know that I haven't showed you how to do this but I am confident you can figure out how to :)" collapse="true"}
+A zero remainder means the number is even.
+
+```{r}
+# use modulo operator %% to see if a number is even
+# if the remainer is 0, it is even
+a_vector %% 2
+
+# how many are even?
+10 - sum(a_vector %% 2)
+```
+:::
+
 ## What is a data frame?
+
+![](img/vector-vs-df.png){fig-align="center" width="469"}
 
 Below I am creating a simple data frame, this is a rectangular data object with rows and columns. In reality, you will probably be reading your data in from a `.csv` or `.xlsx` file, but you can also construct a data frame directly in R. We are doing this with the function [`data.frame()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) which is a part of base R.
 
@@ -210,6 +248,7 @@ length(temps_C)
 ```
 
 ## Performing operations on a data frame
+
 Now that we have our `small_df` we can try performing some operations on it.
 
 What if you wanted to take the log base 2 for every value in `small_df`? Just like we did for a vector, we can simply use the function `log2()` on `small_df`.
@@ -224,7 +263,8 @@ What if I wanted to take the log base 2 of only column a? There are a few ways I
 
 ### By indexing
 
-I can use the square brackets `[]` to access certain parts of my data frame. Remember for data frames, the syntax is [rows, columns]. Let's try some example where we access by using indices (i.e., the position of the row, column, or the combination) to grab different parts of our data frame.
+I can use the square brackets `[]` to access certain parts of my data frame. Remember for data frames, the syntax is \[rows, columns\]. Let's try some example where we access by using indices (i.e., the position of the row, column, or the combination) to grab different parts of our data frame.
+
 ```{r}
 # first row, second column
 small_df[1,2]
@@ -237,6 +277,7 @@ small_df[3,]
 ```
 
 Is there any difference as to the types of objects we get when doing these different types of selection? We can use the function `str()` to see what type of R object we have in the different scenarios.
+
 ```{r}
 # first row, second column
 str(small_df[1,2])
@@ -249,6 +290,7 @@ str(small_df[3,])
 ```
 
 Back to the original idea - how would we take the data only from column "a" and log base 2 transform it?
+
 ```{r}
 # first save our df with a new name
 # this is like doing a "save as" for an existing df
@@ -261,15 +303,19 @@ small_df_log2_a[,1] <- log2(small_df[,1])
 small_df_log2_a
 ```
 
+Note that column "a" now is the object type "dbl" or numeric, instead of "int" or integer, since our log2 transformation has made our values no longer integers.
 
 ### By name
+
 We can also index by providing column names - this is a nice approach since when going back to read code, a column name is often more informative than a column index/number. Note that in this case the column name `a` is in quotes since it is a character string.
+
 ```{r}
 # all rows, the column "a"
 small_df[,"a"]
 ```
 
-We can also use the dollar sign accessor `$` to extract an element in a data frame or list. In the case of a data frame, you are accessing a column (though you could be accessing something else if a different type of object). Note that when you type the name of a data frame, and then the $, R will prompt you with some possible column names.
+We can also use the dollar sign accessor `$` to extract an element in a data frame or list. In the case of a data frame, you are accessing a column (though you could be accessing something else if a different type of object). Note that when you type the name of a data frame, and then the \$, R will prompt you with some possible column names.
+
 ```{r}
 small_df$a
 ```
@@ -280,3 +326,66 @@ By using this syntax, you are turning your data frame into a vector. This may or
 :::
 
 ## Practice
+
+::: {.callout-note title="Create a new data frame and assign it to the variable df. Give is 5 columns and 3 rows, and add some numbers in each of the cells, it doesn't matter what they are." collapse="true"}
+```{r}
+# i'm just using different ways to creating lists of numbers 
+df <- data.frame(col_1 = c(2, 3, 4),
+                 col_2 = seq(from = 5, to = 10, by = 2.5),
+                 col_3 = 4:6,
+                 col_4 = rnorm(3, mean = 10, sd = 2),
+                 col_5 = rep(x = 6, times = 3))
+```
+
+```{r}
+df
+```
+:::
+
+::: {.callout-note title="Multiple all of column 1 by column 2." collapse="true"}
+Here are some different ways to do this.
+
+```{r}
+df$col_1 * df$col_2
+```
+
+```{r}
+df[,1] * df[,2]
+```
+
+```{r}
+df[,"col_1"] * df[,"col_2"]
+```
+:::
+
+::: {.callout-note title="Create a sixth column that is the result of the addition of columns 3 and 4." collapse="true"}
+
+```{r}
+col_6 <- df$col_3 + df$col_4
+
+new_df <- data.frame(df,
+                     col_6)
+```
+
+```{r}
+new_df
+```
+
+
+:::
+
+::: {.callout-note title="How does having NAs in a vector change the class of your vector?" collapse="true"}
+
+```{r}
+test_NA_1 <- c(1, 2, 3, 4, NA)
+
+class(test_NA_1)
+
+test_NA_2 <- c(1, 2, 3, 4, "NA")
+
+class(test_NA_2)
+```
+
+
+
+:::
