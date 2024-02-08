@@ -26,9 +26,11 @@ Today, we will explore data manipulation using base R syntax. It is important to
 
 ## Data manipulation with (base) R
 
-### Create a new dataset 
+### Create a new dataset
 
-### <details>
+\###
+
+<details>
 
 <summary><b>Please create a new data frame and name it df. This data frame should consist of three columns (Control, Trt1, and Trt2) with 50 observations each. The Control column should contain 50 data points that follow a normal distribution with a mean of 35 and a standard deviation of 10. Likewise, the Trt1 column should have a mean of 37 and a standard deviation of 10, and the Trt2 column should have a mean of 75 and a standard deviation of 10. Additionally, add five blocks (a, b, c, d, e), each repeating 10 times. Let's use the function `set.seed(1234)` to work with the same values.</b> **(Click for the answer)**</summary>
 
@@ -44,9 +46,11 @@ df <- data.frame(Control = rnorm(50, 35, 10),
 
 <details>
 
-<summary><b>Data mostly come in two shapes – “long” format and “wide” format.
+<summary>
 
-What type of data do you think is `df`?</b> **(Click for the answer)**`</summary> `{=html}
+<b>Data mostly come in two shapes – “long” format and “wide” format.
+
+What type of data do you think is `df`?</b> **(Click for the answer)**</summary>
 
 Our data frame `df` is in **wide** format.
 
@@ -172,11 +176,13 @@ l
 
 Before seeking assistance from others, it is generally advisable for you to attempt to resolve the problem on your own. R provides comprehensive tools for accessing documentation and searching for help.
 
-### **Exercise 1** 
+### **Exercise 1**
 
 <details>
 
-<summary><b>Let's use the same data frame `df` we created at the beginning of this session</b> **(Click for the answer)**`</summary> `{=html}
+<summary>
+
+<b>Let's use the same data frame `df` we created at the beginning of this session</b> **(Click for the answer)**</summary>
 
 Please go to the beginning of this session and re-run the code.
 
@@ -186,7 +192,9 @@ Please go to the beginning of this session and re-run the code.
 
 <details>
 
-<summary><b>A more informative variable could be one showing the difference between the treatment and the control. Create two new variables: `Trt1.Delta` and `Trt2.Delta`.</b> **(Click for the answer)**`</summary> `{=html}
+<summary>
+
+<b>A more informative variable could be one showing the difference between the treatment and the control. Create two new variables: `Trt1.Delta` and `Trt2.Delta`.</b> **(Click for the answer)**</summary>
 
 ```{r}
 df$Trt1.Delta <- df$Trt1 - df$Control
@@ -199,7 +207,9 @@ df$Trt2.Delta <- df$Trt2 - df$Control
 
 <details>
 
-<summary><b>Create a new data frame `df_delta` containing the following variables (columns): `Block`, `Trt1.Delta`, and `Trt2.Delta`.</b> **(Click for the answer)**`</summary> `{=html}
+<summary>
+
+<b>Create a new data frame `df_delta` containing the following variables (columns): `Block`, `Trt1.Delta`, and `Trt2.Delta`.</b> **(Click for the answer)**</summary>
 
 ```{r}
 df_delta <- df[, c("Block", "Trt1.Delta", "Trt2.Delta")]
@@ -211,7 +221,9 @@ df_delta <- df[, c("Block", "Trt1.Delta", "Trt2.Delta")]
 
 <details>
 
-<summary><b>Summarize `Trt1.Delta` and `Trt2.Delta` by `Block`. Produce the mean and standard deviation for each variable.</b> **(Click for the answer)**`</summary> `{=html}
+<summary>
+
+<b>Summarize `Trt1.Delta` and `Trt2.Delta` by `Block`. Produce the mean and standard deviation for each variable.</b> **(Click for the answer)**</summary>
 
 ```{r}
 df.by <- do.call(data.frame, aggregate(cbind(Trt1.Delta, Trt2.Delta) ~ Block, data = df, FUN = function(x) c(mean = mean(x), sd = sd(x) ) ))
@@ -224,7 +236,9 @@ df.by
 
 <details>
 
-<summary><b>In the end, our goal is to conduct statistical analysis to assess the impact of the treatment. However, the current data format does not allow us to proceed with our analysis. To fix this, please transform the data frame `df_delta` from a wide format to a long format. Please name this new data frame as `long_delta`.</b> **(Click for the answer)**`</summary> `{=html}
+<summary>
+
+<b>In the end, our goal is to conduct statistical analysis to assess the impact of the treatment. However, the current data format does not allow us to proceed with our analysis. To fix this, please transform the data frame `df_delta` from a wide format to a long format. Please name this new data frame as `long_delta`.</b> **(Click for the answer)**</summary>
 
 ```{r}
 l <- reshape(df_delta, 
