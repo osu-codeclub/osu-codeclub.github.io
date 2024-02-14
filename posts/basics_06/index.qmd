@@ -1,0 +1,319 @@
+---
+title: "R Basics - 06 Introduction to the `tidyverse`"
+author:
+  - "Jessica Cooperstone"
+date: "2024-02-16"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+image: img/tidyverse-package-workflow.png
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+We are going to introduce a new package and series of functions today that are designed for data science.
+
+## What is the `tidyverse`?
+
+["The tidyverse"](https://www.tidyverse.org/) is a collection of packages called that are designed for data science. You can certainly use R without using the tidyverse, but it has many packages that I think will make your life a lot easier. We will be using mostly tidyverse functions in this class, with some base R syntax scattered throughout.
+
+![Figure from [teachdatascience.com](https://teachdatascience.com/tidyverse/)](img/tidyverse-package-workflow.png)
+
+The "core tidyverse" contains the 8 packages below:
+
+-   [`dplyr`](https://dplyr.tidyverse.org/): for data manipulation
+-   [`ggplot2`](https://ggplot2.tidyverse.org/): a "grammar of graphics" for creating beautiful plots
+-   [`readr`](https://readr.tidyverse.org/): for reading in rectangular data (i.e., Excel-style formatting)
+-   [`tibble`](https://tibble.tidyverse.org/): using tibbles as modern/better dataframes
+-   [`stringr`](https://stringr.tidyverse.org/): handling strings (i.e., text or stuff in quotes)
+-   [`forcats`](https://forcats.tidyverse.org/): for handling categorical variables (i.e., factors) (meow!)
+-   [`tidyr`](https://tidyr.tidyverse.org/): to make "tidy data"
+-   [`purrr`](https://purrr.tidyverse.org/): for enhancing functional programming (also meow!)
+
+We will be using many of these other packages in Code Club and we will talk about them as we go. There are more tidyverse packages outside of these core eight, and we will talk about some of them another time.
+
+> **tl;dr** Tidyverse has a lot of packages that make data analysis easier. None of them are required, but I think you'll find many tidyverse approaches easier and more intuitive than using base R.
+
+## Installing new packages
+
+So far, we have used only functions and data that exist within "base R" - or the version of R that comes with the default install. R is an open source language, meaning people all around the world can develop tools that can be used within R. These tools are always evolving, and there are way to many of them for them to all come pre-downloaded.
+
+These tools mostly live within something called a "package". You can think about a package as a unit of code that can be shared and reused. These packages can include both functions and data. A person (or team) can create a package, make that available for download, and then anyone can use it.
+
+To install packages in R that are on the [Comprehensive R Archive Network (CRAN)](https://cran.r-project.org/), you can use the function `install.packages()`. There are packages that are not on CRAN but we are not going to talk about them today. Be sure that you provide the name of your packages as a string, and put it in quotes.
+
+```{r install, eval = FALSE}
+install.packages("tidyverse")
+```
+
+## Loading libraries
+
+Once you have downloaded a package, you now have it, you can think about it as a book that you now own. When you want to read the book, you don't need to go buy it again, you need to simply take it off your shelf and open it. Using the function [`library()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/library) takes your package from where it is stored on the "shelf" in your computer, and opens it. I hope this is an ok metaphor.
+
+
+```{r load tidyverse}
+library(tidyverse)
+```
+
+It's a good habit to not ignore warnings/messages that R gives you.
+
+::: {.callout-warning title="What does this warning mean?"}
+:::
+
+> We only need to install packages once. But, every time we want to use them, we need to "load" them, and can do this using the function `library()`.
+
+## Practice
+
+::: {.callout-note title="Please install the tidyverse and then load it." collapse="true"}
+
+
+```{r practice install tidyverse, eval = FALSE}
+install.packages("tidyverse")
+```
+
+It doesn't matter here if you put tidyverse in quotes or not - either will work. You can think about tidyverse as an object hat already exists (and not just a string of characters).
+
+```{r practice library tidyverse}
+# it doesn't matter here if you put tidyverse in quotes or not
+# without quotes will work since you can think about it as an object
+# that already exists (and not just a string of characters)
+library(tidyverse)
+```
+
+:::
+
+## Data for today
+
+In addition to having functions, packages also can contain data. Within the `tidyverse` package, there is a bunch of embedded data we can use to play around with.
+
+If you type the function `data()` and then place your cursor between the parentheses and hit tab, you will see what pre-loaded data in R you have access to.
+
+```{r data, eval = FALSE}
+data()
+```
+
+![](img/data.png)
+
+Today we are going to use a dataset called `diamonds` that is embedded within the package `ggplot` (which we have since it gets autmatically installed when we load the `tidyverse`).
+
+Let's learn about `diamonds` using some of the functions [we learned already](https://osu-codeclub.github.io/posts/basics_04/#what-is-a-data-frame).
+
+```{r}
+str(diamonds)
+```
+
+Tidyverse has a version of `str()` called [`glimpse()`](https://dplyr.tidyverse.org/reference/glimpse.html) which does a similar thing but tries to show you more data.
+
+```{r}
+glimpse(diamonds)
+```
+
+> Note that we do **not** see diamonds as an object in our enrivonrment, even though clearly it's there.
+
+## The pipe `|>` or `%>%`
+
+[The pipe](https://r4ds.had.co.nz/pipes.html) `|>` or `%>%` is a tool that allows you to take the output of one function, and send it to the next function.
+
+You can read the pipe as "and then" - here is a theoretical example.
+
+```{r conceptual pipe, eval = FALSE}
+take_this_data |>
+  then_this_function() |>
+  then_another_function() |> 
+  finally_a_last_function()
+```
+
+The easiest way to see how the pipe works is with an example. We are going to go over some examples in a minute.
+
+Some reasons I like the pipe:
+
+-   its easier to read (and doesn't have a lot of nested parentheses)
+-   it doesn't require you to create lots of interim objects which you won't use again
+-   its easy to troubleshoot
+
+> The keyboard shortcut for `|>` is `Ctrl/Cmd` + `Shift` + `M`
+
+Of course you can assign the output of a pipe to something using the assignment operator `<-` and then use it for other things.
+
+Ssome functions are not "pipe friendly" meaning they will not work using pipes. This is often because the data is not the first argument passed to the function. All tidyverse functions work with piping.
+
+## Selecting columns with `select()`
+
+Often you will want to pick only certain columns in your dataframe, and you can do this with the function [`select()`](https://dplyr.tidyverse.org/reference/select.html). You can pick columns by:
+
+-   their names
+-   their position (i.e., index)
+-   characteristics of that column
+
+If we want to know how the arguments to `select()` work, we can access the documentation material about the function.
+
+```{r about select}
+?select()
+```
+
+The arguments to `select()` are:
+
+```{r select arguments, eval = FALSE}
+select(.data, ...)
+```
+
+This tells us that `select()` accepts a data frame (that's good, `diamonds` is one), and we can pass many other expressions.
+
+Let's select first by name.
+
+```{r select by name}
+select(.data = diamonds, # our df
+       carat, cut, price) # the columns we want to pull
+```
+
+Or, we could more simply use the pipe `|>` or `%>%`
+
+```{r select by name pipe}
+diamonds %>%
+  select(carat, cut, price)
+```
+
+We can read this as, take the dataset diamonds, then select the columns carat, cut, and price. That was pretty easy to read!
+
+Note that when you use the pipe, the potential column names will auto-fill for you after you type 3 letters. You should use this option as it will help prevent misspellings. You can also hit `tab` to scroll through all the potential objects to select.
+
+We can also select by index. In general I would recommend against this because its really hard to remember which column indices are which variables today, nevermind returning back to old code 1 year from now. Still I will show you have.
+
+```{r select by index}
+diamonds %>%
+  select(c(1, 2, 7)) # you could also use the colon syntax if your columns are sequential
+```
+
+You can also select using selection helpers like:
+
+-   [`everything()`](https://tidyselect.r-lib.org/reference/everything.html): picks all variables
+-   [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html): starts with some prefix
+-   [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html): contains a specific string
+-   [`where()`](https://tidyselect.r-lib.org/reference/where.html): selects columns where the statement given in the argument is TRUE
+
+Here is an example of using `where()` to select only the columns that are numeric. The function `where()` asks whether the following function is TRUE or FALSE, and keeps only the occurences that evaluate to TRUE.
+
+```{r select with helpers}
+diamonds %>%
+  select(where(is.numeric))
+```
+
+You can find more helpers [here](https://dplyr.tidyverse.org/reference/select.html).
+
+Using `select()` will also set the order of your columns. More about this in practice.
+
+## Choosing observations with `filter()`
+
+```{r filter img, fig.alt = "Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter.", fig.cap= "Figure from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)", out.width = "70%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/filter.png")
+```
+
+Sometimes you want to select observations (rows) based on values. To do this you use [`filter()`](https://dplyr.tidyverse.org/reference/filter.html). Try not to confuse this with `select()`.
+
+::: {.callout-note title="`select()` picks columns, while `filter()` picks rows."} 
+:::
+
+The function `filter()` will keep only observations that meet your filtering criteria.
+
+Let's say we want to only keep the diamonds that are bigger than 3 carats.
+
+```{r filter by numeric value}
+# without the pipe
+# i find this harder to read
+filter(.data = diamonds, 
+       carat > 3)
+
+# the pipe/my preferred way
+diamonds |> 
+  filter(carat > 3)
+```
+
+Here I made use of the greater than `>` sign, and there are other operators you could also use to help you filter.
+
+-   `==`: equal to (I usually read this as exactly equal to, and is different than using an equal sign in an equation)
+-   `<`, `>`: less than or greater than
+-   `<=`, `>=`: less than or equal to, great than or equal to
+-   `&`: and
+-   `|`: or
+-   `!`: not equal
+-   `is.na`: is NA
+
+You can also layer your filtering.
+
+```{r filter twice &}
+diamonds |> 
+  filter(carat > 3 & cut == "Premium")
+```
+
+## Practice
+
+::: {.callout-note title="Create a new dataframe called `small_diamonds` that includes only the diamonds that are less than 0.5 carats. How many diamonds does this include?" collapse="true"}
+```{r}
+small_diamonds <- diamonds %>%
+  filter(carat < 0.5)
+
+nrow(small_diamonds)
+```
+:::
+
+::: {.callout-note title="Subset diamonds into a new df (`diamonds_subset`) so that it only includes diamonds less than $10,000, and only information for carat, cut, price, and color, in that specific order." collapse="true"}
+```{r}
+diamonds_subset <- diamonds %>%
+  filter(price < 10000) %>%
+  select(carat, cut, price, color) # select both picks and orders!
+```
+:::
+
+::: {.callout-note title="What is the mean and standard deviation of carat of the diamonds that passed your critieria in `diamonds_subset`?" collapse="true"}
+
+Using the `$`
+```{r}
+# mean
+mean(diamonds_subset$carat)
+
+# sd
+sd(diamonds_subset$carat)
+```
+
+Using the pipe
+```{r}
+# mean another way
+diamonds_subset %>%
+  pull(carat) %>% # this is necessary because mean requires a vector!
+  mean()
+
+# or you could go full pipe!
+diamonds %>%
+  filter(price < 10000) %>%
+  pull(carat) %>%
+  mean()
+
+# sd another way
+diamonds_subset %>%
+  pull(carat) %>% # this is necessary because mean requires a vector!
+  sd()
+
+# or you could go full pipe!
+diamonds %>%
+  filter(price < 10000) %>%
+  pull(carat) %>%
+  sd()
+```
+
+:::
+
+::: {.callout-note title="How many diamonds in this dataset are both Ideal cut, less than $10,000, and bigger than 1.5 carats??" collapse="true"}
+When you are trying to filter using "and" and have more than 2 items, use a comma in between them.
+```{r}
+diamonds %>%
+  filter(price < 10000, cut == "Ideal", carat > 1.5) %>%
+  nrow()
+```
+:::
