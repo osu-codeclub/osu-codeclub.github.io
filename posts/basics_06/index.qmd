@@ -43,7 +43,7 @@ We will be using many of these other packages in Code Club and we will talk abou
 
 ## Installing new packages
 
-So far, we have used only functions and data that exist within "base R" - or the version of R that comes with the default install. R is an open source language, meaning people all around the world can develop tools that can be used within R. These tools are always evolving, and there are way to many of them for them to all come pre-downloaded.
+So far, we have used only functions and data that exist within "base R" - or the portion of R that comes with the default install. R is an open source language, meaning people all around the world can develop tools that can be used within R. These tools are always evolving, and there are way too many of them for them to all come pre-downloaded.
 
 These tools mostly live within something called a "package". You can think about a package as a unit of code that can be shared and reused. These packages can include both functions and data. A person (or team) can create a package, make that available for download, and then anyone can use it.
 
@@ -53,7 +53,7 @@ To install packages in R that are on the [Comprehensive R Archive Network (CRAN)
 install.packages("tidyverse")
 ```
 
-## Loading libraries
+## Loading packages
 
 Once you have downloaded a package, you now have it, you can think about it as a book that you now own. When you want to read the book, you don't need to go buy it again, you need to simply take it off your shelf and open it. Using the function [`library()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/library) takes your package from where it is stored on the "shelf" in your computer, and opens it. I hope this is an ok metaphor.
 
@@ -78,13 +78,13 @@ It's a good habit to not ignore warnings/messages that R gives you.
 install.packages("tidyverse")
 ```
 
-It doesn't matter here if you put tidyverse in quotes or not - either will work. You can think about tidyverse as an object hat already exists (and not just a string of characters).
 
 ```{r practice library tidyverse}
 # it doesn't matter here if you put tidyverse in quotes or not
 # without quotes will work since you can think about it as an object
 # that already exists (and not just a string of characters)
-library(tidyverse)
+library(tidyverse) # works
+library("tidyverse") # also works
 ```
 
 :::
@@ -140,6 +140,12 @@ Some reasons I like the pipe:
 
 > The keyboard shortcut for `|>` is `Ctrl/Cmd` + `Shift` + `M`
 
+We can change our R options so that the newer version of the pipe `|>` is used over the older one `%>%` when we use the keyboard shortcut. I try and remember to use the new one but it doesn't always happen, so do be familiar with both.
+
+You can go to `Tools` > `Global Options` > `Code` and make sure the tick mark is checked next to "Use the native pipe operator, |> (requires R 4.1+).
+
+![](img/pipe-options.png)
+
 Of course you can assign the output of a pipe to something using the assignment operator `<-` and then use it for other things.
 
 Ssome functions are not "pipe friendly" meaning they will not work using pipes. This is often because the data is not the first argument passed to the function. All tidyverse functions work with piping.
@@ -176,7 +182,7 @@ select(.data = diamonds, # our df
 Or, we could more simply use the pipe `|>` or `%>%`
 
 ```{r select by name pipe}
-diamonds %>%
+diamonds |> 
   select(carat, cut, price)
 ```
 
@@ -187,7 +193,7 @@ Note that when you use the pipe, the potential column names will auto-fill for y
 We can also select by index. In general I would recommend against this because its really hard to remember which column indices are which variables today, nevermind returning back to old code 1 year from now. Still I will show you how.
 
 ```{r select by index}
-diamonds %>%
+diamonds |> 
   select(c(1, 2, 7)) # you could also use the colon syntax if your columns are sequential
 ```
 
@@ -201,7 +207,7 @@ You can also select using selection helpers like:
 Here is an example of using `where()` to select only the columns that are numeric. The function `where()` asks whether the following function is TRUE or FALSE, and keeps only the occurences that evaluate to TRUE.
 
 ```{r select with helpers}
-diamonds %>%
+diamonds |>
   select(where(is.numeric))
 ```
 
@@ -245,18 +251,28 @@ Here I made use of the greater than `>` sign, and there are other operators you 
 -   `!`: not equal
 -   `is.na`: is NA
 
-You can also layer your filtering.
+You can also layer your filtering. This can include in both an AND or OR fashion.
 
 ```{r filter twice &}
+# include diamonds that are bigger than 3 carats and a Premium cut
 diamonds |> 
   filter(carat > 3 & cut == "Premium")
 ```
+
+```{r filter twice OR}
+# include diamonds that are bigger than 3 carats OR a Premium cut
+# "|" (above the return key) is the symbol for "or"
+diamonds |> 
+  filter(carat > 3 | cut == "Premium")
+```
+
+You can play around with combining these different operators to see what happens.
 
 ## Practice
 
 ::: {.callout-note title="Create a new dataframe called `small_diamonds` that includes only the diamonds that are less than 0.5 carats. How many diamonds does this include?" collapse="true"}
 ```{r}
-small_diamonds <- diamonds %>%
+small_diamonds <- diamonds |>
   filter(carat < 0.5)
 
 nrow(small_diamonds)
@@ -265,8 +281,8 @@ nrow(small_diamonds)
 
 ::: {.callout-note title="Subset diamonds into a new df (`diamonds_subset`) so that it only includes diamonds less than $10,000, and only information for carat, cut, price, and color, in that specific order." collapse="true"}
 ```{r}
-diamonds_subset <- diamonds %>%
-  filter(price < 10000) %>%
+diamonds_subset <- diamonds |>
+  filter(price < 10000) |>
   select(carat, cut, price, color) # select both picks and orders!
 ```
 :::
@@ -285,25 +301,25 @@ sd(diamonds_subset$carat)
 Using the pipe
 ```{r}
 # mean another way
-diamonds_subset %>%
-  pull(carat) %>% # this is necessary because mean requires a vector!
+diamonds_subset |>
+  pull(carat) |> # this is necessary because mean requires a vector!
   mean()
 
 # or you could go full pipe!
-diamonds %>%
-  filter(price < 10000) %>%
-  pull(carat) %>%
+diamonds |>
+  filter(price < 10000) |>
+  pull(carat) |>
   mean()
 
 # sd another way
-diamonds_subset %>%
-  pull(carat) %>% # this is necessary because mean requires a vector!
+diamonds_subset |>
+  pull(carat) |> # this is necessary because mean requires a vector!
   sd()
 
 # or you could go full pipe!
-diamonds %>%
-  filter(price < 10000) %>%
-  pull(carat) %>%
+diamonds |>
+  filter(price < 10000) |>
+  pull(carat) |>
   sd()
 ```
 
@@ -312,8 +328,8 @@ diamonds %>%
 ::: {.callout-note title="How many diamonds in this dataset are both Ideal cut, less than $10,000, and bigger than 1.5 carats??" collapse="true"}
 When you are trying to filter using "and" and have more than 2 items, use a comma in between them.
 ```{r}
-diamonds %>%
-  filter(price < 10000, cut == "Ideal", carat > 1.5) %>%
+diamonds |>
+  filter(price < 10000, cut == "Ideal", carat > 1.5) |>
   nrow()
 ```
 :::
