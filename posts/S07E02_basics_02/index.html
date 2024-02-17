@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2024-01-19">
+
+<title>OSU Code Club - R Basics 2: Scripts and Objects</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-new-here" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">New here?</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-new-here">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/r_resources.html">
+ <span class="dropdown-text">R resources for beginners</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#a-little-more-basic-interaction-with-r" id="toc-a-little-more-basic-interaction-with-r" class="nav-link" data-scroll-target="#a-little-more-basic-interaction-with-r"><span class="header-section-number">2</span> A little more basic interaction with R</a>
+  <ul class="collapse">
+  <li><a href="#the-r-prompt-revisited" id="toc-the-r-prompt-revisited" class="nav-link" data-scroll-target="#the-r-prompt-revisited"><span class="header-section-number">2.1</span> The R prompt, revisited</a></li>
+  <li><a href="#r-data-types" id="toc-r-data-types" class="nav-link" data-scroll-target="#r-data-types"><span class="header-section-number">2.2</span> R data types</a></li>
+  </ul></li>
+  <li><a href="#exercises-1" id="toc-exercises-1" class="nav-link" data-scroll-target="#exercises-1"><span class="header-section-number">3</span> Exercises 1</a></li>
+  <li><a href="#r-scripts" id="toc-r-scripts" class="nav-link" data-scroll-target="#r-scripts"><span class="header-section-number">4</span> R scripts</a>
+  <ul class="collapse">
+  <li><a href="#the-editor-pane" id="toc-the-editor-pane" class="nav-link" data-scroll-target="#the-editor-pane"><span class="header-section-number">4.1</span> The editor pane</a></li>
+  <li><a href="#why-use-a-script" id="toc-why-use-a-script" class="nav-link" data-scroll-target="#why-use-a-script"><span class="header-section-number">4.2</span> Why use a script?</a></li>
+  <li><a href="#saving-the-script" id="toc-saving-the-script" class="nav-link" data-scroll-target="#saving-the-script"><span class="header-section-number">4.3</span> Saving the script</a></li>
+  <li><a href="#sending-code-to-the-console" id="toc-sending-code-to-the-console" class="nav-link" data-scroll-target="#sending-code-to-the-console"><span class="header-section-number">4.4</span> Sending code to the console</a></li>
+  <li><a href="#commenting" id="toc-commenting" class="nav-link" data-scroll-target="#commenting"><span class="header-section-number">4.5</span> Commenting</a></li>
+  </ul></li>
+  <li><a href="#r-objects" id="toc-r-objects" class="nav-link" data-scroll-target="#r-objects"><span class="header-section-number">5</span> R Objects</a>
+  <ul class="collapse">
+  <li><a href="#assigning-stuff-to-r-objects" id="toc-assigning-stuff-to-r-objects" class="nav-link" data-scroll-target="#assigning-stuff-to-r-objects"><span class="header-section-number">5.1</span> Assigning stuff to R objects</a></li>
+  <li><a href="#object-names" id="toc-object-names" class="nav-link" data-scroll-target="#object-names"><span class="header-section-number">5.2</span> Object names</a></li>
+  <li><a href="#saving-the-environment" id="toc-saving-the-environment" class="nav-link" data-scroll-target="#saving-the-environment"><span class="header-section-number">5.3</span> Saving the environment</a></li>
+  </ul></li>
+  <li><a href="#exercises-2" id="toc-exercises-2" class="nav-link" data-scroll-target="#exercises-2"><span class="header-section-number">6</span> Exercises 2</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S07E02_basics_02/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">R Basics 2: Scripts and Objects</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">r-basics</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jelmer Poelstra </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 19, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-last-week" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-last-week">Recap of last week</h4>
+<p>Last week, we installed R and RStudio, learned about the distinction between the two, familiarized ourselves with RStudio, learned about “working directories” and RStudio Projects, and had our first interactions with R by using it as a calculator.</p>
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<ul>
+<li><p>A little more basic interaction with R: <strong>missing prompts</strong> and <strong>data types</strong></p></li>
+<li><p>Writing code in <strong>R scripts</strong> instead of the console, and <strong>commenting</strong> your code</p></li>
+<li><p>Using and naming <strong>R objects</strong>, and (not) saving your <strong>environment</strong></p></li>
+</ul>
+</section>
+<section id="setting-up" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
+<p>If you created an RStudio Project for Code Club last week, then be sure to <strong>have that Project open before we get started</strong>. When you start RStudio, it may well have already opened that project for you (check the top-right corner, and see the screenshots below) — if not, click <code>File</code> (top menu bar) &gt; <code>Recent Projects</code>, and select your Project for Code Club from the list.</p>
+<div class="columns">
+<div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/project_open.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+<figcaption>You have an open project “codeclub”</figcaption>
+</figure>
+</div>
+</div><div class="column" style="width:45%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/project_none.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You have no Project open</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>If you don’t have an RStudio Project, no worries. We’ll be saving a file today, but you can always save it in an appropriate directory on the fly.</p>
+<p><br></p>
+</section>
+</section>
+<section id="a-little-more-basic-interaction-with-r" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="a-little-more-basic-interaction-with-r"><span class="header-section-number">2</span> A little more basic interaction with R</h2>
+<section id="the-r-prompt-revisited" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="the-r-prompt-revisited"><span class="header-section-number">2.1</span> The R prompt, revisited</h3>
+<p>The <strong><code>&gt;</code></strong> sign in your console is the R “prompt”. It indicates that R is ready for you to type something.</p>
+<p>When you are not seeing the <code>&gt;</code> prompt, R is either <strong>busy</strong> (because you asked it to do a longer-running computation) or <strong>waiting</strong> for you to complete an incomplete command.</p>
+<p>Type the following into your console, and press <kbd>Enter</kbd> (called <kbd>Return</kbd> on a Mac, but you get the idea):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">203</span> <span class="sc">/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You should notice that your prompt turned into a <strong><code>+</code></strong>.</p>
+<details>
+<summary>
+<b>What is going on here?</b> (Click for the answer)
+</summary>
+<p><strong>R is waiting for you to finish the command, since you typed an incomplete command</strong>: something has to follow the division sign <code>/</code>.</p>
+</details>
+<p>To get out of this situation, one option is to try and finish the command (in this case, by typing another number) — but here, let’s practice another option: <strong>aborting</strong> <strong>the command by pressing</strong> <kbd><strong>Esc</strong></kbd>.</p>
+<p>While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so (typical cases include forgetting a closing parenthesis <code>)</code>). Aborting and fixing the command in full is often the way to go, especially if you’re writing code in a script (as we’ll do below).</p>
+<p><br></p>
+</section>
+<section id="r-data-types" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="r-data-types"><span class="header-section-number">2.2</span> R data types</h3>
+<p>If we just type a <strong>number</strong> and press <kbd>Enter</kbd>…</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dv">203</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 203</code></pre>
+</div>
+</div>
+<p>… then R will simply <strong>print the number back to us</strong>.</p>
+<p>Under the hood, R is calling a <em>function</em> called <code>print()</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, and we saw an example of this last week, too — typing the name of an object will print it’s value:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 5</code></pre>
+</div>
+</div>
+<p>Rather than a number, what if we want R to print back to us some <strong>text</strong>, which in programming lingo is called a “<strong>character string</strong>”?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>Fantastic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'Fantastic' not found</code></pre>
+</div>
+</div>
+<details>
+<summary>
+<b>What seems to be going wrong?</b> (Click for the answer)
+</summary>
+<p>Whenever you type a character string, <strong>R expects to find an <em>object</em> with that name</strong> (we saw our first object <code>x</code> last week, and will talk more about them today).</p>
+<p>When no object exists with that name, R will throw an error.</p>
+</details>
+<p>We <em>can</em> get R to print character strings back to us, and use them in other ways, as long as they are quoted:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="st">"Fantastic"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Fantastic"</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="st">"Code Club"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "Code Club"</code></pre>
+</div>
+</div>
+<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This <em>avoids confusion with objects</em> because unquoted character strings are assumed to be objects, and also <em>allows for “special characters”</em> like spaces.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Quote types
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Double quotes (<code>"Fantastic"</code>) and single quotes (<code>'Fantastic'</code>) can be used interchangeably in R. Double quotes are preferred by most “style guides”.</p>
+</div>
+</div>
+<p>A little more on R’s main “data types”:</p>
+<ul>
+<li><p>Numbers are by default of the data type <strong><code>numeric</code></strong> (and can also be <code>integer</code> - whole numbers only)</p></li>
+<li><p>Character strings are by default of the data type <strong><code>character</code></strong> (and can also be <code>factor</code> for categorical data)</p></li>
+<li><p>The final main data type is <code>logical</code>, which can be either <code>TRUE</code> or <code>FALSE</code>.</p></li>
+</ul>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-1" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="exercises-1"><span class="header-section-number">3</span> Exercises 1</h2>
+<p><strong>A)</strong> Which of the following do you think would work and which would return an error:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> <span class="st">"introduction"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> introduction</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Try both to see which works and what error you get for the other one. Also, try to describe in words what the correct line of code is doing.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The first of the two options was correct R code, while the second returns an error.</p>
+<p>In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas <strong>quoted character strings are “literals”</strong>. Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
+<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist (unless, of course, you had created an object of that name!):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>session_topic <span class="ot">&lt;-</span> introduction</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in eval(expr, envir, enclos): object 'introduction' not found</code></pre>
+</div>
+</div>
+</details>
+<p><strong>B)</strong> Having run the code above, which of the following would make R print <code>"introduction"</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="st">"session_topic"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>session_topic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong> (which we had just created in exercise A), so we shouldn’t use quotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>session_topic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "introduction"</code></pre>
+</div>
+</div>
+</details>
+<p><strong>C)</strong> Do you think the following code would successfully add <code>5</code> and <code>7</code>? If not, what might happen instead?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="st">"5"</span> <span class="sc">+</span> <span class="st">"7"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>In the code above, the “numbers” are saved not as numbers (in R lingo: as a <code>numeric</code>) but as character strings (<code>character</code>).</p>
+<p>R can’t add character strings, so it will return an error:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="st">"5"</span> <span class="sc">+</span> <span class="st">"7"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in "5" + "7": non-numeric argument to binary operator</code></pre>
+</div>
+</div>
+<p>(Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do. Or to automatically convert the characters to numbers, since you’re clearly wanting them to be numbers — but it doesn’t do that either.)</p>
+</details>
+<p><strong>D) (Bonus)</strong> Execute the following code and check its output:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">+</span> <span class="cn">FALSE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Had you expected this result? If not, can you make sense of it: the fact that it works, the specific results, and the fact that we are not using quotes in the code.</p>
+<p>And based on your deliberations, what do you expect the following code to return?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cn">TRUE</span> <span class="sc">+</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<ul>
+<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) can be used as numbers, in which case <code>TRUE</code> is equivalent to 1, and <code>FALSE</code> is equivalent to 0.</p></li>
+<li><p>Therefore, <code>TRUE + FALSE</code> will return <code>1</code>, and <code>TRUE + TRUE</code> will therefore return <code>2</code>.</p></li>
+<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) are made up of letters but are <strong>not</strong> character strings, so they shouldn’t be quoted.</p></li>
+</ul>
+</details>
+<p><br></p>
+</section>
+<section id="r-scripts" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="r-scripts"><span class="header-section-number">4</span> R scripts</h2>
+<section id="the-editor-pane" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-editor-pane"><span class="header-section-number">4.1</span> The editor pane</h3>
+<p>Jess showed us the four quadrants of RStudio last week:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/rstudio-ide-simplified.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+<p>One of those contains a “<strong>Source Editor</strong>” pane, as in a <em>Text Editor</em>. Here, we can open and edit all sorts of text files — including R scripts. This quadrant will disappear if you have no files open:</p>
+<blockquote class="blockquote">
+<p><strong>Create and open a new R script by clicking</strong> <strong><code>File</code> (top menu bar) &gt; <code>New File</code> &gt; <code>R Script</code>.</strong></p>
+</blockquote>
+<p><br></p>
+</section>
+<section id="why-use-a-script" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="why-use-a-script"><span class="header-section-number">4.2</span> Why use a script?</h3>
+<p>An R script is a text file that contains R code.</p>
+<p>So far, we have been typing commands directly into the R console. But it’s a good idea to write and save most of our code in scripts.</p>
+<p>This helps us <strong>keep track of what we’ve been doing</strong>, especially in the longer run, and to <strong>re-run our code</strong> after modifying input data or one of the lines of code.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Interactive scripts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For those of you who are familiar with the notion of a script from other contexts or programming languages — saving our code as a script does not mean that we necessarily need to run the entire script all at once.</p>
+<p>In R, it is instead most common to write and run code interactively, often line by line.</p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="saving-the-script" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="saving-the-script"><span class="header-section-number">4.3</span> Saving the script</h3>
+<p>Let’s save this new script right away…</p>
+<blockquote class="blockquote">
+<p><strong>Click <code>File</code> &gt; <code>Save As</code></strong></p>
+</blockquote>
+<p>… and give it a descriptive name like <code>codeclub_02.R</code>:</p>
+<ul>
+<li><p>You may want to put the script in a folder for Code Club — which should be automatically selected if you are using your Code Club RStudio Project.</p></li>
+<li><p>Make sure it has the <strong>file extension <code>.R</code></strong> — which should also have been automatically suggested by the pop-up window.</p></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+File extensions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>An R script is just a <strong>plain-text file</strong> and you <em>could</em> also save it with, for example, a <code>.txt</code> extension — this will not break the file, but does have drawbacks.</p>
+<p>When you use a <code>.R</code> extension, your computer and RStudio alike will recognize it as an R script. In RStudio, this means you’ll get some formatting that helps when writing your R code, and it can even recognize and warn you about certain errors in your code.</p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="sending-code-to-the-console" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="sending-code-to-the-console"><span class="header-section-number">4.4</span> Sending code to the console</h3>
+<p>If you write most of your code in a script in the Editor, as we recommended above, wouldn’t it be a hassle to execute it? Do you need to copy-and-paste the code into the console? Luckily not.</p>
+<p>Start by by typing another simple calculation, this time <strong>in your R script</strong>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dv">203</span> <span class="sc">/</span> <span class="fl">2.54</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the cursor still on this line of code in the script, <strong>press</strong> <kbd><strong>Ctrl</strong></kbd> <strong>+</strong> <kbd><strong>Enter</strong></kbd> (or, on a Mac: <kbd>Cmd</kbd> + <kbd>Enter</kbd>).</p>
+<p>The code will be <em>copied to the R console and executed</em> (so you should see the result printed as shown below), and additionally, the <em>cursor will move</em> to the next line in the script.</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 79.92126</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+More on sending code to the console
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that it <em>doesn’t matter where on the line your cursor is</em>: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> will always <strong>execute the entire line</strong> unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)</p>
+<p>To execute a line of code, an alternative to the keyboard shortcut is to <strong>click the <code>Run</code> button</strong> in the bar right above your script, but we recommend using the keyboard shortcut — it is much faster, at least once you get used to it.</p>
+</div>
+</div>
+<p>For the rest of this Code Club session, try to write your code in your script, and send it to the console using the keyboard shortcut.</p>
+<p><br></p>
+</section>
+<section id="commenting" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="commenting"><span class="header-section-number">4.5</span> Commenting</h3>
+<p>You can use <strong><code>#</code> signs</strong> to comment your code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Divide by 2.54 to get the wingspan in inches:</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="dv">203</span> <span class="sc">/</span> <span class="fl">2.54</span>    <span class="co"># Original measurement was in cm</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>Anything to the right of a <code>#</code> is ignored by R, meaning it won’t be executed</p></li>
+<li><p>You can use <code>#</code> both <strong>at the start of a line</strong> (entire line is a comment) or anywhere in a line <strong>following code</strong> (rest of the line is a comment)</p></li>
+<li><p>In your R script, comments are formatted differently so you can clearly distinguish them from code</p></li>
+</ul>
+<p>We recommend that you <strong>use lots of comments in your R scripts</strong>! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.</p>
+<p><br></p>
+</section>
+</section>
+<section id="r-objects" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="r-objects"><span class="header-section-number">5</span> R Objects</h2>
+<section id="assigning-stuff-to-r-objects" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="assigning-stuff-to-r-objects"><span class="header-section-number">5.1</span> Assigning stuff to R objects</h3>
+<p>As we’ve seen a couple of times now, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong>. A few more examples:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>wingspan_cm <span class="ot">&lt;-</span> <span class="dv">203</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>conversion <span class="ot">&lt;-</span> <span class="fl">2.54</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> twice to send it to the console.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The Environment tab
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Recall also that the objects you create get added to your “environment”, which RStudio shows in the <strong>Environment tab</strong> in the top-right panel — check that <code>wingspan_cm</code> and <code>conversion</code> are indeed there.</p>
+</div>
+</div>
+<p>After you’ve assigned a number to an object, you can use it in calculations like so:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>wingspan_cm <span class="sc">/</span> conversion</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 79.92126</code></pre>
+</div>
+</div>
+<p>Or, similarly:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>wingspan_inch <span class="ot">&lt;-</span> wingspan_cm <span class="sc">/</span> conversion</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>wingspan_inch</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 79.92126</code></pre>
+</div>
+</div>
+<p>This illustrates that when you execute code with objects, R substitutes the object name that you provide by its contents under the hood. In other words, <em>the object is just a reference to the underlying value(s)</em>.</p>
+<p>“Object” is a general term that encompasses R items of any size or complexity:</p>
+<ul>
+<li><p>Objects can also contain character strings, collections of numbers or character strings (including in table or matrix format), and functions.</p></li>
+<li><p>The above does not mean that “anything goes” — R distinguishes between a limited number of “<strong>data structures</strong>”, each with their own defined structure. We’ll learn about the most important ones next week.</p></li>
+<li><p>The objects we created so far are called <strong>vectors</strong>, which are more commonly thought of as containing a <em>series of values</em>, but in R, can have a length of one<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+More on assignment operators
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The keyboard shortcut for the assignment operator is <kbd>Alt/Option</kbd> + <kbd>-</kbd>.</p>
+<p>Note that <strong>you can also use <code>=</code> as an assignment operator</strong>, as is common in other programming languages. But because <code>=</code> can have other meanings, we recommend sticking with the <code>&lt;-</code> combination.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This also works to assign the value 5 to x (but we recommend using &lt;- instead)</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">5</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="object-names" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="object-names"><span class="header-section-number">5.2</span> Object names</h3>
+<p>Objects can be given almost any name such as <code>x</code>, <code>current_temperature</code>, or <code>subject_id</code>. Some pointers on object names:</p>
+<ul>
+<li><p>Because R is <strong>case sensitive</strong>, <code>wingspan_inch</code> is different from <code>Wingspan_inch</code>!</p></li>
+<li><p>An object name <strong>cannot contain spaces</strong> — so for readability, you should <em>separate words</em> using:</p>
+<ul>
+<li><strong>Underscores:</strong> <code>wingspan_inch</code> (this is called “snake case”, which we often use in Code Club)</li>
+<li><strong>Periods</strong>: <code>wingspan.inch</code></li>
+<li><strong>Capitalization:</strong> <code>wingspanInch</code> or <code>WingspanInch</code> (“camel case”)</li>
+</ul></li>
+<li><p>You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like “snake case.”<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p></li>
+<li><p>Object names can <em>contain</em> but cannot <em>start</em> with a number: <code>x2</code> is valid but <code>2x</code> is not. (There are also some other restrictions that are beyond the scope of this introduction<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.)</p></li>
+<li><p>Make object names descriptive yet not too long — this is not always easy!</p></li>
+</ul>
+<p><br></p>
+<blockquote class="blockquote">
+<p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
+<p>– Phil Karlton</p>
+</blockquote>
+<p><br></p>
+</section>
+<section id="saving-the-environment" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="saving-the-environment"><span class="header-section-number">5.3</span> Saving the environment</h3>
+<p>Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/rdata-popup.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%"></p>
+</figure>
+</div>
+<p>When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
+<details>
+<summary>
+<b>Can you think of a reason why automatically saving and reloading your workspace may not be a good idea?</b> (Click for the answer)
+</summary>
+<p>The main reason why this is generally not considered good practice relates to the idea that you should be able to <em>reproduce your</em> environment <em>(and more broadly speaking, your analysis) from the code in your script</em>.</p>
+<p>Remember that you can modify your environment either by entering commands in the console directly, or by running them from a script — or even from multiple different scripts. Additionally, it is common to run lines in a script out of order, or write lines in the script that you don’t execute.</p>
+<p>Therefore, if you “carry around” the same environment across multiple different sessions, you run a greater risk of not having a reproducible set of steps in your script.</p>
+</details>
+<p>Generally, a better way of working in R than saving your entire environment is to <strong>use and save script</strong>s (as we’ve seen today) and to <strong>save <em>specific</em> outputs</strong> such as tables and plots (as we’ll see soon).</p>
+<p>To make RStudio stop asking you about saving your workspace, click <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>General</code> and (un)check the boxes as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/r_environment.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Restarting R
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Taking the ideas about reproducibility a step further, it can be a good idea to <strong>occasionally restart R</strong> in the middle of working on some code.</p>
+<p>That way, you can check whether the code in your script is correct and complete, that you are not relying on code that is not in the script, and so on.</p>
+<p>To do so, you don’t need to close and reopen RStudio itself: under <code>Session</code> in the top menu bar, you can click <code>Restart R</code> (and you should also see the keyboard shortcut for it in the menu bar: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F10</kbd> (Windows) / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>0</kbd> (Mac).</p>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-2" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exercises-2"><span class="header-section-number">6</span> Exercises 2</h2>
+<p><strong>A)</strong> Why do the following bits of code fail with an error?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>session number <span class="ot">&lt;-</span> <span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>Expert_Level <span class="ot">&lt;-</span> <span class="dv">3</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>Expert_level</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The first fails because an object name cannot contain a space.</p>
+<p>The second fails because of a difference in capitalization (<code>Level</code> vs <code>level)</code>: recall that R is case sensitive.</p>
+</details>
+<p><strong>B)</strong> What will be the value of <code>distance_miles</code> after executing the following lines in R: <code>31</code> or <code>62</code>?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31 </span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Come up with an expectation, then run the code above and see if you were right. What does this tell you about “linkage” between objects in R?</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>Objects don’t get “linked” to each other at all in R.</p>
+<p>In other words, <code>distance_miles</code> was really assigned <strong>the outcome</strong> of <code>distance_km * 2</code>, which is <code>31</code>, rather than its “formula”.</p>
+<p>Therefore, <code>distance_miles</code> wasn’t (and couldn’t be!) “updated” after we changed the value of <code>distance_km</code>, and continued to be <code>31</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>distance_miles <span class="ot">&lt;-</span> distance_km <span class="sc">*</span> <span class="fl">0.62</span>    <span class="co"># distance_miles is now 31.07 </span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>distance_km <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>distance_miles                          <span class="co"># What is the value of distance_miles now?</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 31</code></pre>
+</div>
+</div>
+</details>
+<p><br></p>
+<hr>
+<p><br></p>
+<p><strong>Attribution</strong></p>
+<p>This was modified after material from <a href="https://carpentries.org/">The Carpentries</a>, especially from <a href="http://uw-madison-aci.github.io/2016-06-01-uwmadison/">this Data Carpentry workshop</a> and <a href="https://datacarpentry.org/R-ecology-lesson">this “R for Ecology” workshop</a>.</p>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>We’ll talk about functions soon, likely next week.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Objects that contain a single value are a distinct data structure called “<strong>scalars</strong>” in some languages, and are more informally also called “<strong>variables</strong>”.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>It is also recommended to use <em>nouns</em> for variable names, and <em>verbs</em> for function names. For more, two popular R style guides are <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s</a> and <a href="https://google.github.io/styleguide/Rguide.xml">Google’s</a>.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list). In general, it’s also best not to use the names of existing <strong>functions</strong>, even though this <em>is</em> possible.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S07E02_basics_02/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
