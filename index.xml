@@ -24,8 +24,7 @@
 <p><br></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Illustration by Allison Horst</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -474,8 +473,13 @@ font-style: inherit;">desc</span>(price))</span></code></pre></div>
 <p><br></p>
 <section id="manipulating-with-mutate" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="manipulating-with-mutate"><span class="header-section-number">6</span> Manipulating with <code>mutate()</code></h2>
-<p>Let’s take another look at the illustration we saw at the top of this page, which is about the <code>mutate()</code> function:</p>
-<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid" style="width:75.0%"></p>
+<p>Let’s take a look at the official <code>mutate()</code> documentation figure (😛):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption>Illustration by Allison Horst</figcaption>
+</figure>
+</div>
 <p>It says “<em>add column(s), keep existing</em>” and shows that a third column, <code>C</code>, is being added to a data frame.</p>
 <details>
 <summary>
@@ -624,7 +628,7 @@ font-style: inherit;">10</span>)</span></code></pre></div>
 </details>
 <hr style="height:1pt; visibility:hidden;">
 <ul>
-<li>Next, expand your “pipeline” from above to either remove the columns with mm measurements, or rename the original <code>x</code>, <code>y</code>, and <code>z</code> columns to clarify that those are in mm.</li>
+<li>Next, expand your “pipeline” to either remove the columns with mm measurements, or rename the original <code>x</code>, <code>y</code>, and <code>z</code> columns to clarify that those are in mm.</li>
 </ul>
 <details>
 <summary>
@@ -798,7 +802,7 @@ font-style: inherit;">depth_mm =</span> z)</span></code></pre></div>
 <ol type="1">
 <li>Add a new column with the price per carat, rounded to whole dollars.</li>
 <li>Sort by price per carat in descending order</li>
-<li>Only keep diamonds with an price per carat above $5,000.</li>
+<li>Only keep diamonds with a price per carat above $5,000.</li>
 </ol>
 <p>What is the highest price per carat, and how many diamonds are you left with?</p>
 <details>
@@ -896,12 +900,15 @@ Attaching package: 'janitor'</code></pre>
 <li>Run the following code to create a “tibble” (tidyverse-style dataframe) with poor column names:</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">sale_stats <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (The backticks ` around the column names are necessary to assign such unwieldy names)</span></span>
+<span id="cb44-2">sale_stats <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tibble</span>(</span>
-<span id="cb44-2">  <span class="st" style="color: #20794D;
+<span id="cb44-3">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`</span><span class="at" style="color: #657422;
 background-color: null;
@@ -918,7 +925,7 @@ background-color: null;
 font-style: inherit;">"GA"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"PT"</span>),</span>
-<span id="cb44-3">  <span class="st" style="color: #20794D;
+<span id="cb44-4">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`</span><span class="at" style="color: #657422;
 background-color: null;
@@ -935,7 +942,7 @@ background-color: null;
 font-style: inherit;">98</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">18</span>),</span>
-<span id="cb44-4">  <span class="st" style="color: #20794D;
+<span id="cb44-5">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`</span><span class="at" style="color: #657422;
 background-color: null;
@@ -952,7 +959,7 @@ background-color: null;
 font-style: inherit;">13</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">175</span>),</span>
-<span id="cb44-5">  <span class="st" style="color: #20794D;
+<span id="cb44-6">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`</span><span class="at" style="color: #657422;
 background-color: null;
@@ -969,17 +976,36 @@ background-color: null;
 font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>)</span>
-<span id="cb44-6">)</span></code></pre></div>
+<span id="cb44-7">)</span></code></pre></div>
 </div>
 <ol start="3" type="1">
-<li>Run the <code>clean_names()</code> function on the data frame. (It will take a data frame as its first argument and return a dataframe, much like the dplyr functions we’ve seen). Take a close look at the output — can you spot 3 types of changes that it made?</li>
+<li>Print the <code>sale_stats</code> data frame and take a look at how the column names are shown.</li>
 </ol>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">sale_stats <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">sale_stats</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 4
+  `Abbreviated ID` `% Sold` `Nr Stored` `Lost&amp;Found`
+  &lt;chr&gt;               &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1 DZ                     62         372            0
+2 GA                     98          13            0
+3 PT                     18         175            2</code></pre>
+</div>
+</div>
+</details>
+<ol start="4" type="1">
+<li>Run the <code>clean_names()</code> function on the <code>sale_stats</code> data frame. (It will take a data frame as its first argument and return a dataframe, much like the dplyr functions we’ve seen). Take a close look at the output — can you spot at least 3 types of changes that it made?</li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">sale_stats <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -995,7 +1021,7 @@ font-style: inherit;">clean_names</span>()</span></code></pre></div>
 </div>
 <p>Or equivalently (output not shown):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 </div>
@@ -1003,7 +1029,7 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 <ul>
 <li>Spaces were converted to underscores</li>
 <li>The <code>&amp;</code> was converted to an underscore</li>
-<li>The <code>%</code> was coverted to <code>percent</code> (!)</li>
+<li>The <code>%</code> was converted to <code>percent</code> (!)</li>
 <li>Uppercase (capital) letters were converted to lowercase</li>
 </ul>
 </details>
@@ -1017,7 +1043,7 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
   <category>tidyverse</category>
   <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</guid>
   <pubDate>Fri, 23 Feb 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" medium="image" type="image/png" height="117" width="144"/>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Tidyverse 1: Introduction to the tidyverse</title>

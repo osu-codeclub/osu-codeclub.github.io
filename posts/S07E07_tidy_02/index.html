@@ -262,8 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><br></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption>Illustration by Allison Horst</figcaption>
+<p><img src="img/run.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -638,8 +637,13 @@ depth
 <p><br></p>
 <section id="manipulating-with-mutate" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="manipulating-with-mutate"><span class="header-section-number">6</span> Manipulating with <code>mutate()</code></h2>
-<p>Let’s take another look at the illustration we saw at the top of this page, which is about the <code>mutate()</code> function:</p>
-<p><img src="img/arrange.png" class="img-fluid" style="width:75.0%"></p>
+<p>Let’s take a look at the official <code>mutate()</code> documentation figure (😛):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption>Illustration by Allison Horst</figcaption>
+</figure>
+</div>
 <p>It says “<em>add column(s), keep existing</em>” and shows that a third column, <code>C</code>, is being added to a data frame.</p>
 <details>
 <summary>
@@ -736,7 +740,7 @@ What do the values in column <code>C</code> appear to represent (compare with <c
 </details>
 <hr style="height:1pt; visibility:hidden;">
 <ul>
-<li>Next, expand your “pipeline” from above to either remove the columns with mm measurements, or rename the original <code>x</code>, <code>y</code>, and <code>z</code> columns to clarify that those are in mm.</li>
+<li>Next, expand your “pipeline” to either remove the columns with mm measurements, or rename the original <code>x</code>, <code>y</code>, and <code>z</code> columns to clarify that those are in mm.</li>
 </ul>
 <details>
 <summary>
@@ -834,7 +838,7 @@ What do the values in column <code>C</code> appear to represent (compare with <c
 <ol type="1">
 <li>Add a new column with the price per carat, rounded to whole dollars.</li>
 <li>Sort by price per carat in descending order</li>
-<li>Only keep diamonds with an price per carat above $5,000.</li>
+<li>Only keep diamonds with a price per carat above $5,000.</li>
 </ol>
 <p>What is the highest price per carat, and how many diamonds are you left with?</p>
 <details>
@@ -902,22 +906,42 @@ Attaching package: 'janitor'</code></pre>
 <li>Run the following code to create a “tibble” (tidyverse-style dataframe) with poor column names:</li>
 </ol>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>sale_stats <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Abbreviated ID</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"DZ"</span>, <span class="st">"GA"</span>, <span class="st">"PT"</span>),</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">% Sold</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">62</span>, <span class="dv">98</span>, <span class="dv">18</span>),</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Nr Stored</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">372</span>, <span class="dv">13</span>, <span class="dv">175</span>),</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Lost&amp;Found</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>)</span>
-<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (The backticks ` around the column names are necessary to assign such unwieldy names)</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>sale_stats <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Abbreviated ID</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"DZ"</span>, <span class="st">"GA"</span>, <span class="st">"PT"</span>),</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">% Sold</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">62</span>, <span class="dv">98</span>, <span class="dv">18</span>),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Nr Stored</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">372</span>, <span class="dv">13</span>, <span class="dv">175</span>),</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Lost&amp;Found</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">2</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
-<li>Run the <code>clean_names()</code> function on the data frame. (It will take a data frame as its first argument and return a dataframe, much like the dplyr functions we’ve seen). Take a close look at the output — can you spot 3 types of changes that it made?</li>
+<li>Print the <code>sale_stats</code> data frame and take a look at how the column names are shown.</li>
 </ol>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>sale_stats <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>sale_stats</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 4
+  `Abbreviated ID` `% Sold` `Nr Stored` `Lost&amp;Found`
+  &lt;chr&gt;               &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1 DZ                     62         372            0
+2 GA                     98          13            0
+3 PT                     18         175            2</code></pre>
+</div>
+</div>
+</details>
+<ol start="4" type="1">
+<li>Run the <code>clean_names()</code> function on the <code>sale_stats</code> data frame. (It will take a data frame as its first argument and return a dataframe, much like the dplyr functions we’ve seen). Take a close look at the output — can you spot at least 3 types of changes that it made?</li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>sale_stats <span class="sc">|&gt;</span> <span class="fu">clean_names</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 3 × 4
   abbreviated_id percent_sold nr_stored lost_found
@@ -929,13 +953,13 @@ Attaching package: 'janitor'</code></pre>
 </div>
 <p>Or equivalently (output not shown):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clean_names</span>(sale_stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">clean_names</span>(sale_stats)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The <code>clean_names()</code> function made the following changes to the column names:</p>
 <ul>
 <li>Spaces were converted to underscores</li>
 <li>The <code>&amp;</code> was converted to an underscore</li>
-<li>The <code>%</code> was coverted to <code>percent</code> (!)</li>
+<li>The <code>%</code> was converted to <code>percent</code> (!)</li>
 <li>Uppercase (capital) letters were converted to lowercase</li>
 </ul>
 </details>
