@@ -260,8 +260,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="installing-r-packages" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="installing-r-packages"><span class="header-section-number">2.2</span> Installing R packages</h3>
-<section id="cran-packages" class="level4" data-number="2.2.1">
-<h4 data-number="2.2.1" class="anchored" data-anchor-id="cran-packages"><span class="header-section-number">2.2.1</span> CRAN packages</h4>
+<section id="cran-packages" class="level4">
+<h4 class="anchored" data-anchor-id="cran-packages">CRAN packages</h4>
 <p>To install an R package that is available at <a href="https://cran.r-project.org/">CRAN</a>, the default R package repository, from within R (e.g.&nbsp;in the R console in RStudio), use the <code>install.packages()</code> function.</p>
 <p>The <code>install.packages()</code> function will handle dependencies within R — i.e., it will install other R packages that your package depends on. Occasionally, when the install function needs to compile a package from source, errors arise that relate to missing system dependencies (i.e.&nbsp;software outside of R).</p>
 <p>On <strong>Mac</strong> and <strong>Linux</strong>, these system dependencies are best installed outside of R, such as with <code>homebrew</code> on Mac or <code>apt</code> on Ubuntu. The errror message you got when trying to install an R package should tell you which system dependencies are needed.</p>
@@ -270,15 +270,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>installlr<span class="sc">::</span><span class="fu">install.RStudio</span>()    <span class="co"># Install RStudio</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>installr<span class="sc">::</span><span class="fu">install.python</span>()      <span class="co"># Install Python</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="installing-packages-from-github" class="level4" data-number="2.2.2">
-<h4 data-number="2.2.2" class="anchored" data-anchor-id="installing-packages-from-github"><span class="header-section-number">2.2.2</span> Installing packages from Github</h4>
+<section id="installing-packages-from-github" class="level4">
+<h4 class="anchored" data-anchor-id="installing-packages-from-github">Installing packages from Github</h4>
 <p>To install a package from Github, use either the <em>devtools</em> or the <em>remotes</em> package – for example:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)                <span class="co"># Install the remotes package</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"kbroman/broman"</span>)  <span class="co"># Install from a repository using "&lt;username&gt;/&lt;repo-name&gt;"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>This will install the package <em>from source</em>, so you will need to make sure you are able to do so by following the instructions in the section right above this one.</p>
 </section>
-<section id="installing-packages-from-bioconductor" class="level4" data-number="2.2.3">
-<h4 data-number="2.2.3" class="anchored" data-anchor-id="installing-packages-from-bioconductor"><span class="header-section-number">2.2.3</span> Installing packages from Bioconductor</h4>
+<section id="installing-packages-from-bioconductor" class="level4">
+<h4 class="anchored" data-anchor-id="installing-packages-from-bioconductor">Installing packages from Bioconductor</h4>
 <p>If you’re doing bioinformatic analyses in R, you will probably run into packages that are not on CRAN but on <a href="https://bioconductor.org/">Bioconductor</a>. To install a package from Bioconductor, use the <em>BiocManager</em> package – for example:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"BiocManager"</span>)  <span class="co"># Install the BiocManager package</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>BiocManager<span class="sc">::</span><span class="fu">install</span>(<span class="st">"edgeR"</span>)    <span class="co"># Install the edgeR package from Bioconductor</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -298,8 +298,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p><strong>Mac</strong>: Download and install the latest <code>.pkg</code> file as if you were installing it for the first time.</p></li>
 </ul>
 <p><br></p>
-<section id="re-installing-your-packages-after-updating-mac-and-linux" class="level4" data-number="2.3.1">
-<h4 data-number="2.3.1" class="anchored" data-anchor-id="re-installing-your-packages-after-updating-mac-and-linux"><span class="header-section-number">2.3.1</span> Re-installing your packages after updating (Mac and Linux)</h4>
+<section id="re-installing-your-packages-after-updating-mac-and-linux" class="level4">
+<h4 class="anchored" data-anchor-id="re-installing-your-packages-after-updating-mac-and-linux">Re-installing your packages after updating (Mac and Linux)</h4>
 <p>While the <code>installr::updateR()</code> function for <strong>Windows</strong> users takes care of reinstalling your packages along with updating R, <strong>Mac</strong> and <strong>Linux</strong> users will have to manually re-install their packages. Some people prefer to re-install these packages on the fly, which can end up being a way to get rid of packages you no longer use.</p>
 <p>But if you want immediately reinstall all your packages, run this before you upgrade:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>my_packages <span class="ot">&lt;-</span> <span class="fu">installed.packages</span>()</span>
