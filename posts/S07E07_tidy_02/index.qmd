@@ -180,6 +180,23 @@ diamonds |>
   arrange(desc(carat))
 ```
 
+::: callout-tip
+### Saving the output?
+
+In the examples above, and in all of today's examples and exercises,
+we are simply _printing_ the output data frame.
+This means that we are leaving the original data frame `diamonds` **unchanged**
+and that we are not storing our results elsewhere either.
+
+Recall that you can assign to a new dataframe as one way to store your results:
+
+```{r}
+diamonds_sorted <- diamonds |>
+  arrange(carat)
+```
+
+:::
+
 <br>
 
 ## Renaming columns with `rename()` (and `select()`)
@@ -331,9 +348,14 @@ the operation is executed in a (vectorized) **row-wise fashion**:
 the `volume` that we see in the first row was created by multiplying `x`, `y` and `z` in the first row,
 and so on.
 
+Also note that the new column created by `mutate()` is (by default) added as the _last_ column.
+
 <hr style="height:1pt; visibility:hidden;" />
 
-It is also possible to simply **change the values in a column** (without creating a new column)
+-----
+
+Instead of creating a new column with `mutate()`,
+it is also possible to simply **change the values in a column** (without creating a new column)
 by assigning back to the same column name.
 For example, say that we wanted diamond length to be in cm _instead of_ in mm:
 
