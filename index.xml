@@ -6,16 +6,999 @@
       version="2.0">
 <channel>
 <title>OSU Code Club</title>
-<link>https://osu-codeclub.github.io/index.html</link>
+<link>https://osu-codeclub.github.io/</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.450</generator>
-<lastBuildDate>Fri, 23 Feb 2024 05:00:00 GMT</lastBuildDate>
+<generator>quarto-1.4.549</generator>
+<lastBuildDate>Fri, 01 Mar 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Tidyverse 3: Grouping and Summarizing Data</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E08_tidy_03/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-the-past-two-weeks" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-the-past-two-weeks">Recap of the past two weeks</h4>
+<p>In the past two weeks, we’ve been learning about 5 functions from the <em>dplyr</em> package, a central workhorse of the tidyverse ecosystem, to manipulate data in data frames:</p>
+<ul>
+<li><code>filter()</code> to pick rows (which typically represent observations/samples/individuals)</li>
+<li><code>select()</code> to pick columns (which typically represent variables/properties)</li>
+<li><code>arrange()</code> to sort data frame rows</li>
+<li><code>rename()</code> to change data frame column names</li>
+<li><code>mutate()</code> to add and manipulate data frame columns</li>
+</ul>
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<p>Today, we will focus on a slightly more complicated and very powerful <em>dplyr</em> function: <code>summarize()</code> to compute summaries across rows, typically across <strong>groups of rows</strong>.</p>
+<p>We will also learn about a couple other handy functions to work with groups of rows: the <code>slice_()</code> family of functions and <code>count()</code>.</p>
+</section>
+<section id="setting-up" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
+<p>Load the tidyverse:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Still need to install the tidyverse? <em>Click here for instructions</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>We’ll continue working with the <code>diamonds</code> dataframe (automatically loaded with the tidyverse), so let’s take another look at that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(diamonds)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="summarize" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="summarize"><span class="header-section-number">2</span> <code>summarize()</code></h2>
+<section id="a-first-example" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="a-first-example"><span class="header-section-number">2.1</span> A first example</h3>
+<p>The <code>summarize()</code> function from the <em>dplyr</em> package can compute across-row data summaries. As a first example, here’s how you can compute the overall mean of the <code>carat</code> column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb6-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(carat))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 1 × 1
+  carat_mean
+       &lt;dbl&gt;
+1      0.798</code></pre>
+</div>
+</div>
+<p>However, summarizing across all rows at once with <code>summarize()</code> is much more verbose than the simple, base R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(diamonds<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>carat)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 0.7979397</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="summarizing-by-group" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="summarizing-by-group"><span class="header-section-number">2.2</span> Summarizing by group</h3>
+<p>The real power of <code>summarize()</code> comes with its ability to compute <strong>group-wise summaries</strong>. For example, simply by adding <code>.by = cut</code>, it will calculate the mean <code>carat</code> separately for each value of <code>cut</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(carat), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut       carat_mean
+  &lt;ord&gt;          &lt;dbl&gt;
+1 Ideal          0.703
+2 Premium        0.892
+3 Good           0.849
+4 Very Good      0.806
+5 Fair           1.05 </code></pre>
+</div>
+</div>
+<p>Nice! We can also compute multiple summarized variables — and use summarizing functions other than <code>mean()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(carat),</span>
+<span id="cb12-3">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_max =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">max</span>(carat),</span>
+<span id="cb12-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean carat_max
+  &lt;ord&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+1 Ideal          0.703      3.5 
+2 Premium        0.892      4.01
+3 Good           0.849      3.01
+4 Very Good      0.806      4   
+5 Fair           1.05       5.01</code></pre>
+</div>
+</div>
+<p>A handy helper function is <strong><code>n()</code></strong>, which will compute the <strong>number of rows for each group</strong> (i.e.&nbsp;the group sizes, which can be good to know, for example so you don’t make unfounded conclusions based on really small sample sizes):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(carat),</span>
+<span id="cb14-3">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nr_diamonds =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">n</span>(),</span>
+<span id="cb14-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean nr_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;       &lt;int&gt;
+1 Ideal          0.703       21551
+2 Premium        0.892       13791
+3 Good           0.849        4906
+4 Very Good      0.806       12082
+5 Fair           1.05         1610</code></pre>
+</div>
+</div>
+<p>You can also ask <code>summarize()</code> to compute summaries by <strong>multiple columns</strong>, which will return separate summaries for each <em>combination</em> of the involved variables — we’ll see this in the exercises.</p>
+<p>Here is an overview of the most commonly used functions to compute summaries:</p>
+<ul>
+<li><code>mean()</code> &amp; <code>median()</code></li>
+<li><code>min()</code> &amp; <code>max()</code></li>
+<li><code>sum()</code></li>
+<li><code>sd()</code>: standard deviation</li>
+<li><code>IQR()</code>: interquartile range</li>
+<li><code>n()</code>: counts the number of rows (observations)</li>
+<li><code>n_distinct()</code>: counts the number of distinct (unique) values</li>
+</ul>
+<p>Finally, this may be obvious, but whatever column you are computing summaries by (using <code>.by</code>) should be a <strong>categorical variable</strong>.</p>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Side note: <code>group_by()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The “classic” way of using <code>summarize()</code> with multiple groups is by preceding it with a <code>group_by()</code> call — e.g., the code below is equivalent to our last example above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb16-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">group_by</span>(cut) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb16-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">carat_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(carat),</span>
+<span id="cb16-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nr_diamonds =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">n</span>())</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean nr_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;       &lt;int&gt;
+1 Fair           1.05         1610
+2 Good           0.849        4906
+3 Very Good      0.806       12082
+4 Premium        0.892       13791
+5 Ideal          0.703       21551</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>The <code>.by</code> argument to <code>summarize()</code> (and other functions!) is a rather recent addition, but I prefer it over <code>group_by()</code>:</p>
+<ul>
+<li>It is simpler, a bit less typing, and makes the <code>summarize()</code> call self-contained</li>
+<li>When grouping by multiple columns, <code>group_by()</code> has some odd, unhelpful behavior where it keeps some of the groupings, such that you likely need an <code>ungroup()</code> call as well.</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-i" class="level2 exercise" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">3</span> Exercises I</h2>
+<section id="diamond-sizes-in-relation-to-clarity" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="diamond-sizes-in-relation-to-clarity"><span class="header-section-number">3.1</span> Diamond sizes in relation to <code>clarity</code></h3>
+<p><strong>A)</strong> Compute the mean length (<code>x</code>), width (<code>y</code>), and depth (<code>z</code>) for each diamond <code>clarity</code>. Also include a column with group sizes. Do you see any clear differences?</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb18-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(x),</span>
+<span id="cb18-3">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(y),</span>
+<span id="cb18-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">z_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(z),</span>
+<span id="cb18-5">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">nr_diamonds =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">n</span>(),</span>
+<span id="cb18-6">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> clarity)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 5
+  clarity x_mean y_mean z_mean nr_diamonds
+  &lt;ord&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;       &lt;int&gt;
+1 SI2       6.40   6.40   3.95        9194
+2 SI1       5.89   5.89   3.64       13065
+3 VS1       5.57   5.58   3.44        8171
+4 VS2       5.66   5.66   3.49       12258
+5 VVS2      5.22   5.23   3.22        5066
+6 VVS1      4.96   4.98   3.06        3655
+7 I1        6.76   6.71   4.21         741
+8 IF        4.97   4.99   3.06        1790</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Diamond size differences between clarities may become more apparent if we use the overall volume:</p>
+<ul>
+<li>Dig up your <code>mutate()</code> skills to create a volume column <code>vol</code> (length * width * depth)</li>
+<li>Compute the mean volume for each diamond <code>clarity</code></li>
+</ul>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vol =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> z) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb20-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">vol_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(vol), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> clarity)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 2
+  clarity vol_mean
+  &lt;ord&gt;      &lt;dbl&gt;
+1 SI2        175. 
+2 SI1        138. 
+3 VS1        119. 
+4 VS2        124. 
+5 VVS2        97.6
+6 VVS1        82.5
+7 I1         205. 
+8 IF          83.3</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="diamond-prices" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="diamond-prices"><span class="header-section-number">3.2</span> Diamond prices</h3>
+<p><strong>A)</strong> For each diamond <code>cut</code>, compute the <code>price</code>’s mean, median, minimum, maximum, and standard deviation.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_mean =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(price),</span>
+<span id="cb22-3">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_median =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">median</span>(price),</span>
+<span id="cb22-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_min =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">min</span>(price),</span>
+<span id="cb22-5">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_max =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">max</span>(price),</span>
+<span id="cb22-6">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_sd =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(price),</span>
+<span id="cb22-7">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 6
+  cut       price_mean price_median price_min price_max price_sd
+  &lt;ord&gt;          &lt;dbl&gt;        &lt;dbl&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;
+1 Ideal          3458.        1810        326     18806    3808.
+2 Premium        4584.        3185        326     18823    4349.
+3 Good           3929.        3050.       327     18788    3682.
+4 Very Good      3982.        2648        336     18818    3936.
+5 Fair           4359.        3282        337     18574    3560.</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Find the combination of <code>cut</code>, <code>color</code>, and <code>clarity</code> that on average yields the most expensive diamonds.</p>
+<p>For this, you’ll have to group by all these 3 columns. Try this for yourself first, but check out the first solution if you can’t get that part to work.</p>
+<details>
+<summary>
+<b>Grouping solution</b> (click here)
+</summary>
+<p><code>.by = c(cut, color, clarity)</code> will group by these 3 columns at once.</p>
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>After summarizing, it makes sense to arrange in descending order by price, so you can see the cut-color-clarity combinations with the most expensive diamonds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb24-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(price),</span>
+<span id="cb24-3">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(cut, color, clarity)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb24-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(price))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 276 × 4
+   cut       color clarity  price
+   &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;    &lt;dbl&gt;
+ 1 Very Good D     IF      10298.
+ 2 Good      D     IF      10030.
+ 3 Ideal     J     I1       9454 
+ 4 Premium   D     IF       9056.
+ 5 Premium   J     SI2      7550.
+ 6 Fair      D     I1       7383 
+ 7 Premium   J     VVS1     7244.
+ 8 Ideal     I     SI2      7192.
+ 9 Premium   I     VS2      7156.
+10 Premium   I     SI2      7148.
+# ℹ 266 more rows</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<p><br></p>
+<section id="the-slice_-functions" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="the-slice_-functions"><span class="header-section-number">4</span> The <code>slice_</code> functions</h2>
+<p>Like the <code>filter()</code> function, functions in the <code>slice_</code> family select specific rows, but have some different functionality that’s quite handy — especially in combination with grouping.</p>
+<p>Let’s say we wanted to only get, <strong>for each <code>cut</code>, the diamond with the highest value of <code>carat</code></strong>. We can do this pretty easily with the <code>slice_max()</code> function, which will return the row(s) with the highest value for a specified variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb26-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(carat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+2  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+3  4.01 Premium   J     I1       62.5    62 15223 10.0   9.94  6.24
+4  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+5  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+6  3.01 Good      H     SI2      57.6    64 18593  9.44  9.38  5.42
+7  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+8  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Why are we getting more than one diamond per <code>cut</code> in some cases? <em>(Click to see the answer)</em>
+</summary>
+Because of ties in the <code>cut</code> value. (We’ll get back to this in the next set of exercises.)
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>You can get more than just the single highest (<code>slice_max()</code>) / lowest (<code>slice_min()</code>) value per group with the <code>n=</code> argument, and can get a specific proportion of rows with <code>prop=</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the 3 highest-depth diamonds for each value of cut</span></span>
+<span id="cb28-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb28-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(depth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> cut, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 280 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  2.01 Ideal   I     VS2      66.7    56 15729  7.75  7.65  5.14
+ 2  0.71 Ideal   E     SI2      65.5    55  2511  5.62  5.56  3.66
+ 3  3.01 Ideal   J     I1       65.4    60 16538  8.99  8.93  5.86
+ 4  0.8  Premium G     SI1      63      59  2760  5.9   5.81  3.69
+ 5  0.9  Premium I     VS2      63      58  2761  6.16  6.12  3.87
+ 6  0.72 Premium I     IF       63      57  2795  5.72  5.7   3.6 
+ 7  0.72 Premium E     VS2      63      55  2802  5.79  5.61  3.59
+ 8  0.7  Premium E     VS2      63      60  2818  5.64  5.6   3.54
+ 9  0.81 Premium G     SI1      63      60  2832  5.87  5.81  3.68
+10  0.7  Premium G     VS1      63      60  2838  5.64  5.57  3.53
+# ℹ 270 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Get the 1% lowest-carat diamonds for each value of color</span></span>
+<span id="cb30-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb30-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_min</span>(carat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> color, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">prop =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.01</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 926 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.2  Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+ 2  0.2  Premium   E     VS2      59.8    62   367  3.79  3.77  2.26
+ 3  0.2  Premium   E     VS2      59      60   367  3.81  3.78  2.24
+ 4  0.2  Premium   E     VS2      61.1    59   367  3.81  3.78  2.32
+ 5  0.2  Premium   E     VS2      59.7    62   367  3.84  3.8   2.28
+ 6  0.2  Ideal     E     VS2      59.7    55   367  3.86  3.84  2.3 
+ 7  0.2  Very Good E     VS2      63.4    59   367  3.74  3.71  2.36
+ 8  0.2  Ideal     E     VS2      62.2    57   367  3.76  3.73  2.33
+ 9  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+10  0.21 Very Good E     VS2      63.2    54   386  3.82  3.78  2.4 
+# ℹ 916 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The full set of <code>slice_</code> functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>slice_head(n = 1)</code> takes the first row.</li>
+<li><code>slice_tail(n = 1)</code> takes the last row</li>
+<li><code>slice_min(x, n = 1)</code> takes the row with the smallest value in column <code>x</code>.</li>
+<li><code>slice_max(x, n = 1)</code> takes the row with the largest value in column <code>x</code>.</li>
+<li><code>slice_sample(n = 1)</code> takes one random row.</li>
+<li><code>slice(15)</code> takes the 15th row.</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="the-count-function" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-count-function"><span class="header-section-number">5</span> The <code>count()</code> function</h2>
+<p>Above, we used the <code>n()</code> helper with <code>summarize()</code> to get the number of rows with each value of <code>cut</code> (i.e.&nbsp;the group sizes) along with other computed summaries.</p>
+<p>Getting a “count table” like that is such a common part of Exploratory Data Analysis (EDA) that there’s another function available for it, <code>count()</code>. And unless you’re already <code>summarize</code>-ing, this one is simpler to use:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut           n
+  &lt;ord&gt;     &lt;int&gt;
+1 Fair       1610
+2 Good       4906
+3 Very Good 12082
+4 Premium   13791
+5 Ideal     21551</code></pre>
+</div>
+</div>
+<p>We may also want to sort the output by frequency, which can be useful especially when there are many different values for the focal variable (not really the case here, but you get the point):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(cut, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sort =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut           n
+  &lt;ord&gt;     &lt;int&gt;
+1 Ideal     21551
+2 Premium   13791
+3 Very Good 12082
+4 Good       4906
+5 Fair       1610</code></pre>
+</div>
+</div>
+<p>And you can also create counts for value combinations across multiple columns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(cut, color)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 35 × 3
+   cut   color     n
+   &lt;ord&gt; &lt;ord&gt; &lt;int&gt;
+ 1 Fair  D       163
+ 2 Fair  E       224
+ 3 Fair  F       312
+ 4 Fair  G       314
+ 5 Fair  H       303
+ 6 Fair  I       175
+ 7 Fair  J       119
+ 8 Good  D       662
+ 9 Good  E       933
+10 Good  F       909
+# ℹ 25 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Base R’s <code>table()</code> function
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Also worth mentioning is the base R <code>table()</code> function, which is similar to <code>count()</code>. While its output format is unwieldy for follow-up analyses<sup>1</sup>, you may prefer its formatting especially when wanting to glance at a 2-way count table to see patterns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(diamonds<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>cut, diamonds<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>color)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>           
+               D    E    F    G    H    I    J
+  Fair       163  224  312  314  303  175  119
+  Good       662  933  909  871  702  522  307
+  Very Good 1513 2400 2164 2299 1824 1204  678
+  Premium   1603 2337 2331 2924 2360 1428  808
+  Ideal     2834 3903 3826 4884 3115 2093  896</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>Additionally, as a <em>dplyr</em> function, <code>count()</code> only works with data frames. Occasionally, you may also need to create a count table for a <strong>vector</strong>, and <code>table()</code> can do that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">cut_vec <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> diamonds<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>cut</span>
+<span id="cb40-2"></span>
+<span id="cb40-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">table</span>(cut_vec)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>cut_vec
+     Fair      Good Very Good   Premium     Ideal 
+     1610      4906     12082     13791     21551 </code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-ii" class="level2 exercise" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">6</span> Exercises II</h2>
+<section id="no-ties-please" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="no-ties-please"><span class="header-section-number">6.1</span> No ties, please</h3>
+<p>Above, when we first used <code>slice_max()</code>, we got multiple rows for some groups. Check out the help for this function (<code>?slice_max</code>) and get it to print only one row per group, even in the case of ties.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The <code>with_ties</code> argument controls this. The default is <code>TRUE</code> (do include ties), so we want to set it to <code>FALSE</code> (don’t include ties):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb42-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(carat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> cut, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">with_ties =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+2  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+3  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+4  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+5  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="random-diamonds" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="random-diamonds"><span class="header-section-number">6.2</span> Random diamonds</h3>
+<p>Use <code>slice_sample()</code> to get 5 random diamonds for each combination of <code>cut</code>, <code>color</code> and <code>clarity</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb44-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_sample</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(cut, color, clarity))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 1,342 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1.11 Ideal   E     SI2      62.8    55  5004  6.62  6.6   4.15
+ 2  1.51 Ideal   E     SI2      62.5    57 10210  7.29  7.34  4.57
+ 3  1.1  Ideal   E     SI2      61.6    57  4829  6.68  6.64  4.1 
+ 4  0.74 Ideal   E     SI2      60.9    57  2617  5.89  5.83  3.57
+ 5  0.55 Ideal   E     SI2      62      56  1273  5.27  5.22  3.25
+ 6  0.91 Premium E     SI1      62.2    58  3665  6.29  6.18  3.86
+ 7  1.51 Premium E     SI1      62.6    55 11565  7.33  7.25  4.56
+ 8  1.5  Premium E     SI1      60.8    58 11795  7.36  7.32  4.46
+ 9  1.51 Premium E     SI1      59.6    61 12236  7.53  7.43  4.46
+10  0.4  Premium E     SI1      60.9    56   945  4.8   4.76  2.91
+# ℹ 1,332 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="count" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="count"><span class="header-section-number">6.3</span> <code>count()</code></h3>
+<p><strong>A)</strong> Create a sorted count table of diamond <code>clarity</code>s</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(clarity, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sort =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 2
+  clarity     n
+  &lt;ord&gt;   &lt;int&gt;
+1 SI1     13065
+2 VS2     12258
+3 SI2      9194
+4 VS1      8171
+5 VVS2     5066
+6 VVS1     3655
+7 IF       1790
+8 I1        741</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> What are the least common combinations of <code>clarity</code> and <code>depth</code> for diamonds costing less than $5,000?</p>
+<details>
+<summary>
+<b>Hints</b> (click here)
+</summary>
+<ul>
+<li>You’ll have to <code>filter()</code> first.</li>
+<li>Can you sort in reverse order with <code>count()</code>? If not, you’ll have to use a separate <code>arrange()</code></li>
+</ul>
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb48-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb48-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">count</span>(clarity, color) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb48-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(n)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 56 × 3
+   clarity color     n
+   &lt;ord&gt;   &lt;ord&gt; &lt;int&gt;
+ 1 I1      J        26
+ 2 I1      D        32
+ 3 IF      D        39
+ 4 IF      J        40
+ 5 VVS1    J        51
+ 6 I1      I        65
+ 7 VVS2    J        67
+ 8 I1      E        84
+ 9 I1      H       108
+10 I1      G       114
+# ℹ 46 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="bonus-sort-then-slice" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="bonus-sort-then-slice"><span class="header-section-number">6.4</span> Bonus: sort then slice</h3>
+<p><code>slice_head()</code> will print the <em>first-occurring</em> row(s), and its twin <code>slice_tail()</code> prints the <em>last</em> row(s). In combination with sorting, these can give more flexibility than the min-max functions.</p>
+<p>For each <code>color</code>, use <code>arrange()</code> and <code>slice_head()</code> to get the 3 diamonds with the highest carat, with ties in carat broken by price (highest first).</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb50-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(carat), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(price)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb50-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_head</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">by =</span> color)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 21 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98
+ 2  4.5  Fair      J     I1       65.8    58 18531 10.2  10.2   6.72
+ 3  4.01 Premium   J     I1       62.5    62 15223 10.0   9.94  6.24
+ 4  4.13 Fair      H     I1       64.8    61 17329 10     9.85  6.43
+ 5  3.65 Fair      H     I1       67.1    53 11668  9.53  9.48  6.38
+ 6  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+ 7  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+ 8  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+ 9  3.67 Premium   I     I1       62.4    56 16193  9.86  9.81  6.13
+10  3.4  Fair      D     I1       66.8    52 15964  9.42  9.34  6.27
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>It’s not actually a data frame…↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>r-basics</category>
+  <category>tidyverse</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E08_tidy_03/</guid>
+  <pubDate>Fri, 01 Mar 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E08_tidy_03/img/dplyr.jpeg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Tidyverse 2: More dplyr Data Wrangling</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E07_tidy_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -23,7 +1006,7 @@
 <p><br></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -500,7 +1483,7 @@ font-style: inherit;">desc</span>(price))</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption class="figure-caption">Illustration by Allison Horst</figcaption>
+<figcaption>Illustration by Allison Horst</figcaption>
 </figure>
 </div>
 <p>It says “<em>add column(s), keep existing</em>” and shows that a third column, <code>C</code>, is being added to a data frame.</p>
@@ -1066,15 +2049,16 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</guid>
   <pubDate>Fri, 23 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Tidyverse 1: Introduction to the tidyverse</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E06_tidy_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -1090,7 +2074,7 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure from <a href="https://teachdatascience.com/tidyverse/">teachdatascience.com</a></figcaption>
+<figcaption>Figure from <a href="https://teachdatascience.com/tidyverse/">teachdatascience.com</a></figcaption>
 </figure>
 </div>
 <p>The “core tidyverse” contains the 8 packages below:</p>
@@ -1455,8 +2439,8 @@ font-style: inherit;">where</span>(is.numeric))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/filter.png" class="img-fluid figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
-<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/filter.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -1890,15 +2874,16 @@ font-style: inherit;">nrow</span>()</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E06_tidy_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</guid>
   <pubDate>Fri, 16 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" medium="image" type="image/png" height="78" width="144"/>
 </item>
 <item>
   <title>R Basics 5: Data Manipulation With Base R</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E05_basics_05/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E05_basics_05/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -2554,15 +3539,16 @@ font-style: inherit;">"long"</span>)</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E05_basics_05/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E05_basics_05/</guid>
   <pubDate>Fri, 09 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E05_basics_05/img/Allison_Horst.png" medium="image" type="image/png" height="80" width="144"/>
 </item>
 <item>
   <title>R Basics 4: Vectorized Operations and Data Frames</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E04_basics_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3036,7 +4022,7 @@ font-style: inherit;">2</span>)</span></code></pre></div>
 <h2 data-number="6" class="anchored" data-anchor-id="what-is-a-data-frame"><span class="header-section-number">6</span> What is a data frame?</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" class="img-fluid figure-img" width="469"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="469"></p>
 </figure>
 </div>
 <p>Below I am creating a simple data frame, this is a rectangular data object with rows and columns. In reality, you will probably be reading your data in from a <code>.csv</code> or <code>.xlsx</code> file, but you can also construct a data frame directly in R. We are doing this with the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame"><code>data.frame()</code></a> which is a part of base R.</p>
@@ -3599,15 +4585,16 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/</guid>
   <pubDate>Fri, 02 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" medium="image" type="image/png" height="119" width="144"/>
 </item>
 <item>
   <title>R Basics 3: Built-in functions, Vectors, and Help</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E03_basics_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3635,8 +4622,8 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>Functions are the foundation of almost everything in R. In programming, they are sets of organized instructions designed to perform specific tasks. The purpose of functions is to create self-contained programs that can be called upon as needed.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Types_of_Functions.png" class="img-fluid figure-img" alt="Types of Functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 1. Types of Functions in R</figcaption>
+<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Types_of_Functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Types of Functions in R"></a></p>
+<figcaption>Fig. 1. Types of Functions in R</figcaption>
 </figure>
 </div>
 <section id="whats-in-a-function" class="level3" data-number="2.1">
@@ -3644,15 +4631,15 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>What exactly is a function? Let’s recall from our math knowledge:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/function-rules.png" class="img-fluid figure-img" alt="Function Rules"></a></p>
-<figcaption class="figure-caption">Fig. 2. Function Rules</figcaption>
+<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/function-rules.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Function Rules"></a></p>
+<figcaption>Fig. 2. Function Rules</figcaption>
 </figure>
 </div>
 <p>A function in R is a collection of statements that can be reused in a program. This is the syntax of <strong><em>defining</em></strong> a function in R:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-function-syntax.png" class="img-fluid figure-img" alt="R Function Syntax"></a></p>
-<figcaption class="figure-caption">Fig. 3. R Function Syntax</figcaption>
+<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-function-syntax.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="R Function Syntax"></a></p>
+<figcaption>Fig. 3. R Function Syntax</figcaption>
 </figure>
 </div>
 <details>
@@ -3667,8 +4654,8 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>Built-in functions, which are already created or defined in the programming framework, are referred to as built-in functions. R offers a comprehensive collection of functions that can effectively handle almost any task for the user. These built-in functions are categorized based on their functionality as follows.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-built-in-functions.png" class="img-fluid figure-img" alt="Types of built-in functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 4. Types of built-in functions in R</figcaption>
+<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-built-in-functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Types of built-in functions in R"></a></p>
+<figcaption>Fig. 4. Types of built-in functions in R</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -4303,7 +5290,7 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 <p>A) Can you obtain information about the type of R object that <code>mean()</code> and <code>sum()</code> functions take by using the <code>help()</code> or <code>?</code> functions?</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Help.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Help.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 
@@ -4314,15 +5301,16 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/</guid>
   <pubDate>Fri, 26 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/R2D2.png" medium="image" type="image/png" height="108" width="144"/>
 </item>
 <item>
   <title>R Basics 2: Scripts and Objects</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E02_basics_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4349,15 +5337,15 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 <div class="column" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_open.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">You have an open project “codeclub”</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_open.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+<figcaption>You have an open project “codeclub”</figcaption>
 </figure>
 </div>
 </div><div class="column" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_none.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You have no Project open</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_none.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You have no Project open</figcaption>
 </figure>
 </div>
 </div>
@@ -4590,7 +5578,7 @@ font-style: inherit;">TRUE</span></span></code></pre></div>
 <p>Jess showed us the four quadrants of RStudio last week:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rstudio-ide-simplified.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rstudio-ide-simplified.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 <p>One of those contains a “<strong>Source Editor</strong>” pane, as in a <em>Text Editor</em>. Here, we can open and edit all sorts of text files — including R scripts. This quadrant will disappear if you have no files open:</p>
@@ -4822,7 +5810,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <p>Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rdata-popup.png" class="img-fluid figure-img" style="width:55.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rdata-popup.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%"></p>
 </figure>
 </div>
 <p>When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
@@ -4838,7 +5826,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <p>To make RStudio stop asking you about saving your workspace, click <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>General</code> and (un)check the boxes as follows:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -4967,15 +5955,16 @@ font-style: inherit;"># What is the value of distance_miles now?</span></span></
 </ol>
 </section></div> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E02_basics_02/</guid>
   <pubDate>Fri, 19 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" medium="image" type="image/png" height="54" width="144"/>
 </item>
 <item>
   <title>R Basics 1: Getting Started</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E01_basics_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E01_basics_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4987,7 +5976,7 @@ font-style: inherit;"># What is the value of distance_miles now?</span></span></
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/r-line-graph.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
 </section>
@@ -5044,7 +6033,7 @@ If you are using an Ohio State computer where you don’t have administrative ac
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rstudio-ide-simplified.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">A screenshot of the RStudio IDE</figcaption>
+<figcaption>A screenshot of the RStudio IDE</figcaption>
 </figure>
 </div>
 <ul>
@@ -5078,7 +6067,7 @@ font-style: inherit;">getwd</span>()</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/getwd-gui.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Go to your working directory by clicking</figcaption>
+<figcaption>Go to your working directory by clicking</figcaption>
 </figure>
 </div>
 </section>
@@ -5096,7 +6085,7 @@ font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</spa
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/setwd-gui.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Set your working directory by clicking</figcaption>
+<figcaption>Set your working directory by clicking</figcaption>
 </figure>
 </div>
 </section>
@@ -5105,7 +6094,7 @@ font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</spa
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rproj.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
 <p>Using an Rproject (<code>.RProj</code>) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc. What it does is set the location of the working directory to be the same place as where your Rproject is located.</p>
@@ -5223,7 +6212,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/environment-x.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">A screenshot of our Environment tab (top right quadrant) now that we have assigned the sum of 2 and 5 to x</figcaption>
+<figcaption>A screenshot of our Environment tab (top right quadrant) now that we have assigned the sum of 2 and 5 to x</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="There is a R shorthand to both assign an object and print it at the same time.">
@@ -5391,15 +6380,16 @@ font-style: inherit;">2</span></span>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E01_basics_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E01_basics_01/</guid>
   <pubDate>Fri, 12 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rstudio-ide-simplified.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Shiny 04: Deploying Shiny App</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E11_shiny_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E11_shiny_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -5627,15 +6617,16 @@ shinyApp(ui = ui, server = server)
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E11_shiny_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E11_shiny_04/</guid>
   <pubDate>Mon, 04 Dec 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E11_shiny_04/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 03: Map viz. in Shiny</title>
   <dc:creator>Sandip Mondal and Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E10_shiny_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E10_shiny_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -5650,8 +6641,8 @@ shinyApp(ui = ui, server = server)
 <p>There are two types of spatial data: vector and raster. Below is a graphical explanation of these data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://zia207.github.io/geospatial-r-github.io/"><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Types of spatial data.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Type of Spatial Data (Ahmed, 2023)</figcaption>
+<p><a href="https://zia207.github.io/geospatial-r-github.io/"><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Types of spatial data.png" class="img-fluid figure-img" alt="Type of Spatial Data (Ahmed, 2023)"></a></p>
+<figcaption>Type of Spatial Data (Ahmed, 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -5661,7 +6652,7 @@ shinyApp(ui = ui, server = server)
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Application screenshot.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Different parameters from Ohio, Pennsylvania, and Indiana in an interactive map.</figcaption>
+<figcaption>Different parameters from Ohio, Pennsylvania, and Indiana in an interactive map.</figcaption>
 </figure>
 </div>
 </section>
@@ -6725,15 +7716,16 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E10_shiny_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E10_shiny_03/</guid>
   <pubDate>Mon, 13 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 02: Intro to Shiny (cont.)</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E09_shiny_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E09_shiny_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -7650,15 +8642,16 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E09_shiny_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E09_shiny_02/</guid>
   <pubDate>Mon, 06 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E09_shiny_02/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 01: Intro to Shiny</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E08_shiny_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E08_shiny_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -7678,8 +8671,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-input-flow.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">The basic structure of a Shiny App. (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-input-flow.png" class="img-fluid figure-img" alt="The basic structure of a Shiny App. (Higgins 2023)"></a></p>
+<figcaption>The basic structure of a Shiny App. (Higgins 2023)</figcaption>
 </figure>
 </div>
 <section id="the-user-interface-section-structure" class="level2" data-number="2.1">
@@ -7687,15 +8680,15 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The user interface, commonly referred to as the “front end” of an application, is the visual and interactive aspect that users encounter. It is typically organized into several sections: <code>titlePanel()</code>, <code>sidebarPanel()</code>, and <code>mainPanel()</code>. In order to establish this structure, the code must be organized into sections that are constructed with functions, as demonstrated below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-structure.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-structure.png" class="img-fluid figure-img" alt="Basic ui (User Interface) code structure (Higgins 2023)"></a></p>
+<figcaption>Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 <p>The code required to achieve this follows a similar hierarchy, as depicted in the figure below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-hierarchy.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-hierarchy.png" class="img-fluid figure-img" alt="User Interface (ui) hierarchy code structure (Higgins 2023)"></a></p>
+<figcaption>User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -7704,8 +8697,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The server section of an app, also known as the “back end”, is where data processing takes place. Users don’t see this part but it handles inputs from the user and generates outputs such as model predictions or tables. These results are rendered to HTML and assigned to unique output values.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-server-structure.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Basic server code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-server-structure.png" class="img-fluid figure-img" alt="Basic server code structure (Higgins 2023)"></a></p>
+<figcaption>Basic server code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -7714,8 +8707,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The code required to run a Shiny app is always the same and quite straightforward. The <code>shinyApp()</code> function takes two arguments: the user interface (ui) and the server code (server) that are being used.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-run-code.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Executing and running a Shiny App (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-run-code.png" class="img-fluid figure-img" alt="Executing and running a Shiny App (Higgins 2023)"></a></p>
+<figcaption>Executing and running a Shiny App (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -8090,8 +9083,8 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <p>For more information, please visit the <a href="https://rstudio.github.io/cheatsheets/shiny.pdf">Shiny CheatSheet</a> and refer to the figure below to gain a better understanding of the sections of the Shiny App <strong><em>ui</em></strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-sections.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-sections.png" class="img-fluid figure-img" alt="Understanding the Shiny User Interface (ui) Sections (Higgins 2023)"></a></p>
+<figcaption>Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
 </figure>
 </div>
 
@@ -8101,15 +9094,16 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E08_shiny_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E08_shiny_01/</guid>
   <pubDate>Mon, 30 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Quarto website 7: making a presentation</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E06_website_07/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E06_website_07/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8463,14 +9457,15 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>quarto presentations</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E06_website_07/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E06_website_07/</guid>
   <pubDate>Mon, 16 Oct 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Quarto website 6: Quarto features</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E06_website_06/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E06_website_06/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8490,7 +9485,7 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <p>We will continue to use RStudio’s <strong>Visual Editor</strong>, and will basically make our way through the options in the bar that is right above your main editor window (but only when you’re in “Visual” mode):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/menu.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/menu.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 <section id="creating-a-document-for-practice" class="level3" data-number="1.1">
@@ -8513,8 +9508,8 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <li><p><strong>Bold</strong>, <em>italic</em>, <u>underlined</u>, <del>Strikeout</del>, <sup>superscript</sup>, <sub>subscript</sub> , <span class="smallcaps">small caps</span> (some of these are under the “Text” subheading)</p></li>
 <li><p><strong>Bullet lists and numbered lists</strong>, which can optionally be in a “tight” layout: press the <code>…</code> at the top-right.</p>
 <ul class="task-list">
-<li><input type="checkbox">Within a list, you can have an “Item Checkbox” to make a checklist…</li>
-<li><input type="checkbox" checked="">…and these boxes can be checked.</li>
+<li><label><input type="checkbox">Within a list, you can have an “Item Checkbox” to make a checklist…</label></li>
+<li><label><input type="checkbox" checked="">…and these boxes can be checked.</label></li>
 </ul></li>
 <li><p>“Blockquotes”, which can be used to provide a quote or even to highlight a bit of text in a different format:</p></li>
 </ul>
@@ -8564,8 +9559,8 @@ Cross-references
 <p>Addings citations is also possible via the “Insert” drop-down menu. Any citation you add will be automatically included in a reference list at the bottom of the document! In the text, the citation will show up as a link to the reference list and you can also hover over the link to see the full reference: <span class="citation" data-cites="m.horst2022">(M. Horst, Presmanes Hill, and B. Gorman 2022)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/reflist.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">A reference list is automatically added to the end of the document</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/reflist.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>A reference list is automatically added to the end of the document</figcaption>
 </figure>
 </div>
 <p>This is a really nice feature that benefits a lot from the RStudio Visual Editor. Without the Visual Editor, you’ll have to make a text file yourself with all the information for each reference (a bibliography in BibTex (<code>.bib</code>) format) — this can be exported from your reference manager, but that’s still a hassle because you often add citations one-by-one to a piece of text. With the Visual Editor, you can search for references online and when you include a reference:</p>
@@ -8580,21 +9575,21 @@ Cross-references
 <div id="tabset-1-1" class="tab-pane active" aria-labelledby="tabset-1-1-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" aria-labelledby="tabset-1-2-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/doi.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/doi.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" aria-labelledby="tabset-1-3-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/zotero.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/zotero.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
@@ -8667,7 +9662,11 @@ font-style: inherit;">+</span></span>
 background-color: null;
 font-style: inherit;">geom_point</span>()</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>…Or a chunk that <strong>produces a simple table</strong>: in this case, simply the first lines of the <code>iris</code> dataframe. This dataframe output will display as shown below (which is a little nicer than the default formatting) when you include a line <code>df-print: kable</code> in the YAML header of your document:</p>
@@ -8778,14 +9777,14 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>To change <strong><em>settings for an individual chunk</em></strong>, the same YAML keys like <code>echo</code> can be used, but in special comment lines (with <code>#|</code> prefixes) at the start of a code chunk:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/chunk_options.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/chunk_options.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 <p><strong>A really useful option is to “fold” the code by using <code>code-fold: true</code> in the YAML header.</strong> That way, code will not be shown by default, but can be shown for each individual code chunk by unfolding it. This is great when you want to emphasize your results, but do want make the underlying code available to anyone who might be interested.</p>
 <p>For example, for the plot we produced above, if we set code-folding to true, it would produce a box like this above the plot — and clicking on that box would then show the code:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/code_fold.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/code_fold.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -8799,13 +9798,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>Above, we saw that we can create plots and include them in the document. Of course, we can also include figures made elsewhere, or photos, etc — and you have probably already done this for your website. When inserting a figure (e.g.&nbsp;by clicking the picture icon in the top bar), you can for example include a caption and specify how you want it aligned:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert_figure.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert_figure.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
 </figure>
 </div>
 <p>Somewhat oddly, the options for the figure <strong>size</strong> only show up once you’ve clicked OK to insert the figure — you’ll see this box below the figure:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/size_figure.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/size_figure.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <p>There are different ways/units to size the figure: I prefer <strong>“%”</strong>, which will allow you to specify the width in percentage of the total page (or focal box) width, as shown above.</p>
@@ -8815,13 +9814,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>When Clicking “Insert Table” in the “Table” dropdown menu in the top bar, you’ll get a pop-up to create a table, similar to how this works in Word:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <p>This will produce a table skeleton like the one shown below, which you can then fill out:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table2.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 <p>Here is an example of what a rendered table will look like, with previous Code Club sessions this semester:</p>
@@ -8880,13 +9879,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>When you click “Insert” =&gt; “Tabset…”, you can first enter names for two or more tabs, and doing this will also determine how many tabs you’ll get (up to 6):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset1.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 <p>Then, inside the gray box, below each header that was created for each tab name, you can enter any content that will show up in each tab:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <p>And here is what the output for the above setup would look like:</p>
@@ -8896,14 +9895,22 @@ font-style: inherit;">false</span></span></code></pre></div>
 <div id="tabset-2-1" class="tab-pane active" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -8950,7 +9957,7 @@ Example of a “warning” callout box
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 <ul>
@@ -8989,7 +9996,7 @@ Whitespace in Markdown
 </section>
 
 
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-m.horst2022" class="csl-entry">
 M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“Palmer Archipelago Penguins Data in the Palmerpenguins R Package - An Alternative to Anderson’s Irises.”</span> <em>The R Journal</em> 14 (1): 244–54. <a href="https://doi.org/10.32614/rj-2022-020">https://doi.org/10.32614/rj-2022-020</a>.
 </div>
@@ -9001,15 +10008,16 @@ M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“
 </section></div> ]]></description>
   <category>website</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E06_website_06/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E06_website_06/</guid>
   <pubDate>Mon, 09 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" medium="image" type="image/png" height="42" width="144"/>
 </item>
 <item>
   <title>Quarto website 5: modifying your site</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E05_website_05/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E05_website_05/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -9019,7 +10027,7 @@ M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"></p>
 </figure>
 </div>
 </div>
@@ -9573,15 +10581,16 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>git</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E05_website_05/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E05_website_05/</guid>
   <pubDate>Mon, 02 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Quarto website 4</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E04_website_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E04_website_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -9610,8 +10619,8 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption class="figure-caption">Figure by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figcaption>Figure by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -9621,7 +10630,7 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -9673,7 +10682,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/settings.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/settings.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -9683,8 +10692,8 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/rename.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You can type directly in the box to change the repo’s name</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/rename.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You can type directly in the box to change the repo’s name</figcaption>
 </figure>
 </div>
 </div>
@@ -9694,8 +10703,8 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/check_pages.png" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">On the GitHub Pages page, you can check the URL to your site</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/check_pages.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%"></p>
+<figcaption>On the GitHub Pages page, you can check the URL to your site</figcaption>
 </figure>
 </div>
 </div>
@@ -9712,7 +10721,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about1.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 </div>
@@ -9725,7 +10734,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about2.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 </div>
@@ -9735,7 +10744,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about3.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 </div>
@@ -9801,8 +10810,8 @@ Your README plain Markdown file
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit.png" class="img-fluid figure-img" style="width:55.0%"></p>
-<figcaption class="figure-caption">After entering something in the Summary box, click ‘Commit to main’</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%"></p>
+<figcaption>After entering something in the Summary box, click ‘Commit to main’</figcaption>
 </figure>
 </div>
 </div>
@@ -9813,8 +10822,8 @@ Your README plain Markdown file
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/push.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption class="figure-caption">Click ‘Push origin’ to push your local repo changes to remote</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/push.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figcaption>Click ‘Push origin’ to push your local repo changes to remote</figcaption>
 </figure>
 </div>
 </div>
@@ -9842,8 +10851,8 @@ Git terminology
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit_on_gh.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">You should see your changes referred to in the online repo</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit_on_gh.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>You should see your changes referred to in the online repo</figcaption>
 </figure>
 </div>
 </div>
@@ -9853,8 +10862,8 @@ Git terminology
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/readme.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">GitHub will render and display a README file in your repo automatically</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/readme.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>GitHub will render and display a README file in your repo automatically</figcaption>
 </figure>
 </div>
 </div>
@@ -9917,8 +10926,8 @@ font-style: inherit;"> github</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_link.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption class="figure-caption">Making the change above should produce this icon in the navbar on your website</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_link.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+<figcaption>Making the change above should produce this icon in the navbar on your website</figcaption>
 </figure>
 </div>
 </div>
@@ -9966,8 +10975,8 @@ font-style: inherit;">]</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_actions.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption class="figure-caption">Making the change above should produce these entries in the TOC of every page on your website</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_actions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+<figcaption>Making the change above should produce these entries in the TOC of every page on your website</figcaption>
 </figure>
 </div>
 </div>
@@ -9999,15 +11008,16 @@ font-style: inherit;">]</span></span></code></pre></div>
 </ol>
 </section></div> ]]></description>
   <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E04_website_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E04_website_04/</guid>
   <pubDate>Mon, 25 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
   <title>Quarto website 3: Deploying your website with GitHub 🐱</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E03_website_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E03_website_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -10032,8 +11042,8 @@ font-style: inherit;">]</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
-<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -10091,7 +11101,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/render-website.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the Build tab in RStudio</figcaption>
+<figcaption>a screenshot of the Build tab in RStudio</figcaption>
 </figure>
 </div>
 </section>
@@ -10106,7 +11116,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/create-gh-account.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of getting a GitHub account</figcaption>
+<figcaption>a screenshot of getting a GitHub account</figcaption>
 </figure>
 </div>
 <p>You will have to pick a username - remember that other people will see this username so use one you’d feel comfortable with. <a href="https://happygitwithr.com/github-acct.html">Here</a> is some advice for picking a username.</p>
@@ -10123,7 +11133,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/add-version-control.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of adding a GitHub repo</figcaption>
+<figcaption>a screenshot of adding a GitHub repo</figcaption>
 </figure>
 </div>
 </section>
@@ -10134,7 +11144,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/publish_repo.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of publishing your repo in Github desktop</figcaption>
+<figcaption>a screenshot of publishing your repo in Github desktop</figcaption>
 </figure>
 </div>
 </section>
@@ -10145,21 +11155,21 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/initial-commit.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the initial commit in GitHub desktop</figcaption>
+<figcaption>a screenshot of the initial commit in GitHub desktop</figcaption>
 </figure>
 </div>
 <p>Once you’ve done that, click <code>Push origin</code> in the top right. This sends your files from your local repository to GitHub. Note that in the screenshot below there are no files indicated under changes, since I’ve already committed them.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/push-origin.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of pushing to origin in GitHub desktop</figcaption>
+<figcaption>a screenshot of pushing to origin in GitHub desktop</figcaption>
 </figure>
 </div>
 <p>Nice! Now we should be able to see your website in your GitHub repo. Navigate there in your browser and check. The website files should be there.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/gh-repo-created.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of what our repo looks like on GitHub.com</figcaption>
+<figcaption>a screenshot of what our repo looks like on GitHub.com</figcaption>
 </figure>
 </div>
 </section>
@@ -10175,14 +11185,14 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/gh-settings-pages.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+<figcaption>a screenshot of the settings for GitHub pages to render from docs</figcaption>
 </figure>
 </div>
 <p>Refresh your page and you should now be able to visit your site! There will be a link at the top of the page. You did it!! Check out your new site.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/visit-site.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+<figcaption>a screenshot of the settings for GitHub pages to render from docs</figcaption>
 </figure>
 </div>
 
@@ -10192,15 +11202,16 @@ font-style: inherit;">---</span></span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>git</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E03_website_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E03_website_03/</guid>
   <pubDate>Mon, 18 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" medium="image" type="image/png" height="144" width="144"/>
 </item>
 <item>
   <title>Quarto website 2</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E02_website_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E02_website_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -10220,16 +11231,16 @@ font-style: inherit;">---</span></span></code></pre></div>
 <p><strong>So, to create a new page, we will create a new Quarto document</strong> — in RStudio, click <code>File</code> =&gt; <code>New File</code> =&gt; <code>Quarto Document</code>:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_file.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">The window to create a new Quarto document</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_file.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>The window to create a new Quarto document</figcaption>
 </figure>
 </div>
 <p>Unlike last week, make sure the <strong>“Use visual markdown editor” box is checked</strong>, and then click the “Create Empty Document” button in the bottom left.</p>
 <p>Once the file has been created, let’s save it straight away: press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>S</kbd>. <strong>Save it in the top-level folder for your website</strong>, i.e.&nbsp;the same folder that contains <code>index.qmd</code> and <code>about.qmd</code>. If you’re making a page for which you have your own ideas, you can name it accordingly — otherwise, save it as <strong><code>research.qmd</code></strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_page.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">Your near-empty document should look something like this</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_page.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>Your near-empty document should look something like this</figcaption>
 </figure>
 </div>
 <p>The newly created document will only contain a few lines, as shown in the screenshot above. This is the so-called “<strong>YAML header</strong>”.</p>
@@ -10418,8 +11429,8 @@ YAML errors (Click to expand)
 <p>If you made a mistake in the YAML, you will see an ominous-looking box like this pop up:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/yaml_error.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You’ll see this error if you specified an invalid key in your YAML. Don’t panic! If you don’t already know what’s wrong, carefully read the error which is quite informative.</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/yaml_error.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You’ll see this error if you specified an invalid key in your YAML. Don’t panic! If you don’t already know what’s wrong, carefully read the error which is quite informative.</figcaption>
 </figure>
 </div>
 </div>
@@ -10473,7 +11484,7 @@ YAML auto-complete and quoting (Click to expand)
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/autocomplete.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/autocomplete.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 <ul>
@@ -10502,7 +11513,7 @@ YAML auto-complete and quoting (Click to expand)
 <li><p>Add a few headers of different levels (start with “Header 2”, the title is basically the one level 1 header) — you can do so by clicking the dropdown menu that will say Normal:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/add_headers.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/add_headers.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div></li>
 <li><p>Try turning on <code>number-sections</code> and play around with the <code>toc-location</code> (Your <code>_quarto.yml</code> has an entry <code>toc: true</code>, so a table of contents will by default be shown on very page).</p></li>
@@ -10598,7 +11609,7 @@ Navbar auto-collapse (Click to expand)
 <p>If the width of your viewing window is narrow (like it often is in RStudio’s “Viewer”, as well as on phones), the navbar will be automatically collapsed into a “Hamburger menu:”</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/hamburger_menu.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/hamburger_menu.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 </div>
@@ -10695,7 +11706,7 @@ font-style: inherit;"> My Research</span></span></code></pre></div>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/favicon.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/favicon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 <ul>
@@ -10748,7 +11759,7 @@ background-color: null;
 font-style: inherit;"> house</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/home_icon.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/home_icon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -10802,7 +11813,7 @@ font-style: inherit;">true</span></span></code></pre></div>
 <p>You can see a visual list of available themes at <a href="https://bootswatch.com/" class="uri">https://bootswatch.com/</a>. The default theme is <code>cosmo</code>, as you can see above. As an example, if we change Lucie’s website theme to <code>lux</code>:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -10859,15 +11870,16 @@ Check out the Code Club site source code
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E02_website_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E02_website_02/</guid>
   <pubDate>Mon, 11 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" medium="image" type="image/png" height="30" width="144"/>
 </item>
 <item>
   <title>Quarto website 1: Initiating a website 🌐</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E01_website_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E01_website_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -10913,14 +11925,14 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/project-type.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
+<figcaption>a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
 </figure>
 </div>
 <p>You will then be asked where you want this website to live in your computer. Under <em>Directory Name</em> pick the name of the folder you want your content to be in, and <em>Create project as subdirectory of</em> as where you want the location on your computer. I have used the Knitr engine for website building.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/create-quarto-website.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
+<figcaption>a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
 </figure>
 </div>
 <p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
@@ -10933,7 +11945,7 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/orienting.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of four quadrants of rstudio</figcaption>
+<figcaption>a screenshot of four quadrants of rstudio</figcaption>
 </figure>
 </div>
 <ul>
@@ -10955,7 +11967,7 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/files.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
+<figcaption>a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
 </figure>
 </div>
 <p>Before we open the files, let’s talk about the file extensions and what they mean:</p>
@@ -10973,7 +11985,7 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/index.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the index.qmd file</figcaption>
+<figcaption>a screenshot of the index.qmd file</figcaption>
 </figure>
 </div>
 <p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
@@ -10985,7 +11997,7 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/about.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the about.qmd file</figcaption>
+<figcaption>a screenshot of the about.qmd file</figcaption>
 </figure>
 </div>
 <p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
@@ -10996,7 +12008,7 @@ The blue box should highlight the installer for your operating system.
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/yaml.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the _quarto.yml file</figcaption>
+<figcaption>a screenshot of the _quarto.yml file</figcaption>
 </figure>
 </div>
 <p>You’re probably not familiar with these <code>.yml</code> files but still its not horribly difficult to figure out what the different bits do.</p>
@@ -11014,7 +12026,7 @@ The blue box should highlight the installer for your operating system.
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E01_website_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E01_website_01/</guid>
   <pubDate>Mon, 28 Aug 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E01_website_01/img/create-quarto-website.png" medium="image" type="image/png" height="104" width="144"/>
 </item>
@@ -11023,8 +12035,9 @@ The blue box should highlight the installer for your operating system.
   <dc:creator>Jelmer Poelstra</dc:creator>
   <dc:creator>Jessica Cooperstone</dc:creator>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/welcome/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/welcome/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -11040,7 +12053,7 @@ The blue box should highlight the installer for your operating system.
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>news</category>
-  <guid>https://osu-codeclub.github.io/posts/welcome/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/welcome/</guid>
   <pubDate>Fri, 18 Aug 2023 04:00:00 GMT</pubDate>
 </item>
 </channel>
