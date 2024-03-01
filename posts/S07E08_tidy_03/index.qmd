@@ -1,0 +1,480 @@
+---
+title: "Tidyverse 3: Grouping and Summarizing Data"
+author: "Jelmer Poelstra"
+date: "2024-03-01"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+image: img/dplyr.jpeg
+editor_options:
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+#### Recap of the past two weeks
+
+In the past two weeks, we've been learning about 5 functions from the _dplyr_ package,
+a central workhorse of the tidyverse ecosystem, to manipulate data in data frames:
+
+- `filter()` to pick rows (which typically represent observations/samples/individuals)
+- `select()` to pick columns (which typically represent variables/properties)
+- `arrange()` to sort data frame rows
+- `rename()` to change data frame column names
+- `mutate()` to add and manipulate data frame columns
+
+#### Learning objectives for today
+
+Today, we will focus on a slightly more complicated and very powerful _dplyr_ function:
+`summarize()` to compute summaries across rows, typically across **groups of rows**.
+
+We will also learn about a couple other handy functions to work with groups of rows:
+the `slice_()` family of functions and `count()`.
+
+#### Setting up
+
+Load the tidyverse:
+
+```{r}
+library(tidyverse)
+```
+
+::: {.callout-warning collapse="true"}
+#### Still need to install the tidyverse? _Click here for instructions_
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+:::
+
+We'll continue working with the `diamonds` dataframe (automatically loaded with the tidyverse),
+so let's take another look at that:
+
+```{r}
+head(diamonds)
+```
+
+<br>
+
+## `summarize()`
+
+### A first example
+
+The [`summarize()` function from the _dplyr_ package](https://dplyr.tidyverse.org/reference/summarise.html)
+can compute across-row data summaries.
+As a first example, here's how you can compute the overall mean of the `carat` column:
+
+```{r}
+diamonds |>
+  summarize(carat_mean = mean(carat))
+```
+
+As you can see, this function has quite a different output from the _dplyr_ functions we'd seen so far.
+All of those returned a manipulated version of our original dataframe,
+whereas `summarize()` returns a "completely new" dataframe with a summary of the original data.
+
+However, summarizing across all rows at once with `summarize()` is much more verbose
+than the simple, base R:
+
+```{r}
+mean(diamonds$carat)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Summarizing by group 
+
+The real power of `summarize()` comes with its ability to compute **group-wise summaries**.
+For example, simply by adding `.by = cut`,
+it will calculate the mean `carat` separately for each value of `cut`:
+
+```{r}
+diamonds |>
+  summarize(carat_mean = mean(carat), .by = cut)
+```
+
+Nice! We can also compute multiple summarized variables ---
+and use summarizing functions other than `mean()`:
+
+```{r}
+diamonds |>
+  summarize(carat_mean = mean(carat),
+            carat_max = max(carat),
+            .by = cut)
+```
+
+A handy helper function is **`n()`**, which will compute the **number of rows for each group**
+(i.e. the group sizes, which can be good to know,
+for example so you don't make unfounded conclusions based on really small sample sizes):
+
+```{r}
+diamonds |>
+  summarize(carat_mean = mean(carat),
+            n_diamonds = n(),
+            .by = cut)
+```
+
+Here is an overview of the most commonly used functions to compute summaries:
+
+- `mean()` & `median()`
+- `min()` & `max()`
+- `sum()`
+- `sd()`: standard deviation
+- `IQR()`: interquartile range
+- `n()`: counts the number of rows (observations)
+- `n_distinct()`: counts the number of distinct (unique) values
+
+Two other comments:
+
+- You can also ask `summarize()` to compute summaries by **multiple columns**,
+  which will return separate summaries for each _combination_ of the involved variables ---
+  we'll see this in the exercises.
+
+- This may be obvious, but whatever column you are computing summaries by
+  (using `.by`) should be a **categorical variable**.
+  In our `diamond` examples, we're only using columns that are `factor`s,
+  but "regular" `character` columns will work just fine as well.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: callout-note
+### Side note: `group_by()`
+
+The "classic" way of using `summarize()` with multiple groups is by preceding
+it with a `group_by()` call ---
+e.g., the code below is equivalent to our last example above:
+
+```{r}
+diamonds |>
+  group_by(cut) |> 
+  summarize(carat_mean = mean(carat),
+            n_diamonds = n())
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+The `.by` argument to `summarize()` (and other functions!) is a rather recent addition,
+but I prefer it over `group_by()`:
+
+- It is simpler, a bit less typing, and makes the `summarize()` call self-contained
+- When grouping by multiple columns, `group_by()` has some odd, unhelpful behavior
+  where it keeps some of the groupings, such that you likely need an `ungroup()` call as well.
+
+:::
+
+<br>
+
+::: exercise
+## Exercises I
+
+### Diamond sizes in relation to `clarity`
+
+**A)** Compute the mean length (`x`), width (`y`), and depth (`z`) for each diamond `clarity`.
+Also include a column with group sizes. Do you see any clear differences?
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  summarize(x_mean = mean(x),
+            y_mean = mean(y),
+            z_mean = mean(z),
+            n_diamonds = n(),
+            .by = clarity)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** Diamond size differences between clarities may become more apparent if we use the overall volume:
+
+- Dig up your `mutate()` skills to create a volume column `vol` (length * width * depth)
+- Compute the mean volume for each diamond `clarity`
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  mutate(vol = x * y * z) |>
+  summarize(vol_mean = mean(vol), .by = clarity)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Diamond prices
+
+**A)** For each diamond `cut`, compute the `price`'s mean, median, minimum, maximum, and standard deviation.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  summarize(price_mean = mean(price),
+            price_median = median(price),
+            price_min = min(price),
+            price_max = max(price),
+            price_sd = sd(price),
+            .by = cut)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** Find the combination of `cut`, `color`, and `clarity` that on average yields
+the most expensive diamonds.
+
+For this, you'll have to group by all these 3 columns.
+Try this for yourself first, but check out the first solution if you can't get that part to work.
+
+<details><summary><b>Grouping solution</b> (click here)</summary>
+
+`.by = c(cut, color, clarity)` will group by these 3 columns at once.
+
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+After summarizing, it makes sense to arrange in descending order by price,
+so you can see the cut-color-clarity combinations with the most expensive diamonds:
+
+```{r}
+diamonds |>
+  summarize(price = mean(price),
+            .by = c(cut, color, clarity)) |>
+  arrange(desc(price))
+```
+
+</details>
+
+:::
+
+<br>
+
+## The `slice_` functions
+
+Like the `filter()` function, [functions in the `slice_` family](https://dplyr.tidyverse.org/reference/slice.html)
+select specific rows,
+but have some different functionality that's quite handy ---
+especially in combination with grouping.
+
+Let's say we wanted to only get, **for each `cut`, the diamond with the highest value of `carat`**.
+We can do this pretty easily with the `slice_max()` function,
+which will return the row(s) with the highest value for a specified variable:
+
+```{r}
+diamonds |>
+  slice_max(carat, by = cut)
+```
+
+<details><summary>Why are we getting more than one diamond per `cut` in some cases? _(Click to see the answer)_</summary>
+Because of ties in the `cut` value. (We'll get back to this in the next set of exercises.)
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+You can get more than just the single highest (`slice_max()`) / lowest (`slice_min()`)
+value per group with the `n=` argument,
+and can get a specific proportion of rows with `prop=`:
+
+```{r}
+# Get the 3 highest-depth diamonds for each value of cut
+diamonds |>
+  slice_max(depth, by = cut, n = 3)
+```
+
+```{r}
+# Get the 1% lowest-carat diamonds for each value of color
+diamonds |>
+  slice_min(carat, by = color, prop = 0.01)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: callout-note
+#### The full set of `slice_` functions
+
+- `slice_head(n = 1)` takes the first row.
+- `slice_tail(n = 1)` takes the last row
+- `slice_min(x, n = 1)` takes the row with the smallest value in column `x`.
+- `slice_max(x, n = 1)` takes the row with the largest value in column `x`.
+- `slice_sample(n = 1)` takes one random row.
+- `slice(15)` takes the 15th row.
+:::
+
+<br>
+
+## The `count()` function
+
+Above, we used the `n()` helper with `summarize()` to get the number of rows
+with each value of `cut` (i.e. the group sizes) along with other computed summaries.
+
+Getting a "count table" like that is such a common part of Exploratory Data Analysis (EDA)
+that there's another _dplyr_ function available for it,
+[`count()`](https://dplyr.tidyverse.org/reference/count.html).
+And unless you're already `summarize`-ing, this one is simpler to use:
+
+```{r}
+diamonds |> count(cut)
+```
+
+We may also want to sort the output by frequency, which can be useful
+especially when there are many different values for the focal variable
+(not really the case here, but you get the point):
+
+```{r}
+diamonds |> count(cut, sort = TRUE)
+```
+
+And you can also create counts for value combinations across multiple columns:
+
+```{r}
+diamonds |> count(cut, color)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: callout-tip
+#### Base R's `table()` function
+
+Also worth mentioning is the base R `table()` function, which is similar to `count()`.
+While its output format is unwieldy for follow-up analyses^[It's not actually a data frame...],
+you may prefer its formatting especially when wanting to glance at a 2-way count table to see patterns:
+
+```{r}
+table(diamonds$cut, diamonds$color)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Additionally, as a _dplyr_ function, `count()` only works with data frames.
+Occasionally, you may also need to create a count table for a **vector**, and `table()` can do that:
+
+```{r}
+cut_vec <- diamonds$cut
+
+table(cut_vec)
+```
+
+:::
+
+<br>
+
+::: exercise
+## Exercises II
+
+### No ties, please
+
+Above, when we first used `slice_max()`, we got multiple rows for some groups.
+Check out the help for this function (`?slice_max`) and get it to print only one row per group,
+even in the case of ties.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+The `with_ties` argument controls this. The default is `TRUE` (do include ties),
+so we want to set it to `FALSE` (don't include ties):
+
+```{r}
+diamonds |>
+  slice_max(carat, by = cut, with_ties = FALSE)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Random diamonds
+
+Use `slice_sample()` to get 5 random diamonds for each combination of `cut`, `color` and `clarity`.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  slice_sample(n = 5, by = c(cut, color, clarity))
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### `count()`
+
+**A)** Create a sorted count table of diamond `clarity`s
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |> count(clarity, sort = TRUE)
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** What are the least common combinations of `clarity` and `depth`
+   for diamonds costing less than $5,000?
+
+<details><summary><b>Hints</b> (click here)</summary>
+
+- You'll have to `filter()` first.
+- Can you sort in reverse order with `count()`? If not, you'll have to use a separate `arrange()`
+
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  filter(price < 5000) |> 
+  count(clarity, color) |>
+  arrange(n)
+```
+</details>
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Bonus: sort then slice
+
+`slice_head()` will print the _first-occurring_ row(s),
+and its twin `slice_tail()` prints the _last_ row(s).
+In combination with sorting, these can give more flexibility than the min-max functions.
+
+For each `color`, use `arrange()` and `slice_head()` to get the 3 diamonds with the highest carat,
+with ties in carat broken by price (highest first).
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |>
+  arrange(desc(carat), desc(price)) |>
+  slice_head(n = 3, by = color)
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+:::
