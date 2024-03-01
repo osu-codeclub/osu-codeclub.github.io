@@ -340,7 +340,7 @@ Still need to install the tidyverse? <em>Click here for instructions</em>
 <h2 data-number="2" class="anchored" data-anchor-id="summarize"><span class="header-section-number">2</span> <code>summarize()</code></h2>
 <section id="a-first-example" class="level3" data-number="2.1">
 <h3 data-number="2.1" class="anchored" data-anchor-id="a-first-example"><span class="header-section-number">2.1</span> A first example</h3>
-<p>The <code>summarize()</code> function from the <em>dplyr</em> package can compute across-row data summaries. As a first example, here’s how you can compute the overall mean of the <code>carat</code> column:</p>
+<p>The <a href="https://dplyr.tidyverse.org/reference/summarise.html"><code>summarize()</code> function from the <em>dplyr</em> package</a> can compute across-row data summaries. As a first example, here’s how you can compute the overall mean of the <code>carat</code> column:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -351,6 +351,7 @@ Still need to install the tidyverse? <em>Click here for instructions</em>
 1      0.798</code></pre>
 </div>
 </div>
+<p>As you can see, this function has quite a different output from the <em>dplyr</em> functions we’d seen so far. All of those returned a manipulated version of our original dataframe, whereas <code>summarize()</code> returns a “completely new” dataframe with a summary of the original data.</p>
 <p>However, summarizing across all rows at once with <code>summarize()</code> is much more verbose than the simple, base R:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diamonds<span class="sc">$</span>carat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -398,20 +399,19 @@ Still need to install the tidyverse? <em>Click here for instructions</em>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat),</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">nr_diamonds =</span> <span class="fu">n</span>(),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>(),</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 5 × 3
-  cut       carat_mean nr_diamonds
-  &lt;ord&gt;          &lt;dbl&gt;       &lt;int&gt;
-1 Ideal          0.703       21551
-2 Premium        0.892       13791
-3 Good           0.849        4906
-4 Very Good      0.806       12082
-5 Fair           1.05         1610</code></pre>
+  cut       carat_mean n_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;      &lt;int&gt;
+1 Ideal          0.703      21551
+2 Premium        0.892      13791
+3 Good           0.849       4906
+4 Very Good      0.806      12082
+5 Fair           1.05        1610</code></pre>
 </div>
 </div>
-<p>You can also ask <code>summarize()</code> to compute summaries by <strong>multiple columns</strong>, which will return separate summaries for each <em>combination</em> of the involved variables — we’ll see this in the exercises.</p>
 <p>Here is an overview of the most commonly used functions to compute summaries:</p>
 <ul>
 <li><code>mean()</code> &amp; <code>median()</code></li>
@@ -422,7 +422,11 @@ Still need to install the tidyverse? <em>Click here for instructions</em>
 <li><code>n()</code>: counts the number of rows (observations)</li>
 <li><code>n_distinct()</code>: counts the number of distinct (unique) values</li>
 </ul>
-<p>Finally, this may be obvious, but whatever column you are computing summaries by (using <code>.by</code>) should be a <strong>categorical variable</strong>.</p>
+<p>Two other comments:</p>
+<ul>
+<li><p>You can also ask <code>summarize()</code> to compute summaries by <strong>multiple columns</strong>, which will return separate summaries for each <em>combination</em> of the involved variables — we’ll see this in the exercises.</p></li>
+<li><p>This may be obvious, but whatever column you are computing summaries by (using <code>.by</code>) should be a <strong>categorical variable</strong>. In our <code>diamond</code> examples, we’re only using columns that are <code>factor</code>s, but “regular” <code>character</code> columns will work just fine as well.</p></li>
+</ul>
 <hr style="height:1pt; visibility:hidden;">
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -439,16 +443,16 @@ Side note: <code>group_by()</code>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cut) <span class="sc">|&gt;</span> </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat),</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">nr_diamonds =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 5 × 3
-  cut       carat_mean nr_diamonds
-  &lt;ord&gt;          &lt;dbl&gt;       &lt;int&gt;
-1 Fair           1.05         1610
-2 Good           0.849        4906
-3 Very Good      0.806       12082
-4 Premium        0.892       13791
-5 Ideal          0.703       21551</code></pre>
+  cut       carat_mean n_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;      &lt;int&gt;
+1 Fair           1.05        1610
+2 Good           0.849       4906
+3 Very Good      0.806      12082
+4 Premium        0.892      13791
+5 Ideal          0.703      21551</code></pre>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -476,20 +480,20 @@ Side note: <code>group_by()</code>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">x_mean =</span> <span class="fu">mean</span>(x),</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">y_mean =</span> <span class="fu">mean</span>(y),</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">z_mean =</span> <span class="fu">mean</span>(z),</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">nr_diamonds =</span> <span class="fu">n</span>(),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>(),</span>
 <span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> clarity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 8 × 5
-  clarity x_mean y_mean z_mean nr_diamonds
-  &lt;ord&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;       &lt;int&gt;
-1 SI2       6.40   6.40   3.95        9194
-2 SI1       5.89   5.89   3.64       13065
-3 VS1       5.57   5.58   3.44        8171
-4 VS2       5.66   5.66   3.49       12258
-5 VVS2      5.22   5.23   3.22        5066
-6 VVS1      4.96   4.98   3.06        3655
-7 I1        6.76   6.71   4.21         741
-8 IF        4.97   4.99   3.06        1790</code></pre>
+  clarity x_mean y_mean z_mean n_diamonds
+  &lt;ord&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;      &lt;int&gt;
+1 SI2       6.40   6.40   3.95       9194
+2 SI1       5.89   5.89   3.64      13065
+3 VS1       5.57   5.58   3.44       8171
+4 VS2       5.66   5.66   3.49      12258
+5 VVS2      5.22   5.23   3.22       5066
+6 VVS1      4.96   4.98   3.06       3655
+7 I1        6.76   6.71   4.21        741
+8 IF        4.97   4.99   3.06       1790</code></pre>
 </div>
 </div>
 </details>
@@ -595,7 +599,7 @@ Side note: <code>group_by()</code>
 <p><br></p>
 <section id="the-slice_-functions" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="the-slice_-functions"><span class="header-section-number">4</span> The <code>slice_</code> functions</h2>
-<p>Like the <code>filter()</code> function, functions in the <code>slice_</code> family select specific rows, but have some different functionality that’s quite handy — especially in combination with grouping.</p>
+<p>Like the <code>filter()</code> function, <a href="https://dplyr.tidyverse.org/reference/slice.html">functions in the <code>slice_</code> family</a> select specific rows, but have some different functionality that’s quite handy — especially in combination with grouping.</p>
 <p>Let’s say we wanted to only get, <strong>for each <code>cut</code>, the diamond with the highest value of <code>carat</code></strong>. We can do this pretty easily with the <code>slice_max()</code> function, which will return the row(s) with the highest value for a specified variable:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
@@ -690,7 +694,7 @@ The full set of <code>slice_</code> functions
 <section id="the-count-function" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="the-count-function"><span class="header-section-number">5</span> The <code>count()</code> function</h2>
 <p>Above, we used the <code>n()</code> helper with <code>summarize()</code> to get the number of rows with each value of <code>cut</code> (i.e.&nbsp;the group sizes) along with other computed summaries.</p>
-<p>Getting a “count table” like that is such a common part of Exploratory Data Analysis (EDA) that there’s another function available for it, <code>count()</code>. And unless you’re already <code>summarize</code>-ing, this one is simpler to use:</p>
+<p>Getting a “count table” like that is such a common part of Exploratory Data Analysis (EDA) that there’s another <em>dplyr</em> function available for it, <a href="https://dplyr.tidyverse.org/reference/count.html"><code>count()</code></a>. And unless you’re already <code>summarize</code>-ing, this one is simpler to use:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> <span class="fu">count</span>(cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -821,16 +825,16 @@ Base R’s <code>table()</code> function
 <pre class="styled-output"><code># A tibble: 1,342 × 10
    carat cut     color clarity depth table price     x     y     z
    &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1  1.11 Ideal   E     SI2      62.8    55  5004  6.62  6.6   4.15
- 2  1.51 Ideal   E     SI2      62.5    57 10210  7.29  7.34  4.57
- 3  1.1  Ideal   E     SI2      61.6    57  4829  6.68  6.64  4.1 
- 4  0.74 Ideal   E     SI2      60.9    57  2617  5.89  5.83  3.57
- 5  0.55 Ideal   E     SI2      62      56  1273  5.27  5.22  3.25
- 6  0.91 Premium E     SI1      62.2    58  3665  6.29  6.18  3.86
- 7  1.51 Premium E     SI1      62.6    55 11565  7.33  7.25  4.56
- 8  1.5  Premium E     SI1      60.8    58 11795  7.36  7.32  4.46
- 9  1.51 Premium E     SI1      59.6    61 12236  7.53  7.43  4.46
-10  0.4  Premium E     SI1      60.9    56   945  4.8   4.76  2.91
+ 1  1.2  Ideal   E     SI2      61.3  56    6006  6.85  6.88  4.21
+ 2  1.02 Ideal   E     SI2      62.6  54.6  4983  6.4   6.44  4.02
+ 3  0.78 Ideal   E     SI2      61    56    3053  5.92  5.98  3.63
+ 4  1.11 Ideal   E     SI2      61.2  57    4969  6.7   6.74  4.11
+ 5  1    Ideal   E     SI2      60.7  55    4077  6.39  6.33  3.86
+ 6  0.71 Premium E     SI1      60.3  60    2674  5.77  5.74  3.47
+ 7  0.82 Premium E     SI1      61.2  61    3211  5.98  5.95  3.65
+ 8  0.51 Premium E     SI1      61.3  54    1546  5.18  5.13  3.16
+ 9  0.57 Premium E     SI1      62.2  55    1590  5.36  5.31  3.32
+10  0.41 Premium E     SI1      62.4  58     755  4.75  4.77  2.97
 # ℹ 1,332 more rows</code></pre>
 </div>
 </div>
