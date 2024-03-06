@@ -323,7 +323,9 @@ Another way to find the means for these columns is to use the `pivot_longer` fun
 
 ```{r}
 diamonds |> 
-pivot_longer(cols = c(x:z), names_to = "dimension", values_to = "value") |> 
+pivot_longer(cols = c(x:z), 
+             names_to = "dimension", 
+             values_to = "value") |> 
   summarise(mean_value = mean(value),
             .by = dimension)
 
@@ -357,7 +359,9 @@ classroom <- tribble(
 
 ```{r}
 classroom |> 
-  pivot_longer(cols = c(quiz1,quiz2, test1), names_to = "assesment", values_to = "grade")
+  pivot_longer(cols = c(quiz1,quiz2, test1), 
+               names_to = "assesment", 
+               values_to = "grade")
 ```
 
 </details>
@@ -388,7 +392,9 @@ str(diamonds)
 
 ```{r}
 diamonds |> 
-  pivot_longer(cols = c(carat,depth:z), names_to = "parameter", values_to = "value") |> 
+  pivot_longer(cols = c(carat,depth:z), 
+               names_to = "parameter", 
+               values_to = "value") |> 
   summarise(mean = mean(value),
             min = min(value),
             max = max(value),
@@ -431,7 +437,10 @@ __Note__: The first four columns (`country`, `iso2`, `iso3`, and `year`) are alr
 
 ```{r}
 who |> 
-  pivot_longer(cols = !c(country:year), names_to = "demographic", values_to = "tb_counts", values_drop_na = TRUE) |> 
+  pivot_longer(cols = !c(country:year), 
+               names_to = "demographic", 
+               values_to = "tb_counts", 
+               values_drop_na = TRUE) |> 
   summarise(count = sum(tb_counts),
             .by = c(country,year)) |> 
   filter(year=='2011') |> 
@@ -509,7 +518,7 @@ Undo the `tidy_classroom` and make it look like one of its untidy form using `pi
 ```{r}
 tidy_classroom <- tibble( name = c( rep( "Billy", 3), rep( "Jenny", 3), rep("Lionel", 3), rep("Suzy", 3)),
         assessment = c( rep(c("quiz1", "quiz2", "test1"), 4)),
-        grade = c(NA, "D", "C", "A", "A", "B", "B", "C", "B", "F", NA, NA))
+        grade = c(NA, "67", "75", "94", "98", "88", "86", "74", "84", "44", NA, NA))
 ```
 
 <details>
