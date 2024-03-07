@@ -143,16 +143,16 @@ font-style: inherit;">8</span>))</span>
 <pre class="styled-output"><code># A tibble: 43 × 1
    height_in
        &lt;dbl&gt;
- 1      69.0
- 2      75.8
- 3      66.6
- 4      72.1
- 5      55.0
- 6      64.1
- 7      60.0
- 8      71.2
- 9      58.9
-10      63.4
+ 1      70.3
+ 2      63.3
+ 3      74.3
+ 4      69.5
+ 5      64.6
+ 6      54.4
+ 7      77.2
+ 8      77.9
+ 9      64.4
+10      70.1
 # ℹ 33 more rows</code></pre>
 </div>
 </div>
@@ -204,16 +204,16 @@ font-style: inherit;">10</span>)))</span>
 <pre class="styled-output"><code># A tibble: 365 × 2
      day geese_number
    &lt;int&gt;        &lt;dbl&gt;
- 1     1           11
- 2     2           37
- 3     3           37
- 4     4           18
- 5     5           18
- 6     6           37
- 7     7           32
- 8     8           29
- 9     9           23
-10    10           36
+ 1     1           14
+ 2     2           24
+ 3     3           24
+ 4     4          -11
+ 5     5            6
+ 6     6           45
+ 7     7           18
+ 8     8           32
+ 9     9           10
+10    10           28
 # ℹ 355 more rows</code></pre>
 </div>
 </div>
@@ -631,14 +631,37 @@ Question
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">data</span>(who)</span></code></pre></div>
+font-style: inherit;">data</span>(who)</span>
+<span id="cb17-2"> who</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 7,240 × 60
+   country  iso2  iso3   year new_sp_m014 new_sp_m1524 new_sp_m2534 new_sp_m3544
+   &lt;chr&gt;    &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+ 1 Afghani… AF    AFG    1980          NA           NA           NA           NA
+ 2 Afghani… AF    AFG    1981          NA           NA           NA           NA
+ 3 Afghani… AF    AFG    1982          NA           NA           NA           NA
+ 4 Afghani… AF    AFG    1983          NA           NA           NA           NA
+ 5 Afghani… AF    AFG    1984          NA           NA           NA           NA
+ 6 Afghani… AF    AFG    1985          NA           NA           NA           NA
+ 7 Afghani… AF    AFG    1986          NA           NA           NA           NA
+ 8 Afghani… AF    AFG    1987          NA           NA           NA           NA
+ 9 Afghani… AF    AFG    1988          NA           NA           NA           NA
+10 Afghani… AF    AFG    1989          NA           NA           NA           NA
+# ℹ 7,230 more rows
+# ℹ 52 more variables: new_sp_m4554 &lt;dbl&gt;, new_sp_m5564 &lt;dbl&gt;,
+#   new_sp_m65 &lt;dbl&gt;, new_sp_f014 &lt;dbl&gt;, new_sp_f1524 &lt;dbl&gt;,
+#   new_sp_f2534 &lt;dbl&gt;, new_sp_f3544 &lt;dbl&gt;, new_sp_f4554 &lt;dbl&gt;,
+#   new_sp_f5564 &lt;dbl&gt;, new_sp_f65 &lt;dbl&gt;, new_sn_m014 &lt;dbl&gt;,
+#   new_sn_m1524 &lt;dbl&gt;, new_sn_m2534 &lt;dbl&gt;, new_sn_m3544 &lt;dbl&gt;,
+#   new_sn_m4554 &lt;dbl&gt;, new_sn_m5564 &lt;dbl&gt;, new_sn_m65 &lt;dbl&gt;, …</code></pre>
+</div>
 </div>
 </blockquote>
 <p>To make this data tidy, we need to the the column names (the year variable) and turn it into its own column (called <code>year</code>), and take all of the population data and put that into a second variable column (called <code>population</code>)</p>
 <p>Previously with the <code>classroom</code> data we did this manually, but there is a much better way to pivot from wide messy data, to longer tidy data with the function <code>pivot_longer</code></p>
 <p>Lets look at the help file for it</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">?pivot_longer</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">?pivot_longer</span></code></pre></div>
 </div>
 <p>From this, we see that the <code>pivot_longer</code> function can take a lot of aruguments, but there are only a few important ones</p>
 <ol type="1">
@@ -648,12 +671,12 @@ font-style: inherit;">data</span>(who)</span></code></pre></div>
 </ol>
 <p>Here’s what that looks like in our example</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">tidy_table4b <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">tidy_table4b <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> table4b <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -672,26 +695,26 @@ background-color: null;
 font-style: inherit;">2000</span><span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">`</span>, </span>
-<span id="cb19-3">               <span class="at" style="color: #657422;
+<span id="cb20-3">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"year"</span>, </span>
-<span id="cb19-4">               <span class="at" style="color: #657422;
+<span id="cb20-4">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"population"</span>) </span>
-<span id="cb19-5"></span>
-<span id="cb19-6"><span class="co" style="color: #5E5E5E;
+<span id="cb20-5"></span>
+<span id="cb20-6"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># note here the numbers are in backticks. This is because R treats column names as characters, and calling a name as number data won't work here. </span></span>
-<span id="cb19-7"></span>
-<span id="cb19-8"><span class="co" style="color: #5E5E5E;
+<span id="cb20-7"></span>
+<span id="cb20-8"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># the new column names also need to be in quotes here</span></span>
-<span id="cb19-9"></span>
-<span id="cb19-10">tidy_table4b</span></code></pre></div>
+<span id="cb20-9"></span>
+<span id="cb20-10">tidy_table4b</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 6 × 3
   country     year  population
@@ -711,27 +734,27 @@ font-style: inherit;"># the new column names also need to be in quotes here</spa
 <p>Pivoting isn’t just for cleaning up! When combined with other functions, pivoting can also be a very useful way to manipulate data to make it easier to analyze</p>
 <p>Last week, we used the summary function to find the mean height, width and depth of diamonds in the <code>diamonds</code> dataset</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data</span>(diamonds)</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">diamonds <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb22-2">  <span class="fu" style="color: #4758AB;
+<span id="cb23-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean_x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(x),</span>
-<span id="cb22-3">            <span class="at" style="color: #657422;
+<span id="cb23-3">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean_y =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(y),</span>
-<span id="cb22-4">            <span class="at" style="color: #657422;
+<span id="cb23-4">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean_z =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -746,10 +769,10 @@ font-style: inherit;">mean</span>(z))</span></code></pre></div>
 <p>For this we had to create a new column for every dimensional mean, which a.) takes a while to type, especially if we wanted to find the mean of further values and b.) comes out to not be tidy data</p>
 <p>Another way to find the means for these columns is to use the <code>pivot_longer</code> function to make another column which we can group the values by</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">diamonds <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb24-2"><span class="fu" style="color: #4758AB;
+<span id="cb25-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -757,25 +780,27 @@ font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(x<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:</span>z), <span class="at" style="color: #657422;
+font-style: inherit;">:</span>z), </span>
+<span id="cb25-3">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"dimension"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"dimension"</span>, </span>
+<span id="cb25-4">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"value"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb24-3">  <span class="fu" style="color: #4758AB;
+<span id="cb25-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean_value =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(value),</span>
-<span id="cb24-4">            <span class="at" style="color: #657422;
+<span id="cb25-6">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.by =</span> dimension)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -786,7 +811,7 @@ font-style: inherit;">.by =</span> dimension)</span></code></pre></div>
 2 y               5.73
 3 z               3.54</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># note in cols, I'm not specifying x, y, and z individually. In the dataset they are all next to each other, so I can use the : operator to signify that I want columns x through z. This can be really helpful on wider datasets. </span></span></code></pre></div>
 </div>
@@ -806,12 +831,12 @@ Question 1
 <div class="callout-body-container callout-body">
 <p>Make the classroom data from earlier into a tidy format using <code>pivot_longer</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">classroom <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">classroom <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">tribble</span>(</span>
-<span id="cb27-2">  <span class="sc" style="color: #5E5E5E;
+<span id="cb28-2">  <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span>name,    <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -820,7 +845,7 @@ background-color: null;
 font-style: inherit;">~</span>quiz2, <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span>test1,</span>
-<span id="cb27-3">  <span class="st" style="color: #20794D;
+<span id="cb28-3">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Billy"</span>,  <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -829,7 +854,7 @@ background-color: null;
 font-style: inherit;">"D"</span>,    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"C"</span>,</span>
-<span id="cb27-4">  <span class="st" style="color: #20794D;
+<span id="cb28-4">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Suzy"</span>,   <span class="st" style="color: #20794D;
 background-color: null;
@@ -838,7 +863,7 @@ background-color: null;
 font-style: inherit;">NA</span>,     <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span>,</span>
-<span id="cb27-5">  <span class="st" style="color: #20794D;
+<span id="cb28-5">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Lionel"</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -847,7 +872,7 @@ background-color: null;
 font-style: inherit;">"C"</span>,    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"B"</span>,</span>
-<span id="cb27-6">  <span class="st" style="color: #20794D;
+<span id="cb28-6">  <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Jenny"</span>,  <span class="st" style="color: #20794D;
 background-color: null;
@@ -856,27 +881,29 @@ background-color: null;
 font-style: inherit;">"A"</span>,    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"B"</span></span>
-<span id="cb27-7">  )</span></code></pre></div>
+<span id="cb28-7">  )</span></code></pre></div>
 </div>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">classroom <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">classroom <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb28-2">  <span class="fu" style="color: #4758AB;
+<span id="cb29-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">c</span>(quiz1,quiz2, test1), <span class="at" style="color: #657422;
+font-style: inherit;">c</span>(quiz1,quiz2, test1), </span>
+<span id="cb29-3">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"assesment"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"assesment"</span>, </span>
+<span id="cb29-4">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -919,7 +946,7 @@ Question 2
 </summary>
 <p>Which are the numeric columns?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">str</span>(diamonds)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -942,10 +969,10 @@ font-style: inherit;">str</span>(diamonds)</span></code></pre></div>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">diamonds <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-2">  <span class="fu" style="color: #4758AB;
+<span id="cb33-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -953,40 +980,42 @@ font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(carat,depth<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:</span>z), <span class="at" style="color: #657422;
+font-style: inherit;">:</span>z), </span>
+<span id="cb33-3">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"parameter"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"parameter"</span>, </span>
+<span id="cb33-4">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"value"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-3">  <span class="fu" style="color: #4758AB;
+<span id="cb33-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(value),</span>
-<span id="cb32-4">            <span class="at" style="color: #657422;
+<span id="cb33-6">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">min =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">min</span>(value),</span>
-<span id="cb32-5">            <span class="at" style="color: #657422;
+<span id="cb33-7">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">max =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">max</span>(value),</span>
-<span id="cb32-6">            <span class="at" style="color: #657422;
+<span id="cb33-8">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sd =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sd</span>(value),</span>
-<span id="cb32-7">            <span class="at" style="color: #657422;
+<span id="cb33-9">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.by =</span> parameter)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1017,9 +1046,31 @@ Question 3 - Challange
 <div class="callout-body-container callout-body">
 <p>Take a look at the very wide dataset <code>who</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">data</span>(who)</span></code></pre></div>
+font-style: inherit;">data</span>(who)</span>
+<span id="cb35-2"></span>
+<span id="cb35-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(who)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 60
+  country   iso2  iso3   year new_sp_m014 new_sp_m1524 new_sp_m2534 new_sp_m3544
+  &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+1 Afghanis… AF    AFG    1980          NA           NA           NA           NA
+2 Afghanis… AF    AFG    1981          NA           NA           NA           NA
+3 Afghanis… AF    AFG    1982          NA           NA           NA           NA
+4 Afghanis… AF    AFG    1983          NA           NA           NA           NA
+5 Afghanis… AF    AFG    1984          NA           NA           NA           NA
+6 Afghanis… AF    AFG    1985          NA           NA           NA           NA
+# ℹ 52 more variables: new_sp_m4554 &lt;dbl&gt;, new_sp_m5564 &lt;dbl&gt;,
+#   new_sp_m65 &lt;dbl&gt;, new_sp_f014 &lt;dbl&gt;, new_sp_f1524 &lt;dbl&gt;,
+#   new_sp_f2534 &lt;dbl&gt;, new_sp_f3544 &lt;dbl&gt;, new_sp_f4554 &lt;dbl&gt;,
+#   new_sp_f5564 &lt;dbl&gt;, new_sp_f65 &lt;dbl&gt;, new_sn_m014 &lt;dbl&gt;,
+#   new_sn_m1524 &lt;dbl&gt;, new_sn_m2534 &lt;dbl&gt;, new_sn_m3544 &lt;dbl&gt;,
+#   new_sn_m4554 &lt;dbl&gt;, new_sn_m5564 &lt;dbl&gt;, new_sn_m65 &lt;dbl&gt;,
+#   new_sn_f014 &lt;dbl&gt;, new_sn_f1524 &lt;dbl&gt;, new_sn_f2534 &lt;dbl&gt;, …</code></pre>
+</div>
 </div>
 <p>This data contains records of the counts of confirmed tuberculosis cases by country, year, and demographic group. The demographic groups are broken down by sex (m, f) and age (0-14, 15-25, 25-34, 35-44, 45-54, 55-64, unknown).</p>
 <p>After using <code>pivot_longer</code>, find the country with the most cases of tb in 2011.</p>
@@ -1035,10 +1086,10 @@ font-style: inherit;">data</span>(who)</span></code></pre></div>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">who <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">who <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb35-2">  <span class="fu" style="color: #4758AB;
+<span id="cb37-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1048,36 +1099,39 @@ font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(country<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">:</span>year), <span class="at" style="color: #657422;
+font-style: inherit;">:</span>year), </span>
+<span id="cb37-3">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"demographic"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"demographic"</span>, </span>
+<span id="cb37-4">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"tb_counts"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"tb_counts"</span>, </span>
+<span id="cb37-5">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values_drop_na =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb35-3">  <span class="fu" style="color: #4758AB;
+<span id="cb37-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarise</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">count =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sum</span>(tb_counts),</span>
-<span id="cb35-4">            <span class="at" style="color: #657422;
+<span id="cb37-7">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.by =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(country,year)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb35-5">  <span class="fu" style="color: #4758AB;
+<span id="cb37-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(year<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1086,7 +1140,7 @@ background-color: null;
 font-style: inherit;">'2011'</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb35-6">  <span class="fu" style="color: #4758AB;
+<span id="cb37-9">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1133,7 +1187,7 @@ font-style: inherit;">desc</span>(count))</span></code></pre></div>
 <p>Lets see how <code>pivot_wider()</code> is used</p>
 <p>This is a dataset containing population data and the number of cases of some disease in Afghanistan, Brazil, and China for the years 1999 and 2000</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">table2</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">table2</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 12 × 4
    country      year type            count
@@ -1155,7 +1209,7 @@ font-style: inherit;">desc</span>(count))</span></code></pre></div>
 <p>Here, we have columns containing <strong>more</strong> than one variable this time (<code>type</code> has both cases and population).</p>
 <p>Lets check out <code>pivot_wider</code> to see how we can undo this and make our data tidy again</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">?pivot_wider</span></code></pre></div>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1">?pivot_wider</span></code></pre></div>
 </div>
 <p>Again, <code>pivot_wider</code> has a bunch of arguments, but this time there are really only two essential ones</p>
 <ol type="1">
@@ -1180,10 +1234,10 @@ Note:
 </div>
 <p>Lets see it in action</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">table2 <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">table2 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb40-2">  <span class="fu" style="color: #4758AB;
+<span id="cb42-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1218,7 +1272,7 @@ Question 1
 <div class="callout-body-container callout-body">
 <p>Undo the <code>tidy_classroom</code> and make it look like one of its untidy form using <code>pivot_wider</code></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">tidy_classroom <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">tidy_classroom <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1251,7 +1305,7 @@ background-color: null;
 font-style: inherit;">"Suzy"</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span>)),</span>
-<span id="cb42-2">        <span class="at" style="color: #657422;
+<span id="cb44-2">        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">assessment =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1268,7 +1322,7 @@ background-color: null;
 font-style: inherit;">"test1"</span>), <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>)),</span>
-<span id="cb42-3">        <span class="at" style="color: #657422;
+<span id="cb44-3">        <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">grade =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1276,23 +1330,23 @@ font-style: inherit;">c</span>(<span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"D"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"67"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"C"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"75"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"A"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"94"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"A"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"98"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"B"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"88"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"B"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"86"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"C"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"74"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"B"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"84"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"F"</span>, <span class="cn" style="color: #8f5902;
+font-style: inherit;">"44"</span>, <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span>, <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -1303,10 +1357,10 @@ font-style: inherit;">NA</span>))</span></code></pre></div>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1">tidy_classroom <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">tidy_classroom <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb43-2">  <span class="fu" style="color: #4758AB;
+<span id="cb45-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1317,10 +1371,10 @@ font-style: inherit;">values_from =</span> grade)</span></code></pre></div>
 <pre class="styled-output"><code># A tibble: 4 × 4
   name   quiz1 quiz2 test1
   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;
-1 Billy  &lt;NA&gt;  D     C    
-2 Jenny  A     A     B    
-3 Lionel B     C     B    
-4 Suzy   F     &lt;NA&gt;  &lt;NA&gt; </code></pre>
+1 Billy  &lt;NA&gt;  67    75   
+2 Jenny  94    98    88   
+3 Lionel 86    74    84   
+4 Suzy   44    &lt;NA&gt;  &lt;NA&gt; </code></pre>
 </div>
 </div>
 </details>
@@ -1338,12 +1392,12 @@ Question 2
 <div class="callout-body-container callout-body">
 <p>In one of the questions from using pivot_longer, we put all of the numeric variables into two columns, here named <code>parameter</code> and <code>value</code>. Can you return the data <code>tampered_diamonds</code> to its original state?</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">tampered_diamonds <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1">tampered_diamonds <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb45-2">  <span class="fu" style="color: #4758AB;
+<span id="cb47-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1367,10 +1421,10 @@ font-style: inherit;">"value"</span>)</span></code></pre></div>
 <b>Hint</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">tampered_diamonds <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">tampered_diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb46-2">  <span class="fu" style="color: #4758AB;
+<span id="cb48-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1411,20 +1465,20 @@ font-style: inherit;">values_from =</span> value)</span></code></pre></div>
 <b>Solution</b> (click here)
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># code from the error read out</span></span>
-<span id="cb49-2">tampered_diamonds <span class="sc" style="color: #5E5E5E;
+<span id="cb51-2">tampered_diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb49-3">  dplyr<span class="sc" style="color: #5E5E5E;
+<span id="cb51-3">  dplyr<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">group_by</span>(cut, color, clarity, parameter) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb49-4">  dplyr<span class="sc" style="color: #5E5E5E;
+<span id="cb51-4">  dplyr<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1441,7 +1495,7 @@ background-color: null;
 font-style: inherit;">"drop"</span>)  <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%&gt;%</span></span>
-<span id="cb49-5">  dplyr<span class="sc" style="color: #5E5E5E;
+<span id="cb51-5">  dplyr<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1464,13 +1518,13 @@ font-style: inherit;">&gt;</span> 1L)</span></code></pre></div>
 10 Fair  D     SI2     price        56
 # ℹ 1,887 more rows</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb51" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb53" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># example of multiple replicates</span></span>
-<span id="cb51-2">tampered_diamonds <span class="sc" style="color: #5E5E5E;
+<span id="cb53-2">tampered_diamonds <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb51-3">  <span class="fu" style="color: #4758AB;
+<span id="cb53-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(cut<span class="sc" style="color: #5E5E5E;
 background-color: null;
