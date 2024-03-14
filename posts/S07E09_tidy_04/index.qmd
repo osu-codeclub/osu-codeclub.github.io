@@ -1,0 +1,594 @@
+---
+title: "Tidy Data and Pivoting"
+author: "Aaron Max Wiedemer"
+date: "2024-03-08"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+image: img/tidy_data_img.jpeg
+editor_options:
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+---
+
+<br>
+
+![Tidy Data By Julia Lowndes and Allison Horst](img/tidy_data_img.jpeg "Tidy Data By Julia Lowndes and Allison Horst")
+
+# Overview
+
+::: {.callout-tip title="Document Summary" collapse="false"}
+
+**tidy data** : a way of organizing data where *columns contain variables* and *rows contain observations*
+
+**Terms**
+
+- **variable** : contains values of an attribute that is measured (i.e., length, sex, pH, color)
+
+- **observation** : contains all the values measured on the same unit (i.e., person, sample, day)
+
+**Functions**
+
+- **pivot_longer()** : a function that "lengthens" data by transforming a set of columns containing values into two columns - one containing the previous column names, and the other contain all of the values. This is the inverse of `pivot_wider()`
+
+- **pivot_wider()** : a function that "widens" data by transforming a set of two columns (though can be more) containing names and values into a larger set of columns. This is the inverse of `pivot_longer()`
+:::
+
+## Starting note
+
+Much of this page is inspired from and has examples from - [Hadley Wickam's Tidy Data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) - [R for Data Science](https://r4ds.had.co.nz/tidy-data.html#wider)
+
+# Introduction
+
+So far, we've been learning a lot of functions within the `tidyverse` to manipulate datasets
+
+-   `filter()` to choose rows
+-   `select()` to choose columns
+-   `arrange()` to sort data
+-   `rename()` to change data names
+-   `mutate()` to add and change data
+-   `summarise()` to produce data summaries
+
+Today we will be learning more about the structure of datasets, specifically **tidy data** .
+
+Most of what we have been working in code club this semester has actually been using tidy data, as most functions in the **tidyverse** are used to create or manipulate tidy data.
+
+While we have been focusing on how to manipulate tidy data, today we will be learning two functions that can be used to manipulate and more powerfully create tidy data - `pivot_longer()` and `pivot_wider()`
+
+## Set up
+
+Lets get our favorite library loaded up
+
+```{r}
+#install.packages("tidyverse") # delete first hash and run to install if you havent already
+library(tidyverse)
+```
+
+# Tidy data
+
+## Data Structure
+
+Most datasets we work with in R are organized in a roughly rectangular grid-like format made up of **rows** and **columns** that contain some values.
+
+Each value in a dataset belongs to some **variable** and some **observation**.
+
+- A __variable__ contains values of an attribute that was measured (i.e., length, sex, pH, color)
+- An __observation__ contains all the values measured on the same thing (unit) (i.e., person, sample, day)
+
+Examples:
+
+> If I'm measuring the height of a population each person will be one **observation** and the variable I am measuring is **height**
+
+> ```{r}
+> height <- tibble(
+>  height_in = c(rnorm(43, m=67, sd=8))
+>  )
+
+> height
+> ```
+
+>
+> If I'm counting the number of geese I see on campus throughout the year every day, the variables will be **number of geese I see, and the day I count them on**. The observation will be **one instance of me counting geese on a specific day**
+>
+
+> ```{r}
+> geese <- tibble(
+>  day = seq(1:365),
+>  geese_number = c(trunc(rnorm(365, m=24, sd=10)))
+>  )
+>
+> geese
+> ```
+
+This may sound like review, but in practice can be somewhat tricky
+
+::: {.callout-warning .callout-warning icon="flase" }
+## Question 
+
+Looking at the `diamonds` dataset, what is the observation and variable of the the value `diamonds[5,7]` ?
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds[5,7]
+```
+
+The observation here is the **5th diamond** and the variable we are measuring is **price**
+
+</details>
+
+:::
+
+## Pre-Tidy Date
+
+> "All tidy data sets are alike. Each messy dataset is messy in its own way" - Hadley Wickham.
+
+At risk of stating the obvious, organizing values in datasets can be accomplished in many ways
+
+Here with an example of table of student grades on several assignments adapted from [Hadley Wickam's Tidy Data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+
+```{r}
+classroom <- tribble(
+  ~name,    ~quiz1, ~quiz2, ~test1,
+  "Billy",  NA,     "67",    "75",
+  "Suzy",   "44",    NA,     NA,
+  "Lionel", "86",    "74",    "84",
+  "Jenny",  "94",    "98",    "88"
+  )
+
+classroom
+```
+
+There is more than one way to organize this information in a table - for instance here we can flip (transpose) the table to have student names in columns and assessments in rows
+
+```{r}
+tribble(
+  ~assessment, ~Billy, ~Suzy, ~Lionel, ~Jenny,
+  "quiz1",     NA,     "44",   "86",     "94",
+  "quiz2",     "67",    NA,    "74",     "98",
+  "test1",     "75",    NA,    "84",     "88"
+  )
+```
+
+This data isn't **tidy data** yet though.
+
+::: {.callout-note title="SIde Note: Different Organizations Serve Different Purposes" collapse="false"}
+Different ways of organizing data can serve different purposes - some ways of organizing data are great for collecting data, some good for analyzing data, some both, and some neither.
+:::
+
+### The look of tidy data
+
+Roughly speaking, in tidy data **columns contain variables** and **rows contain observations**
+
+Here's the dataset manually remade in a tidy format
+
+```{r}
+tidy_classroom <- tibble( name = c( rep( "Billy", 3), rep( "Jenny", 3), rep("Lionel", 3), rep("Suzy", 3)),
+        assessment = c( rep(c("quiz1", "quiz2", "test1"), 4)),
+        grade = c(NA, "67", "75", "94", "98", "88", "86", "74", "84", "44", NA, NA))
+
+
+tidy_classroom
+```
+
+Here, the values, variables, and observations are more clear
+
+The variables are
+
+1.  the __names__ of the students (in the `name` column)
+2.  the __assessments__ (in the `assessment` column)
+3.  the __grades__ (in the `grade` column)
+
+Each observation here is __a particular grade, on each assessmnet, for each student__.
+
+::: {.callout-note title="Note" collapse="false"}
+Look at the __dimensions__ of this table. From this, we can immediatly tell the number of variables, and the number of observations in this dataset
+:::
+
+## Tidy data definition
+
+Tidy data is a standard way of organizing data, and is defined by 3 things
+
+__In tidy data__
+
+1.  __Each variable is one column__; columns are single variables
+2.  __Each observation is one row__; rows are single observations
+3.  __Each value is a cell__; cells are values
+
+**Messy data** is defined as any data organization that is not tidy data
+
+
+#### Why use tidy data?
+
+- Having data structured as tidy data makes it easier to manipulate and analyze data in __tidy R__ - in fact, *most of the functions we have been learning up to now have been preformed on tidy data* - this is the **tidyverse** after all
+
+- Some functions require tidy data, and most operations on data in the __tidyverse__ are made significantly easier by having your data as tidy data (i.e., data visualization, statistics)
+
+- Having data in a standardized format makes it easier to collaborate on
+
+::: {.callout-note title="Order of Columns" collapse="false"}
+_A note on ordering of columns_ : While order of columns doesn't really matter for data to be considered tidy, it is standard and common practice to put meta data (aka fixed or random variables) first, followed by the columns for measured data (i.e., sample name columns go first)
+:::
+
+# Making data tidy - `pivot_longer()` and `pivot_wider()`
+
+Not all data is tidy, which creates the need for us to know how to clean it.
+
+## Pivoting Longer
+
+One common problem mentioned in R for data science and by Hadley Wickham is when you __have column names that are actually variable values__ (when a single variable is spread across multiple columns)
+
+::: {.callout-note title="Sidenote" collapse="false"}
+Having a set of columns with variable values for names is actually very common in metabomolics or genomics data, where column titles are metabolites, genes, taxa, etc.
+:::
+
+Here is a dataset with this issue - This data denotes the population of Afghanistan, Brazil, and China for the years 1999 and 2000
+
+```{r}
+table4b
+```
+
+::: {.callout-warning icon="flase" }
+
+## Question
+
+What are the variables in the `table4b` data?
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+The variables are
+
+- __country__
+- __year__
+- __population__
+
+</details>
+
+:::
+
+This format of data is sometimes called **wide** data, where the row of column names (the very first row) actually contains variable values.
+
+In this data it doesn't look very wide, but imagine how much wider if data was taken every year up to or past this year. Wide data tends to get wide very quickly.
+
+> For an example of very wide data, look at the `who` dataset
+>
+> ```{r}
+> data(who)
+>  who
+> ```
+
+To make this data tidy, we need to the the column names (the year variable) and turn it into its own column (called `year`), and take all of the population data and put that into a second variable column (called `population`)
+
+Previously with the `classroom` data we did this manually, but there is a much better way to pivot from wide messy data, to longer tidy data with the function `pivot_longer`
+
+Lets look at the help file for it
+
+```{r}
+?pivot_longer
+```
+
+From this, we see that the `pivot_longer` function can take a lot of aruguments, but there are only a few important ones
+
+1.  `cols`, in which we select the columns to pivot (i.e., the columns whos names contain a variable)
+2.  `names_to`, in which we create a new column for where our old column names are to be put into
+3.  `values_to`, in which we create a second new column for the values to be put into
+
+Here's what that looks like in our example
+
+```{r}
+
+tidy_table4b <- table4b |> 
+  pivot_longer(cols = `1999`:`2000`, 
+               names_to = "year", 
+               values_to = "population") 
+
+# note here the numbers are in backticks. This is because R treats column names as characters, and calling a name as number data won't work here. 
+
+# the new column names also need to be in quotes here
+
+tidy_table4b
+```
+
+using `pivot_longer` we turned a 3x3 table where the column names stored variable values into a 6x3 table where each column contains a single variable, and each row a single observation - and presto, tidy data!
+
+One other thing to note here is that we are not pivoting every column. In some datasets you may only have a few columns that you would like to be longer
+
+### More examples and uses of pivot
+
+Pivoting isn't just for cleaning up! When combined with other functions, pivoting can also be a very useful way to manipulate data to make it easier to analyze
+
+Last week, we used the summary function to find the mean height, width and depth of diamonds in the `diamonds` dataset
+
+```{r}
+data(diamonds)
+```
+
+
+```{r}
+diamonds |> 
+  summarise(mean_x = mean(x),
+            mean_y = mean(y),
+            mean_z = mean(z))
+```
+
+For this we had to create a new column for every dimensional mean, which a.) takes a while to type, especially if we wanted to find the mean of further values and b.) comes out to not be tidy data
+
+Another way to find the means for these columns is to use the `pivot_longer` function to make another column which we can group the values by
+
+```{r}
+diamonds |> 
+pivot_longer(cols = c(x:z), 
+             names_to = "dimension", 
+             values_to = "value") |> 
+  summarise(mean_value = mean(value),
+            .by = dimension)
+
+# note in cols, I'm not specifying x, y, and z individually. In the dataset they are all next to each other, so I can use the : operator to signify that I want columns x through z. This can be really helpful on wider datasets. 
+```
+
+Here we only have three values, but for wider datasets this can be a very powerful tool
+
+### Pivot longer problems
+
+
+::: {.callout-warning icon="flase" }
+
+## Question 1
+
+Make the classroom data from earlier into a tidy format using `pivot_longer`
+
+```{r}
+classroom <- tribble(
+  ~name,    ~quiz1, ~quiz2, ~test1,
+  "Billy",  NA,     "D",    "C",
+  "Suzy",   "F",    NA,     NA,
+  "Lionel", "B",    "C",    "B",
+  "Jenny",  "A",    "A",    "B"
+  )
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+classroom |> 
+  pivot_longer(cols = c(quiz1,quiz2, test1), 
+               names_to = "assesment", 
+               values_to = "grade")
+```
+
+</details>
+
+:::
+
+
+::: {.callout-warning icon="flase" }
+
+## Question 2
+
+Find the means, minimum values, maximum values, and standard deviations of all of the numeric columns in the `diamonds` dataset using `pivot_longer` followed by `summarise`
+
+<details>
+
+<summary><b>Hint</b> (click here)</summary>
+
+Which are the numeric columns?
+```{r}
+str(diamonds)
+```
+
+</details>
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+diamonds |> 
+  pivot_longer(cols = c(carat,depth:z), 
+               names_to = "parameter", 
+               values_to = "value") |> 
+  summarise(mean = mean(value),
+            min = min(value),
+            max = max(value),
+            sd = sd(value),
+            .by = parameter)
+```
+
+</details>
+
+:::
+
+::: {.callout-warning icon="flase" }
+
+## Question 3 - Challange
+
+Take a look at the very wide dataset `who`
+
+```{r}
+data(who)
+
+head(who)
+```
+
+This data contains records of the counts of confirmed tuberculosis cases by country, year, and demographic group. The demographic groups are broken down by sex (m, f) and age (0-14, 15-25, 25-34, 35-44, 45-54, 55-64, unknown).
+
+After using `pivot_longer`, find the country with the most cases of tb in 2011.
+
+__Note__: The first four columns (`country`, `iso2`, `iso3`, and `year`) are already properly formatted and do not need to be pivoted here.
+
+<details>
+
+<summary><b>Hint</b> (click here)</summary>
+
+`NA` values are liekly to mess up your analysis here - check the `pivot_longer()` help file to see what arguments are available to remove `NA` values
+
+</details>
+
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+who |> 
+  pivot_longer(cols = !c(country:year), 
+               names_to = "demographic", 
+               values_to = "tb_counts", 
+               values_drop_na = TRUE) |> 
+  summarise(count = sum(tb_counts),
+            .by = c(country,year)) |> 
+  filter(year=='2011') |> 
+  arrange(desc(count))
+```
+China is our winner with a sum of 865059 cases in 2011
+
+</details>
+
+:::
+
+
+
+## Pivoting Wider
+
+The other function of the day here is `pivot_wider`
+
+`pivot_wider` , as the name might imply, is the inverse of `pivot_longer` and creates columns from from values stored in another column
+
+### Uses of `pivot_wider()`
+
+You may be thinking, "why would I ever need this? I thought the whole point was to avoid having columns of variable values"
+
+`pivot_wider` is an especially useful function in many situations. Here are only a few:
+
+1.  `pivot_wider` is useful where we have the opposite problem as we saw when learning `pivot_longer` - when a multiple variables are stored in a single column (single observation is scattered across more than one row)
+2.  `pivot_wider` can be useful when we want to make calculations across columns
+3.  Not every function in R accepts tidy data, sometimes we do need wide data! (e.g., anything that requires a matrix, PCA)
+
+### Using `pivot_wider()`
+
+Lets see how `pivot_wider()` is used
+
+This is a dataset containing population data and the number of cases of some disease in Afghanistan, Brazil, and China for the years 1999 and 2000
+
+```{r}
+table2
+```
+
+Here, we have columns containing **more** than one variable this time (`type` has both cases and population).
+
+Lets check out `pivot_wider` to see how we can undo this and make our data tidy again
+
+```{r}
+?pivot_wider
+```
+
+Again, `pivot_wider` has a bunch of arguments, but this time there are really only two essential ones
+
+1.  `names_from` which denotes the column in which our new column names are stored
+2.  `values_from` which denotes the column in which the values we will be filling our new columns with are stored
+
+::: {.callout-note title="Note:" collapse="false"}
+There are fewer important arguments in `pivot_wider` - which one is missing its inverse from `pivot_longer`?
+:::
+
+Lets see it in action
+
+```{r}
+table2 |> 
+  pivot_wider(names_from = type, values_from = count)
+```
+
+We have now seperated our variables into seperate columns, and now our rows each contain only one observation. Tidy data!
+
+### Pivot Wider Problems
+
+
+::: {.callout-warning icon="flase" }
+
+## Question 1
+
+Undo the `tidy_classroom` and make it look like one of its untidy form using `pivot_wider`
+
+```{r}
+tidy_classroom <- tibble( name = c( rep( "Billy", 3), rep( "Jenny", 3), rep("Lionel", 3), rep("Suzy", 3)),
+        assessment = c( rep(c("quiz1", "quiz2", "test1"), 4)),
+        grade = c(NA, "67", "75", "94", "98", "88", "86", "74", "84", "44", NA, NA))
+```
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+tidy_classroom |> 
+  pivot_wider(names_from = assessment, values_from = grade)
+```
+
+</details>
+
+:::
+
+::: {.callout-warning icon="flase" }
+
+## Question 2
+
+In one of the questions from using pivot_longer, we put all of the numeric variables into two columns, here named `parameter` and `value`. Can you return the data `tampered_diamonds` to its original state?
+
+```{r}
+tampered_diamonds <- diamonds |> 
+  pivot_longer(cols = c(carat, depth:z), names_to = "parameter", values_to = "value")
+```
+
+__note__ : if you encounter an error, be sure to check the hint
+
+<details>
+
+<summary><b>Hint</b> (click here)</summary>
+
+```{r}
+tampered_diamonds |> 
+  pivot_wider(names_from = parameter, values_from = value)
+```
+
+Uh-oh! Uh-oh! With what we have learned so far, we cant undo `pivot_longer` with `pivot_wider` here! Can you figure out why?
+
+</details>
+
+<details>
+
+<summary><b>Solution</b> (click here)</summary>
+
+```{r}
+# code from the error read out
+tampered_diamonds %>%
+  dplyr::group_by(cut, color, clarity, parameter) %>%
+  dplyr::summarise(n = dplyr::n(), .groups = "drop")  %>%
+  dplyr::filter(n > 1L)
+
+# example of multiple replicates
+tampered_diamonds |> 
+  filter(cut=="Premium", color == "D", clarity=="VS2")
+```
+
+multiple values for each "type" of diamond - not uniquely identifiable, thus we can't get to the original dataset
+
+</details>
+
+:::
+
+# Citations
+
+[Illustrations from the Openscapes blog Tidy Data for reproducibility, efficiency, and collaboration by Julia Lowndes and Allison Horst](https://allisonhorst.com/other-r-fun)
+
+https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html
+
+https://r4ds.had.co.nz/tidy-data.html#wider

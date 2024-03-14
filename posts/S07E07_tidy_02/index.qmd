@@ -1,0 +1,536 @@
+---
+title: "Tidyverse 2: More _dplyr_ Data Wrangling"
+author: "Jelmer Poelstra"
+date: "2024-02-23"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+image: img/run.jpeg
+editor_options: 
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+---
+
+------------------------------------------------------------------------
+
+<br> 
+
+![](img/run.jpeg){fig-align="center" width="75%"}
+
+<br>
+
+## Introduction
+
+#### Recap of last week
+
+Last week, Jess introduced us to to the _tidyverse_, a collection of packages
+to facilitate doing data science with R, including data manipulation and visualization.
+
+We saw two general properties of the tidyverse:
+that it has a strong focus on  **data frames** and
+that operations are usually connected using the **"pipe" (`|>`) operator**.
+
+We also learned about two key functions from the tidyverse's _dplyr_ package:
+
+- **`filter()`** to pick rows (which typically represent observations/samples/individuals)
+- **`select()`** to pick columns (which typically represent variables/properties)
+
+#### Learning objectives for today
+
+We will continue learning about _dplyr_:
+
+- An overview of key _dplyr_ functionality
+- Sorting data frame rows with `arrange()`
+- Renaming data frame columns with `rename()`
+- Adding and manipulating data frame columns with `mutate()`
+
+Like last week, we will practice with the `diamonds` dataframe that is automatically
+loaded along with the tidyverse.
+
+#### Setting up
+
+Load the tidyverse:
+
+```{r}
+library(tidyverse)
+```
+
+::: {.callout-warning collapse="true"}
+#### Still need to install the tidyverse? _Click here for instructions_
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+:::
+
+<br>
+
+## Overview of key _dplyr_ functionality
+
+Functions from the [*dplyr* package](https://dplyr.tidyverse.org/index.html)
+have the following **commonalities**:
+
+- The first argument is always a data frame (this makes them pipe-friendly)
+- Subsequent arguments typically describe which columns to operate on
+- The output is always a data frame
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Key functions for **row-wise** operations include:
+
+-   [`filter()`](https://dplyr.tidyverse.org/reference/filter.html) --- picks rows based on values in one or more columns _(last week)_
+-   [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) --- orders rows based on values in selected columns _(this week)_
+
+Key functions for **column-wise** operations include:
+
+-   [`select()`](https://dplyr.tidyverse.org/reference/select.html) --- picks columns _(last week)_
+-   [`rename`()](https://dplyr.tidyverse.org/reference/rename.html) --- changes column names _(this week)_
+-   [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) --- creates new columns and changes the values of columns _(this week)_
+
+Key functions for **groups of rows** include:
+
+-   [`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html) --- collapses a group into a single row with the purpose of summarizing data
+
+Finally, there are functions to **combine multiple data frames**
+(joins, with for example `inner_join()`).
+
+<hr style="height:1pt; visibility:hidden;" />
+
+This week, we will cover the remaining functions listed above for row- and column-wise operations.
+In subsequent sessions, we will cover the more complex summarizing and joining functions.
+
+::: callout-note
+#### The _tidyr_ package contains additional data wrangling functions
+There is a separate core tidyverse package (_tidyr_) 
+with closely related functions that can "reshape" ("pivot") data frames between wider and longer formats ---
+we will also cover those in a later dedicated Code Club session.
+:::
+
+<br>
+
+## Sorting with `arrange()`
+
+The `arrange()` function is like the sort function in Excel:
+it changes the order of the rows based on the values in one or more columns.
+For example, you might want to sort entries by their cost or size,
+or by their names in alphabetical order.
+
+We'll see a first example using the `diamonds` data frame.
+Keep in mind that in this data frame, each row represents a single diamond,
+and the columns provide different pieces of information about a diamond:
+
+```{r}
+# Note the initial order in the 'carat' column:
+head(diamonds)
+```
+
+Therefore, sorting this data frame means rearranging the order of the diamonds
+based on their properties --- in the example below, based on the carat of the diamond:
+
+```{r}
+# Now, we'll sort by the values in the 'carat' column:
+diamonds |>
+  arrange(carat)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+As you can see, there are many rows with the same, smallest value of `carat`,
+so we may be interested in **sorting by an additional column**,
+which will break the ties in our first sorting column:
+
+```{r}
+# Sort first by carat, then by cut:
+diamonds |>
+  arrange(carat, cut)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+<details><summary>**Question:** Does the resulting order of entries in the `cut` column make sense to you? If not, what might be going on? _(Click to see the solution)_</summary>
+
+Clearly, the order is not alphabetical, but it could be so in _descending_ order ---
+though this is not in fact the case.
+
+As we briefly saw last week, the `cut` column (as well as the `color` and `clarity` columns)
+are of the "ordered factor" type: therefore, when we sort by this column,
+the order as initially defined by whoever created this data frame will be respected:
+
+```{r}
+head(diamonds$cut)
+```
+
+This also implies that there are no 0.2-carat (the lowest value) diamonds with `Fair` or `Good`
+cuts, because the first-listed and therefore lowest cut was `Very Good`.
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+By default, the sorting is done in _ascending order_ (small-to-big), as you probably expected.
+But of course we may sometimes want to sort in **descending** (big-to-small) order,
+which we can do with the `desc()` helper function:
+
+```{r}
+# Sort first by carat, then by price:
+diamonds |>
+  arrange(desc(carat))
+```
+
+::: callout-tip
+### Saving the output?
+
+In the examples above, and in all of today's examples and exercises,
+we are simply _printing_ the output data frame.
+This means that we are leaving the original data frame `diamonds` **unchanged**
+and that we are not storing our results elsewhere either.
+
+Recall that you can assign to a new dataframe as one way to store your results:
+
+```{r}
+diamonds_sorted <- diamonds |>
+  arrange(carat)
+```
+
+:::
+
+<br>
+
+## Renaming columns with `rename()` (and `select()`)
+
+It is pretty common that you are not happy with the names of columns in your
+data frame and want to rename one or more.
+This can be done with the `rename()` function,
+which uses the syntax `<new-name> = <old-name>`:
+
+```{r}
+# Below, we rename the 'x' column to 'length', and the 'y' column to 'width':
+diamonds |>
+  rename(length = x, width = y)
+```
+
+As an aside, it is also possible rename the columns that you pick with the
+`select()` function:
+
+```{r}
+diamonds |>
+  select(length = x, width = y, z)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: callout-tip
+#### Need to rename many columns?
+If your data frame has many columns that need to be renamed,
+the [**`janitor::clean_names()`**](https://sfirke.github.io/janitor/reference/clean_names.html)
+function provides automated column name cleaning that can be extremely handy.
+
+For example, you might read in an Excel sheet with 20 columms, many of which
+have spaces in their names, and some of which have other special characters like `%` or `&`.
+Those kinds of column names don't play well with R, and `clean_names()` would automatically
+replace such characters with (by default) underscores (`_`).
+
+You can try this function in the last Bonus exercise.
+:::
+
+<br>
+
+::: exercise
+## Exercises I
+
+### Renaming
+
+Above, we renamed the cryptically named `x` and `y` columns,
+but there's a third single-letter column name: **`z`**.
+
+1. Check the help for this data frame by typing `?diamonds`,
+   and figure out what the `z` column represents.
+   
+2. Rename the `z` column to give it a more descriptive name like we did above
+   for `x` and `y`. _(You may run into a problem here! If so, try to understand and resolve it.)_
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+1. **The `z` column represents the depth of the diamond in mm:**
+
+```{r, eval=FALSE}
+?diamonds
+```
+```bash-out
+# The output will include:
+
+z
+    depth in mm (0–31.8)
+
+depth
+    total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+2. **So let's try to rename it to `depth`:**
+
+```{r, error=TRUE}
+diamonds |>
+  rename(depth = z)
+```
+
+Ouch! That didn't work, because a column named `depth` already exists,
+and **column names must be unique**.
+That other depth column is the diamond's "total depth percentage" rather than the raw depth.
+
+There's no one right way to resolve this
+(and of course one option would be to refrain from renaming `z` altogether),
+but we could for example use `depth_mm` etc. notations for these columns:
+
+```{r}
+diamonds |>
+  rename(length_mm = x, width_mm = y, depth_mm = z)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Arranging
+
+See the prices (and other properties) of the _most expensive diamonds_ in the data frame
+by using the `arrange()` function like we did above.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+To see the most expensive (highest-priced) diamond first,
+we'll have to arrange by the `price` column in descending order:
+
+```{r}
+diamonds |>
+  arrange(desc(price))
+```
+
+</details>
+
+:::
+
+<br>
+
+## Manipulating with `mutate()`
+
+Let's take a look at the official `mutate()` documentation figure (😛):
+
+![Illustration by Allison Horst](img/arrange.png){width="75%"}
+
+It says "_add column(s), keep existing_" and shows that a third column, `C`,
+is being added to a data frame.
+
+<details><summary>What do the values in column `C` appear to represent (compare with `A` and `B`)? _(Click for the solution)_</summary>
+
+Column `C` appears to be columns `A` + `B`, e.g in the first row, `1` + `2` = `3`.
+
+</details>
+
+Let's try to do something similar --creating a new column that is based on the values of other columns--
+with diamond dimensions.
+We'll add a column named `volume` that is generated by multiplying the length,
+width, and depth columns:
+
+```{r}
+# (I'm first using select just to limit the output that is printed)
+diamonds |>
+  select(x, y, z) |>
+  mutate(volume = x * y * z)
+```
+
+As you could see in above examples,
+the operation is executed in a (vectorized) **row-wise fashion**:
+the `volume` that we see in the first row was created by multiplying `x`, `y` and `z` in the first row,
+and so on.
+
+Also note that the new column created by `mutate()` is (by default) added as the _last_ column.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+Instead of creating a new column with `mutate()`,
+it is also possible to simply **change the values in a column** (without creating a new column)
+by assigning back to the same column name.
+For example, say that we wanted diamond length to be in cm _instead of_ in mm:
+
+```{r}
+diamonds |>
+  select(x, y, z) |>
+  mutate(x = x / 10)
+```
+
+<br>
+
+::: exercise
+
+## Exercises II
+
+### More unit conversion
+
+Above, we converted the diamond lengths (column `x`) from mm to cm.
+
+- Expand on that code to convert all three dimension columns (`x`, `y`, and, `z`).
+- Also give the converted columns names that indicate the measurements are in cm.
+
+<details><summary><b>Solution so far</b> (click here)</summary>
+
+Several naming schemes are reasonable, but I will use `length_cm` etc:
+
+```{r}
+diamonds |>
+  mutate(length_cm = x / 10,
+         width_cm = y / 10,
+         depth_cm = z / 10)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+- Next, expand your "pipeline" to either remove the columns with mm measurements,
+  or rename the original `x`, `y`, and `z` columns to clarify that those are in mm. 
+
+<details><summary><b>Hint: how to remove specific columns with `select()`</b> (click here)</summary>
+
+If you just want to remove one or a few columns from a data frame with many columns,
+you'd want to be able to directly mark them for removal (rather than listing all columns you want to keep),
+which you can do as follows:
+
+```{r}
+# This will remove the carat and cut columns:
+diamonds |>
+  select(-carat, -cut)
+```
+
+</details>
+
+<details><summary><b>Full solution</b> (click here)</summary>
+
+- Option 1 --- remove the columns with mm measurements:
+
+```{r}
+# (Note that the final 2 added columns are hidden in the output!)
+diamonds |>
+  mutate(length_cm = x / 10,
+         width_cm = y / 10,
+         depth_cm = z / 10) |>
+  select(-x, -y, -z)
+```
+
+- Option 2 --- also keep the cm columns, but rename them:
+
+```{r}
+diamonds |>
+  mutate(length_cm = x / 10,
+         width_cm = y / 10,
+         depth_cm = z / 10) |>
+  rename(length_mm = x,
+         width_mm = y,
+         depth_mm = z)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Price per carat
+
+Include the following steps in a single "pipeline":
+
+1. Add a new column with the price per carat, rounded to whole dollars.
+2. Sort by price per carat in descending order
+3. Only keep diamonds with a price per carat above $5,000.
+
+What is the highest price per carat, and how many diamonds are you left with?
+  
+<details><summary><b>Solution</b> (click here)</summary>
+
+We are left with 13,115 rows and the highest price per carat is $17,829:
+
+```{r}
+diamonds |>
+  mutate(price_per_carat = round(price / carat)) |>
+  arrange(desc(price_per_carat)) |> 
+  filter(price_per_carat > 5000)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Bonus: Renaming columns with `janitor::clean_names()`
+
+1. Install and then load the package _janitor_.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+- Install:
+```{r, eval=FALSE}
+install.packages("janitor")
+```
+
+- Load:
+
+```{r}
+library(janitor)
+```
+
+</details>
+
+2. Run the following code to create a "tibble" (tidyverse-style dataframe)
+   with poor column names:
+   
+```{r}
+# (The backticks ` around the column names are necessary to assign such unwieldy names)
+sale_stats <- tibble(
+  `Abbreviated ID` = c("DZ", "GA", "PT"),
+  `% Sold` = c(62, 98, 18),
+  `Nr Stored` = c(372, 13, 175),
+  `Lost&Found` = c(0, 0, 2)
+)
+```
+
+3. Print the `sale_stats` data frame and take a look at how the column names are shown.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+sale_stats
+```
+
+</details>
+
+4. Run the `clean_names()` function on the `sale_stats` data frame.
+   (It will take a data frame as its first argument and return a dataframe,
+   much like the dplyr functions we've seen).
+   Take a close look at the output ---
+   can you spot at least 3 types of changes that it made?
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+sale_stats |> clean_names()
+```
+
+Or equivalently (output not shown):
+
+```{r, eval=FALSE}
+clean_names(sale_stats)
+```
+
+The `clean_names()` function made the following changes to the column names:
+
+- Spaces were converted to underscores
+- The `&` was converted to an underscore
+- The `%` was converted to `percent` (!)
+- Uppercase (capital) letters were converted to lowercase
+
+</details>
+
+:::
