@@ -10,7 +10,235 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Fri, 08 Mar 2024 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 22 Mar 2024 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Reading in data with the tidyverse</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E10_tidy_05/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<div class="quarto-layout-panel">
+<div class="quarto-layout-row quarto-layout-valign-top">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr.png" height="250"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readxl.png" height="250"></p>
+</div>
+</div>
+</div>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>So far in code club this semester, all of the data we have used has been either made up by us, or able to be loading from data embedded within base R or a package.</p>
+<p>Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a>. This package allows us to read in rectangular data - or data</p>
+<p>Useful references for today:</p>
+<ul>
+<li><a href="https://readr.tidyverse.org/index.html"><code>readr</code> documentation</a></li>
+<li><a href="https://readxl.tidyverse.org/"><code>readxl</code> docuemtation</a> (for reading in Excel files)</li>
+<li><a href="https://r4ds.hadley.nz/data-import">Data import chapter 7</a> in R for Data Science</li>
+</ul>
+<p>There are other non-core tidyverse packages for reading in data (including directly from Google Drive), you can find them <a href="https://www.tidyverse.org/packages/#import">here</a> though I will not go through them today.</p>
+<p>We will start by loading the libraries we need for today.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(readxl)</span></code></pre></div>
+</div>
+<p>But before we actually read in data, let’s talk a little bit about the different ways in which input data can be formatted.</p>
+</section>
+<section id="what-are-some-common-data-formatting-styles" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="what-are-some-common-data-formatting-styles"><span class="header-section-number">2</span> What are some common data formatting styles?</h2>
+<section id="csv" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="csv"><span class="header-section-number">2.1</span> <code>.csv</code></h3>
+<p>The most common formatting style for data is comma separated values, or with the file extension <code>.csv</code>. This means that the data is delimited (i.e., separated) by commas. Often we open these files in a program like Excel, Numbers, or similar, which puts each value into its own cell, but the data actually looks like this:</p>
+<pre><code>Student ID,Full Name,favourite.food,mealPlan,AGE
+1,Sunil Huffmann,Strawberry yoghurt,Lunch only,4
+2,Barclay Lynn,French fries,Lunch only,5
+3,Jayendra Lyne,N/A,Breakfast and lunch,7
+4,Leon Rossini,Anchovies,Lunch only,
+5,Chidiegwu Dunkel,Pizza,Breakfast and lunch,five
+6,Güvenç Attila,Ice cream,Lunch only,6</code></pre>
+<p>Here, the first row are our column headers, and each subsequent row contains information about one student, including their student ID, full name, favorite food, meal plan, and age.</p>
+<p>If we look at this data as a table, it looks like this:</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 23%">
+<col style="width: 26%">
+<col style="width: 27%">
+<col style="width: 6%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">Student ID</th>
+<th style="text-align: left;">Full Name</th>
+<th style="text-align: left;">favourite.food</th>
+<th style="text-align: left;">mealPlan</th>
+<th style="text-align: left;">AGE</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Sunil Huffmann</td>
+<td style="text-align: left;">Strawberry yoghurt</td>
+<td style="text-align: left;">Lunch only</td>
+<td style="text-align: left;">4</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Barclay Lynn</td>
+<td style="text-align: left;">French fries</td>
+<td style="text-align: left;">Lunch only</td>
+<td style="text-align: left;">5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: left;">Jayendra Lyne</td>
+<td style="text-align: left;">N/A</td>
+<td style="text-align: left;">Breakfast and lunch</td>
+<td style="text-align: left;">7</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4</td>
+<td style="text-align: left;">Leon Rossini</td>
+<td style="text-align: left;">Anchovies</td>
+<td style="text-align: left;">Lunch only</td>
+<td style="text-align: left;">NA</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: left;">Chidiegwu Dunkel</td>
+<td style="text-align: left;">Pizza</td>
+<td style="text-align: left;">Breakfast and lunch</td>
+<td style="text-align: left;">five</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Güvenç Attila</td>
+<td style="text-align: left;">Ice cream</td>
+<td style="text-align: left;">Lunch only</td>
+<td style="text-align: left;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="tsv" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="tsv"><span class="header-section-number">2.2</span> <code>.tsv</code></h3>
+<p>Another common data format is tab separated values, or <code>.tsv</code>. Here, instead of being separated by commas like in a <code>.csv</code>, the values are separated by tabs. Looking at the same students data in a <code>.tsv</code> format would look like this:</p>
+<pre><code>Student ID        Full Name        favourite.food        mealPlan        AGE
+1        Sunil Huffmann        Strawberry yoghurt        Lunch only        4
+2        Barclay Lynn        French fries        Lunch only        5
+3        Jayendra Lyne        N/A        Breakfast and lunch        7
+4        Leon Rossini        Anchovies        Lunch only        
+5        Chidiegwu Dunkel        Pizza        Breakfast and lunch        five
+6        Güvenç Attila        Ice cream        Lunch only        6</code></pre>
+</section>
+<section id="xlsx-and-.xls" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="xlsx-and-.xls"><span class="header-section-number">2.3</span> <code>.xlsx</code> and <code>.xls</code></h3>
+<p>These are Microsoft-specific file formats created using the program Excel. Since using Excel spreadsheets so so common, there are special packages that allow the reading in of these file types. If you open up a file in Excel, you can save it in a variety of different file formats, just please do this with care, as Excel has reputation of <a href="https://www.theverge.com/2020/8/6/21355674/human-genes-rename-microsoft-excel-misreading-dates">turning gene names in to dates</a>.</p>
+</section>
+<section id="which-file-format-to-use" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="which-file-format-to-use"><span class="header-section-number">2.4</span> Which file format to use?</h3>
+<p>The truth is all file formats work, and some might be better for certain instances. You might read on the internet that its better to use <code>.csv</code> files over <code>.xlsx.</code> and <code>.xls</code> for compatibility sake, but there are also benefits to Excel formats where lots of data can be stored in one file in different sheets.</p>
+<blockquote class="blockquote">
+<p>Pick the data format that works best for your application.</p>
+</blockquote>
+</section>
+</section>
+<section id="download-data-to-import" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="download-data-to-import"><span class="header-section-number">3</span> Download data to import</h2>
+<p>The code below will let you download some files to your computer, which you can then import. These are some files that Jelmer created from R for Data Science for a <a href="https://biodash.github.io/codeclub/s05e05/#basics-of-reading-rectangular-files">code club</a> many code clubs ago.</p>
+<p>The code below allows you to download four files, in different formats, and with different structure. We will</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># saves the url where the file is located</span></span>
+<span id="cb4-2">url_csv <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.csv"</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># downloads the file and saves in your working directory as students.csv</span></span>
+<span id="cb4-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> url_csv, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"students.csv"</span>)</span>
+<span id="cb4-5"></span>
+<span id="cb4-6">url_csv_noheader <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students_noheader.csv"</span></span>
+<span id="cb4-7"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> url_csv_noheader, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"students_noheader.csv"</span>)</span>
+<span id="cb4-8"></span>
+<span id="cb4-9">url_csv_meta <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students_with_meta.csv"</span></span>
+<span id="cb4-10"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> url_csv_meta, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"students_with_meta.csv"</span>)</span>
+<span id="cb4-11"></span>
+<span id="cb4-12">url_tsv <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.tsv"</span></span>
+<span id="cb4-13"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> url_tsv, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"students.tsv"</span>)</span></code></pre></div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>r-basics</category>
+  <category>tidyverse</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E10_tidy_05/index.html</guid>
+  <pubDate>Fri, 22 Mar 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr.png" medium="image" type="image/png" height="167" width="144"/>
+</item>
 <item>
   <title>Tidy Data and Pivoting</title>
   <dc:creator>Aaron Max Wiedemer</dc:creator>
@@ -13415,161 +13643,6 @@ Check out the Code Club site source code
   <guid>https://osu-codeclub.github.io/posts/S06E02_website_02/index.html</guid>
   <pubDate>Mon, 11 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" medium="image" type="image/png" height="30" width="144"/>
-</item>
-<item>
-  <title>Quarto website 1: Initiating a website 🌐</title>
-  <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E01_website_01/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
-<ul>
-<li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
-<li>have a blog where you post about whatever it is you want to post about</li>
-<li>share your research or data</li>
-</ul>
-<p>Some of you may already have a simple free or paid website for yourself, that you made through <a href="https://u.osu.edu/">www.u.osu.edu</a>, <a href="https://www.squarespace.com/">Squarespace</a>, or <a href="https://sites.google.com/">Google Sites</a>. These tools don’t require you to be able to code, and allow you to create a website with different levels of customization and interactivity.</p>
-<p>For the next few sessions, we are going to go over making a website using <a href="https://quarto.org/">Quarto</a>. Quarto can be used as an open-source publishing system and you can integrate content from Jupyter notebooks, plain text markdown, Python, R, Julia and others. We are going to use Quarto integrated with R.</p>
-<blockquote class="blockquote">
-<p>Take a look at a <a href="https://quarto.org/docs/gallery/#websites">gallery of Quarto website examples</a>.</p>
-</blockquote>
-<p>We picked this particular platform to go over in Code Club since its lightweight, customizable, free, and integrates with R which you’re probably learning anyway. I am going to start going through an example that will be my personal website. I picked this example because I thought this might be of interest to most of you.</p>
-</section>
-<section id="installation" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="installation"><span class="header-section-number">2</span> Installation</h2>
-<p>To render your website in RStudio, you will need to have the <em>rmarkdown</em> R package installed. You can do so by typing (or copying) the following into your R Console inside RStudio:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"rmarkdown"</span>)</span></code></pre></div>
-</div>
-<p>While not necessary for basic website building inside RStudio, it will also be a good idea to have Quarto installed moving forward. This is not an R package, but is a separate piece of software. To install it, go to <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a> and the correct installer for your operating system should be highlighted in a blue box. Click on that box to download and once downloaded, click on the installer to install Quarto.</p>
-<p align="center">
-<img style="border:1px solid gray;" src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/install_quarto.png" width="75%">
-</p><figcaption>
-The blue box should highlight the installer for your operating system.
-</figcaption>
-<p></p>
-</section>
-<section id="initiating-your-website-project" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</h2>
-<p>The first step to getting a website is to open up a new project in RStudio.</p>
-<p>Start by going to <em>File</em> &gt; <em>New Project</em> &gt; <em>New Directory</em>. When asked which Project Type you want, pick <em>Quarto Website</em>. Note that you can also initiate a <em>Quarto Blog</em> which is a type of <em>Quarto Website</em> - since the website template is simpler we are going to start there, and can change back in the future if you want. If you want to read ahead, here is a nice website about <a href="https://samanthacsik.github.io/posts/2022-10-24-quarto-blogs/">making your Quarto website into a blog</a>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/project-type.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
-</figure>
-</div>
-<p>You will then be asked where you want this website to live in your computer. Under <em>Directory Name</em> pick the name of the folder you want your content to be in, and <em>Create project as subdirectory of</em> as where you want the location on your computer. I have used the Knitr engine for website building.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/create-quarto-website.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
-</figure>
-</div>
-<p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
-<p>Once you do this basically you have all the bones of a website! Congratulations 🥳</p>
-</section>
-<section id="orienting-to-your-website" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</h2>
-<p>A new RStudio window should have opened (since we checked the box in the previous step <em>Open in new session</em>) that has your new R project opened.</p>
-<p>We now see the four quadrants of RStudio:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/orienting.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of four quadrants of rstudio</figcaption>
-</figure>
-</div>
-<ul>
-<li>the top left where the two website files <code>index.qmd</code> and <code>_quarto.yml</code> are open</li>
-<li>the bottom left where we see the console</li>
-<li>the top right where we see the tabs: Environment (which is currently empty), History (which we won’t use), Connections (which we won’t use), Tutorial (which we won’t use), and a new one Build (which is how we render our site)</li>
-<li>the bottom right where we see Files (which houses the new files that populate our website), Plots (which you’ve seen before and where plots can be rendered if you don’t like them inline), Packages (which shows all the packages loaded in your R), Help (which you’ve seen before, and where you can get help), Viewer (a new one where we can see a preview rendering of our website), and Presentation (where we can see a preview rendering a presentation but we aren’t doing that right now).</li>
-</ul>
-</section>
-<section id="building-your-site" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="building-your-site"><span class="header-section-number">5</span> Building your site</h2>
-<p>Let’s see what our website looks like before we’ve done anything. If you go to the Build tab in the top right quadrant and click <em>Render Website</em> your site will render and show up in the Viewer in the bottom right.</p>
-</section>
-<section id="looking-around" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="looking-around"><span class="header-section-number">6</span> Looking around</h2>
-<p>You can now click around in your new and very unexciting website. Let’s look around and then we will go through the file structure to see how the two are related.</p>
-<p>Along the top, or if you click the three lines in the top right (depending on the size of your browser page) you can see by default we get a Home and About page. If we click ‘website’ at the top, we go back to Home. We also have a search bar that allows us to search on our site.</p>
-<p>Now that we know what information we see on our site, we can look at the files that are used to build the site and try and interpret them.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/files.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
-</figure>
-</div>
-<p>Before we open the files, let’s talk about the file extensions and what they mean:</p>
-<ul>
-<li><code>.yml</code> is a <a href="https://quarto.org/docs/projects/quarto-projects.html#shared-metadata">YAML</a> or the file that indicates how the website will be configured</li>
-<li><code>.qmd</code> is a <a href="https://quarto.org/docs/get-started/hello/rstudio.html">Quarto markdown document</a>, and if you’re familiar with RMarkdown <code>.Rmd</code> documents its very similar. It contains both text written in markdown and executable code.</li>
-<li><code>.css</code> is a <a href="https://www.w3schools.com/css/css_intro.asp#:~:text=CSS%20stands%20for%20Cascading%20Style,are%20stored%20in%20CSS%20files">Cascading Style Sheets</a> file that indicates the way to style an HTML document (i.e., your website)</li>
-<li><code>.Rproj</code> is a <a href="https://bookdown.org/ndphillips/YaRrr/projects-in-rstudio.html">R Project</a> file that designates your working directory</li>
-</ul>
-<p>We also have a folder <code>_site</code> which houses the knitted website files. More about this later.</p>
-</section>
-<section id="index.qmd" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="index.qmd"><span class="header-section-number">7</span> index.qmd</h2>
-<p>This <code>index.qmd</code> file indicates what the home page of the site will look like.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/index.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the index.qmd file</figcaption>
-</figure>
-</div>
-<p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
-<p>Play around with adding text, code, headers, images, whatever you might want on your website homepage.</p>
-</section>
-<section id="about.qmd" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="about.qmd"><span class="header-section-number">8</span> about.qmd</h2>
-<p>This <code>about.qmd</code> file indicates what the about page of the site will look like.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/about.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the about.qmd file</figcaption>
-</figure>
-</div>
-<p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
-</section>
-<section id="quarto.yml" class="level2" data-number="9">
-<h2 data-number="9" class="anchored" data-anchor-id="quarto.yml"><span class="header-section-number">9</span> _quarto.yml</h2>
-<p>The YAML file indicates how the site should be configured.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E01_website_01/img/yaml.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the _quarto.yml file</figcaption>
-</figure>
-</div>
-<p>You’re probably not familiar with these <code>.yml</code> files but still its not horribly difficult to figure out what the different bits do.</p>
-<p>At the top, project type is indicated as website. We don’t want to change that now.</p>
-<p>In the next section beginning at line 4, we can have some specific information for how the website populates. The title is listed as “website” - we can change that to what we want at the top of our website. There is also a specification for what are the items in your navitation bar - here we have that the Home text will link to the <code>index.qmd</code>, and the next link is <code>about.qmd</code>. You can make more .qmd files that have other information and refer to them here and they will also populate in your navigation bar.</p>
-<p>In the third section at line 12, we can see some information on the setting of the website format. We have a html site, the theme is something called “cosmo” (see <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a> for some other options), we are using the styles.css file for css theming (actually that file is currently blank but thats ok), and we are indicating toc (or table of contents) as true, therefore we have a table of contents.</p>
-<p>Here you can find some <a href="https://quarto.org/docs/reference/projects/websites.html#section">documentation</a> about all the different stuff you can put in your YAML for a website.</p>
-</section>
-<section id="playing-around" class="level2" data-number="10">
-<h2 data-number="10" class="anchored" data-anchor-id="playing-around"><span class="header-section-number">10</span> Playing around</h2>
-<p>Now that we have a general understanding of whats in our site, try playing around to begin customization to be how you want. We will do this for the rest of the session and please ask any questions on problems you come across, or share cool things you find!</p>
-
-
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E01_website_01/index.html</guid>
-  <pubDate>Mon, 28 Aug 2023 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S06E01_website_01/img/create-quarto-website.png" medium="image" type="image/png" height="104" width="144"/>
 </item>
 </channel>
 </rss>
