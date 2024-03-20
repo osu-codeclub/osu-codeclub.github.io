@@ -44,7 +44,7 @@ download.file(url = url_tsv, destfile = "students.tsv")
 
 So far in code club this semester, all of the data we have used has been either made up by us, or able to be loading from data embedded within base R or a package.
 
-Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is [`readr`](https://readr.tidyverse.org/index.html). This package allows us to read in rectangular data - or data 
+Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is [`readr`](https://readr.tidyverse.org/index.html). This package allows us to read in rectangular data. Some of the material from today is adaptes from a past [code club](https://biodash.github.io/codeclub/s05e05/#) by Jelmer Poelstra.
 
 Useful references for today:
 
@@ -117,7 +117,7 @@ The truth is all file formats work, and some might be better for certain instanc
 
 The code below will let you download some files to your computer, which you can then import. These are some files that Jelmer created from R for Data Science for a [code club](https://biodash.github.io/codeclub/s05e05/#basics-of-reading-rectangular-files) many code clubs ago.
 
-The code below allows you to download four files, in different formats, and with different structure. We will 
+The code below allows you to download four files, in different formats, and with different structure. We will practice data import with these files. Remember when you execute this code, your 
 
 ```{r, eval = FALSE}
 # saves the url where the file is located
@@ -135,6 +135,161 @@ url_tsv <- "https://github.com/biodash/biodash.github.io/raw/master/content/code
 download.file(url = url_tsv, destfile = "students.tsv")
 ```
 
+Downloading an Excel file isn't working well for me with this code, so to download the Excel file for practice, download it at this [link](https://buckeyemailosu-my.sharepoint.com/:x:/g/personal/cooperstone_1_osu_edu/EcRiftRuQn5FvwHcfPMMJNgBn__TKfD_NCJjUMgbK2iOnQ?e=jNEbjZ).
+
+Once you've downloaded all these files, take a minute to open them all up on your computer (you can use Excel, Numbers, whatever) to see how they are different.
 
 ## Reading in delimited files
+
+There are a few functions that allow you to read in tabular data in `readr`, and they are part of the `read_*()` family.
+
+![[From the [readr cheatsheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf)]](img/readr-tabdata-cheatsheet.png)
+
+The following functions work similarly:
+
+-   [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html): reads in comma-separated values
+-   [`read_csv2()`](https://readr.tidyverse.org/reference/read_delim.html): reads in semi-colon-separated values where commas are the decimal point (common in Europe) instead of the period (as in the US)
+-   [`read_tsv()`](https://readr.tidyverse.org/reference/read_delim.html): reads in tab-separated values
+-   [`read_delim()`](https://readr.tidyverse.org/reference/read_delim.html): reads in delimited files, where the delimiter can be specified. If you were to specify the delimiter to be ",", this could be the save as `read_csv()`.
+
+Let's start by reading in our "students.csv" file and then work through how changing the specifications for the arguments alters how our data is imported.
+
+The first (and only required) argument to `read_*()` is the file, which we will provide in quotes as it is a string. If we were to have our file in a folder called "data" within our working directory, we could provide "data/students.csv". If our file we wanted to read in was in some other location on our computer, we could provide the full path.
+
+```{r}
+students_csv <- read_csv("students.csv")
+```
+
+We can see a message after we've imported our data giving us information about how this process went. In this case, we've read in a file with 6 rows and 5 columns. The delimiter is `","` and we have information about what type our columns have been imported in. Here, the columns favourite.food, mealPlan, and AGE have been parsed as character type, and Student ID is numeric (i.e., dbl). If we follow the instructions in the message, we can see the full column specification for students_csv.
+
+```{r}
+spec(students_csv)
+```
+
+We can get a sense of our data by using the function `head()` to see the first 6 rows, all columns.
+```{r}
+head(students_csv)
+```
+
+## Reading in Excel files
+
+I expect many of you have data stored in `.xlsx` or `.xls` files that you'd like to read into R. The package [`readxl`](https://readxl.tidyverse.org/) makes easy work of this. This packages has functions including:
+
+-   [`read_xlsx()`](https://readxl.tidyverse.org/reference/read_excel.html): reads in `.xlsx` files 
+-   [`read_xls()`](https://readxl.tidyverse.org/reference/read_excel.html): reads in `.xls` files 
+-   [`read_excel()`](https://readxl.tidyverse.org/reference/read_excel.html): looks to see what the path is and reads in both `.xlsx` and `.xls` files. This function will guess your file format, which usually but not always works well. 
+
+> There are [subtle differences](https://blog.fileformat.com/spreadsheet/xls-vs-xlsx/) between `.xlsx` and `.xls` files but I don't think they're that important to get into here. 
+
+Let's read in our Excel file.
+```{r}
+students_excel <- read_xlsx("students.xlsx")
+
+head(students_excel)
+```
+
+By default the first sheet is read in. If we want to know what the names of the different sheets are, we can run the following code providing the name of our file.
+```{r}
+excel_sheets("students.xlsx")
+```
+
+We can set what sheet specifically we want to read in using the argument `sheet = ""`.
+
+```{r}
+students_excel <- read_xlsx("students.xlsx",
+                            sheet = "students")
+```
+
+
+## Handling file reading issues
+
+![From the [readr cheatsheet](https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf)](img/readr-arguments.png)
+
+### Specifying column types
+Let's say that the column favorite.food is actually a factor, and not a character, we can specify that column should be a factor using the argument `col_types = `. The short codes you can specify in can be found [here](https://readr.tidyverse.org/reference/read_delim.html#arguments). 
+```{r}
+students_csv_mealplan <- read_csv("students.csv",
+                             col_types = "nccfc")
+
+glimpse(students_csv_mealplan)
+```
+
+### Setting column names
+
+You might have a datafile that doesn't include headers, or column names. These functions by default use `col_names = TRUE` and assume that your file does have headers. If you don't, you can set this argument to `FALSE` and provide column headers. Let's just try reading in a file without headers just to see what the result is.
+
+```{r}
+students_no_headers <- read_csv("students_noheader.csv")
+
+head(students_no_headers)
+```
+
+We can see that the first row has become the column names, and this is not what we want. These column names are a bit sloppy, so we can also clean them up using `janitor::clean_names()`.
+
+```{r}
+students_no_headers <- read_csv("students_noheader.csv",
+                                col_names = c("Student ID", "Full Name", "favourite.food",
+                                              "mealPlan", "AGE"))
+```
+
+```{r}
+head(students_no_headers)
+```
+
+If we apply `clean_names()`, we can see what happens.
+
+```{r}
+students_no_headers_clean <- janitor::clean_names(students_no_headers)
+
+head(students_no_headers_clean)
+```
+
+
+### Handling header or metadata lines
+
+Sometimes the headers of your data might not be in the first row. In the case that you want to read in data that has non-data rows, you can indicate those to skip.
+
+![](img/has-metadata.png)
+
+```{r}
+students_metadata <- read_delim("students_with_meta.csv",
+                                delim = ",",
+                                skip = 2) # since there are two lines we don't want to read in
+
+head(students_metadata)
+```
+
+This is particularly useful if you are reading in data that comes off an instrument or system that formats data in a specific way.
+
+### What to do with NAs
+
+Often your data will have NAs, though different people will code NAs differently. They may be simply missing, N/A, 999, or in some other way. You can tell your data import function how NAs are coded so they can be parsed correctly.
+
+In this data, we have NAs that are coded as "NA", and "N/A". The default NA values are R are `na = c("NA", "")`, so our data deviates from what would by default be considered missing.
+
+```{r}
+students_missing <- read_csv("students.csv",
+                             na = c("NA", "N/A", ""))
+
+head(students_missing)
+```
+
+## Practice
+
+### 
+
+### Take some data that you have and try and read it into R
+
+## Bonus, writing out data
+
+Often you will generate data in R that you want to write out to a spredsheet form. You can do this using the `write_*()` functions.
+
+-   [`write_delim()`](https://readr.tidyverse.org/reference/write_delim.html) writes out a delimited file, where you specify the delimiter
+-   [`write_csv()`](https://readr.tidyverse.org/reference/write_delim.html) writes out a csv file
+
+Here, we provide the name of the R object we want to write out, and it will be written to your working directory.
+
+```{r eval = FALSE}
+write_csv(students_csv)
+```
 
