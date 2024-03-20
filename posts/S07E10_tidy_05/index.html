@@ -203,6 +203,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#which-file-format-to-use" id="toc-which-file-format-to-use" class="nav-link" data-scroll-target="#which-file-format-to-use"><span class="header-section-number">2.4</span> Which file format to use?</a></li>
   </ul></li>
   <li><a href="#download-data-to-import" id="toc-download-data-to-import" class="nav-link" data-scroll-target="#download-data-to-import"><span class="header-section-number">3</span> Download data to import</a></li>
+  <li><a href="#reading-in-delimited-files" id="toc-reading-in-delimited-files" class="nav-link" data-scroll-target="#reading-in-delimited-files"><span class="header-section-number">4</span> Reading in delimited files</a></li>
+  <li><a href="#reading-in-excel-files" id="toc-reading-in-excel-files" class="nav-link" data-scroll-target="#reading-in-excel-files"><span class="header-section-number">5</span> Reading in Excel files</a></li>
+  <li><a href="#handling-file-reading-issues" id="toc-handling-file-reading-issues" class="nav-link" data-scroll-target="#handling-file-reading-issues"><span class="header-section-number">6</span> Handling file reading issues</a>
+  <ul class="collapse">
+  <li><a href="#specifying-column-types" id="toc-specifying-column-types" class="nav-link" data-scroll-target="#specifying-column-types"><span class="header-section-number">6.1</span> Specifying column types</a></li>
+  <li><a href="#setting-column-names" id="toc-setting-column-names" class="nav-link" data-scroll-target="#setting-column-names"><span class="header-section-number">6.2</span> Setting column names</a></li>
+  <li><a href="#handling-header-or-metadata-lines" id="toc-handling-header-or-metadata-lines" class="nav-link" data-scroll-target="#handling-header-or-metadata-lines"><span class="header-section-number">6.3</span> Handling header or metadata lines</a></li>
+  <li><a href="#what-to-do-with-nas" id="toc-what-to-do-with-nas" class="nav-link" data-scroll-target="#what-to-do-with-nas"><span class="header-section-number">6.4</span> What to do with NAs</a></li>
+  </ul></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice"><span class="header-section-number">7</span> Practice</a></li>
+  <li><a href="#bonus-writing-out-data" id="toc-bonus-writing-out-data" class="nav-link" data-scroll-target="#bonus-writing-out-data"><span class="header-section-number">8</span> Bonus, writing out data</a></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S07E10_tidy_05/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -257,11 +268,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
 <p>So far in code club this semester, all of the data we have used has been either made up by us, or able to be loading from data embedded within base R or a package.</p>
-<p>Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a>. This package allows us to read in rectangular data - or data</p>
+<p>Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a>. This package allows us to read in rectangular data. Some of the material from today is adaptes from a past <a href="https://biodash.github.io/codeclub/s05e05/#">code club</a> by Jelmer Poelstra.</p>
 <p>Useful references for today:</p>
 <ul>
-<li><a href="https://readr.tidyverse.org/index.html"><code>readr</code> documentation</a></li>
+<li><a href="https://readr.tidyverse.org/index.html"><code>readr</code> documentation</a> (for reading in delimited files)</li>
 <li><a href="https://readxl.tidyverse.org/"><code>readxl</code> docuemtation</a> (for reading in Excel files)</li>
+<li><a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">Data import with the tidyverse cheatsheet</a></li>
 <li><a href="https://r4ds.hadley.nz/data-import">Data import chapter 7</a> in R for Data Science</li>
 </ul>
 <p>There are other non-core tidyverse packages for reading in data (including directly from Google Drive), you can find them <a href="https://www.tidyverse.org/packages/#import">here</a> though I will not go through them today.</p>
@@ -379,7 +391,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="download-data-to-import" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="download-data-to-import"><span class="header-section-number">3</span> Download data to import</h2>
 <p>The code below will let you download some files to your computer, which you can then import. These are some files that Jelmer created from R for Data Science for a <a href="https://biodash.github.io/codeclub/s05e05/#basics-of-reading-rectangular-files">code club</a> many code clubs ago.</p>
-<p>The code below allows you to download four files, in different formats, and with different structure. We will</p>
+<p>The code below allows you to download four files, in different formats, and with different structure. We will practice data import with these files. Remember when you execute this code, your</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># saves the url where the file is located</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>url_csv <span class="ot">&lt;-</span> <span class="st">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.csv"</span></span>
@@ -394,6 +406,291 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>url_tsv <span class="ot">&lt;-</span> <span class="st">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.tsv"</span></span>
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> url_tsv, <span class="at">destfile =</span> <span class="st">"students.tsv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Downloading an Excel file isn’t working well for me with this code, so to download the Excel file for practice, download it at this <a href="https://buckeyemailosu-my.sharepoint.com/:x:/g/personal/cooperstone_1_osu_edu/EcRiftRuQn5FvwHcfPMMJNgBn__TKfD_NCJjUMgbK2iOnQ?e=jNEbjZ">link</a>.</p>
+<p>Once you’ve downloaded all these files, take a minute to open them all up on your computer (you can use Excel, Numbers, whatever) to see how they are different.</p>
+</section>
+<section id="reading-in-delimited-files" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="reading-in-delimited-files"><span class="header-section-number">4</span> Reading in delimited files</h2>
+<p>There are a few functions that allow you to read in tabular data in <code>readr</code>, and they are part of the <code>read_*()</code> family.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/readr-tabdata-cheatsheet.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">[From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a>]</figcaption>
+</figure>
+</div>
+<p>The following functions work similarly:</p>
+<ul>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>: reads in comma-separated values</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv2()</code></a>: reads in semi-colon-separated values where commas are the decimal point (common in Europe) instead of the period (as in the US)</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_tsv()</code></a>: reads in tab-separated values</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_delim()</code></a>: reads in delimited files, where the delimiter can be specified. If you were to specify the delimiter to be “,”, this could be the save as <code>read_csv()</code>.</li>
+</ul>
+<p>Let’s start by reading in our “students.csv” file and then work through how changing the specifications for the arguments alters how our data is imported.</p>
+<p>The first (and only required) argument to <code>read_*()</code> is the file, which we will provide in quotes as it is a string. If we were to have our file in a folder called “data” within our working directory, we could provide “data/students.csv”. If our file we wanted to read in was in some other location on our computer, we could provide the full path.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>students_csv <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"students.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 6 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): Full Name, favourite.food, mealPlan, AGE
+dbl (1): Student ID
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>We can see a message after we’ve imported our data giving us information about how this process went. In this case, we’ve read in a file with 6 rows and 5 columns. The delimiter is <code>","</code> and we have information about what type our columns have been imported in. Here, the columns favourite.food, mealPlan, and AGE have been parsed as character type, and Student ID is numeric (i.e., dbl). If we follow the instructions in the message, we can see the full column specification for students_csv.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">spec</span>(students_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>cols(
+  `Student ID` = col_double(),
+  `Full Name` = col_character(),
+  favourite.food = col_character(),
+  mealPlan = col_character(),
+  AGE = col_character()
+)</code></pre>
+</div>
+</div>
+<p>We can get a sense of our data by using the function <code>head()</code> to see the first 6 rows, all columns.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+</section>
+<section id="reading-in-excel-files" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="reading-in-excel-files"><span class="header-section-number">5</span> Reading in Excel files</h2>
+<p>I expect many of you have data stored in <code>.xlsx</code> or <code>.xls</code> files that you’d like to read into R. The package <a href="https://readxl.tidyverse.org/"><code>readxl</code></a> makes easy work of this. This packages has functions including:</p>
+<ul>
+<li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_xlsx()</code></a>: reads in <code>.xlsx</code> files</li>
+<li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_xls()</code></a>: reads in <code>.xls</code> files</li>
+<li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_excel()</code></a>: looks to see what the path is and reads in both <code>.xlsx</code> and <code>.xls</code> files. This function will guess your file format, which usually but not always works well.</li>
+</ul>
+<blockquote class="blockquote">
+<p>There are <a href="https://blog.fileformat.com/spreadsheet/xls-vs-xlsx/">subtle differences</a> between <code>.xlsx</code> and <code>.xls</code> files but I don’t think they’re that important to get into here.</p>
+</blockquote>
+<p>Let’s read in our Excel file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>students_excel <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"students.xlsx"</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_excel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 G√ºven√ß Attila  Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+<p>By default the first sheet is read in. If we want to know what the names of the different sheets are, we can run the following code providing the name of our file.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">excel_sheets</span>(<span class="st">"students.xlsx"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "students"   "students_2"</code></pre>
+</div>
+</div>
+<p>We can set what sheet specifically we want to read in using the argument <code>sheet = ""</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>students_excel <span class="ot">&lt;-</span> <span class="fu">read_xlsx</span>(<span class="st">"students.xlsx"</span>,</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                            <span class="at">sheet =</span> <span class="st">"students"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="handling-file-reading-issues" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="handling-file-reading-issues"><span class="header-section-number">6</span> Handling file reading issues</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/readr-arguments.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a></figcaption>
+</figure>
+</div>
+<section id="specifying-column-types" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="specifying-column-types"><span class="header-section-number">6.1</span> Specifying column types</h3>
+<p>Let’s say that the column favorite.food is actually a factor, and not a character, we can specify that column should be a factor using the argument <code>col_types =</code>. The short codes you can specify in can be found <a href="https://readr.tidyverse.org/reference/read_delim.html#arguments">here</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>students_csv_mealplan <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"students.csv"</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">col_types =</span> <span class="st">"nccfc"</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(students_csv_mealplan)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 6
+Columns: 5
+$ `Student ID`   &lt;dbl&gt; 1, 2, 3, 4, 5, 6
+$ `Full Name`    &lt;chr&gt; "Sunil Huffmann", "Barclay Lynn", "Jayendra Lyne", "Leo…
+$ favourite.food &lt;chr&gt; "Strawberry yoghurt", "French fries", "N/A", "Anchovies…
+$ mealPlan       &lt;fct&gt; Lunch only, Lunch only, Breakfast and lunch, Lunch only…
+$ AGE            &lt;chr&gt; "4", "5", "7", NA, "five", "6"</code></pre>
+</div>
+</div>
+</section>
+<section id="setting-column-names" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="setting-column-names"><span class="header-section-number">6.2</span> Setting column names</h3>
+<p>You might have a datafile that doesn’t include headers, or column names. These functions by default use <code>col_names = TRUE</code> and assume that your file does have headers. If you don’t, you can set this argument to <code>FALSE</code> and provide column headers. Let’s just try reading in a file without headers just to see what the result is.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>students_no_headers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"students_noheader.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 5 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): Sunil Huffmann, Strawberry yoghurt, Lunch only, 4
+dbl (1): 1
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_no_headers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 5
+    `1` `Sunil Huffmann` `Strawberry yoghurt` `Lunch only`        `4`  
+  &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;                &lt;chr&gt;               &lt;chr&gt;
+1     2 Barclay Lynn     French fries         Lunch only          5    
+2     3 Jayendra Lyne    N/A                  Breakfast and lunch 7    
+3     4 Leon Rossini     Anchovies            Lunch only          &lt;NA&gt; 
+4     5 Chidiegwu Dunkel Pizza                Breakfast and lunch five 
+5     6 Güvenç Attila    Ice cream            Lunch only          6    </code></pre>
+</div>
+</div>
+<p>We can see that the first row has become the column names, and this is not what we want. These column names are a bit sloppy, so we can also clean them up using <code>janitor::clean_names()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>students_no_headers <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"students_noheader.csv"</span>,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">col_names =</span> <span class="fu">c</span>(<span class="st">"Student ID"</span>, <span class="st">"Full Name"</span>, <span class="st">"favourite.food"</span>,</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                                              <span class="st">"mealPlan"</span>, <span class="st">"AGE"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 6 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): Full Name, favourite.food, mealPlan, AGE
+dbl (1): Student ID
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_no_headers)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+<p>If we apply <code>clean_names()</code>, we can see what happens.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>students_no_headers_clean <span class="ot">&lt;-</span> janitor<span class="sc">::</span><span class="fu">clean_names</span>(students_no_headers)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_no_headers_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  student_id full_name        favourite_food     meal_plan           age  
+       &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1          1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2          2 Barclay Lynn     French fries       Lunch only          5    
+3          3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4          4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5          5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6          6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+</section>
+<section id="handling-header-or-metadata-lines" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="handling-header-or-metadata-lines"><span class="header-section-number">6.3</span> Handling header or metadata lines</h3>
+<p>Sometimes the headers of your data might not be in the first row. In the case that you want to read in data that has non-data rows, you can indicate those to skip.</p>
+<p><img src="img/has-metadata.png" class="img-fluid"></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>students_metadata <span class="ot">&lt;-</span> <span class="fu">read_delim</span>(<span class="st">"students_with_meta.csv"</span>,</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>                                <span class="at">delim =</span> <span class="st">","</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">skip =</span> <span class="dv">2</span>) <span class="co"># since there are two lines we don't want to read in</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 6 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): Full Name, favourite.food, mealPlan, AGE
+dbl (1): Student ID
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_metadata)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    N/A                Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+<p>This is particularly useful if you are reading in data that comes off an instrument or system that formats data in a specific way.</p>
+</section>
+<section id="what-to-do-with-nas" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="what-to-do-with-nas"><span class="header-section-number">6.4</span> What to do with NAs</h3>
+<p>Often your data will have NAs, though different people will code NAs differently. They may be simply missing, N/A, 999, or in some other way. You can tell your data import function how NAs are coded so they can be parsed correctly.</p>
+<p>In this data, we have NAs that are coded as “NA”, and “N/A”. The default NA values are R are <code>na = c("NA", "")</code>, so our data deviates from what would by default be considered missing.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>students_missing <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"students.csv"</span>,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">na =</span> <span class="fu">c</span>(<span class="st">"NA"</span>, <span class="st">"N/A"</span>, <span class="st">""</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 6 Columns: 5
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (4): Full Name, favourite.food, mealPlan, AGE
+dbl (1): Student ID
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(students_missing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 5
+  `Student ID` `Full Name`      favourite.food     mealPlan            AGE  
+         &lt;dbl&gt; &lt;chr&gt;            &lt;chr&gt;              &lt;chr&gt;               &lt;chr&gt;
+1            1 Sunil Huffmann   Strawberry yoghurt Lunch only          4    
+2            2 Barclay Lynn     French fries       Lunch only          5    
+3            3 Jayendra Lyne    &lt;NA&gt;               Breakfast and lunch 7    
+4            4 Leon Rossini     Anchovies          Lunch only          &lt;NA&gt; 
+5            5 Chidiegwu Dunkel Pizza              Breakfast and lunch five 
+6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="practice" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="practice"><span class="header-section-number">7</span> Practice</h2>
+</section>
+<section id="bonus-writing-out-data" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="bonus-writing-out-data"><span class="header-section-number">8</span> Bonus, writing out data</h2>
+<p>Often you will generate data in R that you want to write out to a spredsheet form. You can do this using the <code>write_*()</code> functions.</p>
+<ul>
+<li><a href="https://readr.tidyverse.org/reference/write_delim.html"><code>write_delim()</code></a> writes out a delimited file, where you specify the delimiter</li>
+<li><a href="https://readr.tidyverse.org/reference/write_delim.html"><code>write_csv()</code></a> writes out a csv file</li>
+</ul>
+<p>Here, we provide the name of the R object we want to write out, and it will be written to your working directory.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(students_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
