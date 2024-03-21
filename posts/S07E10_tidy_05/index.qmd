@@ -283,31 +283,45 @@ head(students_missing)
 
 ::: {.callout-warning icon="flase" }
 
-## Question 1
+### Read in a file about dogs.
 
 Download and successfully read in the file below. I would recommend that after you download it, you open it to have some information to guide your import.
 
-```{r}
-dogs_url <- ""
+```{r eval = FALSE}
+# where the file is located
+dogs_url <- "https://github.com/osu-codeclub/osu-codeclub.github.io/raw/main/posts/S07E10_tidy_05/dogs2.csv"
+
+# download it
+download.file(url = dogs_url,
+              destfile = "dogs.csv")
 ```
+
+<details>
+
+<summary><b>Hint</b> (click here)</summary>
+
+Look at your file and the documentation for `read_*()` to see what arguments you can set to aid in the import of your data. Take a look at `comment = ` and `skip = `
+
+</details>
 
 <details>
 
 <summary><b>Solution</b> (click here)</summary>
 
 ```{r}
-
+dogs <- read_csv("dogs2.csv",
+                 comment = "%",
+                 skip = 3)
 ```
+
+```{r}
+head(dogs)
+```
+
 
 </details>
 
 :::
-
-### 
-
-```{r}
-
-```
 
 
 ### Take some data that you have and try and read it into R
