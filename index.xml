@@ -33,8 +33,8 @@
 </div>
 <section id="introduction" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>So far in code club this semester, all of the data we have used has been either made up by us, or able to be loading from data embedded within base R or a package.</p>
-<p>Today we are going to go over reading in your own data. The tidyverse core package that contains functions for reading in (and writing out) data is <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a>. This package allows us to read in rectangular data. Some of the material from today is adaptes from a past <a href="https://biodash.github.io/codeclub/s05e05/#">code club</a> by Jelmer Poelstra.</p>
+<p>So far in code club this semester, all of the data we have used has been either made up by us or able to be loading from data embedded within base R or a package.</p>
+<p>Today we are going to go over reading in external data into R. The tidyverse core package that contains functions for reading in (and writing out) data is <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> and <a href="https://readxl.tidyverse.org/"><code>readxl</code></a> allows reading in Excel data. This package allows us to read in rectangular data. Some of the material from today is adapted from a past <a href="https://biodash.github.io/codeclub/s05e05/#">code club</a> by Jelmer Poelstra.</p>
 <p>Useful references for today:</p>
 <ul>
 <li><a href="https://readr.tidyverse.org/index.html"><code>readr</code> documentation</a> (for reading in delimited files)</li>
@@ -43,12 +43,20 @@
 <li><a href="https://r4ds.hadley.nz/data-import">Data import chapter 7</a> in R for Data Science</li>
 </ul>
 <p>There are other non-core tidyverse packages for reading in data (including directly from Google Drive), you can find them <a href="https://www.tidyverse.org/packages/#import">here</a> though I will not go through them today.</p>
-<p>We will start by loading the libraries we need for today.</p>
+<p>We are going to use a new package today.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"readxl"</span>)</span></code></pre></div>
+</div>
+<p>And then will start by loading the libraries we need for today.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 </div>
@@ -58,7 +66,7 @@ font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 <h2 data-number="2" class="anchored" data-anchor-id="what-are-some-common-data-formatting-styles"><span class="header-section-number">2</span> What are some common data formatting styles?</h2>
 <section id="csv" class="level3" data-number="2.1">
 <h3 data-number="2.1" class="anchored" data-anchor-id="csv"><span class="header-section-number">2.1</span> <code>.csv</code></h3>
-<p>The most common formatting style for data is comma separated values, or with the file extension <code>.csv</code>. This means that the data is delimited (i.e., separated) by commas. Often we open these files in a program like Excel, Numbers, or similar, which puts each value into its own cell, but the data actually looks like this:</p>
+<p>The most common formatting style for data is comma separated values, which often has the file extension <code>.csv</code>. This means that the data is delimited (i.e., separated) by commas. Often we open these files in a program like Excel, Numbers, or similar, which puts each value into its own cell, but the data actually looks like this:</p>
 <pre><code>Student ID,Full Name,favourite.food,mealPlan,AGE
 1,Sunil Huffmann,Strawberry yoghurt,Lunch only,4
 2,Barclay Lynn,French fries,Lunch only,5
@@ -137,7 +145,7 @@ font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 </section>
 <section id="tsv" class="level3" data-number="2.2">
 <h3 data-number="2.2" class="anchored" data-anchor-id="tsv"><span class="header-section-number">2.2</span> <code>.tsv</code></h3>
-<p>Another common data format is tab separated values, or <code>.tsv</code>. Here, instead of being separated by commas like in a <code>.csv</code>, the values are separated by tabs. Looking at the same students data in a <code>.tsv</code> format would look like this:</p>
+<p>Another common data format is as tab separated values, or <code>.tsv</code>. Here, instead of being separated by commas like in a <code>.csv</code>, the values are separated by tabs. Looking at the same students data in a <code>.tsv</code> format would look like this:</p>
 <pre><code>Student ID        Full Name        favourite.food        mealPlan        AGE
 1        Sunil Huffmann        Strawberry yoghurt        Lunch only        4
 2        Barclay Lynn        French fries        Lunch only        5
@@ -145,6 +153,9 @@ font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 4        Leon Rossini        Anchovies        Lunch only        
 5        Chidiegwu Dunkel        Pizza        Breakfast and lunch        five
 6        Güvenç Attila        Ice cream        Lunch only        6</code></pre>
+<blockquote class="blockquote">
+<p>Both comma-separated nad tab-separated values can also be stored with other file extensions like <code>.txt</code>.</p>
+</blockquote>
 </section>
 <section id="xlsx-and-.xls" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="xlsx-and-.xls"><span class="header-section-number">2.3</span> <code>.xlsx</code> and <code>.xls</code></h3>
@@ -152,7 +163,7 @@ font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 </section>
 <section id="which-file-format-to-use" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="which-file-format-to-use"><span class="header-section-number">2.4</span> Which file format to use?</h3>
-<p>The truth is all file formats work, and some might be better for certain instances. You might read on the internet that its better to use <code>.csv</code> files over <code>.xlsx.</code> and <code>.xls</code> for compatibility sake, but there are also benefits to Excel formats where lots of data can be stored in one file in different sheets.</p>
+<p>The truth is all file formats can be read into R, and some might be better for certain instances. You might read on the internet that its better to use <code>.csv</code> files over <code>.xlsx.</code> and <code>.xls</code> for compatibility sake, but there are also benefits to Excel formats where lots of data can be stored in one file in different sheets.</p>
 <blockquote class="blockquote">
 <p>Pick the data format that works best for your application.</p>
 </blockquote>
@@ -160,21 +171,21 @@ font-style: inherit;">library</span>(readxl)</span></code></pre></div>
 </section>
 <section id="download-data-to-import" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="download-data-to-import"><span class="header-section-number">3</span> Download data to import</h2>
-<p>The code below will let you download some files to your computer, which you can then import. These are some files that Jelmer created from R for Data Science for a <a href="https://biodash.github.io/codeclub/s05e05/#basics-of-reading-rectangular-files">code club</a> many code clubs ago.</p>
-<p>The code below allows you to download four files, in different formats, and with different structure. We will practice data import with these files. Remember when you execute this code, your</p>
+<p>The code below will let you download some (5) files to your computer for the exercise today, which you can then import. These files were created by Jelmer from R for Data Science for a <a href="https://biodash.github.io/codeclub/s05e05/#basics-of-reading-rectangular-files">code club</a> many code clubs ago.</p>
+<p>The code below allows you to download five files in different formats and with different data structure. We will practice data import with these files. Remember when you execute this code, your files will be downloaded to your working directory.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># saves the url where the file is located</span></span>
-<span id="cb4-2">url_csv <span class="ot" style="color: #003B4F;
+<span id="cb5-2">url_csv <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.csv"</span></span>
-<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># downloads the file and saves in your working directory as students.csv</span></span>
-<span id="cb4-4"><span class="fu" style="color: #4758AB;
+<span id="cb5-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -183,13 +194,13 @@ background-color: null;
 font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students.csv"</span>)</span>
-<span id="cb4-5"></span>
-<span id="cb4-6">url_csv_noheader <span class="ot" style="color: #003B4F;
+<span id="cb5-5"></span>
+<span id="cb5-6">url_csv_noheader <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students_noheader.csv"</span></span>
-<span id="cb4-7"><span class="fu" style="color: #4758AB;
+<span id="cb5-7"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -198,13 +209,13 @@ background-color: null;
 font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students_noheader.csv"</span>)</span>
-<span id="cb4-8"></span>
-<span id="cb4-9">url_csv_meta <span class="ot" style="color: #003B4F;
+<span id="cb5-8"></span>
+<span id="cb5-9">url_csv_meta <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students_with_meta.csv"</span></span>
-<span id="cb4-10"><span class="fu" style="color: #4758AB;
+<span id="cb5-10"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -213,13 +224,13 @@ background-color: null;
 font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students_with_meta.csv"</span>)</span>
-<span id="cb4-11"></span>
-<span id="cb4-12">url_tsv <span class="ot" style="color: #003B4F;
+<span id="cb5-11"></span>
+<span id="cb5-12">url_tsv <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"https://github.com/biodash/biodash.github.io/raw/master/content/codeclub/S05E05/students.tsv"</span></span>
-<span id="cb4-13"><span class="fu" style="color: #4758AB;
+<span id="cb5-13"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -227,10 +238,24 @@ font-style: inherit;">url =</span> url_tsv, <span class="at" style="color: #6574
 background-color: null;
 font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"students.tsv"</span>)</span></code></pre></div>
+font-style: inherit;">"students.tsv"</span>)</span>
+<span id="cb5-14"></span>
+<span id="cb5-15">url_excel <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/main/posts/S07E10_tidy_05/students.xlsx"</span></span>
+<span id="cb5-16"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> url_excel, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"students.xlsx"</span>)</span></code></pre></div>
 </div>
-<p>Downloading an Excel file isn’t working well for me with this code, so to download the Excel file for practice, download it at this <a href="https://buckeyemailosu-my.sharepoint.com/:x:/g/personal/cooperstone_1_osu_edu/EcRiftRuQn5FvwHcfPMMJNgBn__TKfD_NCJjUMgbK2iOnQ?e=jNEbjZ">link</a>.</p>
-<p>Once you’ve downloaded all these files, take a minute to open them all up on your computer (you can use Excel, Numbers, whatever) to see how they are different.</p>
+<p>Once you’ve downloaded all these files, take a minute to open them all up on your computer (you can use Excel, Numbers, whatever) to see how they are different. Be sure not to make any changes to the filesa.</p>
 </section>
 <section id="reading-in-delimited-files" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="reading-in-delimited-files"><span class="header-section-number">4</span> Reading in delimited files</h2>
@@ -243,15 +268,15 @@ font-style: inherit;">"students.tsv"</span>)</span></code></pre></div>
 </div>
 <p>The following functions work similarly:</p>
 <ul>
-<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>: reads in comma-separated values</li>
-<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv2()</code></a>: reads in semi-colon-separated values where commas are the decimal point (common in Europe) instead of the period (as in the US)</li>
-<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_tsv()</code></a>: reads in tab-separated values</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>: reads in comma-separated values files</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv2()</code></a>: reads in semi-colon-separated values files where commas are the decimal point (common in Europe) instead of the period (as in the US)</li>
+<li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_tsv()</code></a>: reads in tab-separated values files</li>
 <li><a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_delim()</code></a>: reads in delimited files, where the delimiter can be specified. If you were to specify the delimiter to be “,”, this could be the save as <code>read_csv()</code>.</li>
 </ul>
-<p>Let’s start by reading in our “students.csv” file and then work through how changing the specifications for the arguments alters how our data is imported.</p>
+<p>Let’s start by reading in our “students.csv” file and then work through how changing how we set the arguments alters how our data is imported.</p>
 <p>The first (and only required) argument to <code>read_*()</code> is the file, which we will provide in quotes as it is a string. If we were to have our file in a folder called “data” within our working directory, we could provide “data/students.csv”. If our file we wanted to read in was in some other location on our computer, we could provide the full path.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">students_csv <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">students_csv <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -269,24 +294,10 @@ dbl (1): Student ID
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
-<p>We can see a message after we’ve imported our data giving us information about how this process went. In this case, we’ve read in a file with 6 rows and 5 columns. The delimiter is <code>","</code> and we have information about what type our columns have been imported in. Here, the columns favourite.food, mealPlan, and AGE have been parsed as character type, and Student ID is numeric (i.e., dbl). If we follow the instructions in the message, we can see the full column specification for students_csv.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">spec</span>(students_csv)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>cols(
-  `Student ID` = col_double(),
-  `Full Name` = col_character(),
-  favourite.food = col_character(),
-  mealPlan = col_character(),
-  AGE = col_character()
-)</code></pre>
-</div>
-</div>
+<p>We can see a message after we’ve imported our data giving us information about how this process went. In this case, we’ve read in a file with 6 rows and 5 columns. The delimiter is <code>","</code> and we have information about what type our columns have been imported in. Here, the columns favourite.food, mealPlan, and AGE have been parsed as character type, and Student ID is numeric (i.e., dbl).</p>
 <p>We can get a sense of our data by using the function <code>head()</code> to see the first 6 rows, all columns.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_csv)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -308,22 +319,22 @@ font-style: inherit;">head</span>(students_csv)</span></code></pre></div>
 <ul>
 <li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_xlsx()</code></a>: reads in <code>.xlsx</code> files</li>
 <li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_xls()</code></a>: reads in <code>.xls</code> files</li>
-<li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_excel()</code></a>: looks to see what the path is and reads in both <code>.xlsx</code> and <code>.xls</code> files. This function will guess your file format, which usually but not always works well.</li>
+<li><a href="https://readxl.tidyverse.org/reference/read_excel.html"><code>read_excel()</code></a>: reads in both <code>.xlsx</code> and <code>.xls</code> files and tries to guess which one your file is. This usually but does not always works well.</li>
 </ul>
 <blockquote class="blockquote">
 <p>There are <a href="https://blog.fileformat.com/spreadsheet/xls-vs-xlsx/">subtle differences</a> between <code>.xlsx</code> and <code>.xls</code> files but I don’t think they’re that important to get into here.</p>
 </blockquote>
 <p>Let’s read in our Excel file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">students_excel <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">students_excel <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_xlsx</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students.xlsx"</span>)</span>
-<span id="cb11-2"></span>
-<span id="cb11-3"><span class="fu" style="color: #4758AB;
+<span id="cb10-2"></span>
+<span id="cb10-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_excel)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -340,7 +351,7 @@ font-style: inherit;">head</span>(students_excel)</span></code></pre></div>
 </div>
 <p>By default the first sheet is read in. If we want to know what the names of the different sheets are, we can run the following code providing the name of our file.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">excel_sheets</span>(<span class="st" style="color: #20794D;
 background-color: null;
@@ -351,14 +362,14 @@ font-style: inherit;">"students.xlsx"</span>)</span></code></pre></div>
 </div>
 <p>We can set what sheet specifically we want to read in using the argument <code>sheet = ""</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">students_excel <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">students_excel <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_xlsx</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students.xlsx"</span>,</span>
-<span id="cb15-2">                            <span class="at" style="color: #657422;
+<span id="cb14-2">                            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">sheet =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -375,22 +386,22 @@ font-style: inherit;">"students"</span>)</span></code></pre></div>
 </div>
 <section id="specifying-column-types" class="level3" data-number="6.1">
 <h3 data-number="6.1" class="anchored" data-anchor-id="specifying-column-types"><span class="header-section-number">6.1</span> Specifying column types</h3>
-<p>Let’s say that the column favorite.food is actually a factor, and not a character, we can specify that column should be a factor using the argument <code>col_types =</code>. The short codes you can specify in can be found <a href="https://readr.tidyverse.org/reference/read_delim.html#arguments">here</a>.</p>
+<p>Let’s say that the column favourite.food is actually a factor (i.e., categorical), and not a character. We can specify that column should be a factor using the argument <code>col_types =</code>. The short codes you can specify in can be found <a href="https://readr.tidyverse.org/reference/read_delim.html#arguments">here</a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">students_csv_mealplan <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">students_csv_mealplan <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students.csv"</span>,</span>
-<span id="cb16-2">                             <span class="at" style="color: #657422;
+<span id="cb15-2">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">col_types =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"nccfc"</span>)</span>
-<span id="cb16-3"></span>
-<span id="cb16-4"><span class="fu" style="color: #4758AB;
+<span id="cb15-3"></span>
+<span id="cb15-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glimpse</span>(students_csv_mealplan)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -408,7 +419,7 @@ $ AGE            &lt;chr&gt; "4", "5", "7", NA, "five", "6"</code></pre>
 <h3 data-number="6.2" class="anchored" data-anchor-id="setting-column-names"><span class="header-section-number">6.2</span> Setting column names</h3>
 <p>You might have a datafile that doesn’t include headers, or column names. These functions by default use <code>col_names = TRUE</code> and assume that your file does have headers. If you don’t, you can set this argument to <code>FALSE</code> and provide column headers. Let’s just try reading in a file without headers just to see what the result is.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">students_no_headers <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">students_no_headers <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -425,7 +436,7 @@ dbl (1): 1
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_no_headers)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -439,16 +450,16 @@ font-style: inherit;">head</span>(students_no_headers)</span></code></pre></div>
 5     6 Güvenç Attila    Ice cream            Lunch only          6    </code></pre>
 </div>
 </div>
-<p>We can see that the first row has become the column names, and this is not what we want. These column names are a bit sloppy, so we can also clean them up using <code>janitor::clean_names()</code>.</p>
+<p>We can see that the first row has become the column names, and this is not what we want. We can indicate the column names using the argument <code>col_names =</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">students_no_headers <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">students_no_headers <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students_noheader.csv"</span>,</span>
-<span id="cb22-2">                                <span class="at" style="color: #657422;
+<span id="cb21-2">                                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">col_names =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -459,7 +470,7 @@ background-color: null;
 font-style: inherit;">"Full Name"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"favourite.food"</span>,</span>
-<span id="cb22-3">                                              <span class="st" style="color: #20794D;
+<span id="cb21-3">                                              <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"mealPlan"</span>, <span class="st" style="color: #20794D;
 background-color: null;
@@ -476,7 +487,7 @@ dbl (1): Student ID
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_no_headers)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -491,17 +502,17 @@ font-style: inherit;">head</span>(students_no_headers)</span></code></pre></div>
 6            6 Güvenç Attila    Ice cream          Lunch only          6    </code></pre>
 </div>
 </div>
-<p>If we apply <code>clean_names()</code>, we can see what happens.</p>
+<p>These column names are a bit sloppy, so we can also clean them up using <code>janitor::clean_names()</code>. If we apply <code>clean_names()</code>, we can see what happens.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">students_no_headers_clean <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">students_no_headers_clean <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> janitor<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">clean_names</span>(students_no_headers)</span>
-<span id="cb26-2"></span>
-<span id="cb26-3"><span class="fu" style="color: #4758AB;
+<span id="cb25-2"></span>
+<span id="cb25-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_no_headers_clean)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -519,22 +530,22 @@ font-style: inherit;">head</span>(students_no_headers_clean)</span></code></pre>
 </section>
 <section id="handling-header-or-metadata-lines" class="level3" data-number="6.3">
 <h3 data-number="6.3" class="anchored" data-anchor-id="handling-header-or-metadata-lines"><span class="header-section-number">6.3</span> Handling header or metadata lines</h3>
-<p>Sometimes the headers of your data might not be in the first row. In the case that you want to read in data that has non-data rows, you can indicate those to skip.</p>
+<p>Sometimes the headers of your data might not be in the first row. In the case that you want to read in data that has non-data rows, you can indicate those to skip in the reading in process.</p>
 <p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/has-metadata.png" class="img-fluid"></p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">students_metadata <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">students_metadata <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_delim</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students_with_meta.csv"</span>,</span>
-<span id="cb28-2">                                <span class="at" style="color: #657422;
+<span id="cb27-2">                                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">delim =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">","</span>,</span>
-<span id="cb28-3">                                <span class="at" style="color: #657422;
+<span id="cb27-3">                                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">skip =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -551,7 +562,7 @@ dbl (1): Student ID
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_metadata)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -570,17 +581,17 @@ font-style: inherit;">head</span>(students_metadata)</span></code></pre></div>
 </section>
 <section id="what-to-do-with-nas" class="level3" data-number="6.4">
 <h3 data-number="6.4" class="anchored" data-anchor-id="what-to-do-with-nas"><span class="header-section-number">6.4</span> What to do with NAs</h3>
-<p>Often your data will have NAs, though different people will code NAs differently. They may be simply missing, N/A, 999, or in some other way. You can tell your data import function how NAs are coded so they can be parsed correctly.</p>
+<p>Often your dataset will have missing data, though different people will code NAs differently. They may be simply missing, N/A, 999, or in some other way. You can tell your data import function how NAs are coded so they can be parsed correctly.</p>
 <p>In this data, we have NAs that are coded as “NA”, and “N/A”. The default NA values are R are <code>na = c("NA", "")</code>, so our data deviates from what would by default be considered missing.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">students_missing <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">students_missing <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"students.csv"</span>,</span>
-<span id="cb32-2">                             <span class="at" style="color: #657422;
+<span id="cb31-2">                             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -590,7 +601,9 @@ font-style: inherit;">"NA"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"N/A"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">""</span>))</span></code></pre></div>
+font-style: inherit;">""</span>)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># adding N/A as a NA option</span></span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 6 Columns: 5
 ── Column specification ────────────────────────────────────────────────────────
@@ -601,7 +614,7 @@ dbl (1): Student ID
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(students_missing)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -620,6 +633,38 @@ font-style: inherit;">head</span>(students_missing)</span></code></pre></div>
 </section>
 <section id="practice" class="level2" data-number="7">
 <h2 data-number="7" class="anchored" data-anchor-id="practice"><span class="header-section-number">7</span> Practice</h2>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Question 1
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Download and successfully read in the file below. I would recommend that after you download it, you open it to have some information to guide your import.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">dogs_url <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span></span></code></pre></div>
+</div>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+</details>
+</div>
+</div>
+<section id="section" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="section"><span class="header-section-number">7.1</span> </h3>
+</section>
+<section id="take-some-data-that-you-have-and-try-and-read-it-into-r" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.2</span> Take some data that you have and try and read it into R</h3>
+<p>This you should do on your own! Find a file that you have and try and read it in and calculate some summary information.</p>
+</section>
 </section>
 <section id="bonus-writing-out-data" class="level2" data-number="8">
 <h2 data-number="8" class="anchored" data-anchor-id="bonus-writing-out-data"><span class="header-section-number">8</span> Bonus, writing out data</h2>
