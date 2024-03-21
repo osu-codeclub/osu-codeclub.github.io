@@ -214,8 +214,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice"><span class="header-section-number">7</span> Practice</a>
   <ul class="collapse">
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">7.1</span> </a></li>
-  <li><a href="#take-some-data-that-you-have-and-try-and-read-it-into-r" id="toc-take-some-data-that-you-have-and-try-and-read-it-into-r" class="nav-link" data-scroll-target="#take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.2</span> Take some data that you have and try and read it into R</a></li>
+  <li><a href="#take-some-data-that-you-have-and-try-and-read-it-into-r" id="toc-take-some-data-that-you-have-and-try-and-read-it-into-r" class="nav-link" data-scroll-target="#take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.1</span> Take some data that you have and try and read it into R</a></li>
   </ul></li>
   <li><a href="#bonus-writing-out-data" id="toc-bonus-writing-out-data" class="nav-link" data-scroll-target="#bonus-writing-out-data"><span class="header-section-number">8</span> Bonus, writing out data</a></li>
   </ul>
@@ -687,26 +686,64 @@ dbl (1): Student ID
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Question 1
+Read in a file about dogs.
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Download and successfully read in the file below. I would recommend that after you download it, you open it to have some information to guide your import.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>dogs_url <span class="ot">&lt;-</span> <span class="st">""</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># where the file is located</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>dogs_url <span class="ot">&lt;-</span> <span class="st">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/main/posts/S07E10_tidy_05/dogs2.csv"</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="co"># download it</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> dogs_url,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">destfile =</span> <span class="st">"dogs.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<details>
+<summary>
+<b>Hint</b> (click here)
+</summary>
+<p>Look at your file and the documentation for <code>read_*()</code> to see what arguments you can set to aid in the import of your data. Take a look at <code>comment =</code> and <code>skip =</code></p>
+</details>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>dogs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"dogs2.csv"</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">comment =</span> <span class="st">"%"</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">skip =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 195 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): Breed
+dbl (8): 2013 Rank, 2014 Rank, 2015 Rank, 2016 Rank, 2017 Rank, 2018 Rank, 2...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dogs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 9
+  Breed  `2013 Rank` `2014 Rank` `2015 Rank` `2016 Rank` `2017 Rank` `2018 Rank`
+  &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1 Retri…           1           1           1           1           1           1
+2 Frenc…          11           9           6           6           4           4
+3 Germa…           2           2           2           2           2           2
+4 Retri…           3           3           3           3           3           3
+5 Bulld…           5           4           4           4           5           5
+6 Poodl…           8           7           8           7           7           7
+# ℹ 2 more variables: `2019 Rank` &lt;dbl&gt;, `2020 Rank` &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </details>
 </div>
 </div>
-<section id="section" class="level3" data-number="7.1">
-<h3 data-number="7.1" class="anchored" data-anchor-id="section"><span class="header-section-number">7.1</span> </h3>
-</section>
-<section id="take-some-data-that-you-have-and-try-and-read-it-into-r" class="level3" data-number="7.2">
-<h3 data-number="7.2" class="anchored" data-anchor-id="take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.2</span> Take some data that you have and try and read it into R</h3>
+<section id="take-some-data-that-you-have-and-try-and-read-it-into-r" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.1</span> Take some data that you have and try and read it into R</h3>
 <p>This you should do on your own! Find a file that you have and try and read it in and calculate some summary information.</p>
 </section>
 </section>
@@ -719,7 +756,7 @@ Question 1
 </ul>
 <p>Here, we provide the name of the R object we want to write out, and it will be written to your working directory.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(students_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(students_csv)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 

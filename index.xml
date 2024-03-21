@@ -639,30 +639,96 @@ font-style: inherit;">head</span>(students_missing)</span></code></pre></div>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Question 1
+Read in a file about dogs.
 </div>
 </div>
 <div class="callout-body-container callout-body">
 <p>Download and successfully read in the file below. I would recommend that after you download it, you open it to have some information to guide your import.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">dogs_url <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># where the file is located</span></span>
+<span id="cb35-2">dogs_url <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">""</span></span></code></pre></div>
+font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/main/posts/S07E10_tidy_05/dogs2.csv"</span></span>
+<span id="cb35-3"></span>
+<span id="cb35-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># download it</span></span>
+<span id="cb35-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> dogs_url,</span>
+<span id="cb35-6">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dogs.csv"</span>)</span></code></pre></div>
 </div>
+<details>
+<summary>
+<b>Hint</b> (click here)
+</summary>
+<p>Look at your file and the documentation for <code>read_*()</code> to see what arguments you can set to aid in the import of your data. Take a look at <code>comment =</code> and <code>skip =</code></p>
+</details>
 <details>
 <summary>
 <b>Solution</b> (click here)
 </summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">dogs <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dogs2.csv"</span>,</span>
+<span id="cb36-2">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">comment =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"%"</span>,</span>
+<span id="cb36-3">                 <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">skip =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 195 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): Breed
+dbl (8): 2013 Rank, 2014 Rank, 2015 Rank, 2016 Rank, 2017 Rank, 2018 Rank, 2...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(dogs)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 6 × 9
+  Breed  `2013 Rank` `2014 Rank` `2015 Rank` `2016 Rank` `2017 Rank` `2018 Rank`
+  &lt;chr&gt;        &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+1 Retri…           1           1           1           1           1           1
+2 Frenc…          11           9           6           6           4           4
+3 Germa…           2           2           2           2           2           2
+4 Retri…           3           3           3           3           3           3
+5 Bulld…           5           4           4           4           5           5
+6 Poodl…           8           7           8           7           7           7
+# ℹ 2 more variables: `2019 Rank` &lt;dbl&gt;, `2020 Rank` &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </details>
 </div>
 </div>
-<section id="section" class="level3" data-number="7.1">
-<h3 data-number="7.1" class="anchored" data-anchor-id="section"><span class="header-section-number">7.1</span> </h3>
-</section>
-<section id="take-some-data-that-you-have-and-try-and-read-it-into-r" class="level3" data-number="7.2">
-<h3 data-number="7.2" class="anchored" data-anchor-id="take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.2</span> Take some data that you have and try and read it into R</h3>
+<section id="take-some-data-that-you-have-and-try-and-read-it-into-r" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="take-some-data-that-you-have-and-try-and-read-it-into-r"><span class="header-section-number">7.1</span> Take some data that you have and try and read it into R</h3>
 <p>This you should do on your own! Find a file that you have and try and read it in and calculate some summary information.</p>
 </section>
 </section>
@@ -675,7 +741,7 @@ font-style: inherit;">""</span></span></code></pre></div>
 </ul>
 <p>Here, we provide the name of the R object we want to write out, and it will be written to your working directory.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">write_csv</span>(students_csv)</span></code></pre></div>
 </div>
