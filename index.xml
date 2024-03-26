@@ -6,27 +6,992 @@
       version="2.0">
 <channel>
 <title>OSU Code Club</title>
-<link>https://osu-codeclub.github.io/index.html</link>
+<link>https://osu-codeclub.github.io/</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.3.450</generator>
-<lastBuildDate>Fri, 22 Mar 2024 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.4.549</generator>
+<lastBuildDate>Fri, 29 Mar 2024 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>Reading in data with the tidyverse</title>
-  <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E10_tidy_05/index.html</link>
+  <title>Plotting 1: Intro to ggplot2</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <dc:creator>Michael Broe</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E11_ggplot_01/</link>
   <description><![CDATA[ 
+
 
 
 
 <hr>
 <p><br></p>
-<div class="quarto-layout-panel">
-<div class="quarto-layout-row quarto-layout-valign-top">
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/img/featured.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>In this Code Club semester, we started with 5 sessions on R basics, followed by 5 sessions on tidyverse data wrangling basics. This session will be the first several on data visualization: creating plots with the ggplot2 package.</p>
+<section id="session-goals" class="level4">
+<h4 class="anchored" data-anchor-id="session-goals">Session Goals</h4>
+<ul>
+<li>Learn the philosophy of <strong>coding</strong> a graphic.</li>
+<li>Learn the basic <strong>template</strong> of a <strong>ggplot</strong> graphic, so you can reuse it for multiple chart types.</li>
+<li>Learn how you can quickly add visual information to a graphic using <strong>aesthetics</strong> and <strong>layers</strong>.</li>
+</ul>
+<p><br></p>
+</section>
+</section>
+<section id="the-ggplot-philosophy" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="the-ggplot-philosophy"><span class="header-section-number">2</span> The ggplot philosophy</h2>
+<p>We have seen that in R, instead of manually manipulating data with a mouse as you do when editing Excel spreadsheets, we <strong>code</strong> the operations we want to perform, e.g.&nbsp;using dplyr verbs like <code>select()</code>. In a similar way, when performing visualization, instead of clicking on a chart type, we <strong>code the chart</strong> in R.</p>
+<p>And just as <code>dplyr</code> gives us efficient ways to manipulate data frames, <strong><code>ggplot2</code></strong> (which is also part of the tidyverse) gives us efficient ways to manipulate charts/plots/graphics<sup>1</sup>. The <strong>gg</strong> in <strong>gg</strong>plot2 stands for <em>grammar of graphics</em>, a systematic approach for designing statistical plots. The idea is to ‘pull apart’ various plots into their component pieces, which leads to the idea of <strong>layers</strong>.</p>
+<p>There’s a learning curve to such a systematic approach, but there are many advantages:</p>
+<ul>
+<li><p>First, <em>every</em> graphic shares a <strong>common template</strong>. Once you understand this structure you can “say” a lot of different things. The <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot cheat sheet</a> lists over 40 plot-types, but because this is somewhat of a language in its own right, users can create their own <a href="https://exts.ggplot2.tidyverse.org/gallery/">extensions</a> that you can also utilize, adding many more.)</p></li>
+<li><p>Second, because the graphic is now a piece of code, it is <strong>reusable</strong>. Once you have a little library of graphs you’ve made, you can tweak them in various ways to make more. You can also share your code with others, so they can apply the same approach to their data.</p></li>
+<li><p>Third, because plots are built up using <strong>layers</strong>, you can gradually build up a graphic of increasing complexity; or on the other hand, take someone else’s code and simplify it by deleting layers. We add layers with <code>+</code> very similar to how we’ve been piping operations with <code>|&gt;</code>.</p></li>
+</ul>
+<p><br></p>
+</section>
+<section id="our-data-set" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="our-data-set"><span class="header-section-number">3</span> Our data set</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/img/palmerpenguins_hex.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Illustration by <a href="https://allisonhorst.github.io/palmerpenguins/articles/art.html">Allison Horst</a></figcaption>
+</figure>
+</div>
+<p>We are going to use a fun 🐧 data set from the package <a href="https://allisonhorst.github.io/palmerpenguins/"><code>palmerpenguins</code></a>. We’ll have to install that package first:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"palmerpenguins"</span>)</span></code></pre></div>
+</div>
+<p><a href="https://allisonhorst.github.io/palmerpenguins/index.html"><code>palmerpenguins</code></a> is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr.&nbsp;Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.</p>
+<p>We’ll now load the package, along with the tidyverse (which includes ggplot2):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(palmerpenguins)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>Once you’ve loaded that package you will have a data frame called <code>penguins</code> at your disposal — let’s take a look:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">penguins</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 344 × 8
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# ℹ 334 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Or glimpse() for a sort of transposed view, so we can see all columns:</span></span>
+<span id="cb6-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(penguins)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>Rows: 344
+Columns: 8
+$ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+$ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+$ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+$ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+$ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+$ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+$ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+$ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="a-first-ggplot2-example" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="a-first-ggplot2-example"><span class="header-section-number">4</span> A first ggplot2 example</h2>
+<p>What is the correlation between bill-length and bill-width in these penguin species? Are longer bills also deeper? We can explore this with a <strong>scatterplot</strong>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/img/culmen_depth.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="a-first-plot-attempt" class="level4">
+<h4 class="anchored" data-anchor-id="a-first-plot-attempt">A first plot attempt</h4>
+<p>The first thing that ggplot2 plot needs from you is a data frame — just like the rest of the tidyverse, ggplot2 is oriented towards data frames. Specifically, the first argument to the <code>ggplot()</code> function is a data frame:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This is not very interesting! But it’s notable that it is <em>something</em>. <code>ggplot()</code> has created a base plot layer.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+While the name of the <em>package</em> is <strong>ggplot2</strong>, the name of the <em>function</em> is just <code>ggplot()</code>.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="our-first-complete-plot" class="level4">
+<h4 class="anchored" data-anchor-id="our-first-complete-plot">Our first complete plot</h4>
+<p>Our initial plotting code was correct but incomplete. Next, we need to specify:</p>
+<ul>
+<li><p>The <strong>plot type</strong> we want using one of many <strong>“geom”</strong> functions — e.g., the geom for a scatterplot is <code>geom_point()</code>.</p></li>
+<li><p>Which columns in our data frame to plot in which ways, such along the x and y axes. In ggplot-speak, we are <strong>mapping variables to aesthetics</strong>, with the <em>aesthetics</em> being things like x and y coordinates as well shape and color.</p></li>
+</ul>
+<p>We can add both these pieces of information in a single additional layer. The operator to <strong>add a layer</strong> is <strong><code>+</code></strong>, which is the <code>ggplot</code> equivalent of the pipe symbol (<code>|&gt;</code>), and best practice is to place it at the end of the line, just like the pipe. Here then is our complete first plot:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm))</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>To recap, the three required ggplot elements that we used are:</p>
+<ul>
+<li>The <strong>data</strong>: here <code>penguins</code></li>
+<li>One or more <strong>geoms</strong>: here <code>geom_point()</code></li>
+<li>One or more <strong>aesthetic mappings</strong>: here <code>x = bill_length_mm, y = bill_depth_mm</code></li>
+</ul>
+<p>We provided three pieces of information from our data — a data frame and two column names. After telling ggplot to use the <code>penguins</code> data frame, we can refer to columns in this data frame using unquoted names.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The ggplot warning above
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ggplot warned us that 2 rows were removed because they “containing missing values or values outside the scale range”:</p>
+<ul>
+<li><p>“<em>Missing values</em>”: If this were the case, there must be <code>NA</code>s in the bill length and/or bill depth columns.</p></li>
+<li><p>“<em>Outside the scale range</em>”: This could happen if we manually set a “scale range”, e.g.&nbsp;restricting the axis limits such that some of the data could no longer be plotted. We didn’t do this and ggplot wouldn’t automatically do it, so this doesn’t apply.</p></li>
+</ul>
+<p>So, there are probably <code>NA</code>s — let’s look for those, starting with the bill length column:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(bill_length_mm))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 2 × 8
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen             NA            NA                NA          NA
+2 Gentoo  Biscoe                NA            NA                NA          NA
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Those are indeed the two rows that ggplot was complaining about.</p>
+</div>
+</div>
+<p>As for the <strong>relationship between bill length and bill depth</strong> — this is not very clear, but I guess if you squint your eyes, you can see local positive correlations? We’ll explore this relationship in more detail below.</p>
+<hr style="height:1pt; visibility:hidden;">
+<details>
+<summary>
+Each point in the plot has a bill length and an associated bill depth. <strong>How does ggplot know which bill lengths to associate with which bill depths?</strong> <em>(Click for the answer)</em>
+</summary>
+<hr style="height:1pt; visibility:hidden;">
+<p>Each point comes from one row in the data frame: so ggplot assumes that the the bill length and bill depth <em>given in one row derive from the same observation</em> (here: the same penguin).</p>
+As such, to work with ggplot, your data frame needs to be in a “tidy” format (see our <a href="../../posts/S07E09_tidy_04/index.html">Code Club from a couple weeks ago</a>). If your data frame is in a wide format and you find yourself struggling to appropriately assign aesthetic mapping, you may have to pivot first, most often with a <code>pivot_longer()</code>.
+<hr style="height:1pt; visibility:hidden;">
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="exercise-1" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
+<p>Create a scatterplot comparing body mass and flipper length. Does it look like there is any correlation?</p>
+<details>
+<summary>
+Hints (click here)
+</summary>
+Take another look at the <code>penguins</code> data frame to see which columns contain body mass and flipper length. It’s up to you which you assign to the x axis and the y axis.
+</details>
+<details>
+<summary>
+Solution (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+</section>
+<section id="the-power-of-aesthetics" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-power-of-aesthetics"><span class="header-section-number">5</span> The power of aesthetics</h2>
+<p>We saw above that the relationship between bill length and bill depth is not particularly clear, but that there <em>might</em> be some local patterns. Is it possible that these clusters correspond somehow to the three different penguin species: Adelie, Chinstrap, and Gentoo? Part of the problem with our original plot may be that we are lumping all the data from all three species together.</p>
+<p>We can quickly explore this by <strong>adding an extra aesthetic</strong>, <code>color</code>. Our current plot maps <code>bill_length_mm</code> to the <code>x</code> aesthetic, and <code>bill_depth_mm</code> to the <code>y</code> aesthetic — now, we’ll add <code>species</code> and map it to the <code>color</code> aesthetic:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm,</span>
+<span id="cb14-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm,</span>
+<span id="cb14-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that a legend is added automatically! It’s much clearer now that, within each species, there does seem to be a positive correlation between bill length and depth.</p>
+<hr style="height:1pt; visibility:hidden;">
+<section id="exercise-2" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
+<p>Go back to your body mass/flipper plot from Exercise 1 and color points by species.</p>
+<p>There are various aesthetics you can use for a categorical variable like <code>species</code> (see the help for <code>geom_point()</code> — type <code>?geom_point</code> to open the help page). One is <code>shape</code>: try this instead of <code>color</code> and see which you prefer.</p>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g,</span>
+<span id="cb15-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm,</span>
+<span id="cb15-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb16-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g,</span>
+<span id="cb16-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm,</span>
+<span id="cb16-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> species))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+</section>
+<section id="syntax-variants" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="syntax-variants"><span class="header-section-number">6</span> Syntax variants</h2>
+<section id="omit-the-argument-names" class="level4">
+<h4 class="anchored" data-anchor-id="omit-the-argument-names">Omit the argument names</h4>
+<p>So far, we’ve been using verbose syntax for clarity, but we can shorten this a bit: instead of…</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm))</span></code></pre></div>
+</div>
+<p>…we can omit the names of the arguments:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb18-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm))</span></code></pre></div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="pipe-data-into-ggplot" class="level4">
+<h4 class="anchored" data-anchor-id="pipe-data-into-ggplot">Pipe data into ggplot</h4>
+<p>You might also prefer to pipe the data frame into ggplot:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm))</span></code></pre></div>
+</div>
+<p>The above example <em>adds</em> a line of code to say the same thing, but you might prefer this as it makes abundantly clear what your input data is. This style especially makes sense when you edit a dataframe prior to plotting it:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make a plot only for the Adelie Penguin:</span></span>
+<span id="cb20-2">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb20-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb20-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+When you pipe data into ggplot, remember to switch between <code>|&gt;</code> and <code>+</code>!
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="local-vs.-global-aesthetics" class="level4">
+<h4 class="anchored" data-anchor-id="local-vs.-global-aesthetics">Local vs.&nbsp;global aesthetics</h4>
+<p>So far, we’ve provided our aesthetic mappings (<code>aes(...)</code>) inside the geom function. However, it is also possible to do this inside the initial <code>ggplot()</code> function call. Compare these two:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Provide the aesthetic mappings inside geom_point():</span></span>
+<span id="cb21-2">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb21-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm))</span>
+<span id="cb21-5"></span>
+<span id="cb21-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Provide the aesthetic mappings inside ggplot():</span></span>
+<span id="cb21-7">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb21-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>()</span></code></pre></div>
+</div>
+<p>In the above example, those two variants are <em>functionally equivalent</em>. However, it is possible to add <strong>multiple geoms</strong> in ggplot — and once you do that, the following becomes important:</p>
+<ul>
+<li>Mappings provided to a specific geom are “<strong>local</strong>”: they do not carry over to other geoms.</li>
+<li>Mappings provided to <code>ggplot()</code> are “<strong>global</strong>”: they apply to all geoms in the plot.</li>
+</ul>
+<p>Therefore, if you have multiple geoms, it most often makes sense to put the aesthetics inside <code>ggplot()</code>, but there are exceptions — and it is also possible to specify aesthetics in multiple places. More about this in the next section.</p>
+<p><br></p>
+</section>
+</section>
+<section id="adding-geoms-and-geom_smooth" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="adding-geoms-and-geom_smooth"><span class="header-section-number">7</span> Adding geoms, and <code>geom_smooth()</code></h2>
+<p>In the scatterplot for bill length vs.&nbsp;depth, there wasn’t a clear <em>overall</em> (across-species) relationship. We can make this even more visually apparent by fitting a line to the data — <strong>overlaying another geom</strong> in the same plot:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `geom_smooth()`:
+! Problem while computing stat.
+ℹ Error occurred in the 2nd layer.
+Caused by error in `compute_layer()`:
+! `stat_smooth()` requires the following missing aesthetics: x and y.</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<details>
+<summary>
+Uh oh! What went wrong here? Can you think of two different ways to solve this? <em>(Click for the answer)</em>
+</summary>
+<p>Because we provided <strong>local</strong> aesthetics to <code>geom_point()</code> only, <code>geom_smooth()</code> has not been informed about any aesthetics, as the error message suggests. We can resolve this either by:</p>
+<ul>
+<li>Providing the same local aesthetics to both geom functions.</li>
+<li>Providing global aesthetics (i.e.&nbsp;to the <code>ggplot()</code> function). This is the better option.</li>
+</ul>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>In our next attempt, we’ll provide the aesthetics globally, so in the <code>ggplot()</code> function:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb25-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb25-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb25-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Fitted lines
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By default, the <code>geom_smooth()</code> function doesn’t use classical linear regression to fit the data. Instead it uses <strong>lo</strong>cally <strong>e</strong>stimated <strong>s</strong>catterplot <strong>s</strong>moothing: <a href="https://en.m.wikipedia.org/wiki/Local_regression">loess</a>. The resulting lines snakes around and tries to find a more local best fit to the data. You can request different fit algorithms with the <code>geom_smooth()</code>’s <code>method</code> argument. See <code>?geom_smooth</code> for details.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="exercise-3" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</h4>
+<p><strong>A)</strong> Revisit your flipper/body_mass plot once again, and fit lines to each species.</p>
+<details>
+<summary>
+Solution (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb27-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<hr>
+<p><strong>B)</strong> Perhaps you think there is too much going on in this plot, with the scatterplot data making the fitted line less clear. Modify your plot so it just shows the fitted line and not the points.</p>
+<details>
+<summary>
+Solution (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb29-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<hr>
+<p><strong>C) (Bonus)</strong></p>
+<ol type="1">
+<li>Pipe your dataset into <code>filter()</code> to keep only the <code>Gentoo</code> data.</li>
+<li>Pipe that data into <code>ggplot()</code> to create a scatterplot with a smoothed-line overlay for just that one species, colored by <code>sex</code>.</li>
+<li>In a next attempt, can you get rid of the points for which the sex is unknown (<code>NA</code>)?</li>
+</ol>
+<details>
+<summary>
+Solution (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb31-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Gentoo"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb31-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb31-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb31-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb33-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Gentoo"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb33-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb33-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<hr>
+<p><strong>D) (Bonus)</strong> Modify your previous Gentoo penguin plot such that:</p>
+<ul>
+<li>You have a single fitted line for penguins of both sexes</li>
+<li>Points are still colored by sex</li>
+</ul>
+<details>
+<summary>
+Solution (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb35-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Gentoo"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb35-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb35-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>We use these terms interchangeably.↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>plotting</category>
+  <category>ggplot2</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E11_ggplot_01/</guid>
+  <pubDate>Fri, 29 Mar 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E11_ggplot_01/img/featured.jpg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Tidyverse 5: Reading in data</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E10_tidy_05/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<p><br></p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr.png" height="250"></p>
 </div>
-<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: flex-start;">
 <p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readxl.png" height="250"></p>
 </div>
 </div>
@@ -263,7 +1228,7 @@ font-style: inherit;">"students.xlsx"</span>)</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr-tabdata-cheatsheet.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">[From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a>]</figcaption>
+<figcaption>[From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a>]</figcaption>
 </figure>
 </div>
 <p>The following functions work similarly:</p>
@@ -381,7 +1346,7 @@ font-style: inherit;">"students"</span>)</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr-arguments.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a></figcaption>
+<figcaption>From the <a href="https://raw.githubusercontent.com/rstudio/cheatsheets/main/data-import.pdf">readr cheatsheet</a></figcaption>
 </figure>
 </div>
 <section id="specifying-column-types" class="level3" data-number="6.1">
@@ -752,15 +1717,16 @@ font-style: inherit;">write_csv</span>(students_csv)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E10_tidy_05/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E10_tidy_05/</guid>
   <pubDate>Fri, 22 Mar 2024 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E10_tidy_05/img/readr.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
-  <title>Tidy Data and Pivoting</title>
+  <title>Tidyverse 4: Tidy Data and Pivoting</title>
   <dc:creator>Aaron Max Wiedemer</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E09_tidy_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E09_tidy_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -768,7 +1734,7 @@ font-style: inherit;">write_csv</span>(students_csv)</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E09_tidy_04/img/tidy_data_img.jpeg" title="Tidy Data By Julia Lowndes and Allison Horst" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Tidy Data By Julia Lowndes and Allison Horst</figcaption>
+<figcaption>Tidy Data By Julia Lowndes and Allison Horst</figcaption>
 </figure>
 </div>
 <section id="overview" class="level1" data-number="1">
@@ -830,10 +1796,10 @@ background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.0
-✔ ggplot2   3.4.3     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.0     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
@@ -888,16 +1854,16 @@ font-style: inherit;">8</span>))</span>
 <pre class="styled-output"><code># A tibble: 43 × 1
    height_in
        &lt;dbl&gt;
- 1      70.3
- 2      63.3
- 3      74.3
- 4      69.5
- 5      64.6
- 6      54.4
- 7      77.2
- 8      77.9
- 9      64.4
-10      70.1
+ 1      67.7
+ 2      53.2
+ 3      66.6
+ 4      69.8
+ 5      69.1
+ 6      76.0
+ 7      55.7
+ 8      66.9
+ 9      69.6
+10      65.8
 # ℹ 33 more rows</code></pre>
 </div>
 </div>
@@ -949,16 +1915,16 @@ font-style: inherit;">10</span>)))</span>
 <pre class="styled-output"><code># A tibble: 365 × 2
      day geese_number
    &lt;int&gt;        &lt;dbl&gt;
- 1     1           14
- 2     2           24
- 3     3           24
- 4     4          -11
- 5     5            6
- 6     6           45
- 7     7           18
- 8     8           32
- 9     9           10
-10    10           28
+ 1     1           44
+ 2     2           16
+ 3     3           27
+ 4     4           22
+ 5     5            9
+ 6     6           15
+ 7     7            3
+ 8     8           16
+ 9     9           20
+10    10           47
 # ℹ 355 more rows</code></pre>
 </div>
 </div>
@@ -2181,9 +3147,8 @@ font-style: inherit;">values_from =</span> value)</span></code></pre></div>
 • Use `values_fn = list` to suppress this warning.
 • Use `values_fn = {summary_fun}` to summarise duplicates.
 • Use the following dplyr code to identify duplicates.
-  {data} %&gt;%
-  dplyr::group_by(cut, color, clarity, parameter) %&gt;%
-  dplyr::summarise(n = dplyr::n(), .groups = "drop") %&gt;%
+  {data} |&gt;
+  dplyr::summarise(n = dplyr::n(), .by = c(cut, color, clarity, parameter)) |&gt;
   dplyr::filter(n &gt; 1L)</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
@@ -2246,7 +3211,9 @@ font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(n <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">&gt;</span> 1L)</span></code></pre></div>
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>L)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre class="styled-output"><code># A tibble: 1,897 × 5
    cut   color clarity parameter     n
@@ -2320,15 +3287,16 @@ font-style: inherit;">"VS2"</span>)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E09_tidy_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E09_tidy_04/</guid>
   <pubDate>Fri, 08 Mar 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E09_tidy_04/img/tidy_data_img.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Tidyverse 3: Grouping and Summarizing Data</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E08_tidy_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E08_tidy_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3305,15 +4273,16 @@ font-style: inherit;">by =</span> color)</span></code></pre></div>
 </section></div> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E08_tidy_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E08_tidy_03/</guid>
   <pubDate>Fri, 01 Mar 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E08_tidy_03/img/dplyr.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Tidyverse 2: More dplyr Data Wrangling</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E07_tidy_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -3321,7 +4290,7 @@ font-style: inherit;">by =</span> color)</span></code></pre></div>
 <p><br></p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -3798,7 +4767,7 @@ font-style: inherit;">desc</span>(price))</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
-<figcaption class="figure-caption">Illustration by Allison Horst</figcaption>
+<figcaption>Illustration by Allison Horst</figcaption>
 </figure>
 </div>
 <p>It says “<em>add column(s), keep existing</em>” and shows that a third column, <code>C</code>, is being added to a data frame.</p>
@@ -4364,15 +5333,16 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</guid>
   <pubDate>Fri, 23 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" medium="image" type="image/jpeg"/>
 </item>
 <item>
   <title>Tidyverse 1: Introduction to the tidyverse</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E06_tidy_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -4388,7 +5358,7 @@ font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Figure from <a href="https://teachdatascience.com/tidyverse/">teachdatascience.com</a></figcaption>
+<figcaption>Figure from <a href="https://teachdatascience.com/tidyverse/">teachdatascience.com</a></figcaption>
 </figure>
 </div>
 <p>The “core tidyverse” contains the 8 packages below:</p>
@@ -4753,8 +5723,8 @@ font-style: inherit;">where</span>(is.numeric))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/filter.png" class="img-fluid figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
-<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/filter.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -5188,15 +6158,16 @@ font-style: inherit;">nrow</span>()</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E06_tidy_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</guid>
   <pubDate>Fri, 16 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" medium="image" type="image/png" height="78" width="144"/>
 </item>
 <item>
   <title>R Basics 5: Data Manipulation With Base R</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E05_basics_05/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E05_basics_05/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -5852,15 +6823,16 @@ font-style: inherit;">"long"</span>)</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E05_basics_05/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E05_basics_05/</guid>
   <pubDate>Fri, 09 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E05_basics_05/img/Allison_Horst.png" medium="image" type="image/png" height="80" width="144"/>
 </item>
 <item>
   <title>R Basics 4: Vectorized Operations and Data Frames</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E04_basics_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -6334,7 +7306,7 @@ font-style: inherit;">2</span>)</span></code></pre></div>
 <h2 data-number="6" class="anchored" data-anchor-id="what-is-a-data-frame"><span class="header-section-number">6</span> What is a data frame?</h2>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" class="img-fluid figure-img" width="469"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" class="img-fluid quarto-figure quarto-figure-center figure-img" width="469"></p>
 </figure>
 </div>
 <p>Below I am creating a simple data frame, this is a rectangular data object with rows and columns. In reality, you will probably be reading your data in from a <code>.csv</code> or <code>.xlsx</code> file, but you can also construct a data frame directly in R. We are doing this with the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame"><code>data.frame()</code></a> which is a part of base R.</p>
@@ -6897,15 +7869,16 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/</guid>
   <pubDate>Fri, 02 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" medium="image" type="image/png" height="119" width="144"/>
 </item>
 <item>
   <title>R Basics 3: Built-in functions, Vectors, and Help</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E03_basics_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -6933,8 +7906,8 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>Functions are the foundation of almost everything in R. In programming, they are sets of organized instructions designed to perform specific tasks. The purpose of functions is to create self-contained programs that can be called upon as needed.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Types_of_Functions.png" class="img-fluid figure-img" alt="Types of Functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 1. Types of Functions in R</figcaption>
+<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Types_of_Functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Types of Functions in R"></a></p>
+<figcaption>Fig. 1. Types of Functions in R</figcaption>
 </figure>
 </div>
 <section id="whats-in-a-function" class="level3" data-number="2.1">
@@ -6942,15 +7915,15 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>What exactly is a function? Let’s recall from our math knowledge:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/function-rules.png" class="img-fluid figure-img" alt="Function Rules"></a></p>
-<figcaption class="figure-caption">Fig. 2. Function Rules</figcaption>
+<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/function-rules.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Function Rules"></a></p>
+<figcaption>Fig. 2. Function Rules</figcaption>
 </figure>
 </div>
 <p>A function in R is a collection of statements that can be reused in a program. This is the syntax of <strong><em>defining</em></strong> a function in R:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-function-syntax.png" class="img-fluid figure-img" alt="R Function Syntax"></a></p>
-<figcaption class="figure-caption">Fig. 3. R Function Syntax</figcaption>
+<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-function-syntax.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="R Function Syntax"></a></p>
+<figcaption>Fig. 3. R Function Syntax</figcaption>
 </figure>
 </div>
 <details>
@@ -6965,8 +7938,8 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
 <p>Built-in functions, which are already created or defined in the programming framework, are referred to as built-in functions. R offers a comprehensive collection of functions that can effectively handle almost any task for the user. These built-in functions are categorized based on their functionality as follows.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-built-in-functions.png" class="img-fluid figure-img" alt="Types of built-in functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 4. Types of built-in functions in R</figcaption>
+<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-built-in-functions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" alt="Types of built-in functions in R"></a></p>
+<figcaption>Fig. 4. Types of built-in functions in R</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -7601,7 +8574,7 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 <p>A) Can you obtain information about the type of R object that <code>mean()</code> and <code>sum()</code> functions take by using the <code>help()</code> or <code>?</code> functions?</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Help.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Help.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
 </figure>
 </div>
 
@@ -7612,15 +8585,16 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/</guid>
   <pubDate>Fri, 26 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/R2D2.png" medium="image" type="image/png" height="108" width="144"/>
 </item>
 <item>
   <title>R Basics 2: Scripts and Objects</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E02_basics_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -7647,15 +8621,15 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
 <div class="column" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_open.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">You have an open project “codeclub”</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_open.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
+<figcaption>You have an open project “codeclub”</figcaption>
 </figure>
 </div>
 </div><div class="column" style="width:45%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_none.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You have no Project open</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_none.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You have no Project open</figcaption>
 </figure>
 </div>
 </div>
@@ -7888,7 +8862,7 @@ font-style: inherit;">TRUE</span></span></code></pre></div>
 <p>Jess showed us the four quadrants of RStudio last week:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rstudio-ide-simplified.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rstudio-ide-simplified.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 <p>One of those contains a “<strong>Source Editor</strong>” pane, as in a <em>Text Editor</em>. Here, we can open and edit all sorts of text files — including R scripts. This quadrant will disappear if you have no files open:</p>
@@ -8120,7 +9094,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <p>Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rdata-popup.png" class="img-fluid figure-img" style="width:55.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rdata-popup.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%"></p>
 </figure>
 </div>
 <p>When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
@@ -8136,7 +9110,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <p>To make RStudio stop asking you about saving your workspace, click <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>General</code> and (un)check the boxes as follows:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -8265,15 +9239,16 @@ font-style: inherit;"># What is the value of distance_miles now?</span></span></
 </ol>
 </section></div> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E02_basics_02/</guid>
   <pubDate>Fri, 19 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" medium="image" type="image/png" height="54" width="144"/>
 </item>
 <item>
   <title>R Basics 1: Getting Started</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E01_basics_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S07E01_basics_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8285,7 +9260,7 @@ font-style: inherit;"># What is the value of distance_miles now?</span></span></
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/r-line-graph.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
 </section>
@@ -8342,7 +9317,7 @@ If you are using an Ohio State computer where you don’t have administrative ac
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rstudio-ide-simplified.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">A screenshot of the RStudio IDE</figcaption>
+<figcaption>A screenshot of the RStudio IDE</figcaption>
 </figure>
 </div>
 <ul>
@@ -8376,7 +9351,7 @@ font-style: inherit;">getwd</span>()</span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/getwd-gui.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Go to your working directory by clicking</figcaption>
+<figcaption>Go to your working directory by clicking</figcaption>
 </figure>
 </div>
 </section>
@@ -8394,7 +9369,7 @@ font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</spa
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/setwd-gui.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Set your working directory by clicking</figcaption>
+<figcaption>Set your working directory by clicking</figcaption>
 </figure>
 </div>
 </section>
@@ -8403,7 +9378,7 @@ font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</spa
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rproj.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
 <p>Using an Rproject (<code>.RProj</code>) will help you with working directory management. An Rproject allows you to keep all of the files associated with a particular project together - from input data, output data, code, resulting figures etc. What it does is set the location of the working directory to be the same place as where your Rproject is located.</p>
@@ -8521,7 +9496,7 @@ font-style: inherit;">5</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/environment-x.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">A screenshot of our Environment tab (top right quadrant) now that we have assigned the sum of 2 and 5 to x</figcaption>
+<figcaption>A screenshot of our Environment tab (top right quadrant) now that we have assigned the sum of 2 and 5 to x</figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="There is a R shorthand to both assign an object and print it at the same time.">
@@ -8689,15 +9664,16 @@ font-style: inherit;">2</span></span>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E01_basics_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S07E01_basics_01/</guid>
   <pubDate>Fri, 12 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E01_basics_01/img/rstudio-ide-simplified.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Shiny 04: Deploying Shiny App</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E11_shiny_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E11_shiny_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8925,15 +9901,16 @@ shinyApp(ui = ui, server = server)
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E11_shiny_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E11_shiny_04/</guid>
   <pubDate>Mon, 04 Dec 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E11_shiny_04/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 03: Map viz. in Shiny</title>
   <dc:creator>Sandip Mondal and Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E10_shiny_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E10_shiny_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -8948,8 +9925,8 @@ shinyApp(ui = ui, server = server)
 <p>There are two types of spatial data: vector and raster. Below is a graphical explanation of these data.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://zia207.github.io/geospatial-r-github.io/"><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Types of spatial data.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Type of Spatial Data (Ahmed, 2023)</figcaption>
+<p><a href="https://zia207.github.io/geospatial-r-github.io/"><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Types of spatial data.png" class="img-fluid figure-img" alt="Type of Spatial Data (Ahmed, 2023)"></a></p>
+<figcaption>Type of Spatial Data (Ahmed, 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -8959,7 +9936,7 @@ shinyApp(ui = ui, server = server)
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/Application screenshot.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Different parameters from Ohio, Pennsylvania, and Indiana in an interactive map.</figcaption>
+<figcaption>Different parameters from Ohio, Pennsylvania, and Indiana in an interactive map.</figcaption>
 </figure>
 </div>
 </section>
@@ -10023,15 +11000,16 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E10_shiny_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E10_shiny_03/</guid>
   <pubDate>Mon, 13 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E10_shiny_03/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 02: Intro to Shiny (cont.)</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E09_shiny_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E09_shiny_02/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -10948,15 +11926,16 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E09_shiny_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E09_shiny_02/</guid>
   <pubDate>Mon, 06 Nov 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E09_shiny_02/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Shiny 01: Intro to Shiny</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E08_shiny_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E08_shiny_01/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -10976,8 +11955,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-input-flow.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">The basic structure of a Shiny App. (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-input-flow.png" class="img-fluid figure-img" alt="The basic structure of a Shiny App. (Higgins 2023)"></a></p>
+<figcaption>The basic structure of a Shiny App. (Higgins 2023)</figcaption>
 </figure>
 </div>
 <section id="the-user-interface-section-structure" class="level2" data-number="2.1">
@@ -10985,15 +11964,15 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The user interface, commonly referred to as the “front end” of an application, is the visual and interactive aspect that users encounter. It is typically organized into several sections: <code>titlePanel()</code>, <code>sidebarPanel()</code>, and <code>mainPanel()</code>. In order to establish this structure, the code must be organized into sections that are constructed with functions, as demonstrated below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-structure.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-structure.png" class="img-fluid figure-img" alt="Basic ui (User Interface) code structure (Higgins 2023)"></a></p>
+<figcaption>Basic ui (User Interface) code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 <p>The code required to achieve this follows a similar hierarchy, as depicted in the figure below.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-hierarchy.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-hierarchy.png" class="img-fluid figure-img" alt="User Interface (ui) hierarchy code structure (Higgins 2023)"></a></p>
+<figcaption>User Interface (ui) hierarchy code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -11002,8 +11981,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The server section of an app, also known as the “back end”, is where data processing takes place. Users don’t see this part but it handles inputs from the user and generates outputs such as model predictions or tables. These results are rendered to HTML and assigned to unique output values.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-server-structure.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Basic server code structure (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-server-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-server-structure.png" class="img-fluid figure-img" alt="Basic server code structure (Higgins 2023)"></a></p>
+<figcaption>Basic server code structure (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -11012,8 +11991,8 @@ font-style: inherit;">shinyApp</span>(ui, server)</span></code></pre></div>
 <p>The code required to run a Shiny app is always the same and quite straightforward. The <code>shinyApp()</code> function takes two arguments: the user interface (ui) and the server code (server) that are being used.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-run-code.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Executing and running a Shiny App (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#how-to-run-an-app"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-run-code.png" class="img-fluid figure-img" alt="Executing and running a Shiny App (Higgins 2023)"></a></p>
+<figcaption>Executing and running a Shiny App (Higgins 2023)</figcaption>
 </figure>
 </div>
 </section>
@@ -11388,8 +12367,8 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <p>For more information, please visit the <a href="https://rstudio.github.io/cheatsheets/shiny.pdf">Shiny CheatSheet</a> and refer to the figure below to gain a better understanding of the sections of the Shiny App <strong><em>ui</em></strong>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-sections.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
+<p><a href="https://bookdown.org/pdr_higgins/rmrwr/a-gentle-introduction-to-shiny.html#the-user-interface-section-structure"><img src="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny-ui-sections.png" class="img-fluid figure-img" alt="Understanding the Shiny User Interface (ui) Sections (Higgins 2023)"></a></p>
+<figcaption>Understanding the Shiny User Interface (<strong><em>ui</em></strong>) Sections (Higgins 2023)</figcaption>
 </figure>
 </div>
 
@@ -11399,15 +12378,16 @@ font-style: inherit;">server =</span> server)</span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>shiny</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E08_shiny_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E08_shiny_01/</guid>
   <pubDate>Mon, 30 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E08_shiny_01/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 <item>
   <title>Quarto website 7: making a presentation</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E06_website_07/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E06_website_07/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -11761,14 +12741,15 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>quarto presentations</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E06_website_07/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E06_website_07/</guid>
   <pubDate>Mon, 16 Oct 2023 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Quarto website 6: Quarto features</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E06_website_06/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E06_website_06/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -11788,7 +12769,7 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <p>We will continue to use RStudio’s <strong>Visual Editor</strong>, and will basically make our way through the options in the bar that is right above your main editor window (but only when you’re in “Visual” mode):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/menu.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/menu.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 <section id="creating-a-document-for-practice" class="level3" data-number="1.1">
@@ -11811,8 +12792,8 @@ Let’s all try playing around with creating slides and modifying them. Is there
 <li><p><strong>Bold</strong>, <em>italic</em>, <u>underlined</u>, <del>Strikeout</del>, <sup>superscript</sup>, <sub>subscript</sub> , <span class="smallcaps">small caps</span> (some of these are under the “Text” subheading)</p></li>
 <li><p><strong>Bullet lists and numbered lists</strong>, which can optionally be in a “tight” layout: press the <code>…</code> at the top-right.</p>
 <ul class="task-list">
-<li><input type="checkbox">Within a list, you can have an “Item Checkbox” to make a checklist…</li>
-<li><input type="checkbox" checked="">…and these boxes can be checked.</li>
+<li><label><input type="checkbox">Within a list, you can have an “Item Checkbox” to make a checklist…</label></li>
+<li><label><input type="checkbox" checked="">…and these boxes can be checked.</label></li>
 </ul></li>
 <li><p>“Blockquotes”, which can be used to provide a quote or even to highlight a bit of text in a different format:</p></li>
 </ul>
@@ -11862,8 +12843,8 @@ Cross-references
 <p>Addings citations is also possible via the “Insert” drop-down menu. Any citation you add will be automatically included in a reference list at the bottom of the document! In the text, the citation will show up as a link to the reference list and you can also hover over the link to see the full reference: <span class="citation" data-cites="m.horst2022">(M. Horst, Presmanes Hill, and B. Gorman 2022)</span>.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/reflist.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">A reference list is automatically added to the end of the document</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/reflist.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>A reference list is automatically added to the end of the document</figcaption>
 </figure>
 </div>
 <p>This is a really nice feature that benefits a lot from the RStudio Visual Editor. Without the Visual Editor, you’ll have to make a text file yourself with all the information for each reference (a bibliography in BibTex (<code>.bib</code>) format) — this can be exported from your reference manager, but that’s still a hassle because you often add citations one-by-one to a piece of text. With the Visual Editor, you can search for references online and when you include a reference:</p>
@@ -11878,21 +12859,21 @@ Cross-references
 <div id="tabset-1-1" class="tab-pane active" aria-labelledby="tabset-1-1-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
 <div id="tabset-1-2" class="tab-pane" aria-labelledby="tabset-1-2-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/doi.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/doi.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
 <div id="tabset-1-3" class="tab-pane" aria-labelledby="tabset-1-3-tab">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/zotero.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/zotero.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 </div>
@@ -11965,7 +12946,11 @@ font-style: inherit;">+</span></span>
 background-color: null;
 font-style: inherit;">geom_point</span>()</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 <p>…Or a chunk that <strong>produces a simple table</strong>: in this case, simply the first lines of the <code>iris</code> dataframe. This dataframe output will display as shown below (which is a little nicer than the default formatting) when you include a line <code>df-print: kable</code> in the YAML header of your document:</p>
@@ -12076,14 +13061,14 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>To change <strong><em>settings for an individual chunk</em></strong>, the same YAML keys like <code>echo</code> can be used, but in special comment lines (with <code>#|</code> prefixes) at the start of a code chunk:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/chunk_options.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/chunk_options.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
 </figure>
 </div>
 <p><strong>A really useful option is to “fold” the code by using <code>code-fold: true</code> in the YAML header.</strong> That way, code will not be shown by default, but can be shown for each individual code chunk by unfolding it. This is great when you want to emphasize your results, but do want make the underlying code available to anyone who might be interested.</p>
 <p>For example, for the plot we produced above, if we set code-folding to true, it would produce a box like this above the plot — and clicking on that box would then show the code:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/code_fold.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/code_fold.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -12097,13 +13082,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>Above, we saw that we can create plots and include them in the document. Of course, we can also include figures made elsewhere, or photos, etc — and you have probably already done this for your website. When inserting a figure (e.g.&nbsp;by clicking the picture icon in the top bar), you can for example include a caption and specify how you want it aligned:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert_figure.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert_figure.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
 </figure>
 </div>
 <p>Somewhat oddly, the options for the figure <strong>size</strong> only show up once you’ve clicked OK to insert the figure — you’ll see this box below the figure:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/size_figure.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/size_figure.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <p>There are different ways/units to size the figure: I prefer <strong>“%”</strong>, which will allow you to specify the width in percentage of the total page (or focal box) width, as shown above.</p>
@@ -12113,13 +13098,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>When Clicking “Insert Table” in the “Table” dropdown menu in the top bar, you’ll get a pop-up to create a table, similar to how this works in Word:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%"></p>
 </figure>
 </div>
 <p>This will produce a table skeleton like the one shown below, which you can then fill out:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table2.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/table2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 <p>Here is an example of what a rendered table will look like, with previous Code Club sessions this semester:</p>
@@ -12178,13 +13163,13 @@ font-style: inherit;">false</span></span></code></pre></div>
 <p>When you click “Insert” =&gt; “Tabset…”, you can first enter names for two or more tabs, and doing this will also determine how many tabs you’ll get (up to 6):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset1.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
 </figure>
 </div>
 <p>Then, inside the gray box, below each header that was created for each tab name, you can enter any content that will show up in each tab:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/tabset2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 <p>And here is what the output for the above setup would look like:</p>
@@ -12194,14 +13179,22 @@ font-style: inherit;">false</span></span></code></pre></div>
 <div id="tabset-2-1" class="tab-pane active" aria-labelledby="tabset-2-1-tab">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" aria-labelledby="tabset-2-2-tab">
 <div class="cell">
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </div>
@@ -12248,7 +13241,7 @@ Example of a “warning” callout box
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E06_website_06/img/insert.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 <ul>
@@ -12287,7 +13280,7 @@ Whitespace in Markdown
 </section>
 
 
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0">
 <div id="ref-m.horst2022" class="csl-entry">
 M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“Palmer Archipelago Penguins Data in the Palmerpenguins R Package - An Alternative to Anderson’s Irises.”</span> <em>The R Journal</em> 14 (1): 244–54. <a href="https://doi.org/10.32614/rj-2022-020">https://doi.org/10.32614/rj-2022-020</a>.
 </div>
@@ -12299,15 +13292,16 @@ M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“
 </section></div> ]]></description>
   <category>website</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E06_website_06/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E06_website_06/</guid>
   <pubDate>Mon, 09 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E06_website_06/img/crossref.png" medium="image" type="image/png" height="42" width="144"/>
 </item>
 <item>
   <title>Quarto website 5: modifying your site</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E05_website_05/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E05_website_05/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -12317,7 +13311,7 @@ M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"></p>
 </figure>
 </div>
 </div>
@@ -12871,15 +13865,16 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>git</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E05_website_05/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E05_website_05/</guid>
   <pubDate>Mon, 02 Oct 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E05_website_05/img/quarto-cartoon.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Quarto website 4</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E04_website_04/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E04_website_04/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -12908,8 +13903,8 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption class="figure-caption">Figure by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figcaption>Figure by <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -12919,7 +13914,7 @@ font-style: inherit;"> # hyperlink blue</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -12971,7 +13966,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/settings.png" class="img-fluid figure-img" style="width:80.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/settings.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
 </figure>
 </div>
 </div>
@@ -12981,8 +13976,8 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/rename.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You can type directly in the box to change the repo’s name</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/rename.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
+<figcaption>You can type directly in the box to change the repo’s name</figcaption>
 </figure>
 </div>
 </div>
@@ -12992,8 +13987,8 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/check_pages.png" class="img-fluid figure-img" style="width:95.0%"></p>
-<figcaption class="figure-caption">On the GitHub Pages page, you can check the URL to your site</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/check_pages.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%"></p>
+<figcaption>On the GitHub Pages page, you can check the URL to your site</figcaption>
 </figure>
 </div>
 </div>
@@ -13010,7 +14005,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about1.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 </div>
@@ -13023,7 +14018,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about2.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
 </figure>
 </div>
 </div>
@@ -13033,7 +14028,7 @@ In the workflow we are showing you here, you’re modifying the files in your wo
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about3.png" class="img-fluid figure-img" style="width:45.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/about3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
 </figure>
 </div>
 </div>
@@ -13099,8 +14094,8 @@ Your README plain Markdown file
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit.png" class="img-fluid figure-img" style="width:55.0%"></p>
-<figcaption class="figure-caption">After entering something in the Summary box, click ‘Commit to main’</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%"></p>
+<figcaption>After entering something in the Summary box, click ‘Commit to main’</figcaption>
 </figure>
 </div>
 </div>
@@ -13111,8 +14106,8 @@ Your README plain Markdown file
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/push.png" class="img-fluid figure-img" style="width:70.0%"></p>
-<figcaption class="figure-caption">Click ‘Push origin’ to push your local repo changes to remote</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/push.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figcaption>Click ‘Push origin’ to push your local repo changes to remote</figcaption>
 </figure>
 </div>
 </div>
@@ -13140,8 +14135,8 @@ Git terminology
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit_on_gh.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">You should see your changes referred to in the online repo</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/commit_on_gh.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>You should see your changes referred to in the online repo</figcaption>
 </figure>
 </div>
 </div>
@@ -13151,8 +14146,8 @@ Git terminology
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/readme.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">GitHub will render and display a README file in your repo automatically</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/readme.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
+<figcaption>GitHub will render and display a README file in your repo automatically</figcaption>
 </figure>
 </div>
 </div>
@@ -13215,8 +14210,8 @@ font-style: inherit;"> github</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_link.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption class="figure-caption">Making the change above should produce this icon in the navbar on your website</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_link.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+<figcaption>Making the change above should produce this icon in the navbar on your website</figcaption>
 </figure>
 </div>
 </div>
@@ -13264,8 +14259,8 @@ font-style: inherit;">]</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_actions.png" class="img-fluid figure-img" style="width:40.0%"></p>
-<figcaption class="figure-caption">Making the change above should produce these entries in the TOC of every page on your website</figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E04_website_04/img/repo_actions.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:40.0%"></p>
+<figcaption>Making the change above should produce these entries in the TOC of every page on your website</figcaption>
 </figure>
 </div>
 </div>
@@ -13297,15 +14292,16 @@ font-style: inherit;">]</span></span></code></pre></div>
 </ol>
 </section></div> ]]></description>
   <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E04_website_04/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E04_website_04/</guid>
   <pubDate>Mon, 25 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E04_website_04/img/github_overview.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
   <title>Quarto website 3: Deploying your website with GitHub 🐱</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E03_website_03/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S06E03_website_03/</link>
   <description><![CDATA[ 
+
 
 
 
@@ -13330,8 +14326,8 @@ font-style: inherit;">]</span></span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
-<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+<p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
 </figure>
 </div>
 </div>
@@ -13389,7 +14385,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/render-website.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the Build tab in RStudio</figcaption>
+<figcaption>a screenshot of the Build tab in RStudio</figcaption>
 </figure>
 </div>
 </section>
@@ -13404,7 +14400,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/create-gh-account.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of getting a GitHub account</figcaption>
+<figcaption>a screenshot of getting a GitHub account</figcaption>
 </figure>
 </div>
 <p>You will have to pick a username - remember that other people will see this username so use one you’d feel comfortable with. <a href="https://happygitwithr.com/github-acct.html">Here</a> is some advice for picking a username.</p>
@@ -13421,7 +14417,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/add-version-control.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of adding a GitHub repo</figcaption>
+<figcaption>a screenshot of adding a GitHub repo</figcaption>
 </figure>
 </div>
 </section>
@@ -13432,7 +14428,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/publish_repo.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of publishing your repo in Github desktop</figcaption>
+<figcaption>a screenshot of publishing your repo in Github desktop</figcaption>
 </figure>
 </div>
 </section>
@@ -13443,21 +14439,21 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/initial-commit.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the initial commit in GitHub desktop</figcaption>
+<figcaption>a screenshot of the initial commit in GitHub desktop</figcaption>
 </figure>
 </div>
 <p>Once you’ve done that, click <code>Push origin</code> in the top right. This sends your files from your local repository to GitHub. Note that in the screenshot below there are no files indicated under changes, since I’ve already committed them.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/push-origin.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of pushing to origin in GitHub desktop</figcaption>
+<figcaption>a screenshot of pushing to origin in GitHub desktop</figcaption>
 </figure>
 </div>
 <p>Nice! Now we should be able to see your website in your GitHub repo. Navigate there in your browser and check. The website files should be there.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/gh-repo-created.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of what our repo looks like on GitHub.com</figcaption>
+<figcaption>a screenshot of what our repo looks like on GitHub.com</figcaption>
 </figure>
 </div>
 </section>
@@ -13473,14 +14469,14 @@ font-style: inherit;">---</span></span></code></pre></div>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/gh-settings-pages.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+<figcaption>a screenshot of the settings for GitHub pages to render from docs</figcaption>
 </figure>
 </div>
 <p>Refresh your page and you should now be able to visit your site! There will be a link at the top of the page. You did it!! Check out your new site.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S06E03_website_03/img/visit-site.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">a screenshot of the settings for GitHub pages to render from docs</figcaption>
+<figcaption>a screenshot of the settings for GitHub pages to render from docs</figcaption>
 </figure>
 </div>
 
@@ -13490,676 +14486,9 @@ font-style: inherit;">---</span></span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>website</category>
   <category>git</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E03_website_03/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S06E03_website_03/</guid>
   <pubDate>Mon, 18 Sep 2023 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E03_website_03/img/github-cartoon.png" medium="image" type="image/png" height="144" width="144"/>
-</item>
-<item>
-  <title>Quarto website 2</title>
-  <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S06E02_website_02/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<hr>
-<p><br></p>
-<p>In today’s session, you will add a new page to the website that you created in the first session.</p>
-<p>Then, we will talk about the “YAML” markup mini-language that is used to configure your website, and will make some changes to the YAML header for your new page <em>and</em> the YAML in the <code>_quarto.yml</code> file with site-wide settings.</p>
-<p><br></p>
-<section id="adding-a-new-page-to-your-site" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="adding-a-new-page-to-your-site"><span class="header-section-number">1</span> Adding a new page to your site</h2>
-<p>Let’s create a new page for your site. If you already have an idea for a page that you would like to add to your site, you can go with that. Otherwise, you can follow along with my example, which will be <strong>a page about research projects on a personal website</strong>.</p>
-<p>Each page on your website has a corresponding <code>.qmd</code> source document. Currently, we just have two pages:</p>
-<ul>
-<li>A home page, for which <code>index.qmd</code> is the source.</li>
-<li>An “about page”, for which <code>about.qmd</code> is the source.</li>
-</ul>
-<p><strong>So, to create a new page, we will create a new Quarto document</strong> — in RStudio, click <code>File</code> =&gt; <code>New File</code> =&gt; <code>Quarto Document</code>:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_file.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">The window to create a new Quarto document</figcaption>
-</figure>
-</div>
-<p>Unlike last week, make sure the <strong>“Use visual markdown editor” box is checked</strong>, and then click the “Create Empty Document” button in the bottom left.</p>
-<p>Once the file has been created, let’s save it straight away: press <kbd>Ctrl</kbd>/<kbd>Cmd</kbd>+<kbd>S</kbd>. <strong>Save it in the top-level folder for your website</strong>, i.e.&nbsp;the same folder that contains <code>index.qmd</code> and <code>about.qmd</code>. If you’re making a page for which you have your own ideas, you can name it accordingly — otherwise, save it as <strong><code>research.qmd</code></strong>.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/new_page.png" class="img-fluid figure-img" style="width:90.0%"></p>
-<figcaption class="figure-caption">Your near-empty document should look something like this</figcaption>
-</figure>
-</div>
-<p>The newly created document will only contain a few lines, as shown in the screenshot above. This is the so-called “<strong>YAML header</strong>”.</p>
-<p>We talked a bit about the YAML “markup language” last week, mostly in the context of the <code>_quarto.yml</code> file, which consists <em>only</em> of YAML content, unlike this <code>.qmd</code> file. Let’s dive a little deeper into YAML, because it’s one of the key components of your website’s source.</p>
-<p><br></p>
-</section>
-<section id="a-little-more-about-yaml" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="a-little-more-about-yaml"><span class="header-section-number">2</span> A little more about YAML</h2>
-<p>YAML (“YAML Ain’t Markup Language”, a silly joke of a name) is a simple format commonly used for <strong>configuration</strong>. In the source files for your website, there is a lot of YAML content straight away.</p>
-<p>First, you have the <code>_quarto.yml</code> file that configures your website, including its navigation elements that are visible on every page of the site, like the “navbar” at the top. But there is also YAML in the headers of all <code>.qmd</code> files. For example, the top of our newly created <code>research.qmd</code> should read:</p>
-<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">---</span></span>
-<span id="cb1-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Untitled"</span></span>
-<span id="cb1-3"><span class="pp" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">---</span></span></code></pre></div>
-<p>As opposed to the <code>_quarto.yml</code> file, this YAML header:</p>
-<ul>
-<li>Is surrounded by lines that only contain three dashes <code>---</code>, that mark the beginning and the end of this YAML header.</li>
-<li>Configures just <em>this individual page</em>, whereas the YAML in <code>_quarto.yml</code> specifies <em>site-wide configurations</em>.</li>
-</ul>
-<p><br></p>
-<p><strong>YAML consists of entries of key-value pairs</strong>: in the example above, <code>title</code> is the key that determines what the document’s title will be, and <code>"Untitled"</code> is the current value.</p>
-<p>Valid YAML <strong>keys</strong> are limited to what has been pre-defined by others (i.e., in this case, the developers of Quarto), and the list of possible keys depends on the document type. The Quarto website has <a href="https://quarto.org/docs/reference/projects/websites.html">a full list of valid YAML keys for the <code>_quarto.yml</code> file</a> as well as a <a href="https://quarto.org/docs/reference/formats/html.html">a list for HTML pages</a>, which is the kind of output that your <code>.qmd</code> files will produce when rendered.</p>
-<p>Depending on the key, the <strong>value</strong> can be:</p>
-<ul>
-<li>A “<em>free-form string</em>” of text, like for a title</li>
-<li><em>Constrained to a series of possible values</em>, like for the <code>theme</code> key, which can set the overall look of a page to one of a few dozen available “themes”</li>
-<li>An <em>on/off switch</em> using <code>true</code>/<code>false</code>, like whether to show a Table of Contents using the <code>toc</code> key.</li>
-</ul>
-<p><br></p>
-<section id="yamls-structure" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="yamls-structure"><span class="header-section-number">2.1</span> YAML’s structure</h3>
-<p>YAML’s structure is quite simple, but it does have a few rules. Each entry is generally on its own line. It has a <em>hierarchical structure</em> in that many values can itself be given key-value pairs to specify additional options. For example, see this section from your <code>_quarto.yml</code> file:</p>
-<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb2-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb2-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> cosmo</span></span>
-<span id="cb2-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">css</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> styles.css</span></span>
-<span id="cb2-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="ch" style="color: #20794D;
-background-color: null;
-font-style: inherit;">true</span></span></code></pre></div>
-<ul>
-<li><p>Note how the values for <em>keys that simply take a value</em> (above: <code>theme</code>, <code>css</code>, and <code>toc</code>) and have no “child keys” are on the same line as the key.</p></li>
-<li><p>In contrast, keys whose values are really “<em>child keys</em>” (above: <code>format</code> and <code>html</code>):</p>
-<ul>
-<li><p>Are followed by a colon <code>:</code></p></li>
-<li><p>Are on a line by themselves</p></li>
-<li><p>Have their child keys on the next line(s), <strong>indented</strong> one more level.</p></li>
-</ul></li>
-<li><p>Indentation in YAML has to use <em>either two or four spaces</em> (no tabs!) per indentation level, and YAML is <em>sensitive to indentation errors</em>. (Note that RStudio will by default insert multiple spaces instead of a true tab when you press the <kbd>Tab</kbd> key, so you can still use that just fine.)</p></li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Site-wide vs.&nbsp;page-specific configuration
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>This <code>format</code> =&gt; <code>html</code> section in the <code>_quarto.yml</code> file will set defaults for the formatting of individual pages on your website. You can use the same keys (e.g.&nbsp;<code>theme</code>, <code>css</code>, and <code>toc</code> shown above) in the YAML header of your <code>qmd</code> files, which would override these site-wide settings.</p>
-</div>
-</div>
-<p><br></p>
-<p>A final component of YAML syntax, with lists of entries, is used in the <code>website</code> section of <code>_quarto.yml</code>:</p>
-<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb3-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Lucy's adventures in science"</span></span>
-<span id="cb3-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb3-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb3-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> index.qmd</span></span>
-<span id="cb3-6"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Home</span></span>
-<span id="cb3-7"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> about.qmd</span></span></code></pre></div>
-<p>Here, each entry (= each page on your website) is preceded by a dash <code>-</code>, and:</p>
-<ul>
-<li><p>The top entry, for the homepage, has an <code>href</code> key pointing to the relevant file, as well as a <code>text</code> key (<strong>note: same indentation level, no additional dash</strong>) that will set what text is being displayed for this link.</p></li>
-<li><p>The bottom entry uses an alternative specification method, with just a pointer to the file. When you do this, the displayed test on the website would be the same as the file name without the <code>.qmd</code> extension, namely “About”.</p></li>
-</ul>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-YAML errors (Click to expand)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>If you made a mistake in the YAML, you will see an ominous-looking box like this pop up:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/yaml_error.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You’ll see this error if you specified an invalid key in your YAML. Don’t panic! If you don’t already know what’s wrong, carefully read the error which is quite informative.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p><br></p>
-</section>
-</section>
-<section id="modifying-the-yaml-header-of-our-new-page" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="modifying-the-yaml-header-of-our-new-page"><span class="header-section-number">3</span> Modifying the YAML header of our new page</h2>
-<p>Let’s start by <strong>changing the page’s title</strong> to <code>title: "My Research"</code>.</p>
-<p>Then, we can <strong>add a few new YAML entries</strong> to further populate the “title block” (top part) of your page:</p>
-<ul>
-<li><p><code>subtitle: "These are my ongoing and past research projects"</code></p></li>
-<li><p><code>date: 2023-09-11</code></p></li>
-<li><p><code>author: "Lucy T. Hedgehog"</code>, or for multiple authors, use the following syntax:</p>
-<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb4-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Lucy T. Hedgehog</span></span>
-<span id="cb4-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Lucy T. Hedgehog's advisor </span></span></code></pre></div></li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-YAML auto-complete and quoting (Click to expand)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<ul>
-<li>Note that when you type a new entry in the YAML header, RStudio will have an auto-completion feature with information boxes:</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/autocomplete.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-<ul>
-<li>In the examples above, we have <strong>double-quoted</strong> (“…”) free-form YAML values like <code>title</code>. This is optional: as long as your title doesn’t contain any special characters, it would also work without quotes.</li>
-</ul>
-</div>
-</div>
-</div>
-<p><br></p>
-<p>Here are a few of the <a href="https://quarto.org/docs/reference/formats/html.html">many other <strong>possible HTML page YAML keys</strong></a> that are particularly useful:</p>
-<ul>
-<li><p><code>date-modified</code>: If you wrote a page originally on a certain date, but made some modifications afterwards, you can get a separate date entry for the modifications. Useful for e.g.&nbsp;blog posts and reports.</p></li>
-<li><p><code>title-block-banner: true</code>: Put the title block (title and subtitle) in a “banner” by adding a background color.</p></li>
-<li><p><code>number-sections: true</code>: Number sections (as determined using headers and their levels) hierarchically.</p></li>
-<li><p><code>toc-location</code>: Where the Table of Contents should show up — one of <code>left</code>, <code>right</code> (default), or <code>body</code></p></li>
-</ul>
-</section>
-<section id="exercises-i" class="level2 exercise" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">4</span> Exercises I</h2>
-<section id="experiment-with-yaml-header-options" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="experiment-with-yaml-header-options">Experiment with YAML header options</h4>
-<p><br></p>
-<p>On your new page:</p>
-<ul>
-<li><p>Try adding the <code>title-block-banner</code> and see if you like that kind of format.</p></li>
-<li><p>Add a few headers of different levels (start with “Header 2”, the title is basically the one level 1 header) — you can do so by clicking the dropdown menu that will say Normal:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/add_headers.png" class="img-fluid figure-img" style="width:75.0%"></p>
-</figure>
-</div></li>
-<li><p>Try turning on <code>number-sections</code> and play around with the <code>toc-location</code> (Your <code>_quarto.yml</code> has an entry <code>toc: true</code>, so a table of contents will by default be shown on very page).</p></li>
-</ul>
-</section>
-</section>
-<p><br></p>
-<section id="modifying-the-_quarto.yml-file" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="modifying-the-_quarto.yml-file"><span class="header-section-number">5</span> Modifying the <code>_quarto.yml</code> file</h2>
-<p>As mentioned above, the <code>_quarto.yml</code> file solely consists of YAML configurations, and these settings apply to the entire website.</p>
-<p>The two most important “sections” in this file are:</p>
-<ul>
-<li><p><code>website</code>, where we can control things like the site’s navigation elements that will show up on every page</p></li>
-<li><p><code>format</code> =&gt; <code>html</code>, where we can specify page-level formatting settings. Here, we can use the same YAML keys that we could use in the YAML header of our new page (and any other page), except that the settings will be applied across all pages on the site.</p></li>
-</ul>
-<p><br></p>
-<section id="the-website-section" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="the-website-section"><span class="header-section-number">5.1</span> The <code>website</code> section</h3>
-<p>In my example, this section currently reads as follows – yours should be the same except for the title unless you did some customization yourself already:</p>
-<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb5-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Lucy's adventures in science"</span></span>
-<span id="cb5-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb5-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb5-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> index.qmd</span></span>
-<span id="cb5-6"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Home</span></span>
-<span id="cb5-7"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> about.qmd</span></span></code></pre></div>
-<p>The <code>navbar</code> key represents <strong>a navigation bar that is always shown across the top of the site</strong>, which should be a good default for most websites. But if you want a website navigation bar on the side, or combined top and side navigation (the latter is useful for sites with a lot of contents, and is used for example on <a href="https://quarto.org/">Quarto’s own documentation website</a>), this is possible: see <a href="https://quarto.org/docs/websites/website-navigation.html">Quarto’s Website Navigation docs</a>.</p>
-<p>Any entries under the <strong><code>left</code> key</strong> will be left-aligned on the navbar, i.e.&nbsp;consecutive entries start on the left-hand side of the navbar, moving rightward with every added entry. We could also add right-aligned entries with a <strong><code>right</code> key</strong> (see the exercise below).</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Navbar auto-collapse (Click to expand)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>If the width of your viewing window is narrow (like it often is in RStudio’s “Viewer”, as well as on phones), the navbar will be automatically collapsed into a “Hamburger menu:”</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/hamburger_menu.png" class="img-fluid figure-img" style="width:65.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</div>
-<p><br></p>
-<p><strong>If we want our new page to show up in the navbar</strong>, we’ll have to add it as a new entry:</p>
-<div class="sourceCode" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">website</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb6-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Lucy's adventures in science"</span></span>
-<span id="cb6-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb6-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb6-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> index.qmd</span></span>
-<span id="cb6-6"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Home</span></span>
-<span id="cb6-7"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> about.qmd</span></span>
-<span id="cb6-8"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> research.qmd</span></span>
-<span id="cb6-9"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> My Research</span></span></code></pre></div>
-<p><br></p>
-<p><strong>Some other useful keys for the <code>website</code> section</strong> include (see this <a href="https://quarto.org/docs/reference/projects/websites.html">Quarto docs page</a> for a full list):</p>
-<ul>
-<li><p><code>back-to-top-navigation</code> (a child key of <code>website</code>): When set to <code>true</code>, this will show a “Back to top” button once you reach the bottom of a page.</p></li>
-<li><p><code>favicon</code> (a child key of <code>website</code>): A favicon is an icon or small image that shows up in your browser next to the name of the website, see the icons shown in screenshot:</p></li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/favicon.png" class="img-fluid figure-img" style="width:65.0%"></p>
-</figure>
-</div>
-<ul>
-<li><code>icon</code> (a navbar entry like <code>href</code> and <code>text</code>): This will allow you to show an icon instead of (default for external links) or in addition to text (default for internal links) for a link in your navbar. See <a href="https://icons.getbootstrap.com/">here</a> for a list of available icons. For example:</li>
-</ul>
-<div class="sourceCode" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb7-1"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">navbar</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb7-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">left</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb7-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">      </span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">-</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">href</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> index.qmd</span></span>
-<span id="cb7-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">text</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> Home</span></span>
-<span id="cb7-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">        </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">icon</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> house</span></span></code></pre></div>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/home_icon.png" class="img-fluid figure-img" style="width:65.0%"></p>
-</figure>
-</div>
-<p><br></p>
-</section>
-<section id="the-html-format-section" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="the-html-format-section"><span class="header-section-number">5.2</span> The <code>html</code> <code>format</code> section</h3>
-<p>Here is what the <code>format</code> section of your <code>_quarto.yaml</code> should look like:</p>
-<div class="sourceCode" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb8-2"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span></span>
-<span id="cb8-3"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> cosmo</span></span>
-<span id="cb8-4"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">css</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> styles.css</span></span>
-<span id="cb8-5"><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">:</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;"> </span><span class="ch" style="color: #20794D;
-background-color: null;
-font-style: inherit;">true</span></span></code></pre></div>
-<p>As mentioned before, the configuration done in this section can use the same keys as those in the YAML header for individual pages, but the settings done in <code>_quarto.yaml</code> will apply across the entire website.</p>
-<p>For now, we’ll only talk about one key: <strong><code>theme</code></strong>. This will change the overall look of your website to a number of preset themes, each with different fonts and colors. While you can also completely customize your website’s look yourself, using one of these themes should work well for most of us.</p>
-<p>You can see a visual list of available themes at <a href="https://bootswatch.com/" class="uri">https://bootswatch.com/</a>. The default theme is <code>cosmo</code>, as you can see above. As an example, if we change Lucie’s website theme to <code>lux</code>:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" class="img-fluid figure-img" style="width:65.0%"></p>
-</figure>
-</div>
-<p><br></p>
-</section>
-</section>
-<section id="exercises-ii" class="level2 exercise" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">6</span> Exercises II</h2>
-<section id="site-wide-configuration" class="level4 unnumbered">
-<h4 class="unnumbered anchored" data-anchor-id="site-wide-configuration">Site-wide configuration</h4>
-<p><br></p>
-<p><strong>Modify your <code>_quarto.yml</code> to configure your website</strong>. You can play around with whatever you prefer, but here are some suggestions:</p>
-<ul>
-<li><p>Try several different themes and pick one for your website.</p></li>
-<li><p>Move the navbar entry for the <code>about.qmd</code> page to the right-hand side.</p></li>
-<li><p>Add one more icons to the Navbar, for example:</p>
-<ul>
-<li>Add a link to your Twitter account and use the <code>twitter</code> icon</li>
-<li>If you have one, add a link to your GitHub account and use the <code>github</code> icon</li>
-<li>Add e.g.&nbsp;a question mark icon to your About page link (search for one <a href="https://icons.getbootstrap.com">here</a>).</li>
-<li>Take a look at the <a href="https://icons.getbootstrap.com">visual list of possible icons</a> and see if there are some that you’d like to use.</li>
-</ul></li>
-<li><p>Add a favicon for your <code>website</code>.</p></li>
-</ul>
-</section>
-</section>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-RStudio’s visual editor
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The visual editor should give you some easy-to-use, Word-processor like options to format the content on your website, add images, and so on — feel free to add some more content to your website!</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Check out the Code Club site source code
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you’re wondering how certain elements or configuration of the Code Club website was done, feel free to look at source code for the Code Club website, which is at: <a href="https://github.com/osu-codeclub/osu-codeclub.github.io" class="uri">https://github.com/osu-codeclub/osu-codeclub.github.io</a>.</p>
-</div>
-</div>
-
-
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>website</category>
-  <guid>https://osu-codeclub.github.io/posts/S06E02_website_02/index.html</guid>
-  <pubDate>Mon, 11 Sep 2023 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S06E02_website_02/img/lux_theme.png" medium="image" type="image/png" height="30" width="144"/>
 </item>
 </channel>
 </rss>
