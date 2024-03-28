@@ -1,0 +1,253 @@
+---
+title: "R Basics 5: Data manipulation with (base) R"
+author: "Horacio Lopez-Nicora"
+date: "2024-02-09"
+categories: [r-basics]
+title-block-banner: false
+number-depth: 3
+execute: 
+  eval: false
+image: img/Allison_Horst.png
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+#### **Recap of last week**
+
+Last week, we discussed vectorized operations and introduced the concept of a data frame. Furthermore, you successfully created a data frame containing multiple columns and rows.
+
+Today, we will explore data manipulation using base R syntax. It is important to note that there are countless ways to achieve the same objective, particularly in base R. Whenever possible, let us consider simpler syntax.
+
+<br>
+
+## Data manipulation with (base) R
+
+### Create a new dataset
+
+\###
+
+<details>
+
+<summary><b>Please create a new data frame and name it df. This data frame should consist of three columns (Control, Trt1, and Trt2) with 50 observations each. The Control column should contain 50 data points that follow a normal distribution with a mean of 35 and a standard deviation of 10. Likewise, the Trt1 column should have a mean of 37 and a standard deviation of 10, and the Trt2 column should have a mean of 75 and a standard deviation of 10. Additionally, add five blocks (a, b, c, d, e), each repeating 10 times. Let's use the function `set.seed(1234)` to work with the same values.</b> **(Click for the answer)**</summary>
+
+```{r}
+set.seed(1234)
+df <- data.frame(Control = rnorm(50, 35, 10),
+                 Trt1 = rnorm(50, 37, 10),
+                 Trt2 = rnorm(50, 75, 10),
+                 Block = rep(c("a", "b", "c", "d", "e"), 10))
+```
+
+</details>
+
+<details>
+
+<summary>
+
+<b>Data mostly come in two shapes – “long” format and “wide” format.
+
+What type of data do you think is `df`?</b> **(Click for the answer)**</summary>
+
+Our data frame `df` is in **wide** format.
+
+</details>
+
+### Extract variables (columns)
+
+There are multiple ways to extract/select variables/columns. Here are two methods that we have previously used:
+
+```{r}
+df[, c("Control", "Trt2")] # by name
+
+df[, c(1, 2)]  # by column index
+```
+
+### Make new variables (columns)
+
+Let's create two new variables from existing ones:
+
+```{r}
+df$Trt1.log <- log(df$Trt1)
+df$Trt2.log <- log(df$Trt2)
+```
+
+### Extract observations (rows)
+
+There are multiple ways to extract/filter observations/rows. Here are two ways we can do this:
+
+```{r}
+# Using [,]
+df[df$Trt1.log < 3.5, ]
+
+df[df$Trt2.log > 4.2 & df$Block == "a", ]
+
+# Using subset
+subset(df, df$Trt2.log > 4.2 & df$Block == "a")
+```
+
+### Arrange observations (rows)
+
+Sorting is an operation that we typically perform when manipulating our dataset.
+
+```{r}
+# ascending order of Block (alphabetic) followed by ascending order of Trt2.log
+df[order(df$Block, df$Trt2.log) , ]
+
+# descending order of Block (alphabetic) followed by ascending order of Trt2.log
+df[order(rev(df$Block), df$Trt2.log) , ]
+```
+
+### Summarize observations (rows)
+
+There are numerous ways to accomplish this task, and we will discover additional methods as we progress to the `tidyverse` package.
+
+```{r}
+# Manually create a data.frame
+data.frame(Trt1.mean = mean(df$Trt1),
+           Trt1.sd = sd(df$Trt1),
+           Trt2.mean = mean(df$Trt2),
+           Trt2.sd = sd(df$Trt2))
+```
+
+### Summarize rows within groups
+
+Typically, our goal is to summarize data according to specific variables. Below is how we can achieve this:
+
+```{r}
+# First operate in the data.frame by group
+df_by <- by(df, 
+   INDICES = list(df$Block),
+   FUN = function(x){
+     data.frame(Block = unique(x$Block),
+                Control.mean = mean(x$Control),
+                Control.sd = sd(x$Control),
+                Trt1.mean = mean(x$Trt1),
+                Trt1.sd = sd(x$Trt1),
+                Trt2.mean = mean(x$Trt2),
+                Trt2.sd = sd(x$Trt2))
+   })
+
+# Then combine the results into a data.frame
+do.call(rbind, df_by)
+```
+
+Alternatively, we can use the `aggregate()` function:
+
+```{r}
+df.by <- do.call(data.frame, aggregate(cbind(Control, Trt1, Trt2) ~ Block, data = df, FUN = function(x) c(mean = mean(x), sd = sd(x) ) ))
+df.by
+```
+
+Let's take a look at each treatment graphically (**we will do more data viz soon!**):
+
+```{r}
+barplot(df.by$Control.mean, names.arg =  paste(df.by$Block)) 
+
+barplot(df.by$Trt1.mean, names.arg =  paste(df.by$Block))
+
+barplot(df.by$Trt2.mean, names.arg =  paste(df.by$Block))
+```
+
+### Reshape our data frame
+
+Wide to long format:
+
+In data analysis, the need to reshape the data frequently arises in order to enhance manageability and usefulness. Reshaping the data entails converting it from one format, such as wide, to another, like long, or vice versa. Such transformations aid in facilitating data accessibility, simplifying analysis, and providing more information.
+
+```{r}
+l <- reshape(df, 
+             varying = c("Control", "Trt1", "Trt2", "Trt1.log", "Trt2.log"), 
+             v.names = "Yield", 
+             timevar = "Treatment", 
+             times = c("Control", "Trt1", "Trt2", "Trt1.log", "Trt2.log"), 
+             new.row.names = 1:1000, 
+             direction = "long")
+
+l
+```
+
+<br>
+
+## Practice
+
+Before seeking assistance from others, it is generally advisable for you to attempt to resolve the problem on your own. R provides comprehensive tools for accessing documentation and searching for help.
+
+### **Exercise 1**
+
+<details>
+
+<summary>
+
+<b>Let's use the same data frame `df` we created at the beginning of this session</b> **(Click for the answer)**</summary>
+
+Please go to the beginning of this session and re-run the code.
+
+</details>
+
+### Exercise 2
+
+<details>
+
+<summary>
+
+<b>A more informative variable could be one showing the difference between the treatment and the control. Create two new variables: `Trt1.Delta` and `Trt2.Delta`.</b> **(Click for the answer)**</summary>
+
+```{r}
+df$Trt1.Delta <- df$Trt1 - df$Control
+df$Trt2.Delta <- df$Trt2 - df$Control
+```
+
+</details>
+
+### Exercise 3
+
+<details>
+
+<summary>
+
+<b>Create a new data frame `df_delta` containing the following variables (columns): `Block`, `Trt1.Delta`, and `Trt2.Delta`.</b> **(Click for the answer)**</summary>
+
+```{r}
+df_delta <- df[, c("Block", "Trt1.Delta", "Trt2.Delta")]
+```
+
+</details>
+
+### Exercise 4
+
+<details>
+
+<summary>
+
+<b>Summarize `Trt1.Delta` and `Trt2.Delta` by `Block`. Produce the mean and standard deviation for each variable.</b> **(Click for the answer)**</summary>
+
+```{r}
+df.by <- do.call(data.frame, aggregate(cbind(Trt1.Delta, Trt2.Delta) ~ Block, data = df, FUN = function(x) c(mean = mean(x), sd = sd(x) ) ))
+df.by
+```
+
+</details>
+
+### Exercise 5
+
+<details>
+
+<summary>
+
+<b>In the end, our goal is to conduct statistical analysis to assess the impact of the treatment. However, the current data format does not allow us to proceed with our analysis. To fix this, please transform the data frame `df_delta` from a wide format to a long format. Please name this new data frame as `long_delta`.</b> **(Click for the answer)**</summary>
+
+```{r}
+l <- reshape(df_delta, 
+             varying = c("Trt1.Delta", "Trt2.Delta"), 
+             v.names = "Yield", 
+             timevar = "Treatment", 
+             times = c("Trt1.Delta", "Trt2.Delta"), 
+             new.row.names = 1:1000, 
+             direction = "long")
+```
+
+</details>

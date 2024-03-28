@@ -1,0 +1,160 @@
+---
+title: "Quarto website 5: modifying your site"
+subtitle: Making a fancy about page, drop down menu bars, and some (S)CSS styling.
+author:
+  - "Jessica Cooperstone"
+date: "2023-10-02"
+categories: [website, git]
+title-block-banner: false
+image: img/quarto-cartoon.png
+alttext: "A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst"
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+```{r quarto cartoon, fig.alt = "A schematic representing the multi-language input (e.g. Python, R, Observable, Julia) and multi-format output (e.g. PDF, html, Word documents, and more) versatility of Quarto. Artwork from Hello, Quarto keynote by Julia Lowndes and Mine Çetinkaya-Rundel, presented at RStudio Conference 2022. Illustrated by Allison Horst", out.width = "70%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/quarto-cartoon.png")
+```
+
+Artwork from ["Hello, Quarto"](https://mine.quarto.pub/hello-quarto/) keynote by [Julia Lowndes](https://jules32.github.io/) and [Mine Çetinkaya-Rundel](https://mine-cr.com/), presented at RStudio Conference 2022. Illustrated by [Allison Horst](https://allisonhorst.com/allison-horst)."
+
+# Introduction
+
+Today we are going to continue customizing our website by:
+
+1. Making a fancy about page
+2. Learning how to make multi-level drop down menu headers
+3. Changing our website themeing in `_quarto.yml`
+4. Doing some light (S)CSS styling to change the visuals of our site
+
+Then, we will push our changes to GitHub using GitHub Desktop. But first: 
+
+<div class="callout callout-success">
+  <h4>Are there other things you want to learn how to do with your website?</h4>
+  <p>Please share!</p>
+</div>
+
+A good way to see what is possible to do with your website is to browse through some other people's sites. There is a Quarto website gallery [here](https://quarto.org/docs/gallery/#websites). Just like people can access the source code on your website, you can often do the same for others. This means if you see a feature you like, you can go into their website code and try and figure out how its done.
+
+# Updating our About page
+
+Because many people who have a Quarto website will have an About page, there are some special, nicely formatted templates which you can use. You can learn more about fancy about pages [here](https://quarto.org/docs/websites/website-about.html), inclduing seeing what the different templates look like.
+
+We are going to practie with our Code Club [practice-website](https://osu-codeclub.github.io/practice-website/).
+
+First, let's set one of the about templates in the YAML of our `about.qmd` file. I am going to start with `jolla`.
+
+```yaml
+title: "About me"
+about:
+  template: jolla
+  image: name_of_image.jpg
+```
+
+Before we render this page, we need to make sure the image we want to appear in this about page is in the home directory of your website. If you want to keep all your images in a subfolder so they're not just floating around loose, you can. And then your YAML will look like this:
+
+```yaml
+title: "About me"
+about:
+  template: jolla # could also use trestles, solana, marquee, broadside
+  image: img/name_of_image.jpg
+```
+
+If you want to use some of the other templates, like `trestles`, `solana`, `marquee`, and `broadside`, you will want to have other information in your `about.qmd`, perhaps sections on Education and Experience.
+
+Check out using these different templates and pick the one you like the most if you want to customize your about page. 
+
+# Creating multi-level drop down menu headers
+
+Earlier I mentioned we can go into other websites to see how different features are coded. We are going to do this on the [OSU Code Club website](https://osu-codeclub.github.io/) to see how it has achieved having multi-level headers. We can also visit the [source repository](https://github.com/osu-codeclub/osu-codeclub.github.io/tree/main) on GitHub to see how this website is formatted.
+
+If you look at the Code Club website homepage, you can see that the header "New here?" has a drop down, and allows you to choose from a few different options.
+
+![](img/new-here.png)
+
+How was that done? If you remember back a few sessions ago, [we set what our headers were going](https://osu-codeclub.github.io/posts/website_02/#modifying-the-_quarto.yml-file) to be in the `_quarto.yml` file. Let's see what that file looks like from the Code Club source repo.
+
+The `_quarto.yml` looks like this:
+
+```yaml
+project:
+  type: website
+  preview: 
+    navigate: false
+
+website:
+  title: "OSU Code Club"
+  site-url: https://osu-codeclub.github.io/
+  repo-url: https://github.com/osu-codeclub/osu-codeclub.github.io
+  repo-actions: [edit, issue]
+  page-navigation: true
+  back-to-top-navigation: true
+  navbar:
+    left:
+      - href: pages/schedule.qmd
+        text: Schedule
+      - href: pages/previous.qmd
+        text: Previous sessions
+      - text: New here?
+        menu:
+        - text: Computer setup for Code Club
+          href: pages/setup.qmd
+        - text: R resources for beginners
+          href: pages/r_resources.qmd
+        - text: Sign up!
+          href: https://forms.gle/eYkMvmJShrcANUrt5
+```
+
+Looking at this we can see what code is used for make drop down headers. You can copy this code into your `_quarto.yml` and then modify the text and href to be appropriate for your site. 
+
+Remember that when you link to new pages, you will need to have material for that page to populate. If we look at the example above, the "Computer setup for Code Club" material is in a file called `setup.qmd` in a folder called `pages` in the home directory of the website.
+
+# Altering website styling in `_quarto.yml`
+
+Making simpler changes, like setting your background colors and fonts, you can do by altering your `_quarto.yml` file under the `format` header. For example, we could make the following changes to our practice-website.
+
+```yaml
+website:
+  navbar:
+    background: "#06280C" # foresty green
+
+format:
+  html:
+    theme: flatly
+    toc: true
+    number-sections: true
+    mainfont: Proxima Nova
+    backgroundcolor: "#CFDAD3" # light grey
+    monobackgroundcolor: "#CFDAD3" # light grey
+    title-block-banner: "#06280C" # foresty green
+    title-block-banner-color: "#CFDAD3" # light grey
+    fontcolor: "#06280C" # foresty green
+    linkcolor: "#0E11E2" # hyperlink blue
+
+```
+
+You don't need to comment on what your colors are, I just like to do this since I have no connection between hexadecimal codes and actual colors, and this helps me to remember what is what. You can see all of the html options you can change within your YAML [here](https://quarto.org/docs/reference/formats/html.html)
+
+Once you made changes, render your website to see what they look like.
+
+# Altering (S)CSS code to change website styling
+
+Sometimes you might want to make more changes that what you can do using the avaiable keys in your YAML. When that is the case, you can make additional alterations by creating a `.scss` theme file.
+
+CSS stands for Cascading Style Sheets and it is used to format the layout of a webpage. By learning how to modify existing CSS files, it is relatively simple to change how your website looks. SCSS is Sassy CSS and the difference is not really important right now, but I think the `.scss` files are a little easier to modify, and are the default in Quarto, so we are going to work from those.
+
+The Quarto website built in themes use [Bootswatch](https://bootswatch.com/) and both the Code Club and practice-website use flatly so let's start there. You can find `.scss.` files for each theme in the Quarto GitHub source repo [here](https://github.com/quarto-dev/quarto-cli/tree/main/src/resources/formats/html/bootstrap/themes). I am going to go to the flatly theme and download it using the "Download raw file" button in the top right of the page. Save this file in the home directory of your website.
+
+![](img/download-scss.png)
+
+Let's open it in RStudio. We will play around with making some changes.
+
+One thing you might want to change first are the colors. Quarto accepts color information as hexadecimal codes. If you want to know the hexadecimal 6 digit code for any color you can go to [www.htmlcolorcodes.com](https://htmlcolorcodes.com/) to find the color/code pair that you want.
+
+In the [Quarto documentation](https://quarto.org/docs/output-formats/html-themes.html#sass-variables), you can find information about the Sass variables that can be specified within your `.scss.` file what what they mean.
+
+# Commit and push to GitHub
+
+Once you are happy with your changes, the last step is to commit and push them to GitHub so the changes can be reflected on your website. You can do this in GitHub desktop by entering a comment in the bottom left, committing to main (or master), and then push to origin.
