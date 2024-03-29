@@ -1,0 +1,418 @@
+---
+title: "R Basics - 04 Vectorized Operations and Data Frame Introduction"
+author:
+  - "Jessica Cooperstone"
+date: "2024-02-02"
+categories: [r-basics]
+title-block-banner: false
+image: img/vector-vs-df.png
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+We are going to continue our discussion about vectors that [Horacio started last week](https://osu-codeclub.github.io/posts/basics_03/#vectors-in-r) and talk about vectorized operations. It's fine if you don't know what this means, you will by the end of today's session. We are also going to introduce the idea of a data frame.
+
+## What are vectorized operations?
+
+I think its easier to see 👀 an example of a vectorized operation, and then we can explain what is happening under the hood.
+
+Let's create a vector of high temperatures for the weather in Columbus OH in Fahrenheit from the last 7 days. I took this data from January 19 to 25, 2024.
+
+```{r}
+temps_F <- c(26, 21, 24, 32, 33, 41, 51)
+```
+
+We can call our vector to see what it contains.
+
+```{r}
+temps_F
+```
+
+A reminder that:
+
+$$
+°F = 1.8 * °C + 32
+$$
+
+With some light rearrangement, we can write the code below so we can plug in a temp in Fahrenheit, and get out one in Celsius.
+
+```{r}
+temps_C <- (temps_F - 32)/1.8
+
+temps_C
+```
+
+Here, we simply use the vector `temps_F` as we would any single number in a smple mathematical operation, and we convert each element or number in our our entire vector using the formula we provide. As a result, we can convert every element of our vector from Fahrenheit to Celsius.
+
+> It is worth mentioning that this is *unique in R* - many other programming languages would require a for loop or similar to do this operation, but because R is a **vectorized language**, this works easily and simply.
+
+Here is another example. Imagine you have a vector of values and you want to calculate the log base 2 value for each element.
+
+```{r}
+raw <- c(20, 36, 42, 53)
+
+log2 <- log2(raw)
+
+log2
+```
+
+This is an example where we apply a formula transformation to a vector, but we can also use vectorized operations with two vectors.
+
+## Vector by vector operations
+
+Let's create some vectors. Note I am not using the `c()` function to create the vector - since I am using the `:` to indicate a string of integers from number 1 to number 2, under the hood, R automatically makes this a vector. If you were to use the `c()` function though you would get the same result.
+
+```{r}
+# create a vector with the values from 1 to 10, incrementing by 1
+# vector_1to10 <- c(1:10) would also work
+vector_1to10 <- 1:10
+
+vector_1to5 <- 1:5
+
+vector_1to3 <- 1:3
+
+vector_0to4 <- 0:4
+```
+
+::: {.callout-note title="What do you think will happen if we try and add `vector_1to10` and `vector_1to5`?" collapse="true"}
+```{r}
+# a vector reminder
+vector_1to10
+
+vector_1to5
+
+# adding
+vector_1to10 + vector_1to5
+```
+
+We see that `vector_1to5` gets recycled, meaning once the 5 elements in the vector have been used, the addition starts back from the beginning again. If we want to be explicit:
+
+-   Element 1 of `vector_1to10` gets added to element 1 of `vector_1to5`
+-   Element 2 of `vector_1to10` gets added to element 2 of `vector_1to5`
+-   Element 3 of `vector_1to10` gets added to element 3 of `vector_1to5`
+-   Element 4 of `vector_1to10` gets added to element 4 of `vector_1to5`
+-   Element 5 of `vector_1to10` gets added to element 5 of `vector_1to5`.
+-   Element 6 of `vector_1to10` gets added to **element 1** of `vector_1to5`
+
+and so on...
+
+⚠️ **This happens without R explicitly telling you this is happening. We do not get a warning.**
+:::
+
+::: {.callout-note title="What do you think will happen if we try and add `vector_1to10` and `vector_1to3`?" collapse="true"}
+```{r}
+# a vector reminder
+vector_1to10
+
+vector_1to3
+
+# adding
+vector_1to10 + vector_1to3
+```
+
+⚠️ **We see that `vector_1to3` gets recycled, but now we have a warning. We get this because the vector lengths are not divisible by each other to produce an integer. R still will perform our operation, but it tells us hey this might not be exactly what you want.**
+
+:::
+
+::: {.callout-note title="What do you think will happen if we try and divide `vector_1to10` by `vector_0to4`?" collapse="true"}
+```{r}
+vector_1to10 / vector_0to4
+```
+
+We see that `vector_0to4` gets recycled, but now we have a new output we haven't seen before, `Inf` which stands for infinity/infinite.
+
+If we are then to try and sum this vector:
+
+```{r}
+sum(vector_1to10 / vector_0to4)
+```
+
+We get an answer of infinite. This is because we have at least one infinite value, so including it as part of a sum makes that sum infinite too.
+
+⚠️ **Think about how this might work if you have NAs in your vector**
+:::
+
+## Filtering vectors
+
+We can also write code that allows us to filter our vector based on certain conditions. What if we wanted to know which observations had data where the temperature was above freezing? We could use a mathematical operator (in this case, `>`) to find instances when the statement we provide is true.
+
+```{r}
+temps_C > 0
+```
+
+When we run this code, we get a series of values corresponding to each element of the vector, and whether or not the statement we have prompted with (`temps_C > 0`) is true or false.
+
+If we wanted to see how many observations meet these criteria, we can take advantage of the fact that `TRUE` is coded as 1, and `FALSE` and 0.
+
+```{r}
+sum(temps_C > 0)
+```
+
+We know then that there are `r sum(temps_C > 0)` observations where the temperature is above freezing.
+
+If we want to know **which** observations are above freezing, we can use the function [`which()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/which) which shows us the indices of the elements in our vector for which our code evaluates to `TRUE`.
+
+```{r}
+which(temps_C > 0)
+```
+
+This tells us that the 5th, 6th, and 7th elements in our data have temperatures higher than freezing. In our vector we don't have the specific days associated with each temperature embedded. We can assign meta-data to our values by using the function [`names()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/names) for our vector. I'll show you how to do that below.
+
+```{r}
+# create a new vector that has the dates we want to assign
+dates <- c("1/19", "1/20", "1/21", "1/22", "1/23", "1/24", "1/25")
+
+# we can assign these dates as the "names" of our vector temps_C
+names(temps_C) <- dates
+
+# now our temps have dates associated with them
+temps_C
+```
+
+If you knew you wanted to do this at the outset, you could create the vector along with its names all at once using the handy function [`structure()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/structure). 
+```{r}
+(temps_F_names <- structure(temps_F,
+                           names = dates))
+```
+
+> You can also set other attributes using the function `structure()`.
+
+You might use the sometimes, but more likely you would want to work using a data frame.
+
+## Practice
+
+::: {.callout-note title="Create a vector of 10 numbers, beginning at 2, incrementing by 11. Remember, if you call `help()` or put a `?` before a function, you can learn more about its arguments and use. You might want to look back to last week's Code Club if you don't remember the simplified function for doing this." collapse="true"}
+```{r}
+a_vector <- seq(from = 2, by = 11, length.out = 10)
+
+a_vector
+```
+:::
+
+::: {.callout-note title="How many of these values are even? Yes I know that I haven't showed you how to do this but I am confident you can figure out how to :)" collapse="true"}
+A zero remainder means the number is even.
+
+```{r}
+# use modulo operator %% to see if a number is even
+# if the remainer is 0, it is even
+a_vector %% 2
+
+# how many are even?
+10 - sum(a_vector %% 2)
+```
+:::
+
+## What is a data frame?
+
+![](img/vector-vs-df.png){fig-align="center" width="469"}
+
+Below I am creating a simple data frame, this is a rectangular data object with rows and columns. In reality, you will probably be reading your data in from a `.csv` or `.xlsx` file, but you can also construct a data frame directly in R. We are doing this with the function [`data.frame()`](https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame) which is a part of base R.
+
+```{r}
+# create a simple 3 by 4 data frame called small_df
+# columns are a, b, and c
+# values are numbers from 1 to 4, 5 to 8, and 9 to 12
+small_df <- data.frame(a = 1:4, 
+                       b = 5:8, 
+                       c = 9:12)
+```
+
+Let's look at `small_df`.
+
+```{r}
+small_df
+```
+
+We can think about a data frame as being composed of a series of vectors (as columns) squished together. In the case above, each column is of the same type, integer or numeric but this doesn't have to be true. Note the first column of 1:4 is actually the row index - you can tell this as it doesn't have a column name.
+
+> Vectors all must be of the same object type (i.e., character, numeric, logical). In a data frame, each column can be a different object type. This is very useful especially when you have to have meta-data combined with numeric data.
+
+We call use some new functions to look more at our data frame.
+
+`View()` will open our data frame like you might be used to looking at a spreadsheet in Excel.
+
+```{r, eval = FALSE}
+View(small_df)
+```
+
+`str()` gives us the structure of the object x.
+
+```{r}
+str(small_df)
+```
+
+`dim()` gives us the dimensions of x.
+
+```{r}
+dim(small_df)
+```
+
+::: {.callout-important title="Note that when referring to a two-dimensional piece of data, R uses the syntax [rows, columns]"}
+:::
+
+Note, that if you use `dim()` on a vector (which has only one dimension), you will get something unexpected.
+
+```{r}
+# this doesn't work
+dim(temps_C)
+```
+
+For a vector, instead you should use the function `length()` to figure out how many elements are in the vector.
+
+```{r}
+# this does work
+length(temps_C)
+```
+
+## Performing operations on a data frame
+
+Now that we have our `small_df` we can try performing some operations on it.
+
+What if you wanted to take the log base 2 for every value in `small_df`? Just like we did for a vector, we can simply use the function `log2()` on `small_df`. Here I am assigning the output of this to a new data frame called `small_df_log2`.
+
+```{r}
+(small_df_log2 <- log2(small_df))
+```
+
+Remember, if you assign something to an object, but also want it to print at the same time, just surround the whole thing in parentheses.
+
+What if I wanted to take the log base 2 of only column `a`? There are a few ways I can do that.
+
+### By indexing
+
+I can use the square brackets `[]` to access certain parts of my data frame. Remember for data frames, the syntax is \[rows, columns\]. Let's try some example where we access by using indices (i.e., the position of the row, column, or the combination) to grab different parts of our data frame.
+
+```{r}
+# first row, second column
+small_df[1,2]
+
+# all rows, second column
+small_df[,2]
+
+# third row, all columns
+small_df[3,]
+```
+
+Is there any difference as to the types of objects we get when doing these different types of selection? We can use the function `str()` to see what type of R object we have in the different scenarios.
+
+```{r}
+# first row, second column
+str(small_df[1,2])
+
+# all rows, second column
+str(small_df[,2])
+
+# third row, all columns
+str(small_df[3,])
+```
+
+Back to the original idea - how would we take the data only from column `a` and log base 2 transform it, but leave the rest of `small_df` as it is?
+
+```{r}
+# first save our df with a new name
+# this is like doing a "save as" for an existing df
+small_df_log2_a <- small_df
+
+# log2 transform the first column, and then assign that back to the first column
+small_df_log2_a[,1] <- log2(small_df[,1])
+
+# check to see if it worked
+small_df_log2_a
+```
+
+Note that column `a` now is the object type "dbl" or numeric, instead of "int" or integer, since our log2 transformation has made our values no longer integers.
+
+### By name
+
+We can also index by providing column names - this is a nice approach since when going back to read code, a column name is often more informative than a column index/number. Note that in this case the column name `a` is in quotes since it is a character string.
+
+```{r}
+# all rows, the column "a"
+small_df[,"a"]
+```
+
+We can also use the dollar sign accessor `$` to extract an element in a data frame or list. In the case of a data frame, you are accessing a column (though you could be accessing something else if a different type of object). Note that when you type the name of a data frame, and then the \$, R will prompt you with some possible column names.
+
+![](img/autofill-dollarsign.png)
+
+```{r}
+small_df$a
+```
+
+By using this syntax, you are turning your data frame into a vector. This may or may not be what you want to do, so just be aware.
+
+::: {.callout-tip title="Accessing certain observations can also be performed using the `tidyverse` functions `select()` and `filter()`. If you don't know what I'm talking about simply ignore this, we will go over it in a future Code Club."}
+:::
+
+## Practice
+
+::: {.callout-note title="Create a new data frame and assign it to the variable df. Give is 5 columns and 3 rows, and add some numbers in each of the cells, it doesn't matter what they are." collapse="true"}
+```{r}
+# i'm just using different ways to creating strings of numbers 
+df <- data.frame(col_1 = c(2, 3, 4),
+                 col_2 = seq(from = 5, to = 10, by = 2.5),
+                 col_3 = 4:6,
+                 col_4 = rnorm(3, mean = 10, sd = 2),
+                 col_5 = rep(x = 6, times = 3))
+```
+
+```{r}
+df
+```
+:::
+
+::: {.callout-note title="Multiply all of column 1 by column 2." collapse="true"}
+Here are some different ways to do this.
+
+```{r}
+df$col_1 * df$col_2
+```
+
+```{r}
+df[,1] * df[,2]
+```
+
+```{r}
+df[,"col_1"] * df[,"col_2"]
+```
+:::
+
+::: {.callout-note title="Create a sixth column that is the result of the addition of columns 3 and 4." collapse="true"}
+
+```{r}
+col_6 <- df$col_3 + df$col_4
+
+new_df <- data.frame(df,
+                     col_6)
+```
+
+```{r}
+new_df
+```
+
+
+:::
+
+::: {.callout-note title="How does having NAs in a vector change the class of your vector?" collapse="true"}
+
+```{r}
+test_NA_1 <- c(1, 2, 3, 4, NA)
+
+class(test_NA_1)
+
+test_NA_2 <- c(1, 2, 3, 4, "NA")
+
+class(test_NA_2)
+```
+
+
+
+:::

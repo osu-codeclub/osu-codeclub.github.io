@@ -1,0 +1,214 @@
+---
+title: "Shiny 02: Intro to Shiny (cont.)"
+subtitle: Explore additional features in Shiny App.
+author: "Horacio Lopez-Nicora"
+date: "2023-11-06"
+categories: [shiny, quarto]
+title-block-banner: false
+image: img/shiny_logo.png
+df-print: kable
+code-fold: false
+---
+
+Welcome to our `shiny` app development class! Throughout this session, we will continue diving into the world of Shiny and explore its incredible potential for creating interactive web applications. Today we will use the function `reactiveVal`.
+
+## Shiny App to collect data.
+
+The `reactiveVal` function is utilized to create a "reactive value" object which has special capabilities for reactive programming. It serves as a variable that allows both reading and writing of values. Whenever the value is read from a `reactiveVal` object, the calling reactive expression becomes dependent on it. Similarly, when the value is altered, any reactives that were previously dependent on it are notified.
+
+Let's make a `shiny` app and see how this works!  
+
+```{r}
+#| eval: false
+
+# Install and call the following packages.
+library(shiny)
+library(DT)
+
+# Initialize an empty data frame to store the collected data
+collected_data <- data.frame(
+  Treatment = character(0),
+  PlotNumber = numeric(0),
+  StandCount = numeric(0),
+  PlantHeight = numeric(0),
+  Severity = numeric(0)
+)
+
+# Create a variable to store the selected rows
+selected_rows <- reactiveVal()
+
+# Define the UI
+ui <- fluidPage(
+  titlePanel("Soybean Field Data Collection"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("treatment", "Select Treatment:", c("T1", "T2", "T3")),
+      numericInput("plot", "Enter Plot Number:", value = 101, min = 101, max = 304),
+      numericInput("stand_count", "Enter Stand Count:", value = 0),
+      numericInput("plant_height", "Enter Plant Height (in cm):", value = 0),
+      numericInput("severity", "Enter Severity Rating:", value = 0),
+      actionButton("submit", "Submit Data"),
+      actionButton("delete", "Delete Selected Row"),
+      downloadButton("downloadData", "Download Data")
+    ),
+    
+    mainPanel(
+      DTOutput("dataTable")
+    )
+  )
+)
+
+# Define the server
+server <- function(input, output, session) {
+  collected_data_reactive <- reactiveVal(NULL)
+  
+  observeEvent(input$submit, {
+    new_entry <- data.frame(
+      Treatment = input$treatment,
+      PlotNumber = input$plot,
+      StandCount = input$stand_count,
+      PlantHeight = input$plant_height,
+      Severity = input$severity
+    )
+    # Append the new entry to the collected data
+    collected_data <- rbind(collected_data_reactive(), new_entry)
+    collected_data_reactive(collected_data)
+    
+    # Reset input fields
+    updateSelectInput(session, "treatment", selected = "T1")
+    updateNumericInput(session, "plot", value = 101)
+    updateNumericInput(session, "stand_count", value = 0)
+    updateNumericInput(session, "plant_height", value = 0)
+    updateNumericInput(session, "severity", value = 0)
+  })
+  
+  observeEvent(input$delete, {
+    # Get the selected row(s) and remove them from the collected data
+    selected_rows(input$dataTable_rows_selected)
+    if (length(selected_rows()) > 0) {
+      collected_data <- collected_data_reactive()
+      collected_data <- collected_data[-selected_rows(), ]
+      collected_data_reactive(collected_data)
+    }
+  })
+  
+  output$dataTable <- renderDT({
+    datatable(collected_data_reactive(), options = list(select = "multi"))
+  })
+  
+  # Download data as a CSV file
+  output$downloadData <- downloadHandler(
+    filename = function() {
+      "collected_data.csv"
+    },
+    content = function(file) {
+      write.csv(collected_data_reactive(), file)
+    }
+  )
+}
+
+# Run the app
+shinyApp(ui, server)
+
+```
+
+Now that we have successfully developed a `shiny` app for data collection, we can now proceed to working on another app designed for processing the collected data.
+
+## Shiny App to process collected data.
+
+We will use `shinyjs` and `ggstatsplot` to generate a `shiny` app that will use collected data to process and generate some preliminary data viz and descriptive stats. For this you will need to use `.csv` file **Aggressiveness_Zone.csv** that was sent to your email.  
+
+```{r}
+#| eval: false
+
+# Load required libraries
+library(shiny)
+library(ggplot2)
+library(dplyr)
+library(ggstatsplot)
+library(shinyjs)
+
+# Define UI
+ui <- fluidPage(
+  useShinyjs(),
+  titlePanel("Summary Statistics and Plots"),
+  
+  sidebarLayout(
+    sidebarPanel(
+      fileInput("file", "Choose CSV File"),
+      selectInput("plotType", "Select Plot Type",
+                  c("Box-violin Plot", "Box Plot", "Violin Plot")),
+      
+      # Add options to modify axis label and tick label size
+      sliderInput("axisLabelSize", "Axis Label Size", min = 8, max = 20, value = 12),
+      sliderInput("axisTickLabelSize", "Axis Tick Label Size", min = 8, max = 20, value = 10)
+    ),
+    
+    mainPanel(
+      tabsetPanel(
+        tabPanel("Summary Statistics", tableOutput("summaryTable")),
+        tabPanel("Plots", plotOutput("plot"))
+      )
+    )
+  )
+)
+
+# Define server
+server <- function(input, output) {
+  data <- reactive({
+    inFile <- input$file
+    if (is.null(inFile)) return(NULL)
+    read.csv(inFile$datapath)
+  })
+  
+  # Define plot_type in the global scope
+  plot_type <- reactive({
+    if (!is.null(data())) {
+      switch(input$plotType,
+             "Box-violin Plot" = {
+               ggstatsplot::ggbetweenstats(data(), x = AEZ, y = RF, messages = FALSE)
+             },
+             "Box Plot" = ggplot(data(), aes(x = AEZ, y = RF, fill = AEZ)) +
+               geom_boxplot() +
+               scale_fill_brewer(palette = "Set1") +
+               theme(axis.text.x = element_text(size = input$axisTickLabelSize),
+                     axis.text.y = element_text(size = input$axisTickLabelSize),
+                     axis.title.x = element_text(size = input$axisLabelSize),
+                     axis.title.y = element_text(size = input$axisLabelSize))
+             ,
+             "Violin Plot" = ggplot(data(), aes(x = AEZ, y = RF, fill = AEZ)) +
+               geom_violin() +
+               geom_point(aes(x = AEZ, y = RF), position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.75), size = 2) +
+               stat_summary(aes(group = AEZ), fun.data = mean_cl_boot, geom = "crossbar", width = 0.5) +
+               scale_fill_brewer(palette = "Set2") +
+               theme(axis.text.x = element_text(size = input$axisTickLabelSize),
+                     axis.text.y = element_text(size = input$axisTickLabelSize),
+                     axis.title.x = element_text(size = input$axisLabelSize),
+                     axis.title.y = element_text(size = input$axisLabelSize))
+      )
+    }
+  })
+  
+  output$summaryTable <- renderTable({
+    if (is.null(data())) return(NULL)
+    summary_stats <- data() %>%
+      group_by(AEZ) %>%
+      summarize(
+        Mean = mean(RF),
+        Standard_Deviation = sd(RF),
+        Standard_Error = sd(RF) / sqrt(n())
+      )
+    as.data.frame(summary_stats)
+  })
+  
+  output$plot <- renderPlot({
+    plot_type()
+  })
+}
+
+# Run the application
+shinyApp(ui, server)
+
+```
+
