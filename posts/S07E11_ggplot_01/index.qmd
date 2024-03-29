@@ -1,0 +1,533 @@
+---
+title: "Plotting 1: Intro to ggplot2"
+author:
+  - "Jelmer Poelstra"
+  - "Michael Broe"
+date: "2024-03-29"
+categories: [plotting, ggplot2]
+title-block-banner: false
+number-depth: 3
+image: img/featured.jpg
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+![](img/featured.jpg){fig-align="center" width="80%"}
+
+<br>
+
+## Introduction
+
+In this Code Club semester, we started with 5 sessions on R basics,
+followed by 5 sessions on tidyverse data wrangling basics.
+This session will be the first several on data visualization:
+creating plots with the ggplot2 package.
+
+#### Session Goals
+
+- Learn the philosophy of **coding** a graphic.
+- Learn the basic **template** of a **ggplot** graphic,
+  so you can reuse it for multiple chart types.
+- Learn how you can quickly add visual information to a graphic using
+  **aesthetics** and **layers**.
+
+<br>
+
+## The ggplot philosophy
+
+We have seen that in R,
+instead of manually manipulating data with a mouse as you do when editing Excel spreadsheets,
+we **code** the operations we want to perform, e.g. using dplyr verbs like `select()`.
+In a similar way, when performing visualization,
+instead of clicking on a chart type, we **code the chart** in R.
+
+And just as `dplyr` gives us efficient ways to manipulate data frames,
+**`ggplot2`** (which is also part of the tidyverse) gives us efficient ways
+to manipulate charts/plots/graphics^[We use these terms interchangeably.].
+The **gg** in **gg**plot2 stands for *grammar of graphics*, a systematic
+approach for designing statistical plots.
+The idea is to 'pull apart' various plots into their component pieces,
+which leads to the idea of **layers**.
+
+There's a learning curve to such a systematic approach, but there are many advantages:
+
+- First, *every* graphic shares a **common template**.
+  Once you understand this structure you can "say" a lot of different things. The
+  [ggplot cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf)
+  lists over 40 plot-types, but because ggplot is somewhat of a language in its own right,
+  users can create their own
+  [extensions](https://exts.ggplot2.tidyverse.org/gallery/)
+  that you can also utilize, adding many more.
+
+- Second, because plots are built up using **layers**,
+  you can gradually build up a graphic of increasing complexity;
+  or on the other hand, take someone else's code and simplify it by deleting layers.
+  We add layers with `+` very similar to how we've been piping operations with `|>`.
+  
+- Third, and this is a more general point that applies to a lot of R code:
+  because the graphic is now a piece of code, it is **reusable**.
+  Once you have a little library of graphs you've made, you can tweak them in various ways to make more.
+  You can also share your code with others, so they can apply the same approach to their data.
+
+<br>
+
+## Our data set
+
+![Illustration by [Allison Horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html)](img/palmerpenguins_hex.png){width=50%}
+
+We are going to use a fun 🐧 data set from the package
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/).
+We'll have to install that package first:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) is a
+package developed by Allison Horst, Alison Hill and Kristen Gorman,
+including a data set collected by Dr. Kristen Gorman at the Palmer Station Antarctica,
+as part of the Long Term Ecological Research Network. 
+It is a nice, relatively simple data set to practice data exploration and visualization in R.
+
+We'll now load the package, along with the tidyverse (which includes ggplot2):
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Once you've loaded that package you will have a data frame called `penguins` at
+your disposal --- let's take a look:
+
+```{r}
+penguins
+```
+
+```{r}
+# Or glimpse() for a sort of transposed view, so we can see all columns:
+glimpse(penguins)
+```
+
+<br>
+
+## A first ggplot2 example
+
+What is the correlation between bill-length and bill-width in these penguin species?
+Are longer bills also deeper? We can explore this with a **scatterplot**.
+
+![](img/culmen_depth.png){fig-align="center" width=70%}
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### A first plot attempt
+
+The first thing that ggplot2 plot needs from you is a data frame ---
+just like the rest of the tidyverse, ggplot2 is oriented towards data frames.
+Specifically, the first argument to the `ggplot()` function is a data frame:
+
+```{r}
+ggplot(data = penguins)
+```
+
+This is not very interesting! But it's notable that it is *something*.
+`ggplot()` has created a base plot layer.
+
+::: callout-important
+#### While the name of the *package* is **ggplot2**, the name of the *function* is just `ggplot()`.
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Our first complete plot
+
+Our initial plotting code was correct but incomplete. Next, we need to specify:
+
+- The **plot type** we want using one of many **"geom"** functions --- 
+  e.g., the geom for a scatterplot is `geom_point()`.
+
+- Which columns in our data frame to plot in which ways, such along the x and y axes.
+  In ggplot-speak, we are **mapping variables to aesthetics**,
+  with the _aesthetics_ being things like x and y coordinates as well shape and color.
+
+We can add both these pieces of information in a single additional layer.
+The operator to **add a layer** is **`+`**,
+which is the `ggplot` equivalent of the pipe symbol (`|>`),
+and best practice is to place it at the end of the line, just like the pipe. 
+Here then is our complete first plot:
+
+```{r}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm, y = bill_depth_mm))
+```
+
+To recap, the three required ggplot elements that we used are:
+
+- The **data**: here `penguins`
+- One or more **geoms**: here `geom_point()`
+- One or more **aesthetic mappings**: here `x = bill_length_mm, y = bill_depth_mm`
+
+Also, note that we provided three pieces of information from our data ---
+a data frame and two column names.
+After telling ggplot to use the `penguins` data frame,
+we can refer to columns in this data frame using their unquoted names.
+
+::: callout-warning
+#### The ggplot warning above
+ggplot warned us that 2 rows were removed because they
+"containing missing values or values outside the scale range":
+
+- "_Missing values_": If this were the case,
+  there must be `NA`s in the bill length and/or bill depth columns.
+
+- "_Outside the scale range_": This could happen if we manually set a "scale range",
+  e.g. restricting axis limits so some of the data can't be plotted.
+  We didn't do this and ggplot wouldn't automatically do it, so this doesn't apply.
+
+So, there are probably `NA`s --- let's look for those, starting with the bill length column:
+
+```{r}
+penguins |> filter(is.na(bill_length_mm))
+```
+
+We indeed get two rows, with `NA`s for all measurement,
+so those must have been the two rows ggplot was complaining about.
+:::
+
+As for the **relationship between bill length and bill depth** ---
+this is not very clear, but I guess if you squint your eyes,
+you can see local positive correlations?
+We'll explore this relationship in more detail below.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+<details><summary>
+Each point in the plot has a bill length and an associated bill depth.
+**How does ggplot know which bill lengths to associate with which bill depths?**
+_(Click for the answer)_</summary>
+<hr style="height:1pt; visibility:hidden;" />
+Each point comes from one row in the data frame:
+so ggplot assumes that the the bill length and bill depth
+_given in one row derive from the same observation_ (here: the same penguin).
+
+As such, to work with ggplot, your data frame needs to be in a "tidy" format
+(see our [Code Club from a couple weeks ago](../S07E09_tidy_04/index.qmd)).
+If you find yourself struggling to appropriately assign aesthetic mappings,
+you may have to pivot your data first, most often with a `pivot_longer()`.
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+Create a scatterplot comparing body mass and flipper length.
+Does it look like there is any correlation there?
+
+<details><summary>Hints (click here)</summary>
+Take another look at the `penguins` data frame to see which columns contain 
+body mass and flipper length.
+It's up to you which you assign to the x axis and the y axis.
+</details>
+
+<details><summary>Solution (click here)</summary>
+
+```{r, warning=FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = body_mass_g, y = flipper_length_mm))
+```
+</details>
+
+:::
+
+<br>
+
+## The power of aesthetics
+
+We saw above that the relationship between bill length and bill depth is not
+particularly clear, but that there *might* be some local patterns.
+Is it possible that these clusters correspond somehow to the three different penguin species:
+Adelie, Chinstrap, and Gentoo?
+That is, part of the problem with our original plot may be that we lumped the data
+from all three species together.
+
+We can explore this by **adding a third aesthetic**, `color`.
+Our current plot maps `bill_length_mm` to the `x` aesthetic,
+and `bill_depth_mm` to the `y` aesthetic ---
+now, we'll add a mapping of `species` to the `color` aesthetic:
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species))
+```
+
+Note that a legend is added automatically!
+It's much clearer now that, within each species, there does seem to be a positive
+correlation between bill length and depth.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+- Go back to your body mass/flipper plot from Exercise 1 and color points by species.
+
+- There are various aesthetics you can use for a categorical variable like species
+  (see the help for `geom_point()` --- type `?geom_point` to open the help page).
+  One of these aesthetics is `shape`: try this instead of `color` and see which you prefer.
+
+<details><summary>Solutions (click here)</summary>
+
+- Color point by species:
+
+  ```{r, warning=FALSE}
+  ggplot(data = penguins) +
+    geom_point(mapping = aes(x = body_mass_g,
+                             y = flipper_length_mm,
+                             color = species))
+  ```
+
+- Try the `shape` aesthetic instead of `color`:
+
+  ```{r, warning=FALSE}
+  ggplot(data = penguins) +
+    geom_point(mapping = aes(x = body_mass_g,
+                             y = flipper_length_mm,
+                             shape = species))
+  ```
+</details>
+
+:::
+
+<br>
+
+## Syntax variants
+
+#### Omit the argument names
+
+So far, we've been using verbose syntax for clarity, but we can shorten this a bit:
+instead of...
+
+```{r, eval=FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = body_mass_g, y = flipper_length_mm))
+```
+
+...we can omit the names of the arguments:
+
+```{r, eval=FALSE}
+ggplot(penguins) +
+  geom_point(aes(x = body_mass_g, y = flipper_length_mm))
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Pipe data into ggplot
+
+You might also prefer to pipe the data frame into ggplot:
+
+```{r, eval=FALSE}
+penguins |>
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm))
+```
+
+The above example _adds_ a line of code to say the same thing,
+but you might prefer this as it makes abundantly clear what your input data is.
+This style especially makes sense when you edit a dataframe prior to plotting it:
+
+```{r, warning = FALSE}
+# Make a plot only for the Adelie Penguin:
+penguins |>
+  filter(species == "Adelie") |> 
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm))
+```
+
+::: callout-warning
+#### When you pipe data into ggplot, remember to switch between `|>` and `+`!
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Local vs. global aesthetics
+
+So far, we've provided our aesthetic mappings (`aes(...)`) inside the geom function.
+However, it is also possible to do this inside the initial `ggplot()` function call.
+Compare these two:
+
+```{r, eval=FALSE}
+# Provide the aesthetic mappings inside geom_point():
+penguins |> 
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm))
+
+# Provide the aesthetic mappings inside ggplot():
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point()
+```
+
+In the above example, those two variants are _functionally equivalent_.
+However, it is possible to add **multiple geoms** in ggplot ---
+and once you do that, the following becomes important:
+
+- Mappings provided to a specific geom are "**local**": they do not carry over to other geoms.
+- Mappings provided to `ggplot()` are "**global**": they apply to all geoms in the plot.
+
+Therefore, if you have multiple geoms,
+it most often makes sense to put the aesthetics inside `ggplot()`,
+but there are exceptions ---
+and it is also possible to specify aesthetics in multiple places.
+More about this in the next section.
+
+<br>
+
+## Adding geoms, and `geom_smooth()`
+
+In the scatterplot for bill length vs. depth, there wasn't a clear _overall_
+(across-species) relationship.
+We can make this even more visually apparent by fitting a line to the data ---
+**overlaying another geom** in the same plot:
+
+```{r, error=TRUE}
+penguins |> 
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_smooth()
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+<details><summary>Uh oh! What went wrong here? Can you think of two different ways to solve this? _(Click for the answer)_</summary>
+
+Because we provided **local** aesthetics to `geom_point()` only,
+`geom_smooth()` has not been informed about any aesthetics, as the error message suggests.
+We can resolve this either by:
+
+- Providing the same local aesthetics to both geom functions.
+- Providing global aesthetics (i.e. to the `ggplot()` function). This is the better option.
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+In our next attempt, we'll provide the aesthetics globally,
+that is, we specify them inside the `ggplot()` function:
+
+```{r, warning=FALSE}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_smooth()
+```
+
+::: callout-warning
+#### Fitted lines
+By default, the `geom_smooth()` function doesn't use classical linear regression
+to fit the data.
+Instead it uses **lo**cally **e**stimated **s**catterplot **s**moothing:
+[loess](https://en.m.wikipedia.org/wiki/Local_regression).
+The resulting lines snake around and trying to find local best fits to the data.
+You can request different fit algorithms with the `geom_smooth()`'s `method` argument.
+See `?geom_smooth` for details.
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+**A)** Revisit your flipper/body_mass plot once again, and fit lines to each species. 
+
+<details><summary>Solution (click here)</summary>
+```{r, warning=FALSE}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  geom_smooth()
+```
+</details>
+
+-----
+
+**B)** Perhaps you think there is too much going on in this plot,
+with the scatterplot data making the fitted line less clear.
+Modify your plot so it just shows the fitted line and not the points.
+
+<details><summary>Solution (click here)</summary>
+
+This is as easy a removing the `geom_point()` line:
+
+```{r, warning=FALSE}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_smooth()
+```
+</details>
+
+-----
+
+**C) (Bonus)**
+
+1. Pipe your dataset into `filter()` to keep only the `Gentoo` data.
+2. Pipe that data into `ggplot()` to create a scatterplot with a smoothed-line overlay
+   for just that one species, colored by `sex`.
+3. In a next attempt, can you get rid of the points for which the sex is unknown (`NA`)?
+
+<details><summary>Solution (click here)</summary>
+
+1. and 2.:
+
+```{r, warning=FALSE}
+penguins |> 
+  filter(species == "Gentoo") |>
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = sex)) +
+  geom_point() + 
+  geom_smooth()
+```
+
+3. --- we add `!is.na(sex)` to the `filter()` call to remove penguins with unknown sex:
+
+```{r, warning=FALSE}
+penguins |> 
+  filter(species == "Gentoo", !is.na(sex)) |>
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = sex)) +
+  geom_point() + 
+  geom_smooth()
+```
+</details>
+
+-----
+
+**D) (Bonus)** Modify your previous Gentoo penguin plot such that:
+
+- You have a single fitted line for penguins of both sexes
+- Points are still colored by sex
+
+<details><summary>Solution (click here)</summary>
+This will require you to some aesthetics _globally_ (`x` and `y`) and the `color`
+aesthetic _locally_, just for `geom_point()`:
+
+```{r, warning=FALSE}
+penguins |> 
+  filter(species == "Gentoo", !is.na(sex)) |>
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm)) +
+  geom_point(aes(color = sex)) + 
+  geom_smooth()
+```
+</details>
+:::
+
+<br>
