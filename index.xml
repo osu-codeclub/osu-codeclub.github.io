@@ -48,9 +48,9 @@
 <p>And just as <code>dplyr</code> gives us efficient ways to manipulate data frames, <strong><code>ggplot2</code></strong> (which is also part of the tidyverse) gives us efficient ways to manipulate charts/plots/graphics<sup>1</sup>. The <strong>gg</strong> in <strong>gg</strong>plot2 stands for <em>grammar of graphics</em>, a systematic approach for designing statistical plots. The idea is to ‘pull apart’ various plots into their component pieces, which leads to the idea of <strong>layers</strong>.</p>
 <p>There’s a learning curve to such a systematic approach, but there are many advantages:</p>
 <ul>
-<li><p>First, <em>every</em> graphic shares a <strong>common template</strong>. Once you understand this structure you can “say” a lot of different things. The <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot cheat sheet</a> lists over 40 plot-types, but because this is somewhat of a language in its own right, users can create their own <a href="https://exts.ggplot2.tidyverse.org/gallery/">extensions</a> that you can also utilize, adding many more.)</p></li>
-<li><p>Second, because the graphic is now a piece of code, it is <strong>reusable</strong>. Once you have a little library of graphs you’ve made, you can tweak them in various ways to make more. You can also share your code with others, so they can apply the same approach to their data.</p></li>
-<li><p>Third, because plots are built up using <strong>layers</strong>, you can gradually build up a graphic of increasing complexity; or on the other hand, take someone else’s code and simplify it by deleting layers. We add layers with <code>+</code> very similar to how we’ve been piping operations with <code>|&gt;</code>.</p></li>
+<li><p>First, <em>every</em> graphic shares a <strong>common template</strong>. Once you understand this structure you can “say” a lot of different things. The <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">ggplot cheat sheet</a> lists over 40 plot-types, but because ggplot is somewhat of a language in its own right, users can create their own <a href="https://exts.ggplot2.tidyverse.org/gallery/">extensions</a> that you can also utilize, adding many more.</p></li>
+<li><p>Second, because plots are built up using <strong>layers</strong>, you can gradually build up a graphic of increasing complexity; or on the other hand, take someone else’s code and simplify it by deleting layers. We add layers with <code>+</code> very similar to how we’ve been piping operations with <code>|&gt;</code>.</p></li>
+<li><p>Third, and this is a more general point that applies to a lot of R code: because the graphic is now a piece of code, it is <strong>reusable</strong>. Once you have a little library of graphs you’ve made, you can tweak them in various ways to make more. You can also share your code with others, so they can apply the same approach to their data.</p></li>
 </ul>
 <p><br></p>
 </section>
@@ -222,7 +222,7 @@ font-style: inherit;">y =</span> bill_depth_mm))</span></code></pre></div>
 <li>One or more <strong>geoms</strong>: here <code>geom_point()</code></li>
 <li>One or more <strong>aesthetic mappings</strong>: here <code>x = bill_length_mm, y = bill_depth_mm</code></li>
 </ul>
-<p>We provided three pieces of information from our data — a data frame and two column names. After telling ggplot to use the <code>penguins</code> data frame, we can refer to columns in this data frame using unquoted names.</p>
+<p>Also, note that we provided three pieces of information from our data — a data frame and two column names. After telling ggplot to use the <code>penguins</code> data frame, we can refer to columns in this data frame using their unquoted names.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -236,7 +236,7 @@ The ggplot warning above
 <p>ggplot warned us that 2 rows were removed because they “containing missing values or values outside the scale range”:</p>
 <ul>
 <li><p>“<em>Missing values</em>”: If this were the case, there must be <code>NA</code>s in the bill length and/or bill depth columns.</p></li>
-<li><p>“<em>Outside the scale range</em>”: This could happen if we manually set a “scale range”, e.g.&nbsp;restricting the axis limits such that some of the data could no longer be plotted. We didn’t do this and ggplot wouldn’t automatically do it, so this doesn’t apply.</p></li>
+<li><p>“<em>Outside the scale range</em>”: This could happen if we manually set a “scale range”, e.g.&nbsp;restricting axis limits so some of the data can’t be plotted. We didn’t do this and ggplot wouldn’t automatically do it, so this doesn’t apply.</p></li>
 </ul>
 <p>So, there are probably <code>NA</code>s — let’s look for those, starting with the bill length column:</p>
 <div class="cell" data-layout-align="center">
@@ -256,7 +256,7 @@ font-style: inherit;">is.na</span>(bill_length_mm))</span></code></pre></div>
 # ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Those are indeed the two rows that ggplot was complaining about.</p>
+<p>We indeed get two rows, with <code>NA</code>s for all measurement, so those must have been the two rows ggplot was complaining about.</p>
 </div>
 </div>
 <p>As for the <strong>relationship between bill length and bill depth</strong> — this is not very clear, but I guess if you squint your eyes, you can see local positive correlations? We’ll explore this relationship in more detail below.</p>
@@ -267,14 +267,13 @@ Each point in the plot has a bill length and an associated bill depth. <strong>H
 </summary>
 <hr style="height:1pt; visibility:hidden;">
 <p>Each point comes from one row in the data frame: so ggplot assumes that the the bill length and bill depth <em>given in one row derive from the same observation</em> (here: the same penguin).</p>
-As such, to work with ggplot, your data frame needs to be in a “tidy” format (see our <a href="../../posts/S07E09_tidy_04/index.html">Code Club from a couple weeks ago</a>). If your data frame is in a wide format and you find yourself struggling to appropriately assign aesthetic mapping, you may have to pivot first, most often with a <code>pivot_longer()</code>.
-<hr style="height:1pt; visibility:hidden;">
+As such, to work with ggplot, your data frame needs to be in a “tidy” format (see our <a href="../../posts/S07E09_tidy_04/index.html">Code Club from a couple weeks ago</a>). If you find yourself struggling to appropriately assign aesthetic mappings, you may have to pivot your data first, most often with a <code>pivot_longer()</code>.
 </details>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="exercise-1" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
-<p>Create a scatterplot comparing body mass and flipper length. Does it look like there is any correlation?</p>
+<p>Create a scatterplot comparing body mass and flipper length. Does it look like there is any correlation there?</p>
 <details>
 <summary>
 Hints (click here)
@@ -318,8 +317,8 @@ font-style: inherit;">y =</span> flipper_length_mm))</span></code></pre></div>
 </section>
 <section id="the-power-of-aesthetics" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="the-power-of-aesthetics"><span class="header-section-number">5</span> The power of aesthetics</h2>
-<p>We saw above that the relationship between bill length and bill depth is not particularly clear, but that there <em>might</em> be some local patterns. Is it possible that these clusters correspond somehow to the three different penguin species: Adelie, Chinstrap, and Gentoo? Part of the problem with our original plot may be that we are lumping all the data from all three species together.</p>
-<p>We can quickly explore this by <strong>adding an extra aesthetic</strong>, <code>color</code>. Our current plot maps <code>bill_length_mm</code> to the <code>x</code> aesthetic, and <code>bill_depth_mm</code> to the <code>y</code> aesthetic — now, we’ll add <code>species</code> and map it to the <code>color</code> aesthetic:</p>
+<p>We saw above that the relationship between bill length and bill depth is not particularly clear, but that there <em>might</em> be some local patterns. Is it possible that these clusters correspond somehow to the three different penguin species: Adelie, Chinstrap, and Gentoo? That is, part of the problem with our original plot may be that we lumped the data from all three species together.</p>
+<p>We can explore this by <strong>adding a third aesthetic</strong>, <code>color</code>. Our current plot maps <code>bill_length_mm</code> to the <code>x</code> aesthetic, and <code>bill_depth_mm</code> to the <code>y</code> aesthetic — now, we’ll add a mapping of <code>species</code> to the <code>color</code> aesthetic:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -355,12 +354,16 @@ font-style: inherit;">color =</span> species))</span></code></pre></div>
 <hr style="height:1pt; visibility:hidden;">
 <section id="exercise-2" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
-<p>Go back to your body mass/flipper plot from Exercise 1 and color points by species.</p>
-<p>There are various aesthetics you can use for a categorical variable like <code>species</code> (see the help for <code>geom_point()</code> — type <code>?geom_point</code> to open the help page). One is <code>shape</code>: try this instead of <code>color</code> and see which you prefer.</p>
+<ul>
+<li><p>Go back to your body mass/flipper plot from Exercise 1 and color points by species.</p></li>
+<li><p>There are various aesthetics you can use for a categorical variable like species (see the help for <code>geom_point()</code> — type <code>?geom_point</code> to open the help page). One of these aesthetics is <code>shape</code>: try this instead of <code>color</code> and see which you prefer.</p></li>
+</ul>
 <details>
 <summary>
 Solutions (click here)
 </summary>
+<ul>
+<li><p>Color point by species:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -391,7 +394,8 @@ font-style: inherit;">color =</span> species))</span></code></pre></div>
 </figure>
 </div>
 </div>
-</div>
+</div></li>
+<li><p>Try the <code>shape</code> aesthetic instead of <code>color</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -422,7 +426,8 @@ font-style: inherit;">shape =</span> species))</span></code></pre></div>
 </figure>
 </div>
 </div>
-</div>
+</div></li>
+</ul>
 </details>
 </section>
 <p><br></p>
@@ -653,7 +658,7 @@ Uh oh! What went wrong here? Can you think of two different ways to solve this? 
 </ul>
 </details>
 <hr style="height:1pt; visibility:hidden;">
-<p>In our next attempt, we’ll provide the aesthetics globally, so in the <code>ggplot()</code> function:</p>
+<p>In our next attempt, we’ll provide the aesthetics globally, that is, we specify them inside the <code>ggplot()</code> function:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -700,7 +705,7 @@ Fitted lines
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>By default, the <code>geom_smooth()</code> function doesn’t use classical linear regression to fit the data. Instead it uses <strong>lo</strong>cally <strong>e</strong>stimated <strong>s</strong>catterplot <strong>s</strong>moothing: <a href="https://en.m.wikipedia.org/wiki/Local_regression">loess</a>. The resulting lines snakes around and tries to find a more local best fit to the data. You can request different fit algorithms with the <code>geom_smooth()</code>’s <code>method</code> argument. See <code>?geom_smooth</code> for details.</p>
+<p>By default, the <code>geom_smooth()</code> function doesn’t use classical linear regression to fit the data. Instead it uses <strong>lo</strong>cally <strong>e</strong>stimated <strong>s</strong>catterplot <strong>s</strong>moothing: <a href="https://en.m.wikipedia.org/wiki/Local_regression">loess</a>. The resulting lines snake around and trying to find local best fits to the data. You can request different fit algorithms with the <code>geom_smooth()</code>’s <code>method</code> argument. See <code>?geom_smooth</code> for details.</p>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -754,6 +759,7 @@ font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
 <summary>
 Solution (click here)
 </summary>
+<p>This is as easy a removing the <code>geom_point()</code> line:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -797,6 +803,9 @@ font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
 <summary>
 Solution (click here)
 </summary>
+<ol type="1">
+<li>and 2.:</li>
+</ol>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -842,6 +851,9 @@ font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
 </div>
 </div>
 </div>
+<ol start="3" type="1">
+<li>— we add <code>!is.na(sex)</code> to the <code>filter()</code> call to remove penguins with unknown sex:</li>
+</ol>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -902,6 +914,7 @@ font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
 <summary>
 Solution (click here)
 </summary>
+<p>This will require you to some aesthetics <em>globally</em> (<code>x</code> and <code>y</code>) and the <code>color</code> aesthetic <em>locally</em>, just for <code>geom_point()</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -955,6 +968,7 @@ font-style: inherit;">geom_smooth</span>()</span></code></pre></div>
 </div>
 </details>
 </section>
+<p><br></p>
 
 
 </section>
