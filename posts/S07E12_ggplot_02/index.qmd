@@ -33,7 +33,7 @@ Last week's session marked the beginning of our data visualization journey with 
 
 #### Session Goals
 
--   Let's pick up on **aesthetics** and learn some more about it.
+-   Let's pick up on **aesthetics** and learn some more about it. Furthermore, let's introduce the  [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) function.
 -   Learn the basic of other **geom_boxplot()**, **geom_violin()**, **stat_summary**.
 
 <br>
@@ -88,6 +88,23 @@ p <- ggplot(data = penguins) +
 p
 ```
 
+::: callout-warning
+#### Please note that we begin by using our data set to create a **plot object** with the function `ggplot()`. We then assign this object to the variable **p**. From this point forward, we can add layers by using the `+` operator.
+:::
+
+### What if we want to customize our plot?
+
+We can do this using [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html). There are several options of themes which control all non-data display. Use `theme()` if you just need to tweak the display of an existing theme.
+
+For this session, let's utilize `theme_bw()`. 
+```{r, warning = FALSE}
+p <- ggplot(data = penguins) + theme_bw() +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species))
+p
+```
+
 ### What if we want to change colors?
 
 We can manually change colors.
@@ -110,7 +127,9 @@ By using the `colors()` function, you can explore numerous color options that ar
 
 There is a wide variety of `R` color packages specifically designed to offer a range of color palette options, each evoking a distinct mood. For instance, the `RColorBrewer` package provides a choice of 35 palettes!
 
-Let's install `RColorBrewer` and select one from the various palettes available.
+*At this point, you have become an expert in the fundamentals of `R`. Installing packages and loading them with `library()` is now second nature to you.* 
+
+Now, we can install `RColorBrewer` and choose one from the many palettes it offers.
 
 ```{r, warning = FALSE}
 RColorBrewer::display.brewer.all(type = "qual")
@@ -125,12 +144,16 @@ p +
 scale_color_brewer(palette = "Set1")
 ```
 
-In addition, the `RColorBrewer` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
+In addition, the `ggplot2` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
 
 ```{r, warning = FALSE}
 p + 
 scale_color_viridis_d()
 ```
+
+::: callout-warning
+#### Please note that when using `scale_color_viridis()` to color data points, we need to specify whether our variable is continuous [using `scale_color_viridis_c()`] or discrete [using `scale_color_viridis_d()`]. In this case, the variable **species** is discrete.
+:::
 
 <br>
 
@@ -202,9 +225,9 @@ How can we incorporate transparency into the data points in our graph? One way t
 
 ```{r, warning = FALSE}
 ggplot(data = penguins) +
-  geom_point(alpha = 0.5, mapping = aes(x = bill_length_mm,
-                           y = bill_depth_mm,
-                           color = species))
+  geom_point(alpha = 0.5, mapping = aes(x = bill_length_mm, 
+                                        y = bill_depth_mm, 
+                                        color = species))
 ```
 
 Here, we present an example of how to utilize the `alpha` function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.
@@ -335,10 +358,13 @@ ggplot(data = penguins,
 
 ```{r, warning = FALSE}
 penguins |> 
-  filter(species == "Gentoo", !is.na(sex)) |>
-  ggplot(aes(x = sex, y = bill_length_mm, color = sex)) +
-  geom_boxplot() + scale_color_brewer(palette = "Dark2") + stat_summary(fun = "mean", color = "red3") + 
-  geom_jitter(alpha = .5) + geom_violin(alpha = .1)
+  filter(species == "Gentoo", !is.na(sex)) |> 
+  ggplot(aes(x = sex, y = bill_length_mm, color = sex)) + 
+  geom_boxplot() + 
+  scale_color_brewer(palette = "Dark2") + 
+  stat_summary(fun = "mean", color = "red3") + 
+  geom_jitter(alpha = .5) + 
+  geom_violin(alpha = .1)
 ```
 
 </details>
