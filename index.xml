@@ -37,7 +37,7 @@
 <section id="session-goals" class="level4">
 <h4 class="anchored" data-anchor-id="session-goals">Session Goals</h4>
 <ul>
-<li>Let’s pick up on <strong>aesthetics</strong> and learn some more about it.</li>
+<li>Let’s pick up on <strong>aesthetics</strong> and learn some more about it. Furthermore, let’s introduce the <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme()</code></a> function.</li>
 <li>Learn the basic of other <strong>geom_boxplot()</strong>, <strong>geom_violin()</strong>, <strong>stat_summary</strong>.</li>
 </ul>
 <p><br></p>
@@ -170,33 +170,89 @@ font-style: inherit;">color =</span> species))</span>
 </div>
 </div>
 </div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Please note that we begin by using our data set to create a <strong>plot object</strong> with the function <code>ggplot()</code>. We then assign this object to the variable <strong>p</strong>. From this point forward, we can add layers by using the <code>+</code> operator.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
 </section>
-<section id="what-if-we-want-to-change-colors" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="what-if-we-want-to-change-colors"><span class="header-section-number">3.2</span> What if we want to change colors?</h3>
+<section id="what-if-we-want-to-customize-our-plot" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="what-if-we-want-to-customize-our-plot"><span class="header-section-number">3.2</span> What if we want to customize our plot?</h3>
+<p>We can do this using <a href="https://ggplot2.tidyverse.org/reference/ggtheme.html"><code>theme()</code></a>. There are several options of themes which control all non-data display. Use <code>theme()</code> if you just need to tweak the display of an existing theme.</p>
+<p>For this session, let’s utilize <code>theme_bw()</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">p <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm,</span>
+<span id="cb9-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm,</span>
+<span id="cb9-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species))</span>
+<span id="cb9-5">p</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-if-we-want-to-change-colors" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="what-if-we-want-to-change-colors"><span class="header-section-number">3.3</span> What if we want to change colors?</h3>
 <p>We can manually change colors.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Manual color change</span></span>
-<span id="cb9-2"><span class="co" style="color: #5E5E5E;
+<span id="cb10-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># By using scale_colour_manual(),</span></span>
-<span id="cb9-3"><span class="co" style="color: #5E5E5E;
+<span id="cb10-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># we can specify the exact colours we want to use</span></span>
-<span id="cb9-4">p <span class="sc" style="color: #5E5E5E;
+<span id="cb10-4">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb9-5"><span class="fu" style="color: #4758AB;
+<span id="cb10-5"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_manual</span>(</span>
-<span id="cb9-6">  <span class="co" style="color: #5E5E5E;
+<span id="cb10-6">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Note that the color order will correspond to</span></span>
-<span id="cb9-7">  <span class="co" style="color: #5E5E5E;
+<span id="cb10-7">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># the order of the species given in the legend</span></span>
-<span id="cb9-8">  <span class="at" style="color: #657422;
+<span id="cb10-8">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -210,19 +266,20 @@ font-style: inherit;">"skyblue"</span>))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>By using the <code>colors()</code> function, you can explore numerous color options that are available for selection.</p>
 </section>
-<section id="using-a-different-color-palette-rcolorbrewer" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="using-a-different-color-palette-rcolorbrewer"><span class="header-section-number">3.3</span> Using a different color palette: <code>RColorBrewer</code></h3>
+<section id="using-a-different-color-palette-rcolorbrewer" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="using-a-different-color-palette-rcolorbrewer"><span class="header-section-number">3.4</span> Using a different color palette: <code>RColorBrewer</code></h3>
 <p>There is a wide variety of <code>R</code> color packages specifically designed to offer a range of color palette options, each evoking a distinct mood. For instance, the <code>RColorBrewer</code> package provides a choice of 35 palettes!</p>
-<p>Let’s install <code>RColorBrewer</code> and select one from the various palettes available.</p>
+<p><em>At this point, you have become an expert in the fundamentals of <code>R</code>. Installing packages and loading them with <code>library()</code> is now second nature to you.</em></p>
+<p>Now, we can install <code>RColorBrewer</code> and choose one from the many palettes it offers.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">RColorBrewer<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">RColorBrewer<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -234,7 +291,7 @@ font-style: inherit;">"qual"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -242,10 +299,10 @@ font-style: inherit;">"qual"</span>)</span></code></pre></div>
 <p>Above, you can observe the organization of the colors into distinct groups based on their sequential, diverging, or mixed characteristics. It is important to note that varied palettes are advantageous for varying data types.</p>
 <p>Let’s use these palettes with our original penguin graph. Here is an example demonstrating how the <strong>Set1</strong> palette is utilized to group data points with the function <code>scale_color_brewer()</code> and the palette argument.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb11-2"><span class="fu" style="color: #4758AB;
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -255,25 +312,38 @@ font-style: inherit;">"Set1"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>In addition, the <code>RColorBrewer</code> package offers other functions. Two such functions are <code>scale_color_viridis()</code> and <code>scale_color_grey()</code>, which allows us to convert colors to <strong>grayscale</strong> without sacrificing information. This is especially important for individuals with colorblindness.</p>
+<p>In addition, the <code>ggplot2</code> package offers other functions. Two such functions are <code>scale_color_viridis()</code> and <code>scale_color_grey()</code>, which allows us to convert colors to <strong>grayscale</strong> without sacrificing information. This is especially important for individuals with colorblindness.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb12-2"><span class="fu" style="color: #4758AB;
+<span id="cb13-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_viridis_d</span>()</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Please note that when using <code>scale_color_viridis()</code> to color data points, we need to specify whether our variable is continuous [using <code>scale_color_viridis_c()</code>] or discrete [using <code>scale_color_viridis_d()</code>]. In this case, the variable <strong>species</strong> is discrete.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
 </div>
 </div>
 <p><br></p>
@@ -294,16 +364,16 @@ Hints (click here)
 Solutions (click here)
 </summary>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb13-2"><span class="fu" style="color: #4758AB;
+<span id="cb14-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_grey</span>()</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -312,26 +382,26 @@ font-style: inherit;">scale_color_grey</span>()</span></code></pre></div>
 </section>
 <p><br></p>
 </section>
-<section id="colorblind-friendly-palettes" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="colorblind-friendly-palettes"><span class="header-section-number">3.4</span> Colorblind-friendly palettes</h3>
+<section id="colorblind-friendly-palettes" class="level3" data-number="3.5">
+<h3 data-number="3.5" class="anchored" data-anchor-id="colorblind-friendly-palettes"><span class="header-section-number">3.5</span> Colorblind-friendly palettes</h3>
 <p>Have you ever contemplated how your figure might appear when viewed by individuals with different types of color blindness? We can utilize the <a href="https://cran.r-project.org/web/packages/colorBlindness/index.html"><code>colorBlindness</code></a> package to explore this aspect.</p>
 <p>Let’s install the <code>colorBlindness</code> package and load it.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Let's install the colorBlindness package</span></span>
-<span id="cb14-2"><span class="fu" style="color: #4758AB;
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"colorBlindness"</span>)</span>
-<span id="cb14-3"><span class="fu" style="color: #4758AB;
+<span id="cb15-3"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(colorBlindness)</span></code></pre></div>
 </div>
 <p>To begin with, let’s test out various colors using the <code>cvdPlot()</code> function. This will demonstrate how our current plot appears to individuals with different types of color blindness.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">colorBlindness<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">colorBlindness<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -339,7 +409,7 @@ font-style: inherit;">cvdPlot</span>(p)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -347,61 +417,22 @@ font-style: inherit;">cvdPlot</span>(p)</span></code></pre></div>
 <p>Our current color palette is not accessible, as can be observed. However, by using <code>viridis</code> palettes, we can ensure that our plots consistently convey the same information, regardless of the audience.</p>
 <p>Let’s use the same <code>viridis</code> palette we used above to make our plot more accessible.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">p_viridis <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">p_viridis <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb16-2"><span class="fu" style="color: #4758AB;
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_viridis_d</span>()</span></code></pre></div>
 </div>
 <p>Were we successful? Let’s use <code>cvdPlot()</code> to check again.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">colorBlindness<span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">colorBlindness<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">cvdPlot</span>(p_viridis)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="providing-transparency-with-alpha" class="level3" data-number="3.5">
-<h3 data-number="3.5" class="anchored" data-anchor-id="providing-transparency-with-alpha"><span class="header-section-number">3.5</span> Providing transparency with <code>alpha</code></h3>
-<p>How can we incorporate transparency into the data points in our graph? One way to achieve this is by utilizing the <code>alpha</code> feature.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb18-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> bill_length_mm,</span>
-<span id="cb18-3">                           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> bill_depth_mm,</span>
-<span id="cb18-4">                           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> species))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -410,7 +441,10 @@ font-style: inherit;">color =</span> species))</span></code></pre></div>
 </div>
 </div>
 </div>
-<p>Here, we present an example of how to utilize the <code>alpha</code> function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.</p>
+</section>
+<section id="providing-transparency-with-alpha" class="level3" data-number="3.6">
+<h3 data-number="3.6" class="anchored" data-anchor-id="providing-transparency-with-alpha"><span class="header-section-number">3.6</span> Providing transparency with <code>alpha</code></h3>
+<p>How can we incorporate transparency into the data points in our graph? One way to achieve this is by utilizing the <code>alpha</code> feature.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -423,20 +457,21 @@ font-style: inherit;">+</span></span>
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>, <span class="at" style="color: #657422;
+background-color: null;
 font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">x =</span> bill_length_mm,</span>
-<span id="cb19-3">                           <span class="at" style="color: #657422;
+font-style: inherit;">x =</span> bill_length_mm, </span>
+<span id="cb19-3">                                        <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">y =</span> bill_depth_mm,</span>
-<span id="cb19-4">                           <span class="at" style="color: #657422;
+font-style: inherit;">y =</span> bill_depth_mm, </span>
+<span id="cb19-4">                                        <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">color =</span> species,</span>
-<span id="cb19-5">                           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> flipper_length_mm))</span></code></pre></div>
+font-style: inherit;">color =</span> species))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -445,22 +480,7 @@ font-style: inherit;">alpha =</span> flipper_length_mm))</span></code></pre></di
 </div>
 </div>
 </div>
-<section id="fa-user-edit-exercise-2" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
-<ul>
-<li><p>We like the graph we produced above. We want, however, to also display <code>body_mass_g</code>.</p></li>
-<li><p>How can we add this additional variable to our graph?</p></li>
-</ul>
-<details>
-<summary>
-Hints (click here)
-</summary>
-<p>We can use the <code>size</code> function within <code>aes()</code>.</p>
-</details>
-<details>
-<summary>
-Solutions (click here)
-</summary>
+<p>Here, we present an example of how to utilize the <code>alpha</code> function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -486,14 +506,64 @@ background-color: null;
 font-style: inherit;">color =</span> species,</span>
 <span id="cb20-5">                           <span class="at" style="color: #657422;
 background-color: null;
+font-style: inherit;">alpha =</span> flipper_length_mm))</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="fa-user-edit-exercise-2" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
+<ul>
+<li><p>We like the graph we produced above. We want, however, to also display <code>body_mass_g</code>.</p></li>
+<li><p>How can we add this additional variable to our graph?</p></li>
+</ul>
+<details>
+<summary>
+Hints (click here)
+</summary>
+<p>We can use the <code>size</code> function within <code>aes()</code>.</p>
+</details>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm,</span>
+<span id="cb21-3">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm,</span>
+<span id="cb21-4">                           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species,</span>
+<span id="cb21-5">                           <span class="at" style="color: #657422;
+background-color: null;
 font-style: inherit;">alpha =</span> flipper_length_mm,</span>
-<span id="cb20-6">                           <span class="at" style="color: #657422;
+<span id="cb21-6">                           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">size =</span> body_mass_g))</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -514,33 +584,33 @@ font-style: inherit;">size =</span> body_mass_g))</span></code></pre></div>
 </div>
 <p>Let’s use <code>geom_boxplot</code> to explore the <strong>bill_length_mm</strong> for the penguien species.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> penguins, </span>
-<span id="cb21-2">       <span class="fu" style="color: #4758AB;
+<span id="cb22-2">       <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> species, </span>
-<span id="cb21-3">           <span class="at" style="color: #657422;
+<span id="cb22-3">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> bill_length_mm,</span>
-<span id="cb21-4">           <span class="at" style="color: #657422;
+<span id="cb22-4">           <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># specify species as a grouping variable</span></span>
-<span id="cb21-5">  <span class="fu" style="color: #4758AB;
+<span id="cb22-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() </span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -572,80 +642,6 @@ Hints (click here)
 Solutions (click here)
 </summary>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> penguins, </span>
-<span id="cb22-2">       <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> species, </span>
-<span id="cb22-3">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> bill_length_mm,</span>
-<span id="cb22-4">           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># specify species as a grouping variable</span></span>
-<span id="cb22-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_boxplot</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb22-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb22-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mean"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"red3"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb22-8">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) </span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-<p><br></p>
-</section>
-<section id="violin-plot-geom_violin" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="violin-plot-geom_violin"><span class="header-section-number">5</span> Violin plot: <code>geom_violin()</code></h2>
-<p>Similar to boxplots, violin plots visualize the distribution of a numerical variable for one or multiple groups. However, the shape of a violin graphically represents the distribution of data points that is not easily visible in a boxplot’s summary, leading to a more precise representation of the data (<a href="https://www.data-to-viz.com/graph/violin.html">Data-to-Viz</a>).</p>
-<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
@@ -668,7 +664,7 @@ background-color: null;
 font-style: inherit;"># specify species as a grouping variable</span></span>
 <span id="cb23-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
+font-style: inherit;">geom_boxplot</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
@@ -712,6 +708,80 @@ font-style: inherit;">5</span>) </span></code></pre></div>
 </div>
 </div>
 </div>
+</details>
+</section>
+<p><br></p>
+</section>
+<section id="violin-plot-geom_violin" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="violin-plot-geom_violin"><span class="header-section-number">5</span> Violin plot: <code>geom_violin()</code></h2>
+<p>Similar to boxplots, violin plots visualize the distribution of a numerical variable for one or multiple groups. However, the shape of a violin graphically represents the distribution of data points that is not easily visible in a boxplot’s summary, leading to a more precise representation of the data (<a href="https://www.data-to-viz.com/graph/violin.html">Data-to-Viz</a>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins, </span>
+<span id="cb24-2">       <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> species, </span>
+<span id="cb24-3">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_length_mm,</span>
+<span id="cb24-4">           <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># specify species as a grouping variable</span></span>
+<span id="cb24-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb24-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb24-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mean"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"red3"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb24-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) </span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 <section id="fa-user-edit-exercise-3" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="fa-user-edit-exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</h4>
 <ol type="1">
@@ -728,10 +798,10 @@ font-style: inherit;">5</span>) </span></code></pre></div>
 Solutions (click here)
 </summary>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb24-2">  <span class="fu" style="color: #4758AB;
+<span id="cb25-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -743,8 +813,8 @@ font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">is.na</span>(sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb24-3">  <span class="fu" style="color: #4758AB;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb25-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -756,12 +826,13 @@ font-style: inherit;">y =</span> bill_length_mm, <span class="at" style="color: 
 background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb24-4">  <span class="fu" style="color: #4758AB;
+font-style: inherit;">+</span> </span>
+<span id="cb25-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">+</span> </span>
+<span id="cb25-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -769,7 +840,8 @@ font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">+</span> </span>
+<span id="cb25-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -782,7 +854,7 @@ background-color: null;
 font-style: inherit;">"red3"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb24-5">  <span class="fu" style="color: #4758AB;
+<span id="cb25-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_jitter</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -790,7 +862,8 @@ font-style: inherit;">alpha =</span> .<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">+</span> </span>
+<span id="cb25-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -800,7 +873,7 @@ font-style: inherit;">1</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E12_ggplot_02/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
