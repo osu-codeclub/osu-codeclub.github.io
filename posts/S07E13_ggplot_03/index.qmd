@@ -1,0 +1,447 @@
+---
+title: "Plotting 3: Intro to ggplot2"
+author:
+  - "Horacio Lopez-Nicora"
+date: "2024-04-12"
+categories: [plotting, ggplot2]
+title-block-banner: false
+number-depth: 3
+image: img/ggplot2_exploratory.png
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+## Introduction
+
+#### Recap of the past session
+
+In last week's session, we delved into aesthetics and gained a deeper understanding of the topic. Additionally, we introduced the theme() function. We also acquired knowledge on the fundamentals of geom_boxplot(), geom_violin(), and stat_summary.
+
+#### Session Goals
+
+-   Let's explore our **palmerpinguins** dataset using histogram and density plots. We will learn about **geom_histogram()** and **geom_density()**.
+-   Learn the basic of bar graph in **ggplot2**.
+
+<br>
+
+## Our data set
+
+![Artwork by [Allison Horst](https://twitter.com/allison_horst).](img/dashboard.jpeg){fig-align="center" width="80%"}
+
+<br>
+
+We are going to continue using our 🐧 data set from the package [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/). If you haven't done so, please install that package first:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr. Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.
+
+We'll now load the package, along with the tidyverse (which includes ggplot2):
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Once you've loaded that package you will have a data frame called `penguins` at your disposal --- let's take a look:
+
+```{r}
+# Or glimpse() for a sort of transposed view, so we can see all columns:
+glimpse(penguins)
+```
+
+<br>
+
+## Histograms: `geom_histogram()`
+
+A histogram provides a precise graphical portrayal of the distribution of numerical data. It only necessitates one aesthetic, which is the `x` variable.
+
+```{r, warning = FALSE}
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram() +
+    labs(title = "Histogram of penguin bill length")
+```
+
+::: callout-warning
+#### It is crucial to have good [labels](https://ggplot2.tidyverse.org/reference/labs.html) to ensure the accessibility of your plots to a broader audience. Always make sure that the axis and legend labels display the complete variable name.
+:::
+
+The default computation of `geom_histogram` through `stat_bin` uses 30 bins, which is not always an optimal choice.
+
+There are possible options to address this issue. One option is to set the number of bins using the `bins` argument. Another option is to adjust the width of each bin using the `binwidth` argument.
+
+The number of bins or bars in the histogram can be customized using the `bins` argument in the geom_histogram function.
+
+An alternative option involves utilizing the `binwidth` argument in the `geom_histogram` function, which dictates the width of each bin on the X-axis. It is important to note that this argument takes priority over the bin argument.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+-   Using the example from above, within use the `bins` and `binwidth` arguments to change the size of each bar/bin.
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+You can use the following argument `geom_histogram(bins = TRY DIFFERENT VALUES)` or `geom_histogram(binwidth = TRY DIFFERENT VALUES)`.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(binwidth = 2) +
+    labs(title = "Histogram of penguin bill length")
+
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(bins = 13) +
+    labs(title = "Histogram of penguin bill length")
+```
+
+</details>
+:::
+
+<br>
+
+### Is the distribution bimodal?
+
+Bimodal NO - Species different!
+
+```{r, warning = FALSE}
+ggplot(penguins) +
+  aes(x = flipper_length_mm, color = species) +
+  geom_histogram(bins = 30) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+```
+
+::: callout-warning
+#### [Themes](https://ggplot2.tidyverse.org/reference/theme.html) are a powerful way for customizing the non-data elements of your plots, such as titles, labels, fonts, background, gridlines, and legends. They can be employed to provide plots with a consistently customized appearance.
+:::
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+-   Instead of coloring only the outline of the `bins`, let's color the `bins` themselves.
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+You will have to use the argument `fill`.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+ggplot(penguins) +
+  aes(x = flipper_length_mm, fill = species) +
+  geom_histogram(bins = 30) +
+  theme_bw() +
+  theme(legend.position = "bottom")
+
+```
+
+</details>
+:::
+
+<br>
+
+### What if we want to customize our plot?
+
+We can do this using [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html). There are several options of themes which control all non-data display. Use `theme()` if you just need to tweak the display of an existing theme.
+
+For this session, let's utilize `theme_bw()`.
+
+```{r, warning = FALSE}
+p <- ggplot(data = penguins) + theme_bw() +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species))
+p
+```
+
+### What if we want to change colors?
+
+We can manually change colors.
+
+```{r, warning = FALSE}
+# Manual color change
+# By using scale_colour_manual(),
+# we can specify the exact colours we want to use
+p + 
+scale_color_manual(
+  # Note that the color order will correspond to
+  # the order of the species given in the legend
+  values = c("grey55", "orange", "skyblue"))
+
+```
+
+By using the `colors()` function, you can explore numerous color options that are available for selection.
+
+### Using a different color palette: `RColorBrewer`
+
+There is a wide variety of `R` color packages specifically designed to offer a range of color palette options, each evoking a distinct mood. For instance, the `RColorBrewer` package provides a choice of 35 palettes!
+
+*At this point, you have become an expert in the fundamentals of `R`. Installing packages and loading them with `library()` is now second nature to you.*
+
+Now, we can install `RColorBrewer` and choose one from the many palettes it offers.
+
+```{r, warning = FALSE}
+RColorBrewer::display.brewer.all(type = "qual")
+```
+
+Above, you can observe the organization of the colors into distinct groups based on their sequential, diverging, or mixed characteristics. It is important to note that varied palettes are advantageous for varying data types.
+
+Let's use these palettes with our original penguin graph. Here is an example demonstrating how the **Set1** palette is utilized to group data points with the function `scale_color_brewer()` and the palette argument.
+
+```{r, warning = FALSE}
+p + 
+scale_color_brewer(palette = "Set1")
+```
+
+In addition, the `ggplot2` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
+
+```{r, warning = FALSE}
+p + 
+scale_color_viridis_d()
+```
+
+::: callout-warning
+#### Please note that when using `scale_color_viridis()` to color data points, we need to specify whether our variable is continuous \[using `scale_color_viridis_c()`\] or discrete \[using `scale_color_viridis_d()`\]. In this case, the variable **species** is discrete.
+:::
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+-   Let us revisit the scatter plot depicting the correlation between bill length and depth, distinguished by different species using colored data points.
+
+-   What if we want to use only a grayscale palette for publication purposes?
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+We can use the `scale_color_grey()` function to color our grouped data points.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+p + 
+scale_color_grey()
+```
+
+</details>
+:::
+
+<br>
+
+### Colorblind-friendly palettes
+
+Have you ever contemplated how your figure might appear when viewed by individuals with different types of color blindness? We can utilize the [`colorBlindness`](https://cran.r-project.org/web/packages/colorBlindness/index.html) package to explore this aspect.
+
+Let's install the `colorBlindness` package and load it.
+
+```{r, eval = FALSE}
+# Let's install the colorBlindness package
+install.packages("colorBlindness")
+library(colorBlindness)
+```
+
+To begin with, let's test out various colors using the `cvdPlot()` function. This will demonstrate how our current plot appears to individuals with different types of color blindness.
+
+```{r, warning = FALSE}
+colorBlindness::cvdPlot(p)
+```
+
+Our current color palette is not accessible, as can be observed. However, by using `viridis` palettes, we can ensure that our plots consistently convey the same information, regardless of the audience.
+
+Let's use the same `viridis` palette we used above to make our plot more accessible.
+
+```{r, warning = FALSE}
+p_viridis <- p + 
+scale_color_viridis_d()
+```
+
+Were we successful? Let's use `cvdPlot()` to check again.
+
+```{r, warning = FALSE}
+colorBlindness::cvdPlot(p_viridis)
+```
+
+### Providing transparency with `alpha`
+
+How can we incorporate transparency into the data points in our graph? One way to achieve this is by utilizing the `alpha` feature.
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(alpha = 0.5, mapping = aes(x = bill_length_mm, 
+                                        y = bill_depth_mm, 
+                                        color = species))
+```
+
+Here, we present an example of how to utilize the `alpha` function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species,
+                           alpha = flipper_length_mm))
+```
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+-   We like the graph we produced above. We want, however, to also display `body_mass_g`.
+
+-   How can we add this additional variable to our graph?
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+We can use the `size` function within `aes()`.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species,
+                           alpha = flipper_length_mm,
+                           size = body_mass_g))
+```
+
+</details>
+:::
+
+<br>
+
+## Boxplot: `geom_boxplot()`
+
+A boxplot gives a nice summary of one or more numeric variables. A boxplot is composed of several elements:
+
+[![Anatomy of a boxplot.](img/Boxplot.png)](https://leansigmacorporation.com/box-plot-with-minitab/)
+
+Let's use `geom_boxplot` to explore the **bill_length_mm** for the penguien species.
+
+```{r, warning = FALSE}
+ggplot(data = penguins, 
+       aes(x = species, 
+           y = bill_length_mm,
+           fill = species)) + # specify species as a grouping variable
+  geom_boxplot() 
+```
+
+::: callout-warning
+#### Please note that we add color to the boxplot by applying the `fill` option. You may want to experiment with using the `color` option to observe the differences.
+:::
+
+::: exercise
+#### {{< fa user-edit >}} Challenge - Let's work together!
+
+Let's consider using a different color palette for the boxplot. Additionally, we might prefer to show the mean value instead of the median value and add some transparency. Lastly, we would like to display our data points to provide information on the sample size for each species.
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+To change the color palette for the boxplot, we can utilize the `scale_fill_brewer()` function. To include the mean value, we can employ the `stat_summary()` function. If we want to add transparency, we can use the `alpha` parameter. Lastly, to overlay the data points, we can utilize the `geom_jitter()` function.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+ggplot(data = penguins, 
+       aes(x = species, 
+           y = bill_length_mm,
+           fill = species)) + # specify species as a grouping variable
+  geom_boxplot(alpha = 0.5) + 
+  scale_fill_brewer(palette = "Dark2") + 
+  stat_summary(fun = "mean", color = "red3") + 
+  geom_jitter(alpha = .5) 
+```
+
+</details>
+:::
+
+<br>
+
+## Violin plot: `geom_violin()`
+
+Similar to boxplots, violin plots visualize the distribution of a numerical variable for one or multiple groups. However, the shape of a violin graphically represents the distribution of data points that is not easily visible in a boxplot's summary, leading to a more precise representation of the data ([Data-to-Viz](https://www.data-to-viz.com/graph/violin.html)).
+
+```{r, warning = FALSE}
+ggplot(data = penguins, 
+       aes(x = species, 
+           y = bill_length_mm,
+           fill = species)) + # specify species as a grouping variable
+  geom_violin(alpha = 0.5) + 
+  scale_fill_brewer(palette = "Dark2") + 
+  stat_summary(fun = "mean", color = "red3") + 
+  geom_jitter(alpha = .5) 
+```
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+1.  To keep only the `Gentoo` data, pipe your dataset into the `filter()` function.
+2.  Create a boxplot examining `bill_length_mm` by `sex` by piping the filtered data into `ggplot()`.
+3.  Ensure that the points with unknown sex (`NA`) are removed.
+4.  Include the mean value of `bill_length_mm` in the boxplots.
+5.  Display all data points on top of the boxplot.
+6.  Lastly, display the distribution of each dataset.
+7.  To achieve the graph displaying all the above requirements, you will need to add transparency.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+penguins |> 
+  filter(species == "Gentoo", !is.na(sex)) |> 
+  ggplot(aes(x = sex, y = bill_length_mm, color = sex)) + 
+  geom_boxplot() + 
+  scale_color_brewer(palette = "Dark2") + 
+  stat_summary(fun = "mean", color = "red3") + 
+  geom_jitter(alpha = .5) + 
+  geom_violin(alpha = .1)
+```
+
+</details>
+:::
+
+<br>
