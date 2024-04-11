@@ -1,5 +1,5 @@
 ---
-title: "Plotting 3: Intro to ggplot2"
+title: "Plotting 3: histogram, density, and bar plots"
 author:
   - "Horacio Lopez-Nicora"
 date: "2024-04-12"
@@ -67,12 +67,13 @@ glimpse(penguins)
 A histogram provides a precise graphical portrayal of the distribution of numerical data. It only needs one aesthetic, which is the `x` variable.
 
 ```{r, warning = FALSE}
-ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram() +
-    labs(title = "Histogram of penguin flipper length")
+ggplot(penguins, aes(x = flipper_length_mm)) + 
+  geom_histogram() + 
+  labs(title = "Histogram of penguin flipper length")
 ```
 
 ::: callout-warning
-#### It is crucial to have good [labels](https://ggplot2.tidyverse.org/reference/labs.html) to ensure the accessibility of your plots to a broader audience. Always make sure that the axis and legend labels display the complete variable name.
+#### It is crucial to have good [labels](https://ggplot2.tidyverse.org/reference/labs.html) to ensure the accessibility of your plots to a broader audience. Always make sure that the axis (within `labs()`, use `x="x-title"`, `y="y-title"`) and legend (within `labs()`, use `fill/color="legend-title"`) labels display the complete variable name.
 :::
 
 The default computation of `geom_histogram` through `stat_bin` uses 30 bins, which is not always an optimal choice.
@@ -103,11 +104,13 @@ You can use the following argument `geom_histogram(bins = TRY DIFFERENT VALUES)`
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(binwidth = 2) +
-    labs(title = "Histogram of penguin flipper length")
+ggplot(penguins, aes(x = flipper_length_mm)) + 
+  geom_histogram(binwidth = 2) + 
+  labs(title = "Histogram of penguin flipper length")
 
-ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(bins = 13) +
-    labs(title = "Histogram of penguin flipper length")
+ggplot(penguins, aes(x = flipper_length_mm)) + 
+  geom_histogram(bins = 13) + 
+  labs(title = "Histogram of penguin flipper length")
 ```
 
 </details>
@@ -126,7 +129,8 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Histogram of penguin flipper length", 
-       subtitle = "By species")
+       subtitle = "By species", 
+       color = "Penguin species")
 
 ```
 
@@ -145,7 +149,7 @@ ggplot(penguins) +
 
 <summary>Hints (click here)</summary>
 
-You will have to use the argument `fill`.
+You will have to use the argument `fill`. Please be sure that your legend title, adjusted using `labs()`, has been properly set.
 
 </details>
 
@@ -160,7 +164,8 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Histogram of penguin flipper length", 
-       subtitle = "By species")
+       subtitle = "By species",
+       fill = "Penguin species")
 
 ```
 
@@ -180,7 +185,8 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin flipper length", 
-       subtitle = "By species")
+       subtitle = "By species",
+       color = "Penguin species")
 ```
 
 <br>
@@ -210,7 +216,8 @@ ggplot(penguins) +
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin body mass", 
        subtitle = "By species",
-       caption = "PalmerPinguins Dataset")
+       caption = "PalmerPinguins Dataset",
+       fill = "Penguin species")
 
 ```
 
@@ -242,7 +249,9 @@ ggplot(penguins) +
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin body mass", 
        subtitle = "By species",
-       caption = "PalmerPinguins Dataset")
+       caption = "PalmerPinguins Dataset",
+       fill = "Penguin species") 
+
 ```
 
 ::: callout-warning
@@ -285,13 +294,14 @@ To summarize the data using averages, we can use the `stat_summary()` function. 
 
 ```{r, warning = FALSE}
 
-ggplot(penguins, aes(species, body_mass_g)) +
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  theme_bw() +
   stat_summary(fun = "mean",
                geom = "bar",
                alpha = 0.5,
                color = "black",
                size = 0.5,
-               mapping = aes(fill=species)) +
+               mapping = aes(fill = species)) +
   stat_summary(geom = "errorbar",
                width = 0.5)
 ```
@@ -324,6 +334,7 @@ You will have to load `RColorBrewer` and use the argument `scale_fill_brewer(pal
 penguins |> 
   filter(species == "Gentoo", !is.na(sex)) |> 
   ggplot(aes(x = sex, y = bill_length_mm)) + 
+  theme_bw() +
   stat_summary(geom = "bar",
                fun = "mean",
                alpha = 0.5,
