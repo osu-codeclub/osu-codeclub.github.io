@@ -10,7 +10,899 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Fri, 05 Apr 2024 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Fri, 12 Apr 2024 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Plotting 3: Intro to ggplot2</title>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-the-past-session" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-the-past-session">Recap of the past session</h4>
+<p>In last week’s session, we delved into aesthetics and gained a deeper understanding of the topic. Additionally, we introduced the theme() function. We also acquired knowledge on the fundamentals of geom_boxplot(), geom_violin(), and stat_summary.</p>
+</section>
+<section id="session-goals" class="level4">
+<h4 class="anchored" data-anchor-id="session-goals">Session Goals</h4>
+<ul>
+<li>Let’s explore our <strong>palmerpinguins</strong> dataset using histogram and density plots. We will learn about <strong>geom_histogram()</strong> and <strong>geom_density()</strong>.</li>
+<li>Learn the basic of <strong>bar graph</strong> in <code>ggplot2</code>.</li>
+</ul>
+<p><br></p>
+</section>
+</section>
+<section id="our-data-set" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="our-data-set"><span class="header-section-number">2</span> Our data set</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/img/dashboard.jpeg" class="img-fluid figure-img" style="width:80.0%"></p>
+<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">Allison Horst</a>.</figcaption>
+</figure>
+</div>
+<p><br></p>
+<p>We are going to continue using our 🐧 data set from the package <a href="https://allisonhorst.github.io/palmerpenguins/"><code>palmerpenguins</code></a>. If you haven’t done so, please install that package first:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"palmerpenguins"</span>)</span></code></pre></div>
+</div>
+<p><a href="https://allisonhorst.github.io/palmerpenguins/index.html"><code>palmerpenguins</code></a> is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr.&nbsp;Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.</p>
+<p>We’ll now load the package, along with the tidyverse (which includes ggplot2):</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(palmerpenguins)</span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.0
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>Once you’ve loaded that package you will have a data frame called <code>penguins</code> at your disposal — let’s take a look:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Or glimpse() for a sort of transposed view, so we can see all columns:</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(penguins)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>Rows: 344
+Columns: 8
+$ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+$ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+$ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+$ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+$ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+$ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+$ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+$ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="histograms-geom_histogram" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="histograms-geom_histogram"><span class="header-section-number">3</span> Histograms: <code>geom_histogram()</code></h2>
+<p>A histogram provides a precise graphical portrayal of the distribution of numerical data. It only needs one aesthetic, which is the <code>x</code> variable.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb6-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+It is crucial to have good <a href="https://ggplot2.tidyverse.org/reference/labs.html">labels</a> to ensure the accessibility of your plots to a broader audience. Always make sure that the axis and legend labels display the complete variable name.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p>The default computation of <code>geom_histogram</code> through <code>stat_bin</code> uses 30 bins, which is not always an optimal choice.</p>
+<p>There are possible options to address this issue. One option is to set the number of bins using the <code>bins</code> argument. Another option is to adjust the width of each bin using the <code>binwidth</code> argument.</p>
+<p>The number of bins or bars in the histogram can be customized using the <code>bins</code> argument in the <code>geom_histogram</code> function.</p>
+<p>An alternative option involves utilizing the <code>binwidth</code> argument in the <code>geom_histogram</code> function, which dictates the width of each bin on the X-axis. <em>It is important to note that this argument takes priority over the bin argument</em>.</p>
+<p><br></p>
+<section id="fa-user-edit-exercise-1" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
+<ul>
+<li>Using the example from above, within use the <code>bins</code> and <code>binwidth</code> arguments to change the size of each bar/bin.</li>
+</ul>
+<details>
+<summary>
+Hints (click here)
+</summary>
+<p>You can use the following argument <code>geom_histogram(bins = TRY DIFFERENT VALUES)</code> or <code>geom_histogram(binwidth = TRY DIFFERENT VALUES)</code>.</p>
+</details>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">binwidth =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb8-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb9-2">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+<section id="is-the-distribution-bimodal" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="is-the-distribution-bimodal"><span class="header-section-number">3.1</span> Is the distribution bimodal?</h3>
+<p>Histograms are effective in displaying the distributional characteristics of variables within a dataset. They provide visual cues regarding the location of distribution peaks, whether the distribution is skewed or symmetric, and the presence of any outliers. <strong>However, given that our dataset consists of three distinct species, can we utilize histograms to analyze all of them simultaneously?</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb10-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb10-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram of penguin flipper length"</span>, </span>
+<span id="cb10-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"By species"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<a href="https://ggplot2.tidyverse.org/reference/theme.html">Themes</a> are a powerful way for customizing the non-data elements of your plots, such as titles, labels, fonts, background, gridlines, and legends. They can be employed to provide plots with a consistently customized appearance.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p><br></p>
+<section id="fa-user-edit-exercise-2" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
+<ul>
+<li>Instead of coloring only the outline of the <code>bins</code>, let’s color the <code>bins</code> themselves.</li>
+</ul>
+<details>
+<summary>
+Hints (click here)
+</summary>
+<p>You will have to use the argument <code>fill</code>.</p>
+</details>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">30</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Histogram of penguin flipper length"</span>, </span>
+<span id="cb11-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"By species"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+</section>
+</section>
+<section id="density-plot-geom_density" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="density-plot-geom_density"><span class="header-section-number">4</span> Density plot: <code>geom_density()</code></h2>
+<p>A density plot provides an alternative way to visualize the distributions of numerical variables. It is essentially a smoothed version of a histogram and serves as a practical option, especially when dealing with continuous data originating from a smooth underlying distribution.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb12-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Density plot of penguin flipper length"</span>, </span>
+<span id="cb12-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"By species"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+<section id="fa-user-edit-exercise-3" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</h4>
+<p>Let’s analyze the distribution of penguins’ body mass according to their species utilizing density plots. - Incorporate distinct colors for each species in the density plots, not just the lines. Employ a level of transparency to provide a clearer view. Please ensure that the density plot is accompanied by a title, subtitle, and <strong>caption</strong>.</p>
+<details>
+<summary>
+Hints (click here)
+</summary>
+<p>You will have to use the argument <code>fill</code> to incorporate color, <code>alpha</code> for transparency, and <code>caption</code> within the <code>labs</code> argument.</p>
+</details>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb13-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Density plot of penguin body mass"</span>, </span>
+<span id="cb13-7">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"By species"</span>,</span>
+<span id="cb13-8">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"PalmerPinguins Dataset"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+</section>
+<section id="geoms-from-ggplot-extension-packages" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="geoms-from-ggplot-extension-packages"><span class="header-section-number">5</span> Geoms from ggplot “extension” packages</h2>
+<p>Transparency can help when density plots ovelap, but can I do better?</p>
+<p>There are various <a href="https://exts.ggplot2.tidyverse.org/gallery/"><strong>ggplot extension packages</strong></a> available. Some of these packages provide extra geoms, such as the trendy “ridgeline” plots offered by the ggridges package.</p>
+<p>We’ll have to install the package:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ggridges"</span>)</span></code></pre></div>
+</div>
+<p>After loading it, we can utilize the ridgeplot geom <code>geom_density_ridges()</code> in the same manner as any other geom.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(ggridges)</span>
+<span id="cb15-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> species, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_density_ridges</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb15-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Density plot of penguin body mass"</span>, </span>
+<span id="cb15-8">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"By species"</span>,</span>
+<span id="cb15-9">       <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"PalmerPinguins Dataset"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Picking joint bandwidth of 153</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Please note that when using <code>geom_density_ridges()</code>, we need to specify the <code>y</code>.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+</section>
+<section id="bar-graphs-geom_bar" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="bar-graphs-geom_bar"><span class="header-section-number">6</span> Bar graphs: <code>geom_bar()</code></h2>
+<p>In order to analyze the distribution of a categorical variable, a bar chart can be employed. The bar heights indicate the frequency of observations associated with each <code>x</code> value.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="stacked-bar-plots." class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="stacked-bar-plots."><span class="header-section-number">6.1</span> Stacked bar plots.</h3>
+<p>Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.</p>
+<p>The first plot displays the frequencies of penguin species on different islands. It reveals that there is an equal number of Adelies on each island. Nonetheless, we lack a clear understanding of the percentage distribution within each specific island.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb18-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The second plot, which is a relative frequency plot created by setting <code>position = "fill"</code> in the <strong>geom</strong>, is more useful for comparing species distributions across islands because it is not influenced by the unequal numbers of penguins on the islands.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"fill"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>By using this plot, we can see that Gentoo penguins exclusively live on Biscoe Island and represent approximately 75% of the penguins on that island. Chinstrap penguins exclusively inhabit Dream Island and make up approximately 50% of the penguins on that island. Whereas Adelie penguins inhabit all three islands and account for the entire penguin population on Torgersen Island.</p>
+</section>
+</section>
+<section id="bar-chart-of-means-stat_summary" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="bar-chart-of-means-stat_summary"><span class="header-section-number">7</span> Bar chart of means: <code>stat_summary()</code></h2>
+<p>To summarize the data using averages, we can use the <code>stat_summary()</code> function. Instead of invoking a geom_* function, we can employ <code>stat_summary()</code> to define the desired method for summarizing the data and presenting it in our visual representation.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(species, body_mass_g)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mean"</span>,</span>
+<span id="cb20-3">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bar"</span>,</span>
+<span id="cb20-4">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>,</span>
+<span id="cb20-5">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>,</span>
+<span id="cb20-6">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>,</span>
+<span id="cb20-7">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>species)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"errorbar"</span>,</span>
+<span id="cb20-9">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No summary function supplied, defaulting to `mean_se()`</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="fa-user-edit-exercise-4" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-4"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 4</h4>
+<ol type="1">
+<li>To keep only the Gentoo data, pipe your dataset into the <code>filter()</code> function.</li>
+<li>Create a bar graph examining the mean bill_length_mm by sex by piping the filtered data into <code>ggplot()</code>.</li>
+<li>Ensure that the points with unknown sex (NA) are removed.</li>
+<li>Include error bars in the bar plots and add transparency.</li>
+<li>Display all data points on top of the boxplot.</li>
+<li>Finally, use color to fill every bar by using the “DarSet2” palette from the “RColorBrewer” package, which was installed last week.</li>
+</ol>
+<details>
+<summary>
+Hints (click here)
+</summary>
+<p>You will have to load <code>RColorBrewer</code> and use the argument <code>scale_fill_brewer(palette = "Dark2")</code>.</p>
+</details>
+<details>
+<summary>
+Solutions (click here)
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Gentoo"</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb22-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_length_mm)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb22-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"bar"</span>,</span>
+<span id="cb22-5">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"mean"</span>,</span>
+<span id="cb22-6">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>,</span>
+<span id="cb22-7">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"black"</span>,</span>
+<span id="cb22-8">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>,</span>
+<span id="cb22-9">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill=</span>sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"errorbar"</span>,</span>
+<span id="cb22-11">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb22-12">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No summary function supplied, defaulting to `mean_se()`</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<p><br></p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>plotting</category>
+  <category>ggplot2</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index.html</guid>
+  <pubDate>Fri, 12 Apr 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/img/ggplot2_exploratory.png" medium="image" type="image/png" height="133" width="144"/>
+</item>
 <item>
   <title>Plotting 2: Intro to ggplot2</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
@@ -14512,1104 +15404,6 @@ shinyApp(ui = ui, server = server)
   <guid>https://osu-codeclub.github.io/posts/S06E11_shiny_04/index.html</guid>
   <pubDate>Mon, 04 Dec 2023 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S06E11_shiny_04/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
-</item>
-<item>
-  <title>Shiny 03: Map viz. in Shiny</title>
-  <dc:creator>Sandip Mondal and Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/shiny_03/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<p>Welcome to our <code>shiny</code> app development class! Throughout this session, Dr.&nbsp;Sandip Mondal will walk us through a case study to generate interactive maps using <code>shiny</code> app.</p>
-<section id="shiny-app-to-visualize-maps." class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="shiny-app-to-visualize-maps."><span class="header-section-number">1</span> Shiny App to visualize maps.</h2>
-<p>To follow step-by-step what we will cover today in class, please refer to this <a href="https://www.wvview.org/os_sa/ShinyApp_module.html#the-west-virginia-view-app-data">Shiny App</a>.</p>
-<p><strong>Dataset description:</strong> This dataset was created by <a href="https://www.wvview.org/maxwell.html">Prof.&nbsp;Maxwell</a> for use in his courses. A variety of attributes have been summarized at the county-level. A total of 3,104 records are provided representing the majority of the counties in the contiguous United States. A few counties were excluded due to their small size.</p>
-</section>
-<section id="types-of-spatial-data." class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="types-of-spatial-data."><span class="header-section-number">2</span> Types of Spatial Data.</h2>
-<p>There are two types of spatial data: vector and raster. Below is a graphical explanation of these data.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://zia207.github.io/geospatial-r-github.io/"><img src="https://osu-codeclub.github.io/posts/shiny_03/img/Types of spatial data.png" class="img-fluid figure-img"></a></p>
-<figcaption class="figure-caption">Type of Spatial Data (Ahmed, 2023)</figcaption>
-</figure>
-</div>
-</section>
-<section id="what-do-we-expect-to-achieve-by-the-end-of-this-tutorial." class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="what-do-we-expect-to-achieve-by-the-end-of-this-tutorial."><span class="header-section-number">3</span> What do we expect to achieve by the end of this tutorial.</h2>
-<p>Today we will start with the output, understand the components of the <code>shiny</code> app and what we want achieve.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/shiny_03/img/Application screenshot.png" class="img-fluid figure-img"></p>
-<figcaption class="figure-caption">Different parameters from Ohio, Pennsylvania, and Indiana in an interactive map.</figcaption>
-</figure>
-</div>
-</section>
-<section id="building-our-shiny-app." class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="building-our-shiny-app."><span class="header-section-number">4</span> Building our Shiny App.</h2>
-<p>Let’s make a <code>shiny</code> app and see how this works!</p>
-<p>First <a href="https://github.com/osu-codeclub/osu-codeclub.github.io/tree/main/posts/shiny_03/data/map_data">download the following files</a> and set it to a working directory.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#import libraries used in the APP</span></span>
-<span id="cb1-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#setwd("...map_data/")  </span><span class="al" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">###</span><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"> Please make sure to use your own working directory</span></span>
-<span id="cb1-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(shiny)</span>
-<span id="cb1-4"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(sf)</span>
-<span id="cb1-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(leaflet)</span>
-<span id="cb1-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(dplyr)</span>
-<span id="cb1-7"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(RColorBrewer)</span>
-<span id="cb1-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(htmlwidgets)</span>
-<span id="cb1-9"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(htmltools)</span>
-<span id="cb1-10"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggplot2)</span>
-<span id="cb1-11"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(bslib)</span>
-<span id="cb1-12">us <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">st_read</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/map_data/OH_IN_PA.shp"</span>) </span>
-<span id="cb1-13">us <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> us <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(STATE_A<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'OH'</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|</span> STATE_A<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'IN'</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|</span> STATE_A <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'PA'</span>)  <span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">### Ohio, Indiana, Pennsylvania</span></span>
-<span id="cb1-14">us <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">st_transform</span>(us, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">crs=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4326</span>)</span>
-<span id="cb1-15"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">class</span>(us)</span>
-<span id="cb1-16"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(us)</span>
-<span id="cb1-17"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">plot</span>(us[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>])</span>
-<span id="cb1-18"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># fist graph on ggplot = Income (boxplot)</span></span>
-<span id="cb1-19">inc_p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(us, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x=</span>STATE_A, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y=</span>med_ncm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill=</span>STATE_A)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb1-20">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_boxplot</span>() </span>
-<span id="cb1-21"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># second graph on ggplot = Temperature (densityplot)</span></span>
-<span id="cb1-22">temp_p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(us, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x=</span>tempmn, ..density.., <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill=</span>STATE_A))<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb1-23">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha=</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>)</span>
-<span id="cb1-24"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># third graph on ggplot = Population vs Development (scatterplot)</span></span>
-<span id="cb1-25">pop_p <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(us, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x=</span>POPULAT, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y=</span>per_dev, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color=</span> STATE_A, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size=</span> med_ncm))<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb1-26">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>()</span>
-<span id="cb1-27"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#color palette for Temperature, Income and Population</span></span>
-<span id="cb1-28">temp_pal <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">colorBin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"YlOrRd"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">domain=</span>us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>tempmn, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bin=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>)</span>
-<span id="cb1-29">pop_pal <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">colorNumeric</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Purples'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">domain=</span> us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>POPULAT)</span>
-<span id="cb1-30">ncm_pal <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">colorNumeric</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Greens'</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">domain=</span> us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>med_ncm)</span>
-<span id="cb1-31"></span>
-<span id="cb1-32"></span>
-<span id="cb1-33"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Define UI for the APP</span></span>
-<span id="cb1-34"></span>
-<span id="cb1-35">ui <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fluidPage</span>(</span>
-<span id="cb1-36">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">theme =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">bs_theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">version =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bootswatch =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"spacelab"</span>), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># theme from the library(bslib)</span></span>
-<span id="cb1-37">  </span>
-<span id="cb1-38">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">titlePanel</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">h1</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Ohio, Indiana and Pennsylvania"</span>,<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">align =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"center"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">style =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"color:#0d793e"</span>)), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Main title of the App use h1</span></span>
-<span id="cb1-39">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">br</span>(),<span class="do" style="color: #5E5E5E;
-background-color: null;
-font-style: italic;">### break the line two times</span></span>
-<span id="cb1-40">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">br</span>(),</span>
-<span id="cb1-41">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tabsetPanel</span>(<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#the tabset panel layout will include the three tab</span></span>
-<span id="cb1-42">    </span>
-<span id="cb1-43">    </span>
-<span id="cb1-44">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Tab 1: Data Exploration</span></span>
-<span id="cb1-45">    </span>
-<span id="cb1-46">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tabPanel</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Data explorer"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># title of the first tab</span></span>
-<span id="cb1-47">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">br</span>(), </span>
-<span id="cb1-48">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">fluidRow</span>(</span>
-<span id="cb1-49">               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">column</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,</span>
-<span id="cb1-50">                      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectInput</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">inputId =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"countryInput1"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#unique input ID</span></span>
-<span id="cb1-51">                                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Choose a State"</span>,</span>
-<span id="cb1-52">                                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">choices =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unique</span>(us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>STATE_N),</span>
-<span id="cb1-53">                                  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">selected =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Ohio"</span>), </span>
-<span id="cb1-54">               ), </span>
-<span id="cb1-55">             ),</span>
-<span id="cb1-56">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">hr</span>(),</span>
-<span id="cb1-57">             DT<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dataTableOutput</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"table"</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#output ID</span></span>
-<span id="cb1-58">    ),</span>
-<span id="cb1-59">    </span>
-<span id="cb1-60">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#Tab 2: Visualization </span></span>
-<span id="cb1-61">    </span>
-<span id="cb1-62">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tabPanel</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Sum plots"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#title of the second tab</span></span>
-<span id="cb1-63">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">br</span>(), </span>
-<span id="cb1-64">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sidebarLayout</span>(<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#left section of the page used by the user to select input    </span></span>
-<span id="cb1-65">               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sidebarPanel</span>(</span>
-<span id="cb1-66">                 </span>
-<span id="cb1-67">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectInput</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">inputId =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'inc_pop_temp'</span>,<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#unique input ID</span></span>
-<span id="cb1-68">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Select a variable'</span>,</span>
-<span id="cb1-69">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">choices =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">''</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Income"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population vs Development"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Median Temperature'</span>), ),</span>
-<span id="cb1-70">              </span>
-<span id="cb1-71">               ),</span>
-<span id="cb1-72">               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mainPanel</span>( <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># right section of the page </span></span>
-<span id="cb1-73">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">plotOutput</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"boxplot"</span>)<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#output ID</span></span>
-<span id="cb1-74">               ))),</span>
-<span id="cb1-75">    </span>
-<span id="cb1-76">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#Tab 3: Interactive Map</span></span>
-<span id="cb1-77">    </span>
-<span id="cb1-78">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">tabPanel</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Interactive Map"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#title of the third tab  </span></span>
-<span id="cb1-79">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sidebarLayout</span>(    </span>
-<span id="cb1-80">               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sidebarPanel</span>(<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#left section of the page used by the user to select input</span></span>
-<span id="cb1-81">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectInput</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">inputId =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"countryInput"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#unique input ID</span></span>
-<span id="cb1-82">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Choose a State"</span>,</span>
-<span id="cb1-83">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">choices =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unique</span>(us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>STATE_N),</span>
-<span id="cb1-84">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">selected =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Ohio"</span>),</span>
-<span id="cb1-85">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectInput</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">inputId =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"varInput"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#unique input ID</span></span>
-<span id="cb1-86">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">label=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Choose a variable"</span>,</span>
-<span id="cb1-87">                             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">choices =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Temperature"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Population'</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'Income'</span>))</span>
-<span id="cb1-88">                 ,),</span>
-<span id="cb1-89">               <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mainPanel</span>(<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># right section of the page </span></span>
-<span id="cb1-90">                 <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leafletOutput</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"map"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#output ID  </span></span>
-<span id="cb1-91">                               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"100%"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">height =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"500px"</span>))))  </span>
-<span id="cb1-92">  ),)</span>
-<span id="cb1-93"></span>
-<span id="cb1-94"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Define server logic </span></span>
-<span id="cb1-95"></span>
-<span id="cb1-96">server <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(input, output) {</span>
-<span id="cb1-97">  </span>
-<span id="cb1-98">  selectedCountry1 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">reactive</span>({<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#reactive expression for the Data Explorer</span></span>
-<span id="cb1-99">    us[us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>STATE_N <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>countryInput1, ] <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#match input of the user with the state name</span></span>
-<span id="cb1-100">  })</span>
-<span id="cb1-101">  </span>
-<span id="cb1-102">  selectedCountry <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">reactive</span>({ <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#reactive expression for the Interactive Map</span></span>
-<span id="cb1-103">    us[us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>STATE_N <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>countryInput, ] <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#match input of the user with the state name</span></span>
-<span id="cb1-104">  })</span>
-<span id="cb1-105">  </span>
-<span id="cb1-106">  output<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>table <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> DT<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">renderDataTable</span>({ <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#Data Explorer tab output</span></span>
-<span id="cb1-107">    </span>
-<span id="cb1-108">    data <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry1</span>()</span>
-<span id="cb1-109">    </span>
-<span id="cb1-110">  })</span>
-<span id="cb1-111">  </span>
-<span id="cb1-112">  output<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>boxplot <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">renderPlot</span>({ <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#Visualization tab output</span></span>
-<span id="cb1-113">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>inc_pop_temp <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Income"</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># If input of the user is Income</span></span>
-<span id="cb1-114">    {inc_p} <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#then print Income graph</span></span>
-<span id="cb1-115">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>inc_pop_temp <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Median Temperature"</span>)<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># If input of the user is Median Temperature</span></span>
-<span id="cb1-116">    {temp_p} <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#then print Temperature graph</span></span>
-<span id="cb1-117">    </span>
-<span id="cb1-118">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>inc_pop_temp <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population vs Development"</span>)<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># If input of the user is Pop vs Dev</span></span>
-<span id="cb1-119">    {pop_p} <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#then print Pop vs Dev graph</span></span>
-<span id="cb1-120">    </span>
-<span id="cb1-121">  })</span>
-<span id="cb1-122">  </span>
-<span id="cb1-123">  output<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>map <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">renderLeaflet</span>({<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#Interactive Map tab output</span></span>
-<span id="cb1-124">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leaflet</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'map'</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#base map</span></span>
-<span id="cb1-125">            <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">options =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leafletOptions</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">zoomControl=</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-126">      </span>
-<span id="cb1-127">      htmlwidgets<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">onRender</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"function(el, x) {</span></span>
-<span id="cb1-128"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">      L.control.zoom({ position: 'topright' }).addTo(this)</span></span>
-<span id="cb1-129"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">  }"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-130">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addTiles</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"OSM"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-131">      </span>
-<span id="cb1-132">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addProviderTiles</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Esri.NatGeoWorldMap"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ESRI"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-133">      </span>
-<span id="cb1-134">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addProviderTiles</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"CartoDB.DarkMatter"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group=</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"CartoDB"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-135">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addLayersControl</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">baseGroups =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"CartoDB"</span>,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"OSM"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ESRI"</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-136">      </span>
-<span id="cb1-137">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addLegend</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottomright"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pal=</span>temp_pal, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values=</span>us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>tempmn, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Temperature"</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-138">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addLegend</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottomright"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pal=</span>pop_pal, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values=</span>us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>POPULAT, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population"</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-139">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addLegend</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottomleft"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pal=</span>ncm_pal, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values=</span>us<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>med_ncm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Income in $"</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-140">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">setView</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lat=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">39</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">lng=</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">zoom=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>)</span>
-<span id="cb1-141">  })</span>
-<span id="cb1-142">  </span>
-<span id="cb1-143">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">observe</span>({<span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#observer</span></span>
-<span id="cb1-144">    </span>
-<span id="cb1-145">    state_popup <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste0</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;strong&gt;County: &lt;/strong&gt;"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#popup </span></span>
-<span id="cb1-146">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>NAME,</span>
-<span id="cb1-147">                          <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;&lt;strong&gt; Temperature: &lt;/strong&gt;"</span>,</span>
-<span id="cb1-148">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>tempmn,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>),<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&amp;#x2103"</span>,</span>
-<span id="cb1-149">                          <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;&lt;strong&gt; Median Income: &lt;/strong&gt;"</span>,</span>
-<span id="cb1-150">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>med_ncm,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">'$'</span>,</span>
-<span id="cb1-151">                          <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;br&gt;&lt;strong&gt; Population: &lt;/strong&gt;"</span>,</span>
-<span id="cb1-152">                          <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>POPULAT)</span>
-<span id="cb1-153">    </span>
-<span id="cb1-154">    high_opt <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">highlightOptions</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"white"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bringToFront =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#highlight when user select county</span></span>
-<span id="cb1-155">    </span>
-<span id="cb1-156">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>varInput <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Temperature"</span>) {</span>
-<span id="cb1-157">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leafletProxy</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"map"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-158">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#understand when to clearshapes</span></span>
-<span id="cb1-159">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># clearShapes() %&gt;%</span></span>
-<span id="cb1-160">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addPolygons</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillColor =</span>  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">temp_pal</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>tempmn),</span>
-<span id="cb1-161">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">popup =</span> state_popup,</span>
-<span id="cb1-162">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#302E2D"</span>,</span>
-<span id="cb1-163">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillOpacity =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-164">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-165">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">highlight =</span> high_opt )</span>
-<span id="cb1-166">    }</span>
-<span id="cb1-167">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>varInput <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Income"</span>) {</span>
-<span id="cb1-168">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leafletProxy</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"map"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-169">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#understand when to clearshapes</span></span>
-<span id="cb1-170">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># clearShapes() %&gt;%</span></span>
-<span id="cb1-171">        </span>
-<span id="cb1-172">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addPolygons</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillColor =</span>  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ncm_pal</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>med_ncm),</span>
-<span id="cb1-173">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">popup =</span> state_popup,</span>
-<span id="cb1-174">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#302E2D"</span>,</span>
-<span id="cb1-175">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillOpacity =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-176">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-177">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">highlight =</span> high_opt )</span>
-<span id="cb1-178">      </span>
-<span id="cb1-179">    }</span>
-<span id="cb1-180">    <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">else</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">if</span> (input<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>varInput <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%in%</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population"</span>) {</span>
-<span id="cb1-181">      <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">leafletProxy</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"map"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span></span>
-<span id="cb1-182">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#understand when to clearshapes</span></span>
-<span id="cb1-183">        <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># clearShapes() %&gt;%</span></span>
-<span id="cb1-184">        <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">addPolygons</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillColor =</span>  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pop_pal</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">selectedCountry</span>()<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>POPULAT),</span>
-<span id="cb1-185">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">popup =</span> state_popup,</span>
-<span id="cb1-186">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col=</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#302E2D"</span>,</span>
-<span id="cb1-187">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fillOpacity =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-188">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,</span>
-<span id="cb1-189">                    <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">highlight =</span> high_opt )</span>
-<span id="cb1-190">    }</span>
-<span id="cb1-191">    </span>
-<span id="cb1-192">    </span>
-<span id="cb1-193">  })</span>
-<span id="cb1-194">  </span>
-<span id="cb1-195">}</span>
-<span id="cb1-196"></span>
-<span id="cb1-197"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">shinyApp</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">ui =</span> ui, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">server =</span> server)</span></code></pre></div>
-</div>
-
-
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>shiny</category>
-  <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/shiny_03/index.html</guid>
-  <pubDate>Mon, 13 Nov 2023 05:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/shiny_03/img/shiny_logo.png" medium="image" type="image/png" height="167" width="144"/>
 </item>
 </channel>
 </rss>
