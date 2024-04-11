@@ -28,7 +28,7 @@ In last week's session, we delved into aesthetics and gained a deeper understand
 #### Session Goals
 
 -   Let's explore our **palmerpinguins** dataset using histogram and density plots. We will learn about **geom_histogram()** and **geom_density()**.
--   Learn the basic of bar graph in **ggplot2**.
+-   Learn the basic of **bar graph** in `ggplot2`.
 
 <br>
 
@@ -64,11 +64,11 @@ glimpse(penguins)
 
 ## Histograms: `geom_histogram()`
 
-A histogram provides a precise graphical portrayal of the distribution of numerical data. It only necessitates one aesthetic, which is the `x` variable.
+A histogram provides a precise graphical portrayal of the distribution of numerical data. It only needs one aesthetic, which is the `x` variable.
 
 ```{r, warning = FALSE}
 ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram() +
-    labs(title = "Histogram of penguin bill length")
+    labs(title = "Histogram of penguin flipper length")
 ```
 
 ::: callout-warning
@@ -79,9 +79,9 @@ The default computation of `geom_histogram` through `stat_bin` uses 30 bins, whi
 
 There are possible options to address this issue. One option is to set the number of bins using the `bins` argument. Another option is to adjust the width of each bin using the `binwidth` argument.
 
-The number of bins or bars in the histogram can be customized using the `bins` argument in the geom_histogram function.
+The number of bins or bars in the histogram can be customized using the `bins` argument in the `geom_histogram` function.
 
-An alternative option involves utilizing the `binwidth` argument in the `geom_histogram` function, which dictates the width of each bin on the X-axis. It is important to note that this argument takes priority over the bin argument.
+An alternative option involves utilizing the `binwidth` argument in the `geom_histogram` function, which dictates the width of each bin on the X-axis. *It is important to note that this argument takes priority over the bin argument*.
 
 <br>
 
@@ -104,10 +104,10 @@ You can use the following argument `geom_histogram(bins = TRY DIFFERENT VALUES)`
 
 ```{r, warning = FALSE}
 ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(binwidth = 2) +
-    labs(title = "Histogram of penguin bill length")
+    labs(title = "Histogram of penguin flipper length")
 
 ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(bins = 13) +
-    labs(title = "Histogram of penguin bill length")
+    labs(title = "Histogram of penguin flipper length")
 ```
 
 </details>
@@ -117,14 +117,16 @@ ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(bins = 13) +
 
 ### Is the distribution bimodal?
 
-Bimodal NO - Species different!
+Histograms are effective in displaying the distributional characteristics of variables within a dataset. They provide visual cues regarding the location of distribution peaks, whether the distribution is skewed or symmetric, and the presence of any outliers. **However, given that our dataset consists of three distinct species, can we utilize histograms to analyze all of them simultaneously?**
 
 ```{r, warning = FALSE}
-ggplot(penguins) +
-  aes(x = flipper_length_mm, color = species) +
-  geom_histogram(bins = 30) +
-  theme_bw() +
-  theme(legend.position = "bottom")
+ggplot(penguins) + 
+  aes(x = flipper_length_mm, color = species) + 
+  geom_histogram(bins = 30) + 
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Histogram of penguin flipper length", 
+       subtitle = "By species")
 
 ```
 
@@ -152,11 +154,13 @@ You will have to use the argument `fill`.
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-ggplot(penguins) +
-  aes(x = flipper_length_mm, fill = species) +
-  geom_histogram(bins = 30) +
-  theme_bw() +
-  theme(legend.position = "bottom")
+ggplot(penguins) + 
+  aes(x = flipper_length_mm, fill = species) + 
+  geom_histogram(bins = 30) + 
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Histogram of penguin flipper length", 
+       subtitle = "By species")
 
 ```
 
@@ -165,34 +169,80 @@ ggplot(penguins) +
 
 <br>
 
-### What if we want to customize our plot?
+## Density plot: `geom_density()`
 
-We can do this using [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html). There are several options of themes which control all non-data display. Use `theme()` if you just need to tweak the display of an existing theme.
-
-For this session, let's utilize `theme_bw()`.
+A density plot provides an alternative way to visualize the distributions of numerical variables. It is essentially a smoothed version of a histogram and serves as a practical option, especially when dealing with continuous data originating from a smooth underlying distribution.
 
 ```{r, warning = FALSE}
-p <- ggplot(data = penguins) + theme_bw() +
-  geom_point(mapping = aes(x = bill_length_mm,
-                           y = bill_depth_mm,
-                           color = species))
-p
+ggplot(penguins) + 
+  aes(x = flipper_length_mm, color = species) + 
+  geom_density() + 
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Density plot of penguin flipper length", 
+       subtitle = "By species")
 ```
 
-### What if we want to change colors?
+<br>
 
-We can manually change colors.
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+Let's analyze the distribution of penguins' body mass according to their species utilizing density plots. - Incorporate distinct colors for each species in the density plots, not just the lines. - Employ a level of transparency to provide a clearer view. - Accompany the density plot with a title, subtitle, and **caption**.
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+You will have to use the argument `fill` to incorporate color, `alpha` for transparency, and `caption` within the `labs` argument.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-# Manual color change
-# By using scale_colour_manual(),
-# we can specify the exact colours we want to use
-p + 
-scale_color_manual(
-  # Note that the color order will correspond to
-  # the order of the species given in the legend
-  values = c("grey55", "orange", "skyblue"))
+ggplot(penguins) + 
+  aes(x = body_mass_g, fill = species) + 
+  geom_density(alpha = 0.2) + 
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Density plot of penguin body mass", 
+       subtitle = "By species",
+       caption = "PalmerPinguins Dataset")
 
+```
+
+</details>
+:::
+
+<br>
+
+## Geoms from ggplot “extension” packages
+
+Transparency can help when density plots ovelap, but can I do better?
+
+There are various [**ggplot extension packages**](https://exts.ggplot2.tidyverse.org/gallery/) available. Some of these packages provide extra geoms, such as the trendy "ridgeline" plots offered by the ggridges package.
+
+We’ll have to install the package:
+
+```{r, eval = FALSE}
+install.packages("ggridges")
+```
+
+After loading it, we can utilize the ridgeplot geom `geom_density_ridges()` in the same manner as any other geom.
+
+```{r, warning = FALSE}
+library(ggridges)
+ggplot(penguins) + 
+  aes(x = body_mass_g, y = species, fill = species) + 
+  geom_density_ridges(alpha = 0.2) + 
+  theme_bw() + 
+  theme(legend.position = "bottom") + 
+  labs(title = "Density plot of penguin body mass", 
+       subtitle = "By species",
+       caption = "PalmerPinguins Dataset")
 ```
 
 By using the `colors()` function, you can explore numerous color options that are available for selection.
@@ -214,15 +264,14 @@ Above, you can observe the organization of the colors into distinct groups based
 Let's use these palettes with our original penguin graph. Here is an example demonstrating how the **Set1** palette is utilized to group data points with the function `scale_color_brewer()` and the palette argument.
 
 ```{r, warning = FALSE}
-p + 
-scale_color_brewer(palette = "Set1")
+
+
 ```
 
 In addition, the `ggplot2` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
 
 ```{r, warning = FALSE}
-p + 
-scale_color_viridis_d()
+
 ```
 
 ::: callout-warning
@@ -251,8 +300,8 @@ We can use the `scale_color_grey()` function to color our grouped data points.
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-p + 
-scale_color_grey()
+
+
 ```
 
 </details>
@@ -275,7 +324,7 @@ library(colorBlindness)
 To begin with, let's test out various colors using the `cvdPlot()` function. This will demonstrate how our current plot appears to individuals with different types of color blindness.
 
 ```{r, warning = FALSE}
-colorBlindness::cvdPlot(p)
+
 ```
 
 Our current color palette is not accessible, as can be observed. However, by using `viridis` palettes, we can ensure that our plots consistently convey the same information, regardless of the audience.
@@ -283,14 +332,14 @@ Our current color palette is not accessible, as can be observed. However, by usi
 Let's use the same `viridis` palette we used above to make our plot more accessible.
 
 ```{r, warning = FALSE}
-p_viridis <- p + 
-scale_color_viridis_d()
+
+
 ```
 
 Were we successful? Let's use `cvdPlot()` to check again.
 
 ```{r, warning = FALSE}
-colorBlindness::cvdPlot(p_viridis)
+
 ```
 
 ### Providing transparency with `alpha`
