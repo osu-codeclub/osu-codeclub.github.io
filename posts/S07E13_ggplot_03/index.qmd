@@ -188,7 +188,7 @@ ggplot(penguins) +
 ::: exercise
 #### {{< fa user-edit >}} Exercise 3
 
-Let's analyze the distribution of penguins' body mass according to their species utilizing density plots. - Incorporate distinct colors for each species in the density plots, not just the lines. - Employ a level of transparency to provide a clearer view. - Accompany the density plot with a title, subtitle, and **caption**.
+Let's analyze the distribution of penguins' body mass according to their species utilizing density plots. - Incorporate distinct colors for each species in the density plots, not just the lines. Employ a level of transparency to provide a clearer view. Please ensure that the density plot is accompanied by a title, subtitle, and **caption**.
 
 <details>
 
@@ -245,235 +245,76 @@ ggplot(penguins) +
        caption = "PalmerPinguins Dataset")
 ```
 
-By using the `colors()` function, you can explore numerous color options that are available for selection.
-
-### Using a different color palette: `RColorBrewer`
-
-There is a wide variety of `R` color packages specifically designed to offer a range of color palette options, each evoking a distinct mood. For instance, the `RColorBrewer` package provides a choice of 35 palettes!
-
-*At this point, you have become an expert in the fundamentals of `R`. Installing packages and loading them with `library()` is now second nature to you.*
-
-Now, we can install `RColorBrewer` and choose one from the many palettes it offers.
-
-```{r, warning = FALSE}
-RColorBrewer::display.brewer.all(type = "qual")
-```
-
-Above, you can observe the organization of the colors into distinct groups based on their sequential, diverging, or mixed characteristics. It is important to note that varied palettes are advantageous for varying data types.
-
-Let's use these palettes with our original penguin graph. Here is an example demonstrating how the **Set1** palette is utilized to group data points with the function `scale_color_brewer()` and the palette argument.
-
-```{r, warning = FALSE}
-
-
-```
-
-In addition, the `ggplot2` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
-
-```{r, warning = FALSE}
-
-```
-
 ::: callout-warning
-#### Please note that when using `scale_color_viridis()` to color data points, we need to specify whether our variable is continuous \[using `scale_color_viridis_c()`\] or discrete \[using `scale_color_viridis_d()`\]. In this case, the variable **species** is discrete.
+#### Please note that when using `geom_density_ridges()`, we need to specify the `y`.
 :::
 
-<br>
+## Bar graphs: `geom_bar()`
+
+In order to analyze the distribution of a categorical variable, a bar chart can be employed. The bar heights indicate the frequency of observations associated with each `x` value.
+
+```{r, warning = FALSE}
+ggplot(penguins, aes(x = species)) +
+  geom_bar()
+```
+
+### Stacked bar plots.
+
+Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.
+
+The first plot displays the frequencies of penguin species on different islands. It reveals that there is an equal number of Adelies on each island. Nonetheless, we lack a clear understanding of the percentage distribution within each specific island.
+
+```{r, warning = FALSE}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar()
+```
+
+The second plot, which is a relative frequency plot created by setting `position = "fill"` in the **geom**, is more useful for comparing species distributions across islands because it is not influenced by the unequal numbers of penguins on the islands. 
+
+```{r, warning = FALSE}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+```
+
+By using this plot, we can see that Gentoo penguins exclusively live on Biscoe Island and represent approximately 75% of the penguins on that island. Chinstrap penguins exclusively inhabit Dream Island and make up approximately 50% of the penguins on that island. Whereas Adelie penguins inhabit all three islands and account for the entire penguin population on Torgersen Island.
+
+
+## Bar chart of means: `stat_summary()`
+
+To summarize the data using averages, we can use the `stat_summary()` function. Instead of invoking a geom_* function, we can employ `stat_summary()` to define the desired method for summarizing the data and presenting it in our visual representation.
+
+```{r, warning = FALSE}
+
+ggplot(penguins, aes(species, body_mass_g)) +
+  stat_summary(fun = "mean",
+               geom = "bar",
+               alpha = 0.5,
+               color = "black",
+               size = 0.5,
+               mapping = aes(fill=species)) +
+  stat_summary(geom = "errorbar",
+               width = 0.5)
+```
+
+
 
 ::: exercise
-#### {{< fa user-edit >}} Exercise 1
+#### {{< fa user-edit >}} Exercise 4
 
--   Let us revisit the scatter plot depicting the correlation between bill length and depth, distinguished by different species using colored data points.
-
--   What if we want to use only a grayscale palette for publication purposes?
+1. To keep only the Gentoo data, pipe your dataset into the `filter()` function.
+2. Create a bar graph examining the mean bill_length_mm by sex by piping the filtered data into `ggplot()`.
+3. Ensure that the points with unknown sex (NA) are removed.
+4. Include error bars in the bar plots and add transparency.
+6. Display all data points on top of the boxplot.
+7. Finally, use color to fill every bar by using the "DarSet2" palette from the "RColorBrewer" package, which was installed last week.
 
 <details>
 
 <summary>Hints (click here)</summary>
 
-We can use the `scale_color_grey()` function to color our grouped data points.
+You will have to load `RColorBrewer` and use the argument `scale_fill_brewer(palette = "Dark2")`.
 
 </details>
-
-<details>
-
-<summary>Solutions (click here)</summary>
-
-```{r, warning = FALSE}
-
-
-```
-
-</details>
-:::
-
-<br>
-
-### Colorblind-friendly palettes
-
-Have you ever contemplated how your figure might appear when viewed by individuals with different types of color blindness? We can utilize the [`colorBlindness`](https://cran.r-project.org/web/packages/colorBlindness/index.html) package to explore this aspect.
-
-Let's install the `colorBlindness` package and load it.
-
-```{r, eval = FALSE}
-# Let's install the colorBlindness package
-install.packages("colorBlindness")
-library(colorBlindness)
-```
-
-To begin with, let's test out various colors using the `cvdPlot()` function. This will demonstrate how our current plot appears to individuals with different types of color blindness.
-
-```{r, warning = FALSE}
-
-```
-
-Our current color palette is not accessible, as can be observed. However, by using `viridis` palettes, we can ensure that our plots consistently convey the same information, regardless of the audience.
-
-Let's use the same `viridis` palette we used above to make our plot more accessible.
-
-```{r, warning = FALSE}
-
-
-```
-
-Were we successful? Let's use `cvdPlot()` to check again.
-
-```{r, warning = FALSE}
-
-```
-
-### Providing transparency with `alpha`
-
-How can we incorporate transparency into the data points in our graph? One way to achieve this is by utilizing the `alpha` feature.
-
-```{r, warning = FALSE}
-ggplot(data = penguins) +
-  geom_point(alpha = 0.5, mapping = aes(x = bill_length_mm, 
-                                        y = bill_depth_mm, 
-                                        color = species))
-```
-
-Here, we present an example of how to utilize the `alpha` function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.
-
-```{r, warning = FALSE}
-ggplot(data = penguins) +
-  geom_point(mapping = aes(x = bill_length_mm,
-                           y = bill_depth_mm,
-                           color = species,
-                           alpha = flipper_length_mm))
-```
-
-::: exercise
-#### {{< fa user-edit >}} Exercise 2
-
--   We like the graph we produced above. We want, however, to also display `body_mass_g`.
-
--   How can we add this additional variable to our graph?
-
-<details>
-
-<summary>Hints (click here)</summary>
-
-We can use the `size` function within `aes()`.
-
-</details>
-
-<details>
-
-<summary>Solutions (click here)</summary>
-
-```{r, warning = FALSE}
-ggplot(data = penguins) +
-  geom_point(mapping = aes(x = bill_length_mm,
-                           y = bill_depth_mm,
-                           color = species,
-                           alpha = flipper_length_mm,
-                           size = body_mass_g))
-```
-
-</details>
-:::
-
-<br>
-
-## Boxplot: `geom_boxplot()`
-
-A boxplot gives a nice summary of one or more numeric variables. A boxplot is composed of several elements:
-
-[![Anatomy of a boxplot.](img/Boxplot.png)](https://leansigmacorporation.com/box-plot-with-minitab/)
-
-Let's use `geom_boxplot` to explore the **bill_length_mm** for the penguien species.
-
-```{r, warning = FALSE}
-ggplot(data = penguins, 
-       aes(x = species, 
-           y = bill_length_mm,
-           fill = species)) + # specify species as a grouping variable
-  geom_boxplot() 
-```
-
-::: callout-warning
-#### Please note that we add color to the boxplot by applying the `fill` option. You may want to experiment with using the `color` option to observe the differences.
-:::
-
-::: exercise
-#### {{< fa user-edit >}} Challenge - Let's work together!
-
-Let's consider using a different color palette for the boxplot. Additionally, we might prefer to show the mean value instead of the median value and add some transparency. Lastly, we would like to display our data points to provide information on the sample size for each species.
-
-<details>
-
-<summary>Hints (click here)</summary>
-
-To change the color palette for the boxplot, we can utilize the `scale_fill_brewer()` function. To include the mean value, we can employ the `stat_summary()` function. If we want to add transparency, we can use the `alpha` parameter. Lastly, to overlay the data points, we can utilize the `geom_jitter()` function.
-
-</details>
-
-<details>
-
-<summary>Solutions (click here)</summary>
-
-```{r, warning = FALSE}
-ggplot(data = penguins, 
-       aes(x = species, 
-           y = bill_length_mm,
-           fill = species)) + # specify species as a grouping variable
-  geom_boxplot(alpha = 0.5) + 
-  scale_fill_brewer(palette = "Dark2") + 
-  stat_summary(fun = "mean", color = "red3") + 
-  geom_jitter(alpha = .5) 
-```
-
-</details>
-:::
-
-<br>
-
-## Violin plot: `geom_violin()`
-
-Similar to boxplots, violin plots visualize the distribution of a numerical variable for one or multiple groups. However, the shape of a violin graphically represents the distribution of data points that is not easily visible in a boxplot's summary, leading to a more precise representation of the data ([Data-to-Viz](https://www.data-to-viz.com/graph/violin.html)).
-
-```{r, warning = FALSE}
-ggplot(data = penguins, 
-       aes(x = species, 
-           y = bill_length_mm,
-           fill = species)) + # specify species as a grouping variable
-  geom_violin(alpha = 0.5) + 
-  scale_fill_brewer(palette = "Dark2") + 
-  stat_summary(fun = "mean", color = "red3") + 
-  geom_jitter(alpha = .5) 
-```
-
-::: exercise
-#### {{< fa user-edit >}} Exercise 3
-
-1.  To keep only the `Gentoo` data, pipe your dataset into the `filter()` function.
-2.  Create a boxplot examining `bill_length_mm` by `sex` by piping the filtered data into `ggplot()`.
-3.  Ensure that the points with unknown sex (`NA`) are removed.
-4.  Include the mean value of `bill_length_mm` in the boxplots.
-5.  Display all data points on top of the boxplot.
-6.  Lastly, display the distribution of each dataset.
-7.  To achieve the graph displaying all the above requirements, you will need to add transparency.
 
 <details>
 
@@ -482,15 +323,20 @@ ggplot(data = penguins,
 ```{r, warning = FALSE}
 penguins |> 
   filter(species == "Gentoo", !is.na(sex)) |> 
-  ggplot(aes(x = sex, y = bill_length_mm, color = sex)) + 
-  geom_boxplot() + 
-  scale_color_brewer(palette = "Dark2") + 
-  stat_summary(fun = "mean", color = "red3") + 
-  geom_jitter(alpha = .5) + 
-  geom_violin(alpha = .1)
+  ggplot(aes(x = sex, y = bill_length_mm)) + 
+  stat_summary(geom = "bar",
+               fun = "mean",
+               alpha = 0.5,
+               color = "black",
+               size = 0.5,
+               mapping = aes(fill=sex)) +
+    stat_summary(geom = "errorbar",
+               width = 0.5) +
+  scale_fill_brewer(palette = "Dark2")
 ```
 
 </details>
 :::
 
 <br>
+
