@@ -306,7 +306,8 @@ ggplot(penguins, aes(x = species, y = body_mass_g)) +
                color = "black",
                size = 0.5,
                mapping = aes(fill = species)) +
-  stat_summary(geom = "errorbar",
+  stat_summary(fun.data = "mean_se",
+               geom = "errorbar",
                width = 0.5)
 ```
 
