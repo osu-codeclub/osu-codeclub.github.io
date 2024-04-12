@@ -67,9 +67,14 @@ glimpse(penguins)
 A histogram provides a precise graphical portrayal of the distribution of numerical data. It only needs one aesthetic, which is the `x` variable.
 
 ```{r, warning = FALSE}
+<<<<<<< HEAD
 ggplot(penguins, aes(x = flipper_length_mm)) + 
   geom_histogram() + 
   labs(title = "Histogram of penguin flipper length")
+=======
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram() +
+    labs(title = "Histogram of penguin flipper length")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 ```
 
 ::: callout-warning
@@ -104,6 +109,7 @@ You can use the following argument `geom_histogram(bins = TRY DIFFERENT VALUES)`
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
+<<<<<<< HEAD
 ggplot(penguins, aes(x = flipper_length_mm)) + 
   geom_histogram(binwidth = 2) + 
   labs(title = "Histogram of penguin flipper length")
@@ -111,6 +117,13 @@ ggplot(penguins, aes(x = flipper_length_mm)) +
 ggplot(penguins, aes(x = flipper_length_mm)) + 
   geom_histogram(bins = 13) + 
   labs(title = "Histogram of penguin flipper length")
+=======
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(binwidth = 2) +
+    labs(title = "Histogram of penguin flipper length")
+
+ggplot(penguins, aes(x = flipper_length_mm)) + geom_histogram(bins = 13) +
+    labs(title = "Histogram of penguin flipper length")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 ```
 
 </details>
@@ -129,8 +142,12 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Histogram of penguin flipper length", 
+<<<<<<< HEAD
        subtitle = "By species", 
        color = "Penguin species")
+=======
+       subtitle = "By species")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 
 ```
 
@@ -164,8 +181,12 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Histogram of penguin flipper length", 
+<<<<<<< HEAD
        subtitle = "By species",
        fill = "Penguin species")
+=======
+       subtitle = "By species")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 
 ```
 
@@ -185,8 +206,12 @@ ggplot(penguins) +
   theme_bw() + 
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin flipper length", 
+<<<<<<< HEAD
        subtitle = "By species",
        color = "Penguin species")
+=======
+       subtitle = "By species")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 ```
 
 <br>
@@ -216,8 +241,12 @@ ggplot(penguins) +
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin body mass", 
        subtitle = "By species",
+<<<<<<< HEAD
        caption = "PalmerPinguins Dataset",
        fill = "Penguin species")
+=======
+       caption = "PalmerPinguins Dataset")
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 
 ```
 
@@ -227,11 +256,19 @@ ggplot(penguins) +
 <br>
 
 ## Geoms from ggplot “extension” packages
+<<<<<<< HEAD
 
 Transparency can help when density plots ovelap, but can I do better?
 
 There are various [**ggplot extension packages**](https://exts.ggplot2.tidyverse.org/gallery/) available. Some of these packages provide extra geoms, such as the trendy "ridgeline" plots offered by the ggridges package.
 
+=======
+
+Transparency can help when density plots ovelap, but can I do better?
+
+There are various [**ggplot extension packages**](https://exts.ggplot2.tidyverse.org/gallery/) available. Some of these packages provide extra geoms, such as the trendy "ridgeline" plots offered by the ggridges package.
+
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 We’ll have to install the package:
 
 ```{r, eval = FALSE}
@@ -249,11 +286,17 @@ ggplot(penguins) +
   theme(legend.position = "bottom") + 
   labs(title = "Density plot of penguin body mass", 
        subtitle = "By species",
+<<<<<<< HEAD
        caption = "PalmerPinguins Dataset",
        fill = "Penguin species") 
 
 ```
 
+=======
+       caption = "PalmerPinguins Dataset")
+```
+
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 ::: callout-warning
 #### Please note that when using `geom_density_ridges()`, we need to specify the `y`.
 :::
@@ -268,9 +311,15 @@ ggplot(penguins, aes(x = species)) +
 ```
 
 ### Stacked bar plots.
+<<<<<<< HEAD
 
 Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.
 
+=======
+
+Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.
+
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
 The first plot displays the frequencies of penguin species on different islands. It reveals that there is an equal number of Adelies on each island. Nonetheless, we lack a clear understanding of the percentage distribution within each specific island.
 
 ```{r, warning = FALSE}
@@ -294,14 +343,22 @@ To summarize the data using averages, we can use the `stat_summary()` function. 
 
 ```{r, warning = FALSE}
 
+<<<<<<< HEAD
 ggplot(penguins, aes(x = species, y = body_mass_g)) +
   theme_bw() +
+=======
+ggplot(penguins, aes(species, body_mass_g)) +
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
   stat_summary(fun = "mean",
                geom = "bar",
                alpha = 0.5,
                color = "black",
                size = 0.5,
+<<<<<<< HEAD
                mapping = aes(fill = species)) +
+=======
+               mapping = aes(fill=species)) +
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
   stat_summary(geom = "errorbar",
                width = 0.5)
 ```
@@ -334,7 +391,10 @@ You will have to load `RColorBrewer` and use the argument `scale_fill_brewer(pal
 penguins |> 
   filter(species == "Gentoo", !is.na(sex)) |> 
   ggplot(aes(x = sex, y = bill_length_mm)) + 
+<<<<<<< HEAD
   theme_bw() +
+=======
+>>>>>>> 75f7dd478884b5fd5ad0f8811e768dad5e0a49f3
   stat_summary(geom = "bar",
                fun = "mean",
                alpha = 0.5,
