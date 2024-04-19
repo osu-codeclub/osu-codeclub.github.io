@@ -266,7 +266,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>And two useful side-notes:</p>
 <ul>
 <li>Setting a plotting theme for your entire R session</li>
-<li>Saving plots with <code>ggsave()</code></li>
+<li>Saving plots to file with <code>ggsave()</code></li>
 </ul>
 <p>Like in previous sessions, we’ll start by loading the tidyverse and palmerpenguins packages:</p>
 <div class="cell" data-layout-align="center">
@@ -290,6 +290,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_update</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>After doing this, as you’ll see, all plots in this session will feature <code>theme_bw</code> without minor grid lines.</p>
 <p><br></p>
 </section>
 <section id="faceting-intro-and-facet_wrap" class="level2" data-number="3">
@@ -345,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="an-example-with-two-variables" class="level4">
 <h4 class="anchored" data-anchor-id="an-example-with-two-variables">An example with two variables</h4>
-<p>In the above example, you may prefer either of the two plots we made. For example, perhaps you aren’t convinced by the faceting solution because you thought the overlapping points in the first plot were useful to make clear how similar Adelie and Chinstrap penguins are in body mass and flipper length.</p>
+<p>In the above example, you may reasonably prefer either of the two plots we made. For example, perhaps you aren’t convinced by the faceting solution because you thought the overlapping points in the first plot were useful to make clear how similar Adelie and Chinstrap penguins are in body mass and flipper length.</p>
 <p>What may be a more straightforward example of the usefulness of faceting is a situation in which we want to show two or more categorical variables in a plot, like <code>species</code> <em>and</em> <code>island</code> below:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
@@ -360,7 +361,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This plot isn’t clear at all! Let’s facet by <code>island</code>:</p>
+<p>This plot isn’t clear at all! Let’s facet by <code>island</code> to get a much better plot:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> flipper_length_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
@@ -375,7 +376,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Much better!</p>
 </section>
 <section id="exercise-1" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
@@ -399,7 +399,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Say that you didn’t want the species side-by-side (1 row, 3 columns), but on top of each other (3 rows, 1 column). Take a look at the help page for <code>facet_wrap()</code> (type <code>?facet_wrap</code>) and try to figure out how you can do this.</p>
+<p><strong>B)</strong> Say that you didn’t want the species side-by-side (1 row, 3 columns), but stacked vertically (3 rows, 1 column). Take a look at the help page for <code>facet_wrap()</code> (type <code>?facet_wrap</code>) and try to figure out how you can do this.</p>
 <details>
 <summary>
 <em>(Click for the answer)</em>
@@ -422,8 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="exercise-2" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
-<p>In our first example, we faceted because there was too much overlap between points. You may also want to facet for the opposite reason, when differences between species (or by some other variable) are so large that the plot suffers from it.</p>
-<p>Let’s artificially create such a situation by increasing the bill lengths for Chinstrap penguins by 100 mm each:</p>
+<p>In our first example, we faceted because there was too much overlap between points. You may also want to facet for the opposite reason, when <strong>differences by some variable are so large that the plot suffers from it</strong>. Let’s artificially create such a situation by increasing the bill lengths for Chinstrap penguins by 100 mm each:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>penguins_ed <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_mm =</span> <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"Chinstrap"</span>,</span>
@@ -443,16 +442,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Above, the spread along the x axis (bill length) is so large that it becomes hard to see the relationship between bill length and bill depth. Let’s facet:</p>
+<p>Above, the spread along the x axis (bill length) is so large that it <strong>has become hard to see the relationship between bill length and bill depth</strong>. Let’s facet:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_mm =</span> <span class="fu">ifelse</span>(species <span class="sc">==</span> <span class="st">"Chinstrap"</span>,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                                 bill_length_mm <span class="sc">+</span> <span class="dv">100</span>,</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                 bill_length_mm)) <span class="sc">|&gt;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>species) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>penguins_ed <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> species)) <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>species) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -655,7 +651,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -682,7 +678,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -699,7 +695,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>If you do need to specify the plot object explicitly, you can pass it as the second argument:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"test_plot.png"</span>, p_bill_flipper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"test_plot2.png"</span>, p_bill_flipper)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Some notes:</p>
 <ul>

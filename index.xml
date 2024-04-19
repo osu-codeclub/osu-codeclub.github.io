@@ -33,7 +33,7 @@
 <p>And two useful side-notes:</p>
 <ul>
 <li>Setting a plotting theme for your entire R session</li>
-<li>Saving plots with <code>ggsave()</code></li>
+<li>Saving plots to file with <code>ggsave()</code></li>
 </ul>
 <p>Like in previous sessions, we’ll start by loading the tidyverse and palmerpenguins packages:</p>
 <div class="cell" data-layout-align="center">
@@ -81,6 +81,7 @@ font-style: inherit;">panel.grid.minor =</span> <span class="fu" style="color: #
 background-color: null;
 font-style: inherit;">element_blank</span>())</span></code></pre></div>
 </div>
+<p>After doing this, as you’ll see, all plots in this session will feature <code>theme_bw</code> without minor grid lines.</p>
 <p><br></p>
 </section>
 <section id="faceting-intro-and-facet_wrap" class="level2" data-number="3">
@@ -186,7 +187,7 @@ font-style: inherit;">"none"</span>)</span></code></pre></div>
 </section>
 <section id="an-example-with-two-variables" class="level4">
 <h4 class="anchored" data-anchor-id="an-example-with-two-variables">An example with two variables</h4>
-<p>In the above example, you may prefer either of the two plots we made. For example, perhaps you aren’t convinced by the faceting solution because you thought the overlapping points in the first plot were useful to make clear how similar Adelie and Chinstrap penguins are in body mass and flipper length.</p>
+<p>In the above example, you may reasonably prefer either of the two plots we made. For example, perhaps you aren’t convinced by the faceting solution because you thought the overlapping points in the first plot were useful to make clear how similar Adelie and Chinstrap penguins are in body mass and flipper length.</p>
 <p>What may be a more straightforward example of the usefulness of faceting is a situation in which we want to show two or more categorical variables in a plot, like <code>species</code> <em>and</em> <code>island</code> below:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">penguins <span class="sc" style="color: #5E5E5E;
@@ -219,7 +220,7 @@ font-style: inherit;">geom_point</span>()</span></code></pre></div>
 </div>
 </div>
 </div>
-<p>This plot isn’t clear at all! Let’s facet by <code>island</code>:</p>
+<p>This plot isn’t clear at all! Let’s facet by <code>island</code> to get a much better plot:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -264,7 +265,6 @@ font-style: inherit;">"top"</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
-<p>Much better!</p>
 </section>
 <section id="exercise-1" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
@@ -318,7 +318,7 @@ font-style: inherit;">"top"</span>)</span></code></pre></div>
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Say that you didn’t want the species side-by-side (1 row, 3 columns), but on top of each other (3 rows, 1 column). Take a look at the help page for <code>facet_wrap()</code> (type <code>?facet_wrap</code>) and try to figure out how you can do this.</p>
+<p><strong>B)</strong> Say that you didn’t want the species side-by-side (1 row, 3 columns), but stacked vertically (3 rows, 1 column). Take a look at the help page for <code>facet_wrap()</code> (type <code>?facet_wrap</code>) and try to figure out how you can do this.</p>
 <details>
 <summary>
 <em>(Click for the answer)</em>
@@ -367,8 +367,7 @@ font-style: inherit;">1</span>)</span></code></pre></div>
 </section>
 <section id="exercise-2" class="level4 exercise">
 <h4 class="anchored" data-anchor-id="exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
-<p>In our first example, we faceted because there was too much overlap between points. You may also want to facet for the opposite reason, when differences between species (or by some other variable) are so large that the plot suffers from it.</p>
-<p>Let’s artificially create such a situation by increasing the bill lengths for Chinstrap penguins by 100 mm each:</p>
+<p>In our first example, we faceted because there was too much overlap between points. You may also want to facet for the opposite reason, when <strong>differences by some variable are so large that the plot suffers from it</strong>. Let’s artificially create such a situation by increasing the bill lengths for Chinstrap penguins by 100 mm each:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">penguins_ed <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -422,31 +421,12 @@ font-style: inherit;">geom_point</span>()</span></code></pre></div>
 </div>
 </div>
 </div>
-<p>Above, the spread along the x axis (bill length) is so large that it becomes hard to see the relationship between bill length and bill depth. Let’s facet:</p>
+<p>Above, the spread along the x axis (bill length) is so large that it <strong>has become hard to see the relationship between bill length and bill depth</strong>. Let’s facet:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">penguins_ed <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
 <span id="cb13-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bill_length_mm =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ifelse</span>(species <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Chinstrap"</span>,</span>
-<span id="cb13-3">                                 bill_length_mm <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>,</span>
-<span id="cb13-4">                                 bill_length_mm)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb13-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -459,19 +439,19 @@ background-color: null;
 font-style: inherit;">color =</span> species)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb13-6">  <span class="fu" style="color: #4758AB;
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb13-7">  <span class="fu" style="color: #4758AB;
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">~</span>species) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb13-8">  <span class="fu" style="color: #4758AB;
+<span id="cb13-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -910,7 +890,7 @@ font-style: inherit;">"A"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1017,7 +997,7 @@ font-style: inherit;">'I'</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1042,7 +1022,7 @@ font-style: inherit;">"test_plot.png"</span>)</span></code></pre></div>
 background-color: null;
 font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"test_plot.png"</span>, p_bill_flipper)</span></code></pre></div>
+font-style: inherit;">"test_plot2.png"</span>, p_bill_flipper)</span></code></pre></div>
 </div>
 <p>Some notes:</p>
 <ul>
@@ -1069,6 +1049,7 @@ font-style: inherit;">"test_plot.png"</span>, p_bill_flipper)</span></code></pre
   <category>ggplot2</category>
   <guid>https://osu-codeclub.github.io/posts/S07E14_ggplot_04/</guid>
   <pubDate>Fri, 19 Apr 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/featured_plot.png" medium="image" type="image/png" height="103" width="144"/>
 </item>
 <item>
   <title>Plotting 3: histogram, density, and bar plots</title>
