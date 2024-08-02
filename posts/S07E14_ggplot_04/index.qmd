@@ -1,0 +1,495 @@
+---
+title: "Plotting 4: Faceting and multi-panel figures"
+author:
+  - "Jelmer Poelstra"
+  - Mike Sovic
+date: "2024-04-19"
+categories: [plotting, ggplot2]
+title-block-banner: false
+image: featured_plot.png
+number-depth: 3
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+execute: 
+  warning: false
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+In this last session of the semester, we'll cap off our series on ggplot2 basics with
+a focus on:
+
+- Faceting plots: splitting plots into subplots based on one or more variables
+- Combining plots into multi-panel figures with the patchwork package
+
+And two useful side-notes:
+
+- Setting a plotting theme for your entire R session
+- Saving plots to file with `ggsave()`
+
+Like in previous sessions, we'll start by loading the tidyverse and palmerpenguins
+packages:
+
+```{r, message=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+<br>
+
+## Setting a theme for all plots in the session
+
+We've seen that you can change the "theme" (overall look) of a ggplot plot by
+adding a layer like `theme_bw()`.
+If you're making a bunch of plots, and want all them to have a specific theme,
+it can be more convenient to set the plotting theme upfront for
+_all plots in your current R session_ ---
+you can do so with the `theme_set()` function:
+
+```{r}
+theme_set(theme_bw())
+```
+
+One other tidbit worth pointing out is that you can set the "base size" for a theme,
+which is the relative size of the text and lines.
+You may have noticed that the ggplot's font size of e.g. axis labels and titles
+is relatively small.
+Instead of changing all of these individually with arguments to `theme()`,
+you can use the `base_size` argument when specifying the overall theme:
+
+```{r}
+# (The default base_size is 11)
+theme_set(theme_bw(base_size = 12))
+```
+
+Finally, you can set any `theme()` arguments for all plots in the R session
+with `theme_update()` ---
+for example, we may want to turn off the minor grid lines: 
+
+```{r}
+theme_update(panel.grid.minor = element_blank())
+```
+
+After doing this, as you'll see,
+all plots in this session will feature `theme_bw` without minor grid lines.
+
+<br>
+
+## Faceting: intro and `facet_wrap()`
+
+#### An example with one variable
+
+Let's start by revisiting the following plot you made in the exercises a couple
+of weeks ago:
+
+```{r}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point()
+```
+
+We've used the color aesthetic to distinguish species,
+but because of the overlap between Adelie (red) and Chinstrap (green) penguins,
+it's not that easy to see the relationship between body mass and flipper length
+for these two species.
+
+An alternative to using aesthetics such as color or shape to distinguish between
+levels of categorical variables is to split the plot into subplots/panels.
+In ggplot, such subplots are called "facets", and there are two functions to split
+a plot into facets: `facet_wrap()` and `facet_grid()`.
+
+Let's start with `facet_wrap()`.
+Facets are added as an additional layer to the plot, and in the faceting function,
+you specify one or more variables to split the plot into separate panels by.
+Here, we want to facet by species:
+
+```{r}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  # Add the facet_wrap layer:
+  facet_wrap(~species) +
+  # We still color by species to make the plot look nicer, but no longer need a legend:
+  theme(legend.position = "none")
+```
+
+::: callout-tip
+#### `facet_wrap()` syntax
+Note how the variable to facet by is specified:
+with a tilde (**`~`**) in front, which is R's way of specifying formulas.
+We're basically saying to split the plot "as a function of" (by) `species`. 
+An alternative way of specifying the variable is by wrapping the variable name
+in `vars()`, e.g. `facet_wrap(vars(species))`.
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### An example with two variables
+
+In the above example, you may reasonably prefer either of the two plots we made.
+For example, perhaps you aren't convinced by the faceting solution because you
+thought the overlapping points in the first plot were useful to make clear how
+similar Adelie and Chinstrap penguins are in body mass and flipper length.
+
+What may be a more straightforward example of the usefulness of faceting is a
+situation in which we want to show two or more categorical variables in a plot,
+like `species` _and_ `island` below:
+
+```{r}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm,
+             color = species, shape = island)) +
+  geom_point()
+```
+
+This plot isn't clear at all! Let's facet by `island` to get a much better plot:
+
+```{r}
+penguins |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  facet_wrap(~island) +
+  theme(legend.position = "top")
+```
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+**A)** Create a scatter plot of bill length vs. bill depth with points colored by sex,
+and the plot faceted by species.
+
+<details><summary>_(Click for the answer)_</summary>
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+  geom_point() +
+  facet_wrap(~species) +
+  theme(legend.position = "top")
+```
+</details>
+
+**B)** Say that you didn't want the species side-by-side (1 row, 3 columns),
+but stacked vertically (3 rows, 1 column).
+Take a look at the help page for `facet_wrap()` (type `?facet_wrap`) and try
+to figure out how you can do this.
+
+<details><summary>_(Click for the answer)_</summary>
+
+You can use the `ncol` and/or `nrow` arguments to force a specific number of rows
+and or columns.
+The easiest solution here is to merely set the number of columns to 1,
+which will make `facet_wrap()` use multiple columns instead:
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+  geom_point() +
+  facet_wrap(~species, ncol = 1)
+```
+</details>
+
+:::
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+In our first example, we faceted because there was too much overlap between points.
+You may also want to facet for the opposite reason,
+when **differences by some variable are so large that the plot suffers from it**.
+Let's artificially create such a situation by increasing the bill lengths for
+Chinstrap penguins by 100 mm each:
+
+```{r}
+penguins_ed <- penguins |>
+  mutate(bill_length_mm = ifelse(species == "Chinstrap",
+                                 bill_length_mm + 100,
+                                 bill_length_mm))
+```
+
+And plot this modified data:
+
+```{r}
+penguins_ed |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point()
+```
+
+Above, the spread along the x axis (bill length) is so large that
+it **has become hard to see the relationship between bill length and bill depth**.
+Let's facet:
+
+```{r}
+penguins_ed |>
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  facet_wrap(~species) +
+  theme(legend.position = "none")
+```
+
+That didn't solve anything yet! **But** when you facet,
+you can make axis ranges ("scales") vary independently between facets.
+This can be done with the `scales` argument to `facet_wrap()`.
+Take a look at the help page again,
+and try to get the x-axis range to differ between the facets.
+
+<details><summary>_(Click for the answer)_</summary>
+You'll want to set `scales` to `free_x`:
+
+```{r}
+penguins_ed |>
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  facet_wrap(~species, scales = "free_x") +
+  theme(legend.position = "none")
+```
+</details>
+:::
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+In your `theme_set()` call, vary the value of `base_size` and take a look at its
+effect by recreating the plots you made above a few times.
+:::
+
+<br>
+
+## `facet_grid()`
+
+If you would like to **split your plot by two variables**,
+use the `facet_grid()` function,
+which will create a grid with the levels of one variable across rows and of the other
+variable across columns.
+
+The formula-style syntax now uses `row-variable ~ column-variable`:
+
+```{r}
+penguins |>
+  filter(!is.na(sex)) |> 
+  ggplot(aes(x = body_mass_g, y = flipper_length_mm, color = species)) +
+  geom_point() +
+  facet_grid(island ~ sex) +
+  theme(legend.position = "none")
+```
+
+::: {.callout-note collapse="true"}
+#### `facet_wrap()` vs. `facet_grid()` _(Click to expand)_
+
+Note that you can also tell `facet_grid()` to facet only by one variable,
+either across rows or across columns.
+With that in mind, you may wonder why there even is a separate `facet_wrap()` function.
+
+Well, one feature of `facet_wrap()` that we haven't yet seen is that it can "wrap"
+a single variable across both rows and columns.
+Here is an example with the `mpg` data set,
+which has a categorical value `cyl` with 4 levels,
+enough to make `facet_wrap()` spread these across 2 rows and 2 columns:
+
+```{r}
+ggplot(mpg, aes(x = displ, y = hwy)) + 
+  geom_point() + 
+  facet_wrap(~cyl)
+```
+:::
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 4
+
+Create a scatter plot of bill length vs. bill depth and facet in a grid with
+the variables `species` and `year`.
+
+<details><summary>_(Click for the answer)_</summary>
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  facet_grid(species~year) +
+  theme(legend.position = "none")
+```
+</details>
+:::
+
+<br>
+
+## Multi-panel figures with patchwork
+
+The [patchwork](https://patchwork.data-imaginist.com/) package allows you to combine
+multiple plots into a single multi-panel figure.
+
+This is something you might be used to doing with programs like Powerpoint or Illustrator.
+But certainly if all the individual plots that should make up a figure are made with R,
+it is highly beneficial to combine them in R as well.
+One of the advantages of using R is that you can easily rerun your code to recreate plots
+with some modifications, but if after any change,
+you have to put plots together in another program,
+you lose some of the advantages related to automation and reproducibility.
+
+Let's install and then load the package:
+
+```{r, eval = FALSE}
+install.packages("patchwork")
+```
+
+```{r, message=FALSE, warning=FALSE}
+library(patchwork)
+```
+
+Patchwork assumes that you have created and saved the individual plots as separate R objects.
+Then, you tell patchwork how to arrange these plots,
+and the syntax to define the layout is based on common mathematical operators.
+Some examples, where `plot1`, `plot2`, and `plot3` represent plots that have
+been saved as objects with those names:
+
+* `plot1 | plot2` puts two plots side-by-side
+* `plot1 / plot2` stacks two plots vertically
+* `plot1 / (plot2 | plot3)` gives plot1 on a top row, and plots 2 and 3 on a bottom row
+
+Below is an example from palmerpenguins.
+First we create the plots, saving each as a new object:
+
+```{r}
+p_scatter <- penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  facet_wrap("species")
+p_scatter
+```
+
+```{r}
+p_bar <- penguins |> 
+  summarize(bill_length = mean(bill_length_mm, na.rm = TRUE), .by = island) |>
+  ggplot(aes(x = island, y = bill_length)) +
+  geom_col()
+p_bar
+```
+
+```{r}
+p_box <- penguins |> 
+  drop_na() |> 
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot()
+p_box
+```
+
+Then we simply use the patchwork syntax to define how these 3 plots will be arranged.
+In this case, the first (faceted) plot on top, with the other two side-by-side below it:
+
+```{r}
+p_scatter / (p_bar | p_box)
+```
+
+Patchwork has quite a lot more functionality,
+and this is very well explained in various vignettes/tutorials on
+[its website](https://patchwork.data-imaginist.com/articles/patchwork.html).
+Here, we'll just try one more feature, adding tags for the individual plots ---
+where we tell patchwork about the type of numbering we would like (e.g. A-B-C vs. 1-2-3)
+by specifying the first character:
+
+```{r}
+p_scatter / (p_bar | p_box) +
+  plot_annotation(tag_levels = "A")
+```
+
+```{r, echo=FALSE}
+ggsave("featured_plot.png")
+```
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 5
+
+Use the palmerpenguins data to try to create the plot below:
+
+```{r, echo = FALSE, message = FALSE, warning=FALSE}
+p_bill_flipper <- penguins |>
+  ggplot(aes(x = bill_length_mm, y = flipper_length_mm)) +
+  geom_point() +
+  facet_wrap(~species) +
+  geom_smooth(method = "lm") +
+  labs(x = "Bill Length (mm)", y = "Flipper Length (mm)")
+  
+p_mass_yr <- penguins |>
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() + 
+  labs(x = "Species", y = "Body Mass (g)")
+
+p_bill_flipper / p_mass_yr + 
+  plot_annotation(tag_levels = 'I')
+```
+
+<details><summary>_(Click for the answer)_</summary>
+
+```{r, message = FALSE, warning=FALSE}
+p_bill_flipper <- penguins |>
+  ggplot(aes(x = bill_length_mm, y = flipper_length_mm)) +
+  geom_point() +
+  facet_wrap(~species) +
+  geom_smooth(method = "lm") +
+  labs(x = "Bill Length (mm)", y = "Flipper Length (mm)")
+  
+p_mass_yr <- penguins |>
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() + 
+  labs(x = "Species", y = "Body Mass (g)")
+
+p_bill_flipper / p_mass_yr + 
+  plot_annotation(tag_levels = 'I')
+```
+</details>
+:::
+
+<br>
+
+### Saving plots
+
+If you hadn't already,
+now that you've learned to create publication-ready multi-panel figures,
+you are probably wondering how you can save these plots.
+
+Perhaps you've seen the "Export" button in the plotting pane, which can can do this.
+However, a better and more flexible way is to use the `ggsave()` function.
+By default, it will save the last plot you produced to the specified file:
+
+```{r}
+ggsave("test_plot.png")
+```
+
+If you do need to specify the plot object explicitly,
+you can pass it as the second argument:
+
+```{r}
+ggsave("test_plot2.png", p_bill_flipper)
+```
+
+Some notes:
+
+- You can specify the file/image type (PNG, JPEG, SVG, PDF, etc.) simply by providing
+  the appropriate file extension.
+- Use the `height` and `width` arguments to specify both the aspect ratio and
+  the absolute size.
+  Larger sizes will lead to relatively smaller text and points,
+  which can be a convenient way to customize this!
+- For raster graphic formats like PNG, you can specify the resolution with the
+  `dpi` argument.
+
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 6
+
+Save one or more of your previously produced plots as PNG images, and vary:
+
+- The aspect ratio and asbolute size with `height` and `width`
+- The resolution with `dpi`
+:::
+
+<br><br>
