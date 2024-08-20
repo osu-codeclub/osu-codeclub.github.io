@@ -1,0 +1,57 @@
+---
+title: "Data wrangling: more on `filter()` and `select()`"
+author:
+  - "Jessica Cooperstone"
+date: "2024-08-26"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+image: img/go-wrangling.png
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+![Artwork by [\@allison_horst](https://twitter.com/allison_horst)](img/go-wrangling.png)
+
+# Introduction
+
+We are going to start off this semester of code club with a series of sessions on how to "wrangle" your data. It can be a struggle to get data into a format that is amenable for analysis, so we will be going through a series of functions and approaches that will get you more comfortable with manipulating your data.
+
+If you don't have R and RStudio on your computer, you can find instructions for installation [here](https://osu-codeclub.github.io/pages/setup.html). You can also find some additional introductory material on getting set up in RStudio [here](https://osu-codeclub.github.io/posts/S07E01_basics_01/).
+
+## Load libraries
+
+```{r}
+library(tidyverse)
+```
+
+
+# Pick observations with `filter()`
+
+```{r filter img, fig.alt = "Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter.", fig.cap= "Figure from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)", out.width = "70%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/filter.png")
+```
+
+Sometimes you want to select observations (rows) based on values. To do this you use [`filter()`](https://dplyr.tidyverse.org/reference/filter.html). Try not to confuse this with `select()`.
+
+::: {.callout-note title="`select()` picks columns, while `filter()` picks rows."} 
+:::
+
+The function `filter()` will keep only observations that meet your filtering criteria.
+
+# Choose columns with `select()`
+
+Often you will want to pick only certain columns in your dataframe, and you can do this with the function [`select()`](https://dplyr.tidyverse.org/reference/select.html). You can pick columns by:
+
+-   their names
+-   their position (i.e., index)
+-   characteristics of that column
+
+If we want to know how the arguments to `select()` work, we can access the documentation material about the function.
+
+```{r about select}
+?select()
+```
