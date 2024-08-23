@@ -60,6 +60,7 @@ glimpse(factbook_2015)
 
 We see that `Country Name` and `Country Code` are character columns while the others are numeric (i.e., dbl).
 
+### Cleaning column names
 It looks like we have some column names that don't use standard R practices (i.e., they have spaces, start with numbers), so let's use the function [`clean_names()`]() from the `janitor` package to clean those names up.
 
 First, install the package `janitor` if you don't have it.
@@ -186,12 +187,17 @@ factbook_2015 |>
 ```
 
 
-We can also select data based on its characteristics. We can select using selection helpers like:
+We can also select data based on its characteristics. We can select using [selection helpers](https://dplyr.tidyverse.org/reference/select.html) like:
 
 * [`everything()`](https://tidyselect.r-lib.org/reference/everything.html): picks all variables
 *  [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html): starts with some prefix
+* [`ends_with()`](): ends with some suffix
 * [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html): contains a specific string
+* [`matches()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a regular expression
+* [`num_range()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a numeric range
 * [`where()`](https://tidyselect.r-lib.org/reference/where.html): selects columns where the statement given in the argument is TRUE
+* [`all_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches all of the variable names in a character vector
+* [`any_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches any of the names in a character vector
 
 For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string "gdp" in their name. I'm also going to add `country_name` so we know what we're working with.
 
@@ -207,5 +213,59 @@ factbook_2015 |>
   select(where(is.character))
 ```
 
+We can also combine selections using the `&` (and), `|` (or), and `!` (not) operators. For example, if I want the columns about GNI but only the international ones I can:
 
-You can find lots of more selection helpers [here](https://dplyr.tidyverse.org/reference/select.html).
+```{r}
+factbook_2015 |> 
+  select(starts_with("gni") & ends_with("international"))
+```
+
+We can also use `select()` to order our columns, as the order we select them in dictates the order they will exist in our dataframe.
+
+## Practice
+
+Come up with 3 different ways to select the columns about children, and make sure you also include a country column so you know what you're looking at.
+
+
+<details><summary>Need a hint?</summary>
+
+Here are the columns that I'm considering to be about children:
+
+[1] "country_name"  
+[17] "mortality_rate_under_5_per_1_000_live_births"  
+[18] "prevalence_of_underweight_weight_for_age_percent_of_children_under_5"                        
+[19] "immunization_measles_percent_of_children_ages_12_23_months"                                  
+[20] "primary_completion_rate_total_percent_of_relevant_age_group"                                 
+[21] "school_enrollment_secondary_percent_gross"                                                   
+[22] "school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi"   
+
+</details>    
+
+
+<details><summary>Click for the solution</summary>
+
+By name and for columns in a row, using the `:`.
+```{r}
+factbook_2015 |> 
+  select(country_name, 
+         mortality_rate_under_5_per_1_000_live_births:
+         school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi)
+```
+
+By index:
+
+```{r}
+factbook_2015 |> 
+  select(1, 17:22) 
+```
+
+By name characteristics:
+```{r}
+factbook_2015 |> 
+  select(country_name, contains("under_5"), contains("children"),
+         contains("primary"), contains("school"))
+```
+
+These are just some ways!
+
+</details>   
