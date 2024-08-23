@@ -6,6 +6,11 @@ date: "2024-08-26"
 categories: [r-basics, tidyverse]
 title-block-banner: false
 image: img/go-wrangling.png
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
 ---
 
 ```{r knitr_options, echo=FALSE}
@@ -32,7 +37,58 @@ library(tidyverse)
 
 We are going to use data from [The World Factbook](https://www.cia.gov/the-world-factbook/), put together by the CIA to "provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities." I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.
 
-The data we are going to download can be found [here](https://www.cia.gov/the-world-factbook/field/population/country-comparison/), thoguh I have saved the file and included some code below for you to download it.
+The data we are going to download can be found [here](https://www.cia.gov/the-world-factbook/field/population/country-comparison/), though I have saved the file, added it to our Code Club Github, and included some code below for you to download it.
+
+```{r, eval = FALSE}
+download.file(
+  url = "https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S08E01_wrangling_01/data/factbook-2015.csv",
+  destfile = "factbook_download_2015.csv"
+)
+```
+You should now see the file "factbook_download_2015.csv" in your working directory.
+
+We can read it in using the tidyverse function from the [`readr`](https://readr.tidyverse.org/index.html) package called [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html).
+
+```{r}
+factbook_2015 <- read_csv("factbook_download_2015.csv")
+```
+Let's get a better handle on this data. We can use the function [`glimpse()`](https://dplyr.tidyverse.org/reference/glimpse.html) to get a "glimpse" at our data.
+
+```{r}
+glimpse(factbook_2015)
+```
+
+We see that `Country Name` and `Country Code` are character columns while the others are numeric (i.e., dbl).
+
+It looks like we have some column names that don't use standard R practices (i.e., they have spaces, start with numbers), so let's use the function [`clean_names()`]() from the `janitor` package to clean those names up.
+
+First, install the package `janitor` if you don't have it.
+
+```{r, eval = FALSE}
+install.packages("janitor")
+```
+
+Then we can load the package and clean up our column names.
+```{r}
+library(janitor)
+```
+
+```{r}
+# old column names
+colnames(factbook_2015)
+
+# use clean_names and save over the current df factbook_2015
+factbook_2015 <- clean_names(factbook_2015)
+
+# new column names
+colnames(factbook_2015)
+```
+
+What if we want to see a complete list of our countries? We could run the following code to see that:
+
+```{r}
+factbook_2015$country_name
+```
 
 
 # Pick observations with `filter()`
@@ -48,12 +104,49 @@ Sometimes you want to select observations (rows) based on values. To do this you
 
 The function `filter()` will keep only observations that meet your filtering criteria.
 
+Let's filter for countries that have a population more than Ohio (11.76M).
+```{r}
+factbook_2015 |> 
+  filter(population_total > 11760000)
+```
+
+If we want to see the countries that also have an area that is less than the size of Ohio (116,098 km^2), we can also add that to our filter statement using the `&` operator.
+
+```{r}
+factbook_2015 |> 
+  filter(population_total > 11760000 & surface_area_sq_km < 116098)
+```
+
+There are four countries that have more people than Ohio in a space that is less than Ohio.
+
+## Practice
+
+How many countries have negative annual population growth? This variable is called `population_growth_annual_percent`.
+
+<details><summary>Need a hint?</summary>
+
+Try to `filter` for `population_growth_annual_percent` < 0.
+
+</details>    
+
+
+<details><summary>Click for the solution</summary>
+
+```{r}
+factbook_2015 |> 
+  filter(population_growth_annual_percent < 0)
+```
+
+There are 34 countries that have a negative annual growth rate in 2015.
+
+</details>    
+
 # Choose columns with `select()`
 
-Often you will want to pick only certain columns in your dataframe, and you can do this with the function [`select()`](https://dplyr.tidyverse.org/reference/select.html). You can pick columns by:
+Often you will want to pick only certain columns in your dataframe, and you can do this with the function [`select()`](https://dplyr.tidyverse.org/reference/select.html). You can pick columns generally by:
 
 -   their names
--   their position (i.e., index)
+-   their position 
 -   characteristics of that column
 
 If we want to know how the arguments to `select()` work, we can access the documentation material about the function.
@@ -61,3 +154,58 @@ If we want to know how the arguments to `select()` work, we can access the docum
 ```{r about select}
 ?select()
 ```
+
+Let's first select columns by their names. Let's pick just the `country_name`, `population_total`, and `surface_area_sq_km`.
+
+```{r}
+factbook_2015 |> 
+  select(country_name, population_total, surface_area_sq_km)
+```
+
+Those columns are also the 1st, 3rd, and 5th columns in our data frame, do we can select them by their indices, or by their location.
+
+```{r}
+factbook_2015 |> 
+  select(1, 3, 5)
+```
+
+In general I would recommend against this because its really hard to remember which column indices are which variables today, nevermind returning back to old code 1 year from now.
+
+We can also select columns that are consecutive, using the `:` operator. Below I'm selecting the columns `country_name` through `population_growth_annual_percent`.
+
+```{r}
+factbook_2015 |> 
+  select(country_name:population_growth_annual_percent)
+```
+
+We can remove columns using the `!` operator:
+
+```{r}
+factbook_2015 |> 
+  select(!country_code)
+```
+
+
+We can also select data based on its characteristics. We can select using selection helpers like:
+
+* [`everything()`](https://tidyselect.r-lib.org/reference/everything.html): picks all variables
+*  [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html): starts with some prefix
+* [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html): contains a specific string
+* [`where()`](https://tidyselect.r-lib.org/reference/where.html): selects columns where the statement given in the argument is TRUE
+
+For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string "gdp" in their name. I'm also going to add `country_name` so we know what we're working with.
+
+```{r}
+factbook_2015 |> 
+  select(country_name, contains("gdp"))
+```
+
+We can also select all column that meet a certain predicate. For example, we can pick all of the column that are of the type character.
+
+```{r}
+factbook_2015 |> 
+  select(where(is.character))
+```
+
+
+You can find lots of more selection helpers [here](https://dplyr.tidyverse.org/reference/select.html).
