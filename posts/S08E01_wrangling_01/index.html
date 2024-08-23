@@ -201,13 +201,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
   <ul class="collapse">
   <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries"><span class="header-section-number">1.1</span> Load libraries</a></li>
-  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.2</span> Data</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.2</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#cleaning-column-names" id="toc-cleaning-column-names" class="nav-link" data-scroll-target="#cleaning-column-names"><span class="header-section-number">1.2.1</span> Cleaning column names</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#pick-observations-with-filter" id="toc-pick-observations-with-filter" class="nav-link" data-scroll-target="#pick-observations-with-filter"><span class="header-section-number">2</span> Pick observations with <code>filter()</code></a>
   <ul class="collapse">
   <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice"><span class="header-section-number">2.1</span> Practice</a></li>
   </ul></li>
-  <li><a href="#choose-columns-with-select" id="toc-choose-columns-with-select" class="nav-link" data-scroll-target="#choose-columns-with-select"><span class="header-section-number">3</span> Choose columns with <code>select()</code></a></li>
+  <li><a href="#choose-columns-with-select" id="toc-choose-columns-with-select" class="nav-link" data-scroll-target="#choose-columns-with-select"><span class="header-section-number">3</span> Choose columns with <code>select()</code></a>
+  <ul class="collapse">
+  <li><a href="#practice-1" id="toc-practice-1" class="nav-link" data-scroll-target="#practice-1"><span class="header-section-number">3.1</span> Practice</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S08E01_wrangling_01/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -363,6 +369,8 @@ $ `Inflation, consumer prices (annual %)`                                       
 </div>
 </div>
 <p>We see that <code>Country Name</code> and <code>Country Code</code> are character columns while the others are numeric (i.e., dbl).</p>
+<section id="cleaning-column-names" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="cleaning-column-names"><span class="header-section-number">1.2.1</span> Cleaning column names</h3>
 <p>It looks like we have some column names that don’t use standard R practices (i.e., they have spaces, start with numbers), so let’s use the function <a href=""><code>clean_names()</code></a> from the <code>janitor</code> package to clean those names up.</p>
 <p>First, install the package <code>janitor</code> if you don’t have it.</p>
 <div class="cell" data-layout-align="center">
@@ -617,6 +625,7 @@ Attaching package: 'janitor'</code></pre>
 </div>
 </section>
 </section>
+</section>
 <section id="pick-observations-with-filter" class="level1" data-number="2">
 <h1 data-number="2"><span class="header-section-number">2</span> Pick observations with <code>filter()</code></h1>
 <div class="cell" data-layout-align="center">
@@ -840,12 +849,17 @@ Click for the solution
 #   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
-<p>We can also select data based on its characteristics. We can select using selection helpers like:</p>
+<p>We can also select data based on its characteristics. We can select using <a href="https://dplyr.tidyverse.org/reference/select.html">selection helpers</a> like:</p>
 <ul>
 <li><a href="https://tidyselect.r-lib.org/reference/everything.html"><code>everything()</code></a>: picks all variables</li>
 <li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>starts_with()</code></a>: starts with some prefix</li>
+<li><a href=""><code>ends_with()</code></a>: ends with some suffix</li>
 <li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>contains()</code></a>: contains a specific string</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>matches()</code></a>: matches a regular expression</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>num_range()</code></a>: matches a numeric range</li>
 <li><a href="https://tidyselect.r-lib.org/reference/where.html"><code>where()</code></a>: selects columns where the statement given in the argument is TRUE</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>all_of()</code></a>: matches all of the variable names in a character vector</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>any_of()</code></a>: matches any of the names in a character vector</li>
 </ul>
 <p>For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string “gdp” in their name. I’m also going to add <code>country_name</code> so we know what we’re working with.</p>
 <div class="cell" data-layout-align="center">
@@ -895,9 +909,137 @@ Click for the solution
 # ℹ 207 more rows</code></pre>
 </div>
 </div>
-<p>You can find lots of more selection helpers <a href="https://dplyr.tidyverse.org/reference/select.html">here</a>.</p>
+<p>We can also combine selections using the <code>&amp;</code> (and), <code>|</code> (or), and <code>!</code> (not) operators. For example, if I want the columns about GNI but only the international ones I can:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"gni"</span>) <span class="sc">&amp;</span> <span class="fu">ends_with</span>(<span class="st">"international"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   gni_ppp_current_international gni_per_capita_ppp_current_international
+                           &lt;dbl&gt;                                    &lt;dbl&gt;
+ 1                   77739869000                                     2300
+ 2                   33981401261                                    11800
+ 3                  541234000000                                    13690
+ 4                            NA                                       NA
+ 5                            NA                                       NA
+ 6                  190283000000                                     6760
+ 7                    1766297473                                    19640
+ 8                  848960000000                                    19680
+ 9                   30505448341                                    10600
+10                    3718236361                                    35660
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>We can also use <code>select()</code> to order our columns, as the order we select them in dictates the order they will exist in our dataframe.</p>
+<section id="practice-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">3.1</span> Practice</h2>
+<p>Come up with 3 different ways to select the columns about children, and make sure you also include a country column so you know what you’re looking at.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Here are the columns that I’m considering to be about children:</p>
+<p>[1] “country_name”<br>
+[17] “mortality_rate_under_5_per_1_000_live_births”<br>
+[18] “prevalence_of_underweight_weight_for_age_percent_of_children_under_5”<br>
+[19] “immunization_measles_percent_of_children_ages_12_23_months”<br>
+[20] “primary_completion_rate_total_percent_of_relevant_age_group”<br>
+[21] “school_enrollment_secondary_percent_gross”<br>
+[22] “school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi”</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>By name and for columns in a row, using the <code>:</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>         mortality_rate_under_5_per_1_000_live_births<span class="sc">:</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>         school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By index:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">17</span><span class="sc">:</span><span class="dv">22</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By name characteristics:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, <span class="fu">contains</span>(<span class="st">"under_5"</span>), <span class="fu">contains</span>(<span class="st">"children"</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">contains</span>(<span class="st">"primary"</span>), <span class="fu">contains</span>(<span class="st">"school"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>These are just some ways!</p>
+</details>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->

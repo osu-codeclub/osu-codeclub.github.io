@@ -155,6 +155,8 @@ $ `Inflation, consumer prices (annual %)`                                       
 </div>
 </div>
 <p>We see that <code>Country Name</code> and <code>Country Code</code> are character columns while the others are numeric (i.e., dbl).</p>
+<section id="cleaning-column-names" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="cleaning-column-names"><span class="header-section-number">1.2.1</span> Cleaning column names</h3>
 <p>It looks like we have some column names that don’t use standard R practices (i.e., they have spaces, start with numbers), so let’s use the function <a href=""><code>clean_names()</code></a> from the <code>janitor</code> package to clean those names up.</p>
 <p>First, install the package <code>janitor</code> if you don’t have it.</p>
 <div class="cell" data-layout-align="center">
@@ -429,6 +431,7 @@ font-style: inherit;">$</span>country_name</span></code></pre></div>
 [217] "Zimbabwe"                      </code></pre>
 </div>
 </div>
+</section>
 </section>
 </section>
 <section id="pick-observations-with-filter" class="level1" data-number="2">
@@ -712,12 +715,17 @@ font-style: inherit;">!</span>country_code)</span></code></pre></div>
 #   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
 </div>
 </div>
-<p>We can also select data based on its characteristics. We can select using selection helpers like:</p>
+<p>We can also select data based on its characteristics. We can select using <a href="https://dplyr.tidyverse.org/reference/select.html">selection helpers</a> like:</p>
 <ul>
 <li><a href="https://tidyselect.r-lib.org/reference/everything.html"><code>everything()</code></a>: picks all variables</li>
 <li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>starts_with()</code></a>: starts with some prefix</li>
+<li><a href=""><code>ends_with()</code></a>: ends with some suffix</li>
 <li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>contains()</code></a>: contains a specific string</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>matches()</code></a>: matches a regular expression</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>num_range()</code></a>: matches a numeric range</li>
 <li><a href="https://tidyselect.r-lib.org/reference/where.html"><code>where()</code></a>: selects columns where the statement given in the argument is TRUE</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>all_of()</code></a>: matches all of the variable names in a character vector</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>any_of()</code></a>: matches any of the names in a character vector</li>
 </ul>
 <p>For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string “gdp” in their name. I’m also going to add <code>country_name</code> so we know what we’re working with.</p>
 <div class="cell" data-layout-align="center">
@@ -781,9 +789,189 @@ font-style: inherit;">where</span>(is.character))</span></code></pre></div>
 # ℹ 207 more rows</code></pre>
 </div>
 </div>
-<p>You can find lots of more selection helpers <a href="https://dplyr.tidyverse.org/reference/select.html">here</a>.</p>
+<p>We can also combine selections using the <code>&amp;</code> (and), <code>|</code> (or), and <code>!</code> (not) operators. For example, if I want the columns about GNI but only the international ones I can:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb37-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"gni"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ends_with</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"international"</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   gni_ppp_current_international gni_per_capita_ppp_current_international
+                           &lt;dbl&gt;                                    &lt;dbl&gt;
+ 1                   77739869000                                     2300
+ 2                   33981401261                                    11800
+ 3                  541234000000                                    13690
+ 4                            NA                                       NA
+ 5                            NA                                       NA
+ 6                  190283000000                                     6760
+ 7                    1766297473                                    19640
+ 8                  848960000000                                    19680
+ 9                   30505448341                                    10600
+10                    3718236361                                    35660
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>We can also use <code>select()</code> to order our columns, as the order we select them in dictates the order they will exist in our dataframe.</p>
+<section id="practice-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">3.1</span> Practice</h2>
+<p>Come up with 3 different ways to select the columns about children, and make sure you also include a country column so you know what you’re looking at.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Here are the columns that I’m considering to be about children:</p>
+<p>[1] “country_name”<br>
+[17] “mortality_rate_under_5_per_1_000_live_births”<br>
+[18] “prevalence_of_underweight_weight_for_age_percent_of_children_under_5”<br>
+[19] “immunization_measles_percent_of_children_ages_12_23_months”<br>
+[20] “primary_completion_rate_total_percent_of_relevant_age_group”<br>
+[21] “school_enrollment_secondary_percent_gross”<br>
+[22] “school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi”</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>By name and for columns in a row, using the <code>:</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb39-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, </span>
+<span id="cb39-3">         mortality_rate_under_5_per_1_000_live_births<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb39-4">         school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By index:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb41-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">17</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">22</span>) </span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By name characteristics:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb43-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">contains</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"under_5"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">contains</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"children"</span>),</span>
+<span id="cb43-3">         <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">contains</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"primary"</span>), <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">contains</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"school"</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>These are just some ways!</p>
+</details>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
