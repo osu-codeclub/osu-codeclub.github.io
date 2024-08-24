@@ -25,7 +25,11 @@ knitr::opts_chunk$set(eval = TRUE)
 
 We are going to start off this semester of code club with a series of sessions on how to "wrangle" your data. It can be a struggle to get data into a format that is amenable for analysis, so we will be going through a series of functions and approaches that will get you more comfortable with manipulating your data.
 
+> "Yet far too much handcrafted work — what data scientists call “data wrangling,” “data munging” and “data janitor work” — is still required. Data scientists, according to interviews and expert estimates, spend from 50 percent to 80 percent of their time mired in this more mundane labor of collecting and preparing unruly digital data, before it can be explored for useful nuggets." - [For Big-Data Scientists, ‘Janitor Work’ Is Key Hurdle to Insights, NY Times](https://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html)
+
 If you don't have R and RStudio on your computer, you can find instructions for installation [here](https://osu-codeclub.github.io/pages/setup.html). You can also find some additional introductory material on getting set up in RStudio [here](https://osu-codeclub.github.io/posts/S07E01_basics_01/).
+
+### Poll - who is new to R?
 
 ## Load libraries
 
@@ -45,6 +49,7 @@ download.file(
   destfile = "factbook_download_2015.csv"
 )
 ```
+
 You should now see the file "factbook_download_2015.csv" in your working directory.
 
 We can read it in using the tidyverse function from the [`readr`](https://readr.tidyverse.org/index.html) package called [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html).
@@ -52,6 +57,7 @@ We can read it in using the tidyverse function from the [`readr`](https://readr.
 ```{r}
 factbook_2015 <- read_csv("factbook_download_2015.csv")
 ```
+
 Let's get a better handle on this data. We can use the function [`glimpse()`](https://dplyr.tidyverse.org/reference/glimpse.html) to get a "glimpse" at our data.
 
 ```{r}
@@ -60,8 +66,21 @@ glimpse(factbook_2015)
 
 We see that `Country Name` and `Country Code` are character columns while the others are numeric (i.e., dbl).
 
+We can look at this data another way, using the function `head()` to look at the first six rows, and every column.
+
+```{r}
+head(factbook_2015)
+```
+
 ### Cleaning column names
-It looks like we have some column names that don't use standard R practices (i.e., they have spaces, start with numbers), so let's use the function [`clean_names()`]() from the `janitor` package to clean those names up.
+
+It looks like we have some column names that don't use standard R practices (i.e., they have spaces, start with numbers). This isn't a critical problem (meaning you can use column names like this - we know that because we have them here!) but it does make things slightly more difficult. The main difficulty is that you will have to refer to column names surrounded in back ticks and this can be annoying.
+
+```{r, eval = FALSE}
+factbook_2015$`Country Name`
+```
+
+Let's use the function [`clean_names()`]() from the `janitor` package to clean those names up.
 
 First, install the package `janitor` if you don't have it.
 
@@ -70,6 +89,7 @@ install.packages("janitor")
 ```
 
 Then we can load the package and clean up our column names.
+
 ```{r}
 library(janitor)
 ```
@@ -85,12 +105,19 @@ factbook_2015 <- clean_names(factbook_2015)
 colnames(factbook_2015)
 ```
 
+By default, `clean_names()` converst to "snake_case" (where words are separated by an underscore instead of a space).
+
+![[Exploring Programming Naming Styles by Kiran Vajrapu](https://kiranvajrapu.medium.com/exploring-programming-naming-styles-85aefd54c188)](img/cases.png)
+
+::: callout-note
+Having spaces, starting with numbers, or have unallowable characters (e.g., %, ?, !) is only a problem for column **names** not for cell **contents**.
+:::
+
 What if we want to see a complete list of our countries? We could run the following code to see that:
 
 ```{r}
 factbook_2015$country_name
 ```
-
 
 # Pick observations with `filter()`
 
@@ -100,18 +127,19 @@ knitr::include_graphics("img/filter.png")
 
 Sometimes you want to select observations (rows) based on values. To do this you use [`filter()`](https://dplyr.tidyverse.org/reference/filter.html). Try not to confuse this with `select()`.
 
-::: {.callout-note title="`select()` picks columns, while `filter()` picks rows."} 
+::: {.callout-note title="`select()` picks columns, while `filter()` picks rows."}
 :::
 
 The function `filter()` will keep only observations that meet your filtering criteria.
 
 Let's filter for countries that have a population more than Ohio (11.76M).
+
 ```{r}
 factbook_2015 |> 
   filter(population_total > 11760000)
 ```
 
-If we want to see the countries that also have an area that is less than the size of Ohio (116,098 km^2), we can also add that to our filter statement using the `&` operator.
+If we want to see the countries that also have an area that is less than the size of Ohio (116,098 km\^2), we can also add that to our filter statement using the `&` operator.
 
 ```{r}
 factbook_2015 |> 
@@ -124,14 +152,17 @@ There are four countries that have more people than Ohio in a space that is less
 
 How many countries have negative annual population growth? This variable is called `population_growth_annual_percent`.
 
-<details><summary>Need a hint?</summary>
+<details>
 
-Try to `filter` for `population_growth_annual_percent` < 0.
+<summary>Need a hint?</summary>
 
-</details>    
+Try to `filter` for `population_growth_annual_percent` \< 0.
 
+</details>
 
-<details><summary>Click for the solution</summary>
+<details>
+
+<summary>Click for the solution</summary>
 
 ```{r}
 factbook_2015 |> 
@@ -140,14 +171,14 @@ factbook_2015 |>
 
 There are 34 countries that have a negative annual growth rate in 2015.
 
-</details>    
+</details>
 
 # Choose columns with `select()`
 
 Often you will want to pick only certain columns in your dataframe, and you can do this with the function [`select()`](https://dplyr.tidyverse.org/reference/select.html). You can pick columns generally by:
 
 -   their names
--   their position 
+-   their position
 -   characteristics of that column
 
 If we want to know how the arguments to `select()` work, we can access the documentation material about the function.
@@ -186,18 +217,17 @@ factbook_2015 |>
   select(!country_code)
 ```
 
-
 We can also select data based on its characteristics. We can select using [selection helpers](https://dplyr.tidyverse.org/reference/select.html) like:
 
-* [`everything()`](https://tidyselect.r-lib.org/reference/everything.html): picks all variables
-*  [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html): starts with some prefix
-* [`ends_with()`](): ends with some suffix
-* [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html): contains a specific string
-* [`matches()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a regular expression
-* [`num_range()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a numeric range
-* [`where()`](https://tidyselect.r-lib.org/reference/where.html): selects columns where the statement given in the argument is TRUE
-* [`all_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches all of the variable names in a character vector
-* [`any_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches any of the names in a character vector
+-   [`everything()`](https://tidyselect.r-lib.org/reference/everything.html): picks all variables
+-   [`starts_with()`](https://tidyselect.r-lib.org/reference/starts_with.html): starts with some prefix
+-   [`ends_with()`](): ends with some suffix
+-   [`contains()`](https://tidyselect.r-lib.org/reference/starts_with.html): contains a specific string
+-   [`matches()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a regular expression
+-   [`num_range()`](https://tidyselect.r-lib.org/reference/starts_with.html): matches a numeric range
+-   [`where()`](https://tidyselect.r-lib.org/reference/where.html): selects columns where the statement given in the argument is TRUE
+-   [`all_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches all of the variable names in a character vector
+-   [`any_of()`](https://tidyselect.r-lib.org/reference/all_of.html): matches any of the names in a character vector
 
 For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string "gdp" in their name. I'm also going to add `country_name` so we know what we're working with.
 
@@ -226,25 +256,28 @@ We can also use `select()` to order our columns, as the order we select them in 
 
 Come up with 3 different ways to select the columns about children, and make sure you also include a country column so you know what you're looking at.
 
+<details>
 
-<details><summary>Need a hint?</summary>
+<summary>Need a hint?</summary>
 
 Here are the columns that I'm considering to be about children:
 
-[1] "country_name"  
-[17] "mortality_rate_under_5_per_1_000_live_births"  
-[18] "prevalence_of_underweight_weight_for_age_percent_of_children_under_5"                        
-[19] "immunization_measles_percent_of_children_ages_12_23_months"                                  
-[20] "primary_completion_rate_total_percent_of_relevant_age_group"                                 
-[21] "school_enrollment_secondary_percent_gross"                                                   
-[22] "school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi"   
+\[1\] "country_name"\
+\[17\] "mortality_rate_under_5_per_1_000_live_births"\
+\[18\] "prevalence_of_underweight_weight_for_age_percent_of_children_under_5"\
+\[19\] "immunization_measles_percent_of_children_ages_12_23_months"\
+\[20\] "primary_completion_rate_total_percent_of_relevant_age_group"\
+\[21\] "school_enrollment_secondary_percent_gross"\
+\[22\] "school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi"
 
-</details>    
+</details>
 
+<details>
 
-<details><summary>Click for the solution</summary>
+<summary>Click for the solution</summary>
 
 By name and for columns in a row, using the `:`.
+
 ```{r}
 factbook_2015 |> 
   select(country_name, 
@@ -260,6 +293,7 @@ factbook_2015 |>
 ```
 
 By name characteristics:
+
 ```{r}
 factbook_2015 |> 
   select(country_name, contains("under_5"), contains("children"),
@@ -268,4 +302,4 @@ factbook_2015 |>
 
 These are just some ways!
 
-</details>   
+</details>
