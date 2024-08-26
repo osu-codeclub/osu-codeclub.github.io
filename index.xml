@@ -1031,6 +1031,152 @@ font-style: inherit;">"school"</span>))</span></code></pre></div>
 </div>
 <p>These are just some ways!</p>
 </details>
+</section>
+</section>
+<section id="sorting-data-with-arrange" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Sorting data with <code>arrange()</code></h1>
+<p>A nice helper function for looking at your data is <a href="https://dplyr.tidyverse.org/reference/arrange.html"><code>arrange()</code></a> which sorts your data.</p>
+<p>We can sort our data based on how much forest (<code>forest_area_sq_km</code>) each country has.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb48-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(forest_area_sq_km)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 53
+   country_name             country_code population_total population_growth_an…¹
+   &lt;chr&gt;                    &lt;chr&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Gibraltar                GIB                     32520                  0.209
+ 2 Monaco                   MCO                     36760                  1.78 
+ 3 Nauru                    NRU                     11185                  2.21 
+ 4 Qatar                    QAT                   2414573                  8.65 
+ 5 Curacao                  CUW                    157980                  1.32 
+ 6 Faroe Islands            FRO                     48816                  0.722
+ 7 Greenland                GRL                     56114                 -0.322
+ 8 Malta                    MLT                    445053                  2.39 
+ 9 Sint Maarten (Dutch par… SXM                     38825                  2.98 
+10 Aruba                    ABW                    104257                  0.638
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By default, <code>arrange()</code> sorts small to big, if we want to go from big to small we can set <code>arrange(desc())</code> to sort by descending.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb50-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(forest_area_sq_km))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 53
+   country_name       country_code population_total population_growth_annual_p…¹
+   &lt;chr&gt;              &lt;chr&gt;                   &lt;dbl&gt;                        &lt;dbl&gt;
+ 1 Russian Federation RUS                 144640716                        0.279
+ 2 Brazil             BRA                 205188205                        0.846
+ 3 Canada             CAN                  35704498                        0.760
+ 4 United States      USA                 320738994                        0.736
+ 5 China              CHN                1379860000                        0.581
+ 6 Australia          AUS                  23815995                        1.44 
+ 7 Congo, Dem. Rep.   COD                  78656904                        3.39 
+ 8 Indonesia          IDN                 259091970                        1.11 
+ 9 Peru               PER                  30711863                        1.17 
+10 India              IND                1322866505                        1.19 
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>It’s not too surprising that the biggest countries in forest-feasible lattitudes have the most forest.</p>
+<p>We can also add <code>select()</code> into our pipe, so that we don’t have to scroll so far to see what the actual amount of forest is.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb52-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, surface_area_sq_km, forest_area_sq_km) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb52-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(forest_area_sq_km))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 3
+   country_name       surface_area_sq_km forest_area_sq_km
+   &lt;chr&gt;                           &lt;dbl&gt;             &lt;dbl&gt;
+ 1 Russian Federation           17098250          8149305.
+ 2 Brazil                        8515770          5038848 
+ 3 Canada                        9879750          3471157.
+ 4 United States                 9831510          3100950 
+ 5 China                         9562911          2102942.
+ 6 Australia                     7741220          1330945 
+ 7 Congo, Dem. Rep.              2344860          1316621.
+ 8 Indonesia                     1913580           950279 
+ 9 Peru                          1285220           731945.
+10 India                         3287260           708280 
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>Wow almost 50% of Russia is forested.</p>
+<section id="practice-2" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="practice-2"><span class="header-section-number">4.1</span> Practice</h2>
+<p>Which countries have the lowest cell phone subscriptions? <code>mobile_cellular_subscriptions_per_100_people</code></p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>You can use the function <code>arrange()</code> to sort your columns. The default arranging is from low to high, so if you want to go from high to low, you can set <code>arrange(desc())</code>.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1">factbook_2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb54-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, mobile_cellular_subscriptions_per_100_people) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb54-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(mobile_cellular_subscriptions_per_100_people)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   country_name              mobile_cellular_subscriptions_per_100_people
+   &lt;chr&gt;                                                            &lt;dbl&gt;
+ 1 Korea, Dem. People's Rep.                                         12.8
+ 2 Eritrea                                                           14.2
+ 3 Micronesia, Fed. Sts.                                             20.6
+ 4 Central African Republic                                          25.8
+ 5 South Sudan                                                       25.9
+ 6 Cuba                                                              29.4
+ 7 Djibouti                                                          31.2
+ 8 Marshall Islands                                                  31.4
+ 9 Kiribati                                                          35.1
+10 Chad                                                              38.7
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+</details>
 
 
 </section>
