@@ -303,3 +303,56 @@ factbook_2015 |>
 These are just some ways!
 
 </details>
+
+# Sorting data with `arrange()`
+
+A nice helper function for looking at your data is [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) which sorts your data.
+
+We can sort our data based on how much forest (`forest_area_sq_km`) each country has.
+```{r}
+factbook_2015 |> 
+  arrange(forest_area_sq_km)
+```
+
+By default, `arrange()` sorts small to big, if we want to go from big to small we can set `arrange(desc())` to sort by descending.
+
+```{r}
+factbook_2015 |> 
+  arrange(desc(forest_area_sq_km))
+```
+
+It's not too surprising that the biggest countries in forest-feasible lattitudes have the most forest.
+
+We can also add `select()` into our pipe, so that we don't have to scroll so far to see what the actual amount of forest is.
+
+```{r}
+factbook_2015 |> 
+  select(country_name, surface_area_sq_km, forest_area_sq_km) |> 
+  arrange(desc(forest_area_sq_km))
+```
+
+Wow almost 50% of Russia is forested.
+
+## Practice
+Which countries have the lowest cell phone subscriptions? `mobile_cellular_subscriptions_per_100_people`
+
+<details>
+
+<summary>Need a hint?</summary>
+
+You can use the function `arrange()` to sort your columns. The default arranging is from low to high, so if you want to go from high to low, you can set `arrange(desc())`.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+factbook_2015 |> 
+  select(country_name, mobile_cellular_subscriptions_per_100_people) |> 
+  arrange(mobile_cellular_subscriptions_per_100_people)
+```
+
+
+</details>
