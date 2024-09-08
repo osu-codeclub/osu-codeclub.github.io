@@ -200,7 +200,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
   <ul class="collapse">
-  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link" data-scroll-target="#load-libraries"><span class="header-section-number">1.1</span> Load libraries</a></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">1.1</span> Load packages</a></li>
   <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.2</span> Data</a></li>
   </ul></li>
   <li><a href="#choose-columns-with-select" id="toc-choose-columns-with-select" class="nav-link" data-scroll-target="#choose-columns-with-select"><span class="header-section-number">2</span> Choose columns with <code>select()</code></a>
@@ -270,8 +270,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://dplyr.tidyverse.org/reference/arrange.html"><code>arrange()</code></a> sorts columns based on their values</li>
 <li><a href="https://dplyr.tidyverse.org/reference/mutate.html"><code>mutate()</code></a> creates new columns based on existing ones</li>
 </ul>
-<section id="load-libraries" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="load-libraries"><span class="header-section-number">1.1</span> Load libraries</h2>
+<section id="load-packages" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">1.1</span> Load packages</h2>
 <p>First we will load the packages that we will use today.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -766,7 +766,7 @@ Click for the solution
 <section id="creating-new-columns-with-mutate" class="level1" data-number="4">
 <h1 data-number="4"><span class="header-section-number">4</span> Creating new columns with <code>mutate()</code></h1>
 <p>Sometimes we might want to use our existing columns to create new ones. For example, we might want to know which country has the highest percentage of its land as forest. In our current data set, we can see amount of forested land (<code>forest_area_sq_km</code>) but this doesn’t take into account the size of the country. Fortunately, we also have the variable <code>surface_area_sq_km</code> so this is something we can calculate ourselves.</p>
-<p>Conceptually, a new variable representing the percentage of forested land by taking <code>forest_area_sq_km</code>, dividing it by <code>surface_area_sq_km</code> and multiplying by 100.</p>
+<p>Conceptually, a new variable representing the percentage of forested land can be created by taking <code>forest_area_sq_km</code>, dividing it by <code>surface_area_sq_km</code> and multiplying by 100.</p>
 <p>The function <code>mutate()</code> uses the syntax <code>new_variable = existing_variables</code>. I am also saving over our existing dataframe so we can see our new variable. I am then using <code>select()</code> to see only the variables I want, and order by <code>desc(forest_percent)</code> to see the countries with the highest percentage of forest at the top.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="ot">&lt;-</span> factbook_2015 <span class="sc">|&gt;</span> </span>
@@ -793,30 +793,31 @@ Click for the solution
 </div>
 </div>
 <p>Wow! Suriname is 93% forested!</p>
-<p>It’s a little bit annoying that <code>forest_percent</code> is now showing up in scientific notation, let’s fix that. We will use the function <code>format()</code> within a <code>mutate()</code> function to indicate that scientific notation should be false (i.e., <code>scientific = FALSE</code>).</p>
+<p>We might be interested to have <code>forest_area_sq_km</code> and <code>surface_area_sq_km</code> show up in scientific notation,. We will use the function <code>format()</code> within a <code>mutate()</code> function to indicate that scientific notation should be true (i.e., <code>scientific = TRUE</code>).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="ot">&lt;-</span> factbook_2015 <span class="sc">|&gt;</span> </span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest_percent =</span> <span class="fu">format</span>(forest_percent, <span class="at">scientific =</span> <span class="cn">FALSE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">forest_area_sq_km =</span> <span class="fu">format</span>(forest_area_sq_km, <span class="at">scientific =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">surface_area_sq_km =</span> <span class="fu">format</span>(surface_area_sq_km, <span class="at">scientific =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Did it work?</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, forest_percent) <span class="sc">|&gt;</span> </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(forest_percent))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, forest_area_sq_km, surface_area_sq_km) <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(surface_area_sq_km))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="styled-output"><code># A tibble: 217 × 2
-   country_name          forest_percent
-   &lt;chr&gt;                 &lt;chr&gt;         
- 1 Suriname              93.1001709193 
- 2 Micronesia, Fed. Sts. 91.8142857143 
- 3 Palau                 89.1086956522 
- 4 Equatorial Guinea     88.7778966132 
- 5 Gabon                 88.1309074607 
- 6 Solomon Islands       87.4262975779 
- 7 American Samoa        86.4000000000 
- 8 Guyana                85.8787737824 
- 9 Papua New Guinea      77.8334217008 
-10 Seychelles            73.2608695652 
+<pre class="styled-output"><code># A tibble: 217 × 3
+   country_name             forest_area_sq_km surface_area_sq_km
+   &lt;chr&gt;                    &lt;chr&gt;             &lt;chr&gt;             
+ 1 Canada                   3.471157e+06      9.879750e+06      
+ 2 United Arab Emirates     3.173000e+03      9.864790e+04      
+ 3 United States            3.100950e+06      9.831510e+06      
+ 4 Sao Tome and Principe    5.500000e+02      9.600000e+02      
+ 5 China                    2.102942e+06      9.562911e+06      
+ 6 Turks and Caicos Islands 1.052000e+02      9.500000e+02      
+ 7 Tanzania                 4.809000e+05      9.473000e+05      
+ 8 Hungary                  2.060820e+04      9.303000e+04      
+ 9 Cyprus                   1.727100e+03      9.251000e+03      
+10 Nigeria                  2.244345e+05      9.237700e+05      
 # ℹ 207 more rows</code></pre>
 </div>
 </div>
