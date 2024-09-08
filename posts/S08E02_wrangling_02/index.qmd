@@ -31,7 +31,8 @@ Last Code Club, we didn't get to go over the function `select()` - so we are goi
 -   [`arrange()`](https://dplyr.tidyverse.org/reference/arrange.html) sorts columns based on their values
 -   [`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html) creates new columns based on existing ones
 
-## Load libraries
+## Load packages
+
 First we will load the packages that we will use today.
 ```{r}
 library(tidyverse) 
@@ -260,7 +261,7 @@ factbook_2015 |>
 
 Sometimes we might want to use our existing columns to create new ones. For example, we might want to know which country has the highest percentage of its land as forest. In our current data set, we can see amount of forested land (`forest_area_sq_km`) but this doesn't take into account the size of the country. Fortunately, we also have the variable `surface_area_sq_km` so this is something we can calculate ourselves.
 
-Conceptually, a new variable representing the percentage of forested land by taking `forest_area_sq_km`, dividing it by `surface_area_sq_km` and multiplying by 100. 
+Conceptually, a new variable representing the percentage of forested land can be created by taking `forest_area_sq_km`, dividing it by `surface_area_sq_km` and multiplying by 100. 
 
 The function `mutate()` uses the syntax `new_variable = existing_variables`. I am also saving over our existing dataframe so we can see our new variable. I am then using `select()` to see only the variables I want, and order by `desc(forest_percent)` to see the countries with the highest percentage of forest at the top.
 
@@ -275,18 +276,19 @@ factbook_2015 |>
 
 Wow! Suriname is 93% forested!
 
-It's a little bit annoying that `forest_percent` is now showing up in scientific notation, let's fix that. We will use the function `format()` within a `mutate()` function to indicate that scientific notation should be false (i.e., `scientific = FALSE`).
+We might be interested to have `forest_area_sq_km` and `surface_area_sq_km` show up in scientific notation,. We will use the function `format()` within a `mutate()` function to indicate that scientific notation should be true (i.e., `scientific = TRUE`).
 
 ```{r}
 factbook_2015 <- factbook_2015 |> 
-  mutate(forest_percent = format(forest_percent, scientific = FALSE))
+  mutate(forest_area_sq_km = format(forest_area_sq_km, scientific = TRUE),
+         surface_area_sq_km = format(surface_area_sq_km, scientific = TRUE))
 ```
 
 Did it work?
 ```{r}
 factbook_2015 |> 
-  select(country_name, forest_percent) |> 
-  arrange(desc(forest_percent))
+  select(country_name, forest_area_sq_km, surface_area_sq_km) |> 
+  arrange(desc(surface_area_sq_km))
 ```
 
 Excellent.
