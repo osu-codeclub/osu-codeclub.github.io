@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.549">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2024-09-16">
+
+<title>OSU Code Club - Data Wrangling 3: Summarizing Data by Group</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/other.html"> 
+<span class="menu-text">Other stuff</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-new-here" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">New here?</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-new-here">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/r_resources.html">
+ <span class="dropdown-text">R resources for beginners</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#a-penguins-dataset" id="toc-a-penguins-dataset" class="nav-link" data-scroll-target="#a-penguins-dataset"><span class="header-section-number">2</span> A penguins dataset</a></li>
+  <li><a href="#exploring-data-with-the-count-function" id="toc-exploring-data-with-the-count-function" class="nav-link" data-scroll-target="#exploring-data-with-the-count-function"><span class="header-section-number">3</span> Exploring data with the <code>count()</code> function</a></li>
+  <li><a href="#missing-data" id="toc-missing-data" class="nav-link" data-scroll-target="#missing-data"><span class="header-section-number">4</span> Missing data</a></li>
+  <li><a href="#exercises-i" id="toc-exercises-i" class="nav-link" data-scroll-target="#exercises-i"><span class="header-section-number">5</span> Exercises I</a>
+  <ul class="collapse">
+  <li><a href="#count" id="toc-count" class="nav-link" data-scroll-target="#count"><span class="header-section-number">5.1</span> <code>count()</code></a></li>
+  <li><a href="#removing-rows-with-missing-data" id="toc-removing-rows-with-missing-data" class="nav-link" data-scroll-target="#removing-rows-with-missing-data"><span class="header-section-number">5.2</span> Removing rows with missing data</a></li>
+  </ul></li>
+  <li><a href="#the-summarize-function" id="toc-the-summarize-function" class="nav-link" data-scroll-target="#the-summarize-function"><span class="header-section-number">6</span> The <code>summarize()</code> function</a></li>
+  <li><a href="#exercises-ii" id="toc-exercises-ii" class="nav-link" data-scroll-target="#exercises-ii"><span class="header-section-number">7</span> Exercises II</a>
+  <ul class="collapse">
+  <li><a href="#means-across-variables" id="toc-means-across-variables" class="nav-link" data-scroll-target="#means-across-variables"><span class="header-section-number">7.1</span> Means across variables</a></li>
+  <li><a href="#summaries-across-multiple-groups" id="toc-summaries-across-multiple-groups" class="nav-link" data-scroll-target="#summaries-across-multiple-groups"><span class="header-section-number">7.2</span> Summaries across multiple groups</a></li>
+  </ul></li>
+  <li><a href="#the-slice_-functions" id="toc-the-slice_-functions" class="nav-link" data-scroll-target="#the-slice_-functions"><span class="header-section-number">8</span> The <code>slice_</code> functions</a></li>
+  <li><a href="#exercises-iii" id="toc-exercises-iii" class="nav-link" data-scroll-target="#exercises-iii"><span class="header-section-number">9</span> Exercises III</a>
+  <ul class="collapse">
+  <li><a href="#no-ties-please" id="toc-no-ties-please" class="nav-link" data-scroll-target="#no-ties-please"><span class="header-section-number">9.1</span> No ties, please</a></li>
+  <li><a href="#random-penguins" id="toc-random-penguins" class="nav-link" data-scroll-target="#random-penguins"><span class="header-section-number">9.2</span> Random penguins</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S08E03_wrangling_03/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Data Wrangling 3: Summarizing Data by Group</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">r-basics</div>
+    <div class="quarto-category">tidyverse</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jelmer Poelstra </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 16, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-the-past-two-weeks" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-the-past-two-weeks">Recap of the past two weeks</h4>
+<p>In the past two weeks, we’ve been learning about the following functions from the <em>dplyr</em> package, a central workhorse of the tidyverse ecosystem, to manipulate data in data frames:</p>
+<ul>
+<li><code>filter()</code> to pick rows (which typically represent observations/samples/individuals)</li>
+<li><code>select()</code> to pick columns (which typically represent variables/properties)</li>
+<li><code>arrange()</code> to sort data frame rows</li>
+<li><code>mutate()</code> to add and manipulate data frame columns</li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<p>Today, our main focus is another very useful <em>dplyr</em> function: <code>summarize()</code> to compute summaries across rows, typically across <strong>groups of rows</strong>.</p>
+<p>But we will start with an introduction to a new dataset, the <code>count()</code> function, and dealing with missing data.</p>
+<p>And if we get to it, we will learn about the <code>slice_()</code> family of functions, to pick rows but in a different manner than with <code>filter()</code>.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="setting-up" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
+<p>Load the <em>tidyverse</em> meta-package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Still need to install the tidyverse? <em>Click here for instructions</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="a-penguins-dataset" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="a-penguins-dataset"><span class="header-section-number">2</span> A penguins dataset</h2>
+<p>The data set we will use today is from the <a href="https://allisonhorst.github.io/palmerpenguins/index.html"><code>palmerpenguins</code></a> package, which contains a data set on 🐧 collected by Dr.&nbsp;Kristen Gorman at the Palmer Station Antarctica.</p>
+<p>It is a nice, relatively simple data set to practice data exploration and visualization in R.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/palmerpenguins_hex.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>Illustration by <a href="https://allisonhorst.github.io/palmerpenguins/articles/art.html">Allison Horst</a></figcaption>
+</figure>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="installing-and-loading-the-package" class="level4">
+<h4 class="anchored" data-anchor-id="installing-and-loading-the-package">Installing and loading the package</h4>
+<p>We’ll have to install that package first, which should be quick:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"palmerpenguins"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we’re ready to load the package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="taking-a-look-at-the-data-set" class="level4">
+<h4 class="anchored" data-anchor-id="taking-a-look-at-the-data-set">Taking a look at the data set</h4>
+<p>Once you’ve loaded the <em>palmerpenguins</em> package, you will have a data frame called <code>penguins</code> at your disposal — let’s take a look:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>penguins</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 344 × 8
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# ℹ 334 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>In this data set, <strong>each row represents an individual penguin</strong> for which we know the <code>species</code>, <code>sex</code>, <code>island</code> of origin, and for which, across several <code>year</code>s, we have a set of size measurements:</p>
+<ul>
+<li>Bill length in mm (<code>bill_length_mm</code> column)</li>
+<li>Bill depth in mm (<code>bill_depth_mm</code> column)</li>
+<li>Flipper length in mm (<code>flipper_length_mm</code> column)</li>
+<li>Body mass in grams (<code>body_mass_g</code> column)</li>
+</ul>
+<p>Here’s a visual for what the two bill measurements represent:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/culmen_depth.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exploring-data-with-the-count-function" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="exploring-data-with-the-count-function"><span class="header-section-number">3</span> Exploring data with the <code>count()</code> function</h2>
+<p>To orient yourself a bit more to this dataset, you may want to see, for example, how many species and how many islands are in it, and how frequently each occur.</p>
+<p>In other words, we may want to produce a few “count tables”, which is a common part of Exploratory Data Analysis (EDA). We can do this with the <em>dplyr</em> function <a href="https://dplyr.tidyverse.org/reference/count.html"><code>count()</code></a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 2
+  species       n
+  &lt;fct&gt;     &lt;int&gt;
+1 Adelie      152
+2 Chinstrap    68
+3 Gentoo      124</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 2
+  island        n
+  &lt;fct&gt;     &lt;int&gt;
+1 Biscoe      168
+2 Dream       124
+3 Torgersen    52</code></pre>
+</div>
+</div>
+<p>OK, so we have 3 species of penguin and 3 island. Which species occur on which islands? We can answer this by simply specifying both columns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(species, island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  species   island        n
+  &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;
+1 Adelie    Biscoe       44
+2 Adelie    Dream        56
+3 Adelie    Torgersen    52
+4 Chinstrap Dream        68
+5 Gentoo    Biscoe      124</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Why are not all possible combinations of <code>species</code> and <code>island</code> shown here?
+</summary>
+Some <code>species</code> do not appear to occur on (or at least haven’t been sampled on) certain <code>island</code>s. These zero-counts are not show, or “dropped, by default.
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>To <strong>show zero-count combinations</strong>, add <code>.drop = FALSE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(species, island, <span class="at">.drop =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 9 × 3
+  species   island        n
+  &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;
+1 Adelie    Biscoe       44
+2 Adelie    Dream        56
+3 Adelie    Torgersen    52
+4 Chinstrap Biscoe        0
+5 Chinstrap Dream        68
+6 Chinstrap Torgersen     0
+7 Gentoo    Biscoe      124
+8 Gentoo    Dream         0
+9 Gentoo    Torgersen     0</code></pre>
+</div>
+</div>
+<p>Finally, you can <strong>sort the output by the count</strong> using <code>sort = TRUE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(species, island, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  species   island        n
+  &lt;fct&gt;     &lt;fct&gt;     &lt;int&gt;
+1 Gentoo    Biscoe      124
+2 Chinstrap Dream        68
+3 Adelie    Dream        56
+4 Adelie    Torgersen    52
+5 Adelie    Biscoe       44</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Side note: Base R’s <code>table()</code> function <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Also worth mentioning is the base R <code>table()</code> function, which is similar to <code>count()</code>. While its output format is unwieldy for follow-up analyses, you may prefer its formatting especially when wanting to glance at a 2-way count table to see patterns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(penguins<span class="sc">$</span>species, penguins<span class="sc">$</span>island)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>           
+            Biscoe Dream Torgersen
+  Adelie        44    56        52
+  Chinstrap      0    68         0
+  Gentoo       124     0         0</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>Additionally, as a <em>dplyr</em> function, <code>count()</code> only works with data frames. You may sometimes need to create a count table for a <strong>vector</strong>, and <code>table()</code> can do that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>species_vector <span class="ot">&lt;-</span> penguins<span class="sc">$</span>species</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(species_vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>species_vector
+   Adelie Chinstrap    Gentoo 
+      152        68       124 </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="missing-data" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="missing-data"><span class="header-section-number">4</span> Missing data</h2>
+<p>Let’s compute the mean bill length across all penguins:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>bill_length_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] NA</code></pre>
+</div>
+</div>
+<details>
+<summary>
+What does <code>NA</code> mean and why are we getting this?
+</summary>
+<code>NA</code> means “not any” and is R’s way of representing missing data. When a computation in R returns <code>NA</code>, this means that some of the values used must themselves have been <code>NA</code>. In other words, one or more of the values in the <code>bill_length_mm</code> columns are <code>NA</code>: perhaps the penguin in question got away before its bill was measured.
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>We can overcome this by setting the argument <code>na.rm</code> (“NA-remove”) to <code>TRUE</code> – and note that this argument is available in many functions in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(penguins<span class="sc">$</span>bill_length_mm, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 43.92193</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>Let’s find the penguins with a missing bill length measurement:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.na</span>(bill_length_mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 2 × 8
+  species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie  Torgersen             NA            NA                NA          NA
+2 Gentoo  Biscoe                NA            NA                NA          NA
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-i" class="level2 exercise" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">5</span> Exercises I</h2>
+<section id="count" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="count"><span class="header-section-number">5.1</span> <code>count()</code></h3>
+<p><strong>A)</strong> Use <code>count()</code> to get the number of penguins for each combination of <code>species</code>, <code>year</code> and <code>sex</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> <span class="fu">count</span>(species, year, sex)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 22 × 4
+   species    year sex        n
+   &lt;fct&gt;     &lt;int&gt; &lt;fct&gt;  &lt;int&gt;
+ 1 Adelie     2007 female    22
+ 2 Adelie     2007 male      22
+ 3 Adelie     2007 &lt;NA&gt;       6
+ 4 Adelie     2008 female    25
+ 5 Adelie     2008 male      25
+ 6 Adelie     2009 female    26
+ 7 Adelie     2009 male      26
+ 8 Chinstrap  2007 female    13
+ 9 Chinstrap  2007 male      13
+10 Chinstrap  2008 female     9
+# ℹ 12 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> What is the least common combination of <code>species</code> and <code>sex</code> for penguins weighing less than 4,000 grams?</p>
+<details>
+<summary>
+<b>Hint</b> (click here)
+</summary>
+You’ll have to <code>filter()</code> first.
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The least common combination among such light-weight penguins is female Gentoo, of which there is only 1. Or you may also argue that the answer should be male Gentoo, of which there are none:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(body_mass_g <span class="sc">&lt;</span> <span class="dv">4000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(species, sex, <span class="at">.drop =</span> <span class="cn">FALSE</span>, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 7 × 3
+  species   sex        n
+  &lt;fct&gt;     &lt;fct&gt;  &lt;int&gt;
+1 Adelie    female    73
+2 Adelie    male      35
+3 Chinstrap female    33
+4 Chinstrap male      19
+5 Adelie    &lt;NA&gt;       4
+6 Gentoo    female     1
+7 Gentoo    male       0</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+</section>
+<section id="removing-rows-with-missing-data" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="removing-rows-with-missing-data"><span class="header-section-number">5.2</span> Removing rows with missing data</h3>
+<p>For the sake of convenience, we will here remove these two penguins that don’t seem to have had <em>any</em> measurements taken<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p><strong>A</strong>) Do so by storing the output of an appropriate <code>filter()</code> operation in a new data frame <code>penguins_noNA</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(bill_length_mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<p><strong>B</strong>) Check how many penguins (rows) were removed.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>2 rows should have been removed.</p>
+<p>There are many ways to check this! You can simply look for these objects in the Environment pane, print them to screen, or use the <code>nrow()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 344</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins_noNA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 342</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins) <span class="sc">-</span> <span class="fu">nrow</span>(penguins_noNA)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 2</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Side note: Checking and removing all columns with missing data <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You can see rows with missing data in <em>any</em> column, regardless of how many there are in total, using the <code>if_any()</code> helper function of <code>filter()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">if_any</span>(<span class="fu">everything</span>(), is.na)) <span class="sc">|&gt;</span></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>body_mass_g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 11 × 7
+   species island    bill_length_mm bill_depth_mm flipper_length_mm sex    year
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt; &lt;fct&gt; &lt;int&gt;
+ 1 Adelie  Torgersen           NA            NA                  NA &lt;NA&gt;   2007
+ 2 Adelie  Torgersen           34.1          18.1               193 &lt;NA&gt;   2007
+ 3 Adelie  Torgersen           42            20.2               190 &lt;NA&gt;   2007
+ 4 Adelie  Torgersen           37.8          17.1               186 &lt;NA&gt;   2007
+ 5 Adelie  Torgersen           37.8          17.3               180 &lt;NA&gt;   2007
+ 6 Adelie  Dream               37.5          18.9               179 &lt;NA&gt;   2007
+ 7 Gentoo  Biscoe              44.5          14.3               216 &lt;NA&gt;   2007
+ 8 Gentoo  Biscoe              46.2          14.4               214 &lt;NA&gt;   2008
+ 9 Gentoo  Biscoe              47.3          13.8               216 &lt;NA&gt;   2009
+10 Gentoo  Biscoe              44.5          15.7               217 &lt;NA&gt;   2009
+11 Gentoo  Biscoe              NA            NA                  NA &lt;NA&gt;   2009</code></pre>
+</div>
+</div>
+<p>(I removed the <code>body_mass_g</code> column just to be able to fit the <code>sex</code> column on the webpage, which is where the <code>NA</code>s are.)</p>
+<p>By just adding a <code>!</code> to the above code, you can therefore remove any rows with any missing data:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA2a <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">if_any</span>(<span class="fu">everything</span>(), is.na))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Though it is also worth noting that there is a specialized base R function available for this as well:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA2b <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins)         <span class="co"># The original data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 344</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins_noNA)    <span class="co"># Without the 2 penguins with missing measurements</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 342</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins_noNA2a)  <span class="co"># Without all rows with missing data, using filter()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 333</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(penguins_noNA2b)  <span class="co"># Without all rows with missing data, using na.omit()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 333</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+<section id="the-summarize-function" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="the-summarize-function"><span class="header-section-number">6</span> The <code>summarize()</code> function</h2>
+<p>The <a href="https://dplyr.tidyverse.org/reference/summarise.html"><code>summarize()</code> function from the <em>dplyr</em> package</a> can compute across-row data summaries. As a first example, here’s how you can compute the overall mean bill length with this function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_len_mean =</span> <span class="fu">mean</span>(bill_length_mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 1 × 1
+  bill_len_mean
+          &lt;dbl&gt;
+1          43.9</code></pre>
+</div>
+</div>
+<p>As you can see, this function has quite a different output from the <em>dplyr</em> functions we’d seen so far. All of those returned a manipulated version of our original dataframe, whereas <code>summarize()</code> returns a “completely new” dataframe with a summary of the original data.</p>
+<p>However, summarizing <em>across all rows at once</em> with <code>summarize()</code> is much more verbose than the simple “base R” solution we saw above (<code>mean(penguins_noNA$bill_length_mm)</code>).</p>
+<hr style="height:1pt; visibility:hidden;">
+<section id="summarizing-by-group" class="level4">
+<h4 class="anchored" data-anchor-id="summarizing-by-group">Summarizing by group</h4>
+<p>The real power of <code>summarize()</code> comes with its ability to compute <strong>group-wise summaries</strong>. For example, simply by adding <code>.by = species</code>, it will calculate the mean bill length separately for each species:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_len_mean =</span> <span class="fu">mean</span>(bill_length_mm), <span class="at">.by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 2
+  species   bill_len_mean
+  &lt;fct&gt;             &lt;dbl&gt;
+1 Adelie             38.8
+2 Gentoo             47.5
+3 Chinstrap          48.8</code></pre>
+</div>
+</div>
+<p>Nice! We can also compute multiple summarized variables — and use summarizing functions other than <code>mean()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_len_mean =</span> <span class="fu">mean</span>(bill_length_mm),</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">bill_len_max =</span> <span class="fu">max</span>(bill_length_mm),</span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">bill_len_min =</span> <span class="fu">min</span>(bill_length_mm),</span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 4
+  species   bill_len_mean bill_len_max bill_len_min
+  &lt;fct&gt;             &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;
+1 Adelie             38.8         46           32.1
+2 Gentoo             47.5         59.6         40.9
+3 Chinstrap          48.8         58           40.9</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="including-group-counts" class="level4">
+<h4 class="anchored" data-anchor-id="including-group-counts">Including group counts</h4>
+<p>A handy helper function is <strong><code>n()</code></strong>, which will compute the <strong>number of rows for each group</strong> (i.e.&nbsp;the group sizes, which can be good to know, for example so you don’t make unfounded conclusions based on really small sample sizes):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_depth_mean =</span> <span class="fu">mean</span>(bill_depth_mm),</span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_penguins =</span> <span class="fu">n</span>(),</span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 3
+  species   bill_depth_mean n_penguins
+  &lt;fct&gt;               &lt;dbl&gt;      &lt;int&gt;
+1 Adelie               18.3        151
+2 Gentoo               15.0        123
+3 Chinstrap            18.4         68</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="common-summary-statistic-functions" class="level4">
+<h4 class="anchored" data-anchor-id="common-summary-statistic-functions">Common summary statistic functions</h4>
+<p>Here is an overview of the most commonly used functions to compute summaries:</p>
+<ul>
+<li><code>mean()</code> &amp; <code>median()</code></li>
+<li><code>min()</code> &amp; <code>max()</code></li>
+<li><code>sum()</code></li>
+<li><code>sd()</code>: standard deviation</li>
+<li><code>IQR()</code>: interquartile range</li>
+<li><code>n()</code>: counts the number of rows (observations)</li>
+<li><code>n_distinct()</code>: counts the number of distinct (unique) values</li>
+</ul>
+<p>Two final comments about <code>summarize()</code>:</p>
+<ul>
+<li><p>You can also ask <code>summarize()</code> to compute summaries by <strong>multiple columns</strong>, which will return separate summaries for each <em>combination</em> of the involved variables — we’ll see this in the exercises.</p></li>
+<li><p>This may be obvious, but whatever column you are computing summaries by (using <code>.by</code>) should be a <strong>categorical variable</strong>. In our <code>diamond</code> examples, we’re only using columns that are <code>factor</code>s, but “regular” <code>character</code> columns will work just fine as well.</p></li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Side note: <code>group_by()</code> <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The “classic” way of using <code>summarize()</code> with multiple groups is by preceding it with a <code>group_by()</code> call — e.g., the code below is equivalent to our last example above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span> </span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_depth_mean =</span> <span class="fu">mean</span>(bill_depth_mm),</span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_penguins =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 3
+  species   bill_depth_mean n_penguins
+  &lt;fct&gt;               &lt;dbl&gt;      &lt;int&gt;
+1 Adelie               18.3        151
+2 Chinstrap            18.4         68
+3 Gentoo               15.0        123</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>The <code>.by</code> argument to <code>summarize()</code> (and other functions!) is a rather recent addition, but I prefer it over <code>group_by()</code>:</p>
+<ul>
+<li>It is simpler, a bit less typing, and makes the <code>summarize()</code> call self-contained</li>
+<li>When grouping by multiple columns, <code>group_by()</code> has some odd, unhelpful behavior where it keeps some of the groupings, such that you likely need an <code>ungroup()</code> call as well.</li>
+</ul>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-ii" class="level2 exercise" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">7</span> Exercises II</h2>
+<section id="means-across-variables" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="means-across-variables"><span class="header-section-number">7.1</span> Means across variables</h3>
+<p>Compute the per-species means for all 4 size-related variables.</p>
+<p>Do all these variables co-vary, such that, for example, one species is the largest for each measurement?</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">bill_len =</span> <span class="fu">mean</span>(bill_length_mm),</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">bill_dep =</span> <span class="fu">mean</span>(bill_depth_mm),</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">flip_len =</span> <span class="fu">mean</span>(flipper_length_mm),</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">body_mass =</span> <span class="fu">mean</span>(body_mass_g),</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 5
+  species   bill_len bill_dep flip_len body_mass
+  &lt;fct&gt;        &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 Adelie        38.8     18.3     190.     3701.
+2 Gentoo        47.5     15.0     217.     5076.
+3 Chinstrap     48.8     18.4     196.     3733.</code></pre>
+</div>
+</div>
+<p>The variables seem to largely co-vary across species, but bill depth stands out: the large Gentoo penguins have less deep bills than the other two species.</p>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="summaries-across-multiple-groups" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="summaries-across-multiple-groups"><span class="header-section-number">7.2</span> Summaries across multiple groups</h3>
+<p>For Adelie penguins only, find the combination of <code>island</code> and <code>year</code> on which the lightest penguins were found, on average.</p>
+<p>For this, you’ll have to group by both abovementioned columns. See if you can figure this out by yourself first, but check out the grouping hint below if you can’t get that part to work.</p>
+<details>
+<summary>
+<b>Grouping hint</b> (click here)
+</summary>
+<code>.by = c(island, year)</code> will group by these 3 columns at once.
+</details>
+<details>
+<summary>
+<b>More hints</b> (click here)
+</summary>
+<ul>
+<li><code>filter()</code> before you summarize.</li>
+<li><code>arrange()</code> after you summarize.</li>
+</ul>
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>After summarizing, it makes sense to arrange mean mass, so you can see the “lightest species-island combinations” first:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">==</span> <span class="st">"Adelie"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mass_mean =</span> <span class="fu">mean</span>(body_mass_g),</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> <span class="fu">c</span>(island, year)) <span class="sc">|&gt;</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(mass_mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 9 × 3
+  island     year mass_mean
+  &lt;fct&gt;     &lt;int&gt;     &lt;dbl&gt;
+1 Torgersen  2009     3489.
+2 Biscoe     2007     3620 
+3 Biscoe     2008     3628.
+4 Dream      2009     3651.
+5 Dream      2007     3671.
+6 Dream      2008     3756.
+7 Torgersen  2007     3763.
+8 Torgersen  2008     3856.
+9 Biscoe     2009     3858.</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<p><br></p>
+<section id="the-slice_-functions" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="the-slice_-functions"><span class="header-section-number">8</span> The <code>slice_</code> functions</h2>
+<p>Like the <code>filter()</code> function, <a href="https://dplyr.tidyverse.org/reference/slice.html">functions in the <code>slice_</code> family</a> select specific rows, but have some different functionality that’s quite handy — especially in combination with grouping.</p>
+<p>Let’s say we wanted to only get, <strong>for each <code>species</code>, the lightest penguin</strong>. We can do this pretty easily with the <code>slice_max()</code> function, which will return the row(s) with the highest value for a specified variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(body_mass_g, <span class="at">by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 4 × 8
+  species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie    Biscoe           36.5          16.6               181        2850
+2 Adelie    Biscoe           36.4          17.1               184        2850
+3 Gentoo    Biscoe           42.7          13.7               208        3950
+4 Chinstrap Dream            46.9          16.6               192        2700
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Why are we getting more than one penguin per <code>species</code> in some cases? <em>(Click to see the answer)</em>
+</summary>
+Because of ties in the <code>body_mass_g</code> value. (We’ll get back to this in the next set of exercises.)
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>You can get more than just the single highest (<code>slice_max()</code>) / lowest (<code>slice_min()</code>) value per group with the <code>n=</code> argument, and can get a specific proportion of rows with <code>prop=</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the 3 penguins with the longest flippers for each year:</span></span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(flipper_length_mm, <span class="at">by =</span> year, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 10 × 8
+   species island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Gentoo  Biscoe           50            16.3               230        5700
+ 2 Gentoo  Biscoe           59.6          17                 230        6050
+ 3 Gentoo  Biscoe           48.7          15.1               222        5350
+ 4 Gentoo  Biscoe           47.3          15.3               222        5250
+ 5 Gentoo  Biscoe           54.3          15.7               231        5650
+ 6 Gentoo  Biscoe           49.8          16.8               230        5700
+ 7 Gentoo  Biscoe           48.6          16                 230        5800
+ 8 Gentoo  Biscoe           52.1          17                 230        5550
+ 9 Gentoo  Biscoe           51.5          16.3               230        5500
+10 Gentoo  Biscoe           55.1          16                 230        5850
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the 2% narrowest-billed penguins for each sex</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(bill_depth_mm, <span class="at">by =</span> sex, <span class="at">prop =</span> <span class="fl">0.02</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 8
+  species island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Gentoo  Biscoe           48.5          14.1               220        5300
+2 Gentoo  Biscoe           51.3          14.2               218        5300
+3 Gentoo  Biscoe           50.2          14.3               218        5700
+4 Gentoo  Biscoe           42.9          13.1               215        5000
+5 Gentoo  Biscoe           46.1          13.2               211        4500
+6 Gentoo  Biscoe           44.9          13.3               213        5100
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The full set of <code>slice_</code> functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>slice_head(n = 1)</code> takes the first row.</li>
+<li><code>slice_tail(n = 1)</code> takes the last row</li>
+<li><code>slice_min(x, n = 1)</code> takes the row with the smallest value in column <code>x</code>.</li>
+<li><code>slice_max(x, n = 1)</code> takes the row with the largest value in column <code>x</code>.</li>
+<li><code>slice_sample(n = 1)</code> takes one random row.</li>
+<li><code>slice(15)</code> takes the 15th row.</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-iii" class="level2 exercise" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="exercises-iii"><span class="header-section-number">9</span> Exercises III</h2>
+<section id="no-ties-please" class="level3" data-number="9.1">
+<h3 data-number="9.1" class="anchored" data-anchor-id="no-ties-please"><span class="header-section-number">9.1</span> No ties, please</h3>
+<p>Above, when we first used <code>slice_min()</code>, we got multiple rows for some groups. Check out the help for this function (<code>?slice_min</code>) and get it to print only one row per group, even in the case of ties.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The <code>with_ties</code> argument controls this. The default is <code>TRUE</code> (do include ties), so we want to set it to <code>FALSE</code> (don’t include ties):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(body_mass_g, <span class="at">by =</span> species, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 8
+  species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+  &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+1 Adelie    Biscoe           36.5          16.6               181        2850
+2 Gentoo    Biscoe           42.7          13.7               208        3950
+3 Chinstrap Dream            46.9          16.6               192        2700
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="random-penguins" class="level3" data-number="9.2">
+<h3 data-number="9.2" class="anchored" data-anchor-id="random-penguins"><span class="header-section-number">9.2</span> Random penguins</h3>
+<p>Use <code>slice_sample()</code> to get 5 random penguins for each combination of <code>year</code> and <code>island</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>penguins_noNA <span class="sc">|&gt;</span></span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">by =</span> <span class="fu">c</span>(year, island))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 45 × 8
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           34.6          21.1               198        4400
+ 2 Adelie  Torgersen           36.7          19.3               193        3450
+ 3 Adelie  Torgersen           39.2          19.6               195        4675
+ 4 Adelie  Torgersen           39.1          18.7               181        3750
+ 5 Adelie  Torgersen           40.3          18                 195        3250
+ 6 Gentoo  Biscoe              40.9          13.7               214        4650
+ 7 Gentoo  Biscoe              50            15.3               220        5550
+ 8 Gentoo  Biscoe              46.7          15.3               219        5200
+ 9 Gentoo  Biscoe              47.6          14.5               215        5400
+10 Gentoo  Biscoe              42.9          13.1               215        5000
+# ℹ 35 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p> Removing rows with <code>NA</code>s <em>may</em> be appropriate for your own data too, but this will depend on the context!<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S08E03_wrangling_03/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
