@@ -1,5 +1,5 @@
 ---
-title: "Data Wrangling 3: Summarizing Data by Group"
+title: "Data Wrangling 3: Counting and Summarizing Data by Group"
 author: "Jelmer Poelstra"
 date: "2024-09-16"
 categories: [r-basics, tidyverse]
@@ -34,21 +34,21 @@ to manipulate data in data frames:
 
 #### Learning objectives for today
 
-Today, our main focus is another very useful _dplyr_ function:
-`summarize()` to compute summaries across rows, typically across **groups of rows**.
+- Or main focus is another very useful _dplyr_ function:
+  `summarize()` to compute summaries across rows, typically across **groups of rows**.
 
-But we will start with an introduction to a new dataset,
-the `count()` function, and dealing with missing data.
+- We will start with an introduction to a new dataset,
+  the `count()` function, and dealing with missing data.
 
-And if we get to it,
-we will learn about the `slice_()` family of functions,
-to pick rows but in a different manner than with `filter()`.
+- If we get to it,
+  we will also learn about the `slice_()` family of functions,
+  to pick rows in a different manner than with `filter()`.
 
 <hr style="height:1pt; visibility:hidden;" />
 
 #### Setting up
 
-Load the _tidyverse_ meta-package:
+Load the tidyverse meta-package:
 
 ```{r}
 library(tidyverse)
@@ -137,8 +137,10 @@ penguins |> count(species)
 penguins |> count(island)
 ```
 
-OK, so we have 3 species of penguin and 3 island. Which species occur on which islands?
-We can answer this by simply specifying both columns:
+OK, so we have penguins that belong to 3 different species occur on 3 different
+islands.
+Which species occur on which islands?
+We can answer this with `count()` simply by specifying both columns:
 
 ```{r}
 penguins |> count(species, island)
@@ -362,6 +364,9 @@ penguins_noNA |>
   summarize(bill_len_mean = mean(bill_length_mm))
 ```
 
+(Note that we are now using `penguins_noNA`, which you created in the exercise above,
+and we will continue to do so during the rest of the session.)
+
 As you can see, this function has quite a different output from the _dplyr_ functions we'd seen so far.
 All of those returned a manipulated version of our original dataframe,
 whereas `summarize()` returns a "completely new" dataframe with a summary of the original data.
@@ -373,7 +378,8 @@ than the simple "base R" solution we saw above (`mean(penguins_noNA$bill_length_
 
 #### Summarizing by group 
 
-The real power of `summarize()` comes with its ability to compute **group-wise summaries**.
+The real power of `summarize()` comes with its ability to easily compute
+**group-wise summaries**.
 For example, simply by adding `.by = species`,
 it will calculate the mean bill length separately for each species:
 
@@ -421,6 +427,8 @@ Here is an overview of the most commonly used functions to compute summaries:
 - `IQR()`: interquartile range
 - `n()`: counts the number of rows (observations)
 - `n_distinct()`: counts the number of distinct (unique) values
+
+<hr style="height:1pt; visibility:hidden;" />
 
 Two final comments about `summarize()`:
 
