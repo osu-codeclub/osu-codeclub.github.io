@@ -1,0 +1,631 @@
+---
+title: "Data Wrangling 3: Summarizing Data by Group"
+author: "Jelmer Poelstra"
+date: "2024-09-16"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+editor_options:
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+#### Recap of the past two weeks
+
+In the past two weeks, we've been learning about the following functions
+from the _dplyr_ package, a central workhorse of the tidyverse ecosystem,
+to manipulate data in data frames:
+
+- `filter()` to pick rows (which typically represent observations/samples/individuals)
+- `select()` to pick columns (which typically represent variables/properties)
+- `arrange()` to sort data frame rows
+- `mutate()` to add and manipulate data frame columns
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Learning objectives for today
+
+Today, our main focus is another very useful _dplyr_ function:
+`summarize()` to compute summaries across rows, typically across **groups of rows**.
+
+But we will start with an introduction to a new dataset,
+the `count()` function, and dealing with missing data.
+
+And if we get to it,
+we will learn about the `slice_()` family of functions,
+to pick rows but in a different manner than with `filter()`.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Setting up
+
+Load the _tidyverse_ meta-package:
+
+```{r}
+library(tidyverse)
+```
+
+::: {.callout-warning collapse="true"}
+#### Still need to install the tidyverse? _Click here for instructions_
+
+```{r, eval=FALSE}
+install.packages("tidyverse")
+```
+:::
+
+<br>
+
+## A penguins dataset
+
+The data set we will use today is from the
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) package,
+which contains a data set on 🐧 collected by Dr. Kristen Gorman at the
+Palmer Station Antarctica.
+
+It is a nice, relatively simple data set to practice data exploration and
+visualization in R.
+
+![Illustration by [Allison Horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html)](img/palmerpenguins_hex.png){width=50%}
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Installing and loading the package
+
+We'll have to install that package first, which should be quick:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+Now we're ready to load the package:
+
+```{r}
+library(palmerpenguins)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Taking a look at the data set
+
+Once you've loaded the _palmerpenguins_ package,
+you will have a data frame called `penguins` at your disposal ---
+let's take a look:
+
+```{r}
+penguins
+```
+
+In this data set, **each row represents an individual penguin** for which we know
+the `species`, `sex`, `island` of origin, and for which, across several `year`s,
+we have a set of size measurements:
+
+- Bill length in mm (`bill_length_mm` column)
+- Bill depth in mm (`bill_depth_mm` column)
+- Flipper length in mm (`flipper_length_mm` column)
+- Body mass in grams (`body_mass_g` column)
+
+Here's a visual for what the two bill measurements represent:
+
+![](img/culmen_depth.png){fig-align="center" width=70%}
+
+<br>
+
+## Exploring data with the `count()` function
+
+To orient yourself a bit more to this dataset, you may want to see, for example,
+how many species and how many islands are in it, and how frequently each occur.
+
+In other words, we may want to produce a few "count tables",
+which is a common part of Exploratory Data Analysis (EDA).
+We can do this with the _dplyr_ function 
+[`count()`](https://dplyr.tidyverse.org/reference/count.html):
+
+```{r}
+penguins |> count(species)
+```
+
+```{r}
+penguins |> count(island)
+```
+
+OK, so we have 3 species of penguin and 3 island. Which species occur on which islands?
+We can answer this by simply specifying both columns:
+
+```{r}
+penguins |> count(species, island)
+```
+
+<details><summary>Why are not all possible combinations of `species` and `island` shown here?</summary>
+Some `species` do not appear to occur on (or at least haven't been sampled on)
+certain `island`s. These zero-counts are not show, or "dropped, by default.
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+To **show zero-count combinations**, add `.drop = FALSE`:
+
+```{r}
+penguins |> count(species, island, .drop = FALSE)
+```
+
+Finally, you can **sort the output by the count** using `sort = TRUE`:
+
+```{r}
+penguins |> count(species, island, sort = TRUE)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+:::{.callout-tip collapse="true"}
+#### Side note: Base R's `table()` function _(Click to expand)_
+
+Also worth mentioning is the base R `table()` function, which is similar to `count()`.
+While its output format is unwieldy for follow-up analyses,
+you may prefer its formatting especially when wanting to glance at a 2-way
+count table to see patterns:
+
+```{r}
+table(penguins$species, penguins$island)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Additionally, as a _dplyr_ function, `count()` only works with data frames.
+You may sometimes need to create a count table for a **vector**,
+and `table()` can do that:
+
+```{r}
+species_vector <- penguins$species
+table(species_vector)
+```
+:::
+
+<br>
+
+## Missing data
+
+Let's compute the mean bill length across all penguins:
+
+```{r}
+mean(penguins$bill_length_mm)
+```
+
+<details><summary>What does `NA` mean and why are we getting this?</summary>
+
+`NA` means "not any" and is R's way of representing missing data.
+When a computation in R returns `NA`, this means that some of the values used
+must themselves have been `NA`.
+In other words, one or more of the values in the `bill_length_mm` columns are
+`NA`: perhaps the penguin in question got away before its bill was measured.
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+We can overcome this by setting the argument `na.rm` ("NA-remove") to `TRUE` --
+and note that this argument is available in many functions in R:
+
+```{r}
+mean(penguins$bill_length_mm, na.rm = TRUE)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Let's find the penguins with a missing bill length measurement:
+
+```{r}
+penguins |>
+  filter(is.na(bill_length_mm))
+```
+
+<br>
+
+::: exercise
+
+## Exercises I
+
+### `count()`
+
+**A)** Use `count()` to get the number of penguins for each combination of
+       `species`, `year` and `sex`.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+penguins |> count(species, year, sex)
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** What is the least common combination of `species` and `sex`
+for penguins weighing less than 4,000 grams?
+
+<details><summary><b>Hint</b> (click here)</summary>
+You'll have to `filter()` first.
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+The least common combination among such light-weight penguins is female Gentoo,
+of which there is only 1.
+Or you may also argue that the answer should be male Gentoo,
+of which there are none:
+
+```{r}
+penguins |>
+  filter(body_mass_g < 4000) |> 
+  count(species, sex, .drop = FALSE, sort = TRUE)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+### Removing rows with missing data
+
+For the sake of convenience, we will here remove these two penguins that don't
+seem to have had _any_ measurements taken^[
+Removing rows with `NA`s _may_ be appropriate for your own data too,
+but this will depend on the context!].
+
+**A**) Do so by storing the output of an appropriate `filter()` operation in a
+       new data frame `penguins_noNA`.
+
+<details><summary><b>Solution</b> (click here)</summary>
+```{r}
+penguins_noNA <- penguins |>
+  filter(!is.na(bill_length_mm))
+```
+</details>
+
+**B**) Check how many penguins (rows) were removed.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+2 rows should have been removed.
+
+There are many ways to check this!
+You can simply look for these objects in the
+Environment pane, print them to screen, or use the `nrow()` function: 
+
+```{r}
+nrow(penguins)
+nrow(penguins_noNA)
+nrow(penguins) - nrow(penguins_noNA)
+```
+</details>
+
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-tip collapse="true"}
+#### Side note: Checking and removing all columns with missing data _(Click to expand)_
+
+You can see rows with missing data in _any_ column, regardless of how many there
+are in total, using the `if_any()` helper function of `filter()`:
+
+```{r}
+penguins |>
+  filter(if_any(everything(), is.na)) |>
+  select(-body_mass_g)
+```
+
+(I removed the `body_mass_g` column just to be able to fit the `sex` column on
+the webpage, which is where the `NA`s are.)
+
+By just adding a `!` to the above code, you can therefore remove any rows with
+any missing data:
+
+```{r}
+penguins_noNA2a <- penguins |>
+  filter(!if_any(everything(), is.na))
+```
+
+Though it is also worth noting that there is a specialized base R function
+available for this as well:
+
+```{r}
+penguins_noNA2b <- na.omit(penguins)
+```
+
+```{r}
+nrow(penguins)         # The original data frame
+nrow(penguins_noNA)    # Without the 2 penguins with missing measurements
+nrow(penguins_noNA2a)  # Without all rows with missing data, using filter()
+nrow(penguins_noNA2b)  # Without all rows with missing data, using na.omit()
+```
+:::
+
+<br>
+
+## The `summarize()` function
+
+The [`summarize()` function from the _dplyr_ package](https://dplyr.tidyverse.org/reference/summarise.html)
+can compute across-row data summaries.
+As a first example,
+here's how you can compute the overall mean bill length with this function:
+
+```{r}
+penguins_noNA |>
+  summarize(bill_len_mean = mean(bill_length_mm))
+```
+
+As you can see, this function has quite a different output from the _dplyr_ functions we'd seen so far.
+All of those returned a manipulated version of our original dataframe,
+whereas `summarize()` returns a "completely new" dataframe with a summary of the original data.
+
+However, summarizing _across all rows at once_ with `summarize()` is much more verbose
+than the simple "base R" solution we saw above (`mean(penguins_noNA$bill_length_mm)`).
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Summarizing by group 
+
+The real power of `summarize()` comes with its ability to compute **group-wise summaries**.
+For example, simply by adding `.by = species`,
+it will calculate the mean bill length separately for each species:
+
+```{r}
+penguins_noNA |>
+  summarize(bill_len_mean = mean(bill_length_mm), .by = species)
+```
+
+Nice! We can also compute multiple summarized variables ---
+and use summarizing functions other than `mean()`:
+
+```{r}
+penguins_noNA |>
+  summarize(bill_len_mean = mean(bill_length_mm),
+            bill_len_max = max(bill_length_mm),
+            bill_len_min = min(bill_length_mm),
+            .by = species)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Including group counts
+
+A handy helper function is **`n()`**, which will compute the **number of rows for each group**
+(i.e. the group sizes, which can be good to know,
+for example so you don't make unfounded conclusions based on really small sample sizes):
+
+```{r}
+penguins_noNA |>
+  summarize(bill_depth_mean = mean(bill_depth_mm),
+            n_penguins = n(),
+            .by = species)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Common summary statistic functions
+
+Here is an overview of the most commonly used functions to compute summaries:
+
+- `mean()` & `median()`
+- `min()` & `max()`
+- `sum()`
+- `sd()`: standard deviation
+- `IQR()`: interquartile range
+- `n()`: counts the number of rows (observations)
+- `n_distinct()`: counts the number of distinct (unique) values
+
+Two final comments about `summarize()`:
+
+- You can also ask `summarize()` to compute summaries by **multiple columns**,
+  which will return separate summaries for each _combination_ of the involved variables ---
+  we'll see this in the exercises.
+
+- This may be obvious, but whatever column you are computing summaries by
+  (using `.by`) should be a **categorical variable**.
+  In our `diamond` examples, we're only using columns that are `factor`s,
+  but "regular" `character` columns will work just fine as well.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-tip collapse="true"}
+### Side note: `group_by()` _(Click to expand)_
+
+The "classic" way of using `summarize()` with multiple groups is by preceding
+it with a `group_by()` call ---
+e.g., the code below is equivalent to our last example above:
+
+```{r}
+penguins_noNA |>
+  group_by(species) |> 
+  summarize(bill_depth_mean = mean(bill_depth_mm),
+            n_penguins = n())
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+The `.by` argument to `summarize()` (and other functions!) is a rather recent addition,
+but I prefer it over `group_by()`:
+
+- It is simpler, a bit less typing, and makes the `summarize()` call self-contained
+- When grouping by multiple columns, `group_by()` has some odd, unhelpful behavior
+  where it keeps some of the groupings, such that you likely need an `ungroup()` call as well.
+
+:::
+
+<br>
+
+::: exercise
+## Exercises II
+
+### Means across variables
+
+Compute the per-species means for all 4 size-related variables.
+
+Do all these variables co-vary, such that, for example,
+one species is the largest for each measurement?
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+penguins_noNA |>
+  summarize(bill_len = mean(bill_length_mm),
+            bill_dep = mean(bill_depth_mm),
+            flip_len = mean(flipper_length_mm),
+            body_mass = mean(body_mass_g),
+            .by = species)
+```
+
+The variables seem to largely co-vary across species, but bill depth stands out:
+the large Gentoo penguins have less deep bills than the other two species.
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Summaries across multiple groups
+
+For Adelie penguins only, find the combination of `island` and `year` on which
+the lightest penguins were found, on average.
+
+For this, you'll have to group by both abovementioned columns.
+See if you can figure this out by yourself first,
+but check out the grouping hint below if you can't get that part to work.
+
+<details><summary><b>Grouping hint</b> (click here)</summary>
+`.by = c(island, year)` will group by these 3 columns at once.
+</details>
+
+<details><summary><b>More hints</b> (click here)</summary>
+
+- `filter()` before you summarize.
+- `arrange()` after you summarize.
+
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+After summarizing, it makes sense to arrange mean mass,
+so you can see the "lightest species-island combinations" first:
+
+```{r}
+penguins_noNA |>
+  filter(species == "Adelie") |> 
+  summarize(mass_mean = mean(body_mass_g),
+            .by = c(island, year)) |>
+  arrange(mass_mean)
+```
+
+</details>
+
+:::
+
+<br>
+
+## The `slice_` functions
+
+Like the `filter()` function,
+[functions in the `slice_` family](https://dplyr.tidyverse.org/reference/slice.html)
+select specific rows,
+but have some different functionality that's quite handy ---
+especially in combination with grouping.
+
+Let's say we wanted to only get, **for each `species`, the lightest penguin**.
+We can do this pretty easily with the `slice_max()` function,
+which will return the row(s) with the highest value for a specified variable:
+
+```{r}
+penguins_noNA |>
+  slice_min(body_mass_g, by = species)
+```
+
+<details><summary>Why are we getting more than one penguin per `species` in some cases? _(Click to see the answer)_</summary>
+Because of ties in the `body_mass_g` value. (We'll get back to this in the next set of exercises.)
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+You can get more than just the single highest (`slice_max()`) / lowest (`slice_min()`)
+value per group with the `n=` argument,
+and can get a specific proportion of rows with `prop=`:
+
+```{r}
+# Get the 3 penguins with the longest flippers for each year:
+penguins_noNA |>
+  slice_max(flipper_length_mm, by = year, n = 3)
+```
+
+```{r}
+# Get the 2% narrowest-billed penguins for each sex
+penguins_noNA |>
+  slice_min(bill_depth_mm, by = sex, prop = 0.02)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: callout-note
+#### The full set of `slice_` functions
+
+- `slice_head(n = 1)` takes the first row.
+- `slice_tail(n = 1)` takes the last row
+- `slice_min(x, n = 1)` takes the row with the smallest value in column `x`.
+- `slice_max(x, n = 1)` takes the row with the largest value in column `x`.
+- `slice_sample(n = 1)` takes one random row.
+- `slice(15)` takes the 15th row.
+:::
+
+<br>
+
+::: exercise
+
+## Exercises III
+
+### No ties, please
+
+Above, when we first used `slice_min()`, we got multiple rows for some groups.
+Check out the help for this function (`?slice_min`) and get it to print only one row per group,
+even in the case of ties.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+The `with_ties` argument controls this. The default is `TRUE` (do include ties),
+so we want to set it to `FALSE` (don't include ties):
+
+```{r}
+penguins_noNA |>
+  slice_min(body_mass_g, by = species, with_ties = FALSE)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+-----
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Random penguins
+
+Use `slice_sample()` to get 5 random penguins for each combination of `year` and
+`island`.
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+penguins_noNA |>
+  slice_sample(n = 5, by = c(year, island))
+```
+</details>
+
+:::
