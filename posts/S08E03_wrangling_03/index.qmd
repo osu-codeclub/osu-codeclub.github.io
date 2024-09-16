@@ -34,13 +34,13 @@ to manipulate data in data frames:
 
 #### Learning objectives for today
 
-- Or main focus is another very useful _dplyr_ function:
+- Our main focus is another very useful _dplyr_ function:
   `summarize()` to compute summaries across rows, typically across **groups of rows**.
 
 - We will start with an introduction to a new dataset,
   the `count()` function, and dealing with missing data.
 
-- If we get to it,
+- If we manage to get to it,
   we will also learn about the `slice_()` family of functions,
   to pick rows in a different manner than with `filter()`.
 
@@ -100,8 +100,12 @@ Once you've loaded the _palmerpenguins_ package,
 you will have a data frame called `penguins` at your disposal ---
 let's take a look:
 
-```{r}
+```{r, results='hide'}
 penguins
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(penguins)
 ```
 
 In this data set, **each row represents an individual penguin** for which we know
@@ -159,12 +163,6 @@ To **show zero-count combinations**, add `.drop = FALSE`:
 penguins |> count(species, island, .drop = FALSE)
 ```
 
-Finally, you can **sort the output by the count** using `sort = TRUE`:
-
-```{r}
-penguins |> count(species, island, sort = TRUE)
-```
-
 <hr style="height:1pt; visibility:hidden;" />
 
 :::{.callout-tip collapse="true"}
@@ -196,6 +194,9 @@ table(species_vector)
 ## Missing data
 
 Let's compute the mean bill length across all penguins:
+we can do so by running the `mean()` function on the bill length column
+from the `penguins` data frame, which we can extract using the base R
+`$` notation, `penguins$bill_length_mm`:
 
 ```{r}
 mean(penguins$bill_length_mm)
@@ -212,7 +213,9 @@ In other words, one or more of the values in the `bill_length_mm` columns are
 
 <hr style="height:1pt; visibility:hidden;" />
 
-We can overcome this by setting the argument `na.rm` ("NA-remove") to `TRUE` --
+We can overcome this issue,
+and compute the mean among the non-missing bill length values,
+by setting the argument `na.rm` ("NA-remove") to `TRUE` --
 and note that this argument is available in many functions in R:
 
 ```{r}
@@ -221,11 +224,19 @@ mean(penguins$bill_length_mm, na.rm = TRUE)
 
 <hr style="height:1pt; visibility:hidden;" />
 
-Let's find the penguins with a missing bill length measurement:
+Let's find the penguins with a missing bill length measurement using `filter()`
+in combination with the `is.na()` function,
+which tests whether a value is `NA` or not:
 
-```{r}
+```{r, results='hide'}
 penguins |>
   filter(is.na(bill_length_mm))
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  penguins |> filter(is.na(bill_length_mm))
+)
 ```
 
 <br>
@@ -260,7 +271,20 @@ You'll have to `filter()` first.
 The least common combination among such light-weight penguins is female Gentoo,
 of which there is only 1.
 Or you may also argue that the answer should be male Gentoo,
-of which there are none:
+of which there are none.
+
+In the code below, I'm sorting the dataframe by the count (column `n`),
+so we'll see the least common combinations at the top:
+
+```{r}
+penguins |>
+  filter(body_mass_g < 4000) |> 
+  count(species, sex, .drop = FALSE) |>
+  arrange(n)
+```
+
+P.S.: `count()` does have a `sort` argument so you can omit the separate
+call to `arrange()`, though note that it can only sort descendingly:
 
 ```{r}
 penguins |>
@@ -283,6 +307,12 @@ but this will depend on the context!].
 
 **A**) Do so by storing the output of an appropriate `filter()` operation in a
        new data frame `penguins_noNA`.
+
+<details><summary><b>Hint</b> (click here)</summary>
+The code will be very similar to our `is.na` filtering operation above,
+except that you should negate this using a `!`:
+this will instead keep rows that are _not_ `NA`.  
+</details>
 
 <details><summary><b>Solution</b> (click here)</summary>
 ```{r}
@@ -318,35 +348,40 @@ nrow(penguins) - nrow(penguins_noNA)
 You can see rows with missing data in _any_ column, regardless of how many there
 are in total, using the `if_any()` helper function of `filter()`:
 
-```{r}
+- Its first argument is a column selection (here, `everything()` will select all columns),
+- Its second argument is the name of a function to run for each column (here, `is.na`)
+- Rows for which the function returns `TRUE` in _any_ (hence "`if_any()`") of the
+  will be kept.
+
+```{r, results='hide'}
 penguins |>
-  filter(if_any(everything(), is.na)) |>
-  select(-body_mass_g)
+  filter(if_any(everything(), is.na))
 ```
 
-(I removed the `body_mass_g` column just to be able to fit the `sex` column on
-the webpage, which is where the `NA`s are.)
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  penguins |> filter(if_any(everything(), is.na))
+)
+```
 
-By just adding a `!` to the above code, you can therefore remove any rows with
-any missing data:
+It looks  like besides the 2 rows with missing measurements,
+there are also 9 rows where the `sex` of the penguins is missing
+(on the website, click the right arrow to see that column).
+
+Removing all rows with missing data could be done by adding a `!` to the above code,
+but there is also a `drop_na()` convenience function available:
 
 ```{r}
-penguins_noNA2a <- penguins |>
-  filter(!if_any(everything(), is.na))
+penguins_noNA2 <- penguins |>
+  drop_na()
 ```
 
-Though it is also worth noting that there is a specialized base R function
-available for this as well:
-
-```{r}
-penguins_noNA2b <- na.omit(penguins)
-```
+Let's check the numbers of rows in the different data frames:
 
 ```{r}
 nrow(penguins)         # The original data frame
 nrow(penguins_noNA)    # Without the 2 penguins with missing measurements
-nrow(penguins_noNA2a)  # Without all rows with missing data, using filter()
-nrow(penguins_noNA2b)  # Without all rows with missing data, using na.omit()
+nrow(penguins_noNA2)   # Without all rows with missing data
 ```
 :::
 
@@ -361,7 +396,7 @@ here's how you can compute the overall mean bill length with this function:
 
 ```{r}
 penguins_noNA |>
-  summarize(bill_len_mean = mean(bill_length_mm))
+  summarize(mean(bill_length_mm))
 ```
 
 (Note that we are now using `penguins_noNA`, which you created in the exercise above,
@@ -371,8 +406,18 @@ As you can see, this function has quite a different output from the _dplyr_ func
 All of those returned a manipulated version of our original dataframe,
 whereas `summarize()` returns a "completely new" dataframe with a summary of the original data.
 
-However, summarizing _across all rows at once_ with `summarize()` is much more verbose
-than the simple "base R" solution we saw above (`mean(penguins_noNA$bill_length_mm)`).
+Note that the default summary column above is quite unwieldy,
+so we'll typically want to provide a column name for it ourselves:
+
+```{r}
+penguins_noNA |>
+  summarize(bill_len_mean = mean(bill_length_mm))
+```
+
+Also, summarizing _across all rows at once_ with `summarize()`, like we just did,
+is much more verbose than the simple "base R" solution we saw earlier
+(`mean(penguins_noNA$bill_length_mm)`).
+Are we sure this function is useful?
 
 <hr style="height:1pt; visibility:hidden;" />
 
@@ -403,7 +448,8 @@ penguins_noNA |>
 
 #### Including group counts
 
-A handy helper function is **`n()`**, which will compute the **number of rows for each group**
+A handy helper function related to the `count()` function we used above is **`n()`**,
+which will compute the **number of rows for each group**
 (i.e. the group sizes, which can be good to know,
 for example so you don't make unfounded conclusions based on really small sample sizes):
 
@@ -512,20 +558,17 @@ See if you can figure this out by yourself first,
 but check out the grouping hint below if you can't get that part to work.
 
 <details><summary><b>Grouping hint</b> (click here)</summary>
-`.by = c(island, year)` will group by these 3 columns at once.
+`.by = c(island, year)` will group by these 2 columns at once.
 </details>
 
 <details><summary><b>More hints</b> (click here)</summary>
 
-- `filter()` before you summarize.
-- `arrange()` after you summarize.
+- `filter()` before you summarize to only keep Adelie penguins.
+- `arrange()` after you summarize to see the lowest mean weights at the top.
 
 </details>
 
 <details><summary><b>Solution</b> (click here)</summary>
-
-After summarizing, it makes sense to arrange mean mass,
-so you can see the "lightest species-island combinations" first:
 
 ```{r}
 penguins_noNA |>
@@ -541,7 +584,7 @@ penguins_noNA |>
 
 <br>
 
-## The `slice_` functions
+## Bonus: The `slice_` functions
 
 Like the `filter()` function,
 [functions in the `slice_` family](https://dplyr.tidyverse.org/reference/slice.html)
@@ -551,7 +594,7 @@ especially in combination with grouping.
 
 Let's say we wanted to only get, **for each `species`, the lightest penguin**.
 We can do this pretty easily with the `slice_max()` function,
-which will return the row(s) with the highest value for a specified variable:
+which will return the row(s) with the lowest value for a specified variable:
 
 ```{r}
 penguins_noNA |>
