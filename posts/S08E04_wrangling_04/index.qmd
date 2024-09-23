@@ -1,0 +1,438 @@
+---
+title: "Data Wrangling 4: Merging/Joining Data Frames"
+author: "Horacio Lopez-Nicora"
+date: "2024-09-23"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+editor_options:
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+editor: 
+  markdown: 
+    wrap: 72
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+In the past two weeks, we've been learning about several functions from
+the *dplyr* package, a central workhorse of the tidyverse ecosystem, to
+manipulate data in data frames.
+
+In real-world data analysis, it's uncommon to work with just a single
+data frame. More often than not, you will be dealing with multiple data
+frames that you need to combine to effectively address your analytical
+questions.
+
+In this session, we will explore the essential techniques for merging
+data frames using the `_join` functions provided by the *dplyr* package.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Learning objectives for today
+
+1.  **Understand Join Fundamentals:**
+    -   Grasp the basics of **joins** and their significance in merging
+        datasets.
+    -   Learn about *keys* and their use in linking different data
+        frames.
+2.  **Explore Mutating Joins:**
+    -   Get acquainted with **mutating join** functions in `dplyr`, such
+        as `inner_join`, `left_join`, `right_join`, and `full_join`.
+    -   Learn how to add new columns to a data frame using matching
+        records from another.
+3.  **Discover Filtering Joins:**
+    -   Learn how to use **filtering join** functions like `semi_join`
+        and `anti_join`.
+    -   Understand how to retain or exclude records in one data frame
+        based on matches with another data frame.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Setting up
+
+Load the tidyverse meta-package:
+
+```{r}
+library(tidyverse)
+```
+
+<br>
+
+## Data Jazz: Merging with `dplyr` Joins
+
+Just as a
+[jazz](https://medium.com/@birdlandjazz/what-exactly-is-jazz-anyway-9cc462f28c10)
+band brings together a variety of instruments to create a rich,
+spontaneous musical experience, data analysis often involves merging
+different data sets to form a coherent and insightful whole. Each data
+set can be thought of as an instrument in a jazz ensemble, contributing
+its unique timbre and melody to the overall composition.
+
+When you use join functions from the \`dplyr\` package in R Studio, it's
+like orchestrating an improvisational jazz performance where the
+trumpet's crisp notes (one data set) harmonize with the saxophone's
+smooth riffs (another data set), underpinned by the piano's rhythmic
+chords (yet another data set).
+
+By cleverly combining these data sets through joins, you can produce an
+insightful and dynamic data analysis, much like a jazz composition that
+resonates on multiple levels.
+
+[![Illustration by Barandash
+Karandashich](img/jazz.png)](https://www.shutterstock.com/g/barandash+karandashich)
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-warning collapse="true"}
+## Looking to get excited about jazz? Click here for a book recommendation!
+
+[But Beautiful: A Book About
+Jazz](https://www.amazon.com/But-Beautiful-Book-About-Jazz/dp/0312429479)
+by Geoff Dyer.
+:::
+
+#### **To explore the `_join` functions we will create our own data sets:**
+
+##### **Musicians data frame:**
+
+```{r, results='hide'}
+musicians <- tibble(
+  musician_id = 1:5,
+  name = c("John Coltrane", "Miles Davis", "Thelonious Monk", "Ella Fitzgerald", "Louis Armstrong"),
+  instrument = c("Saxophone", "Trumpet", "Piano", "Vocals", "Trumpet"),
+  years_active = c("1945-1967", "1944-1975", "1934-1975", "1934-1993", "1919-1971"),
+  genre = c("Jazz", "Jazz", "Bebop", "Swing", "Jazz")
+)
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(musicians)
+```
+
+##### **Albums data frame:**
+
+```{r, results='hide'}
+albums <- tibble(
+  album_id = 1:6,
+  musician_id = c(1, 2, 3, 2, 4, 5),
+  album_title = c("Blue Train", "Kind of Blue", "Monk's Dream", "Bitches Brew", "Ella in Berlin", "Louis Armstrong Plays W.C. Handy"),
+  release_year = c(1957, 1959, 1963, 1970, 1960, 1954),
+  genre = c("Hard Bop", "Modal Jazz", "Bebop", "Fusion", "Vocal Jazz", "Jazz")
+)
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(albums)
+```
+
+##### **Awards data frame:**
+
+```{r, results='hide'}
+awards <- tibble(
+  award_id = 1:5,
+  musician_id = c(1, 2, 4, 4, 5),
+  award_name = c("Grammy Hall of Fame", "Grammy Lifetime Achievement Award", "Grammy Hall of Fame", "National Medal of Arts", "Grammy Lifetime Achievement Award"),
+  year = c(1999, 1990, 1999, 1987, 1972)
+)
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(awards)
+```
+
+##### **Gigs data frame:**
+
+```{r, results='hide'}
+gigs <- tibble(
+  gig_id = 1:6,
+  musician_id = c(1, 2, 2, 4, 1, 5),
+  venue = c("Blue Note", "Village Vanguard", "Birdland", "Newport Jazz Festival", "Montreux Jazz Festival", "Cotton Club"),
+  date = as.Date(c("1961-11-18", "1961-03-21", "1961-04-12", "1962-07-11", "1965-03-10", "1937-06-26")),
+  city = c("New York", "New York", "New York", "Newport", "Montreux", "Harlem")
+)
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(gigs)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Let's explore the different `_join` funtions
+
+When merging datasets, we typically integrate variables from one dataset
+into another using a specific "key" variable. Let's examine our **JAZZ** datasets and explore the joining verbs:
+
+### Setting the Stage
+
+::: {layout-ncol="2"}
+![Key variables](img/setup_key.png)
+
+![Set up](img/setup2.png)
+:::
+
+### Mutating `_join` funtions:
+
+[![Chapter 19: Joins \[R4DS
+(2ed)\]](img/venn.png){alt="Illustration by Barandash Karandashich"}](https://r4ds.hadley.nz/joins)
+
+#### **`left_join` (and `right_join`)**
+
+::: {layout-ncol="2"}
+![left_join](img/left_join.png)
+
+![right_join](img/right_join.png)
+:::
+
+**Left join: Musicians with all their gigs.**
+
+```{r, results='hide'}
+musicians |> left_join(gigs, 
+                       by = join_by(musician_id)) 
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> left_join(gigs, 
+                         by = join_by(musician_id)) 
+)
+```
+
+**Right join: All albums and related musicians.**
+
+```{r, results='hide'}
+musicians |> right_join(albums, 
+                        by = join_by(musician_id)) 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> right_join(albums, 
+                         by = join_by(musician_id)) 
+)
+```
+
+#### **`inner_join` (and `full_join`)**
+
+::: {layout-ncol="2"}
+![inner_join](img/inner_join.png)
+
+![full_join](img/full_join.png)
+:::
+
+**Inner join: Musicians and their albums.**
+
+```{r, results='hide'}
+musicians |> inner_join(awards, 
+                        by = join_by(musician_id)) 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> inner_join(awards, 
+                        by = join_by(musician_id)) 
+)
+```
+
+**Full join: Complete overview of musicians and their awards.**
+
+```{r, results='hide'}
+musicians |> full_join(awards, 
+                        by = join_by(musician_id)) 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> full_join(awards, 
+                        by = join_by(musician_id)) 
+)
+```
+
+### Exercises I
+
+**A)** Find all albums by Miles Davis.
+
+<details><summary><b>Hint</b> (click here)</summary>
+Use an inner join to list all albums released by Miles Davis. Then use `filter()` to end up with a data set with information only for Miles Davis.
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+musicians |> inner_join(albums, by = join_by(musician_id)) |>
+  filter(name == "Miles Davis")
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** Combine musicians, gigs, and awards information.
+
+<details><summary><b>Hint</b> (click here)</summary>
+Perform a left join to combine musicians with their gigs and awards information.
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+
+musicians |> left_join(gigs, by = join_by(musician_id)) |>
+  left_join(awards, by = join_by(musician_id), relationship = "many-to-many")
+
+```
+</details>
+
+**C)** List of venues with musician information.
+
+<details><summary><b>Hint</b> (click here)</summary>
+Perform a right join to get a list of all gig venues and the associated musician details.
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+
+```{r}
+
+musicians |> right_join(gigs, by = join_by(musician_id))
+
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Filtering `_join` funtions:
+
+::: {layout-ncol="2"}
+[![Anti
+join](img/Join_AntiJoin.png)](http://lindsaydbrin.github.io/CREATE_R_Workshop/Lesson_-_dplyr_join.html)
+
+[![Semi
+join](img/Join_InnerJoin.png)](http://lindsaydbrin.github.io/CREATE_R_Workshop/Lesson_-_dplyr_join.html)
+:::
+
+#### **`anti_join` (and `semi_join`)**
+
+::: {layout-ncol="2"}
+![anti_join](img/anti.png)
+
+![semi_join](img/semi.png)
+:::
+
+**Semi join: Musicians who have received awards.**
+
+```{r, results='hide'}
+musicians |> semi_join(awards, 
+                        by = join_by(musician_id)) 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> semi_join(awards, 
+                        by = join_by(musician_id)) 
+)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-warning collapse="true"}
+## What is the difference between `inner_join` and `semi_join` ?
+
+Notice that the observations in both data frames are the similar, but
+that the inner join adds the variables from the data frame “y”, whereas
+the semi join only uses the “y” data frame to determine which
+observations to keep.
+:::
+
+### Exercises II
+
+**A)** Find musicians without any gigs.
+
+<details><summary><b>Hint</b> (click here)</summary>
+Using an anti join, find musicians who haven't have any gigs in this period.
+</details>
+
+<details><summary><b>Solution</b> (click here)</summary>
+```{r, results='hide'}
+musicians |> anti_join(gigs, 
+                        by = join_by(musician_id)) 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+  musicians |> anti_join(gigs, 
+                        by = join_by(musician_id)) 
+)
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+
+## Merging Data Sets in Base R
+
+The `merge` function in base R can perform inner joins, left joins, right joins, and full joins by specifying appropriate parameters. 
+
+**Left join: Musicians with all their gigs.**
+
+```{r, results='hide'}
+merge(musicians, gigs, all.x = TRUE, by = "musician_id") 
+
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+merge(musicians, gigs, all.x = TRUE, by = "musician_id") 
+)
+```
+
+**Right join: All albums and related musicians.**
+
+```{r, results='hide'}
+merge(musicians, albums, all.y = TRUE, by = "musician_id") 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+merge(musicians, albums, all.y = TRUE, by = "musician_id")
+)
+```
+
+**Inner join: Musicians and their albums.**
+
+```{r, results='hide'}
+merge(musicians, awards, all = FALSE, by = "musician_id") 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+merge(musicians, awards, all = FALSE, by = "musician_id")
+)
+```
+
+**Full join: Complete overview of musicians and their awards.**
+
+```{r, results='hide'}
+merge(musicians, awards, all = TRUE, by = "musician_id") 
+```
+
+```{r, echo=FALSE}
+rmarkdown::paged_table(
+merge(musicians, awards, all = TRUE, by = "musician_id")
+)
+```
+
+With `merge()`, you can achieve the same results as `dplyr`'s **mutating joins**, though `dplyr` provides a more explicit and often more readable syntax for many users. Both methods are powerful, and understanding both can be very useful in different contexts!
+
+<hr style="height:1pt; visibility:hidden;" />
