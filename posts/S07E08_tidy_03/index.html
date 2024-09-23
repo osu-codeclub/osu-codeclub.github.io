@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2024-03-01">
+
+<title>OSU Code Club - Tidyverse 3: Grouping and Summarizing Data</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html" rel="" target="">
+ <span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html" rel="" target="">
+ <span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/other.html" rel="" target="">
+ <span class="menu-text">Other stuff</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-new-here" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">New here?</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-new-here">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html" rel="" target="">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/r_resources.html" rel="" target="">
+ <span class="dropdown-text">R resources for beginners</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#summarize" id="toc-summarize" class="nav-link" data-scroll-target="#summarize"><span class="header-section-number">2</span> <code>summarize()</code></a>
+  <ul class="collapse">
+  <li><a href="#a-first-example" id="toc-a-first-example" class="nav-link" data-scroll-target="#a-first-example"><span class="header-section-number">2.1</span> A first example</a></li>
+  <li><a href="#summarizing-by-group" id="toc-summarizing-by-group" class="nav-link" data-scroll-target="#summarizing-by-group"><span class="header-section-number">2.2</span> Summarizing by group</a></li>
+  </ul></li>
+  <li><a href="#exercises-i" id="toc-exercises-i" class="nav-link" data-scroll-target="#exercises-i"><span class="header-section-number">3</span> Exercises I</a>
+  <ul class="collapse">
+  <li><a href="#diamond-sizes-in-relation-to-clarity" id="toc-diamond-sizes-in-relation-to-clarity" class="nav-link" data-scroll-target="#diamond-sizes-in-relation-to-clarity"><span class="header-section-number">3.1</span> Diamond sizes in relation to <code>clarity</code></a></li>
+  <li><a href="#diamond-prices" id="toc-diamond-prices" class="nav-link" data-scroll-target="#diamond-prices"><span class="header-section-number">3.2</span> Diamond prices</a></li>
+  </ul></li>
+  <li><a href="#the-slice_-functions" id="toc-the-slice_-functions" class="nav-link" data-scroll-target="#the-slice_-functions"><span class="header-section-number">4</span> The <code>slice_</code> functions</a></li>
+  <li><a href="#the-count-function" id="toc-the-count-function" class="nav-link" data-scroll-target="#the-count-function"><span class="header-section-number">5</span> The <code>count()</code> function</a></li>
+  <li><a href="#exercises-ii" id="toc-exercises-ii" class="nav-link" data-scroll-target="#exercises-ii"><span class="header-section-number">6</span> Exercises II</a>
+  <ul class="collapse">
+  <li><a href="#no-ties-please" id="toc-no-ties-please" class="nav-link" data-scroll-target="#no-ties-please"><span class="header-section-number">6.1</span> No ties, please</a></li>
+  <li><a href="#random-diamonds" id="toc-random-diamonds" class="nav-link" data-scroll-target="#random-diamonds"><span class="header-section-number">6.2</span> Random diamonds</a></li>
+  <li><a href="#count" id="toc-count" class="nav-link" data-scroll-target="#count"><span class="header-section-number">6.3</span> <code>count()</code></a></li>
+  <li><a href="#bonus-sort-then-slice" id="toc-bonus-sort-then-slice" class="nav-link" data-scroll-target="#bonus-sort-then-slice"><span class="header-section-number">6.4</span> Bonus: sort then slice</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S07E08_tidy_03/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tidyverse 3: Grouping and Summarizing Data</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">r-basics</div>
+    <div class="quarto-category">tidyverse</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jelmer Poelstra </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 1, 2024</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-the-past-two-weeks" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-the-past-two-weeks">Recap of the past two weeks</h4>
+<p>In the past two weeks, we’ve been learning about 5 functions from the <em>dplyr</em> package, a central workhorse of the tidyverse ecosystem, to manipulate data in data frames:</p>
+<ul>
+<li><code>filter()</code> to pick rows (which typically represent observations/samples/individuals)</li>
+<li><code>select()</code> to pick columns (which typically represent variables/properties)</li>
+<li><code>arrange()</code> to sort data frame rows</li>
+<li><code>rename()</code> to change data frame column names</li>
+<li><code>mutate()</code> to add and manipulate data frame columns</li>
+</ul>
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<p>Today, we will focus on a slightly more complicated and very powerful <em>dplyr</em> function: <code>summarize()</code> to compute summaries across rows, typically across <strong>groups of rows</strong>.</p>
+<p>We will also learn about a couple other handy functions to work with groups of rows: the <code>slice_()</code> family of functions and <code>count()</code>.</p>
+</section>
+<section id="setting-up" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
+<p>Load the tidyverse:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Still need to install the tidyverse? <em>Click here for instructions</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p>We’ll continue working with the <code>diamonds</code> dataframe (automatically loaded with the tidyverse), so let’s take another look at that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diamonds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="summarize" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="summarize"><span class="header-section-number">2</span> <code>summarize()</code></h2>
+<section id="a-first-example" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="a-first-example"><span class="header-section-number">2.1</span> A first example</h3>
+<p>The <a href="https://dplyr.tidyverse.org/reference/summarise.html"><code>summarize()</code> function from the <em>dplyr</em> package</a> can compute across-row data summaries. As a first example, here’s how you can compute the overall mean of the <code>carat</code> column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 1 × 1
+  carat_mean
+       &lt;dbl&gt;
+1      0.798</code></pre>
+</div>
+</div>
+<p>As you can see, this function has quite a different output from the <em>dplyr</em> functions we’d seen so far. All of those returned a manipulated version of our original dataframe, whereas <code>summarize()</code> returns a “completely new” dataframe with a summary of the original data.</p>
+<p>However, summarizing across all rows at once with <code>summarize()</code> is much more verbose than the simple, base R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(diamonds<span class="sc">$</span>carat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] 0.7979397</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="summarizing-by-group" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="summarizing-by-group"><span class="header-section-number">2.2</span> Summarizing by group</h3>
+<p>The real power of <code>summarize()</code> comes with its ability to compute <strong>group-wise summaries</strong>. For example, simply by adding <code>.by = cut</code>, it will calculate the mean <code>carat</code> separately for each value of <code>cut</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat), <span class="at">.by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut       carat_mean
+  &lt;ord&gt;          &lt;dbl&gt;
+1 Ideal          0.703
+2 Premium        0.892
+3 Good           0.849
+4 Very Good      0.806
+5 Fair           1.05 </code></pre>
+</div>
+</div>
+<p>Nice! We can also compute multiple summarized variables — and use summarizing functions other than <code>mean()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">carat_max =</span> <span class="fu">max</span>(carat),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean carat_max
+  &lt;ord&gt;          &lt;dbl&gt;     &lt;dbl&gt;
+1 Ideal          0.703      3.5 
+2 Premium        0.892      4.01
+3 Good           0.849      3.01
+4 Very Good      0.806      4   
+5 Fair           1.05       5.01</code></pre>
+</div>
+</div>
+<p>A handy helper function is <strong><code>n()</code></strong>, which will compute the <strong>number of rows for each group</strong> (i.e.&nbsp;the group sizes, which can be good to know, for example so you don’t make unfounded conclusions based on really small sample sizes):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat),</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>(),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean n_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;      &lt;int&gt;
+1 Ideal          0.703      21551
+2 Premium        0.892      13791
+3 Good           0.849       4906
+4 Very Good      0.806      12082
+5 Fair           1.05        1610</code></pre>
+</div>
+</div>
+<p>Here is an overview of the most commonly used functions to compute summaries:</p>
+<ul>
+<li><code>mean()</code> &amp; <code>median()</code></li>
+<li><code>min()</code> &amp; <code>max()</code></li>
+<li><code>sum()</code></li>
+<li><code>sd()</code>: standard deviation</li>
+<li><code>IQR()</code>: interquartile range</li>
+<li><code>n()</code>: counts the number of rows (observations)</li>
+<li><code>n_distinct()</code>: counts the number of distinct (unique) values</li>
+</ul>
+<p>Two other comments:</p>
+<ul>
+<li><p>You can also ask <code>summarize()</code> to compute summaries by <strong>multiple columns</strong>, which will return separate summaries for each <em>combination</em> of the involved variables — we’ll see this in the exercises.</p></li>
+<li><p>This may be obvious, but whatever column you are computing summaries by (using <code>.by</code>) should be a <strong>categorical variable</strong>. In our <code>diamond</code> examples, we’re only using columns that are <code>factor</code>s, but “regular” <code>character</code> columns will work just fine as well.</p></li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Side note: <code>group_by()</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The “classic” way of using <code>summarize()</code> with multiple groups is by preceding it with a <code>group_by()</code> call — e.g., the code below is equivalent to our last example above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(cut) <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">carat_mean =</span> <span class="fu">mean</span>(carat),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 3
+  cut       carat_mean n_diamonds
+  &lt;ord&gt;          &lt;dbl&gt;      &lt;int&gt;
+1 Fair           1.05        1610
+2 Good           0.849       4906
+3 Very Good      0.806      12082
+4 Premium        0.892      13791
+5 Ideal          0.703      21551</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>The <code>.by</code> argument to <code>summarize()</code> (and other functions!) is a rather recent addition, but I prefer it over <code>group_by()</code>:</p>
+<ul>
+<li>It is simpler, a bit less typing, and makes the <code>summarize()</code> call self-contained</li>
+<li>When grouping by multiple columns, <code>group_by()</code> has some odd, unhelpful behavior where it keeps some of the groupings, such that you likely need an <code>ungroup()</code> call as well.</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="exercises-i" class="level2 exercise" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">3</span> Exercises I</h2>
+<section id="diamond-sizes-in-relation-to-clarity" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="diamond-sizes-in-relation-to-clarity"><span class="header-section-number">3.1</span> Diamond sizes in relation to <code>clarity</code></h3>
+<p><strong>A)</strong> Compute the mean length (<code>x</code>), width (<code>y</code>), and depth (<code>z</code>) for each diamond <code>clarity</code>. Also include a column with group sizes. Do you see any clear differences?</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">x_mean =</span> <span class="fu">mean</span>(x),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">y_mean =</span> <span class="fu">mean</span>(y),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">z_mean =</span> <span class="fu">mean</span>(z),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_diamonds =</span> <span class="fu">n</span>(),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> clarity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 5
+  clarity x_mean y_mean z_mean n_diamonds
+  &lt;ord&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;      &lt;int&gt;
+1 SI2       6.40   6.40   3.95       9194
+2 SI1       5.89   5.89   3.64      13065
+3 VS1       5.57   5.58   3.44       8171
+4 VS2       5.66   5.66   3.49      12258
+5 VVS2      5.22   5.23   3.22       5066
+6 VVS1      4.96   4.98   3.06       3655
+7 I1        6.76   6.71   4.21        741
+8 IF        4.97   4.99   3.06       1790</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Diamond size differences between clarities may become more apparent if we use the overall volume:</p>
+<ul>
+<li>Dig up your <code>mutate()</code> skills to create a volume column <code>vol</code> (length * width * depth)</li>
+<li>Compute the mean volume for each diamond <code>clarity</code></li>
+</ul>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">vol =</span> x <span class="sc">*</span> y <span class="sc">*</span> z) <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">vol_mean =</span> <span class="fu">mean</span>(vol), <span class="at">.by =</span> clarity)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 2
+  clarity vol_mean
+  &lt;ord&gt;      &lt;dbl&gt;
+1 SI2        175. 
+2 SI1        138. 
+3 VS1        119. 
+4 VS2        124. 
+5 VVS2        97.6
+6 VVS1        82.5
+7 I1         205. 
+8 IF          83.3</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="diamond-prices" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="diamond-prices"><span class="header-section-number">3.2</span> Diamond prices</h3>
+<p><strong>A)</strong> For each diamond <code>cut</code>, compute the <code>price</code>’s mean, median, minimum, maximum, and standard deviation.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">price_mean =</span> <span class="fu">mean</span>(price),</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">price_median =</span> <span class="fu">median</span>(price),</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">price_min =</span> <span class="fu">min</span>(price),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">price_max =</span> <span class="fu">max</span>(price),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">price_sd =</span> <span class="fu">sd</span>(price),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 6
+  cut       price_mean price_median price_min price_max price_sd
+  &lt;ord&gt;          &lt;dbl&gt;        &lt;dbl&gt;     &lt;int&gt;     &lt;int&gt;    &lt;dbl&gt;
+1 Ideal          3458.        1810        326     18806    3808.
+2 Premium        4584.        3185        326     18823    4349.
+3 Good           3929.        3050.       327     18788    3682.
+4 Very Good      3982.        2648        336     18818    3936.
+5 Fair           4359.        3282        337     18574    3560.</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Find the combination of <code>cut</code>, <code>color</code>, and <code>clarity</code> that on average yields the most expensive diamonds.</p>
+<p>For this, you’ll have to group by all these 3 columns. Try this for yourself first, but check out the first solution if you can’t get that part to work.</p>
+<details>
+<summary>
+<b>Grouping solution</b> (click here)
+</summary>
+<p><code>.by = c(cut, color, clarity)</code> will group by these 3 columns at once.</p>
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>After summarizing, it makes sense to arrange in descending order by price, so you can see the cut-color-clarity combinations with the most expensive diamonds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">price =</span> <span class="fu">mean</span>(price),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">.by =</span> <span class="fu">c</span>(cut, color, clarity)) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(price))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 276 × 4
+   cut       color clarity  price
+   &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;    &lt;dbl&gt;
+ 1 Very Good D     IF      10298.
+ 2 Good      D     IF      10030.
+ 3 Ideal     J     I1       9454 
+ 4 Premium   D     IF       9056.
+ 5 Premium   J     SI2      7550.
+ 6 Fair      D     I1       7383 
+ 7 Premium   J     VVS1     7244.
+ 8 Ideal     I     SI2      7192.
+ 9 Premium   I     VS2      7156.
+10 Premium   I     SI2      7148.
+# ℹ 266 more rows</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<p><br></p>
+<section id="the-slice_-functions" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="the-slice_-functions"><span class="header-section-number">4</span> The <code>slice_</code> functions</h2>
+<p>Like the <code>filter()</code> function, <a href="https://dplyr.tidyverse.org/reference/slice.html">functions in the <code>slice_</code> family</a> select specific rows, but have some different functionality that’s quite handy — especially in combination with grouping.</p>
+<p>Let’s say we wanted to only get, <strong>for each <code>cut</code>, the diamond with the highest value of <code>carat</code></strong>. We can do this pretty easily with the <code>slice_max()</code> function, which will return the row(s) with the highest value for a specified variable:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(carat, <span class="at">by =</span> cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+2  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+3  4.01 Premium   J     I1       62.5    62 15223 10.0   9.94  6.24
+4  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+5  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+6  3.01 Good      H     SI2      57.6    64 18593  9.44  9.38  5.42
+7  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+8  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98</code></pre>
+</div>
+</div>
+<details>
+<summary>
+Why are we getting more than one diamond per <code>cut</code> in some cases? <em>(Click to see the answer)</em>
+</summary>
+Because of ties in the <code>cut</code> value. (We’ll get back to this in the next set of exercises.)
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>You can get more than just the single highest (<code>slice_max()</code>) / lowest (<code>slice_min()</code>) value per group with the <code>n=</code> argument, and can get a specific proportion of rows with <code>prop=</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the 3 highest-depth diamonds for each value of cut</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(depth, <span class="at">by =</span> cut, <span class="at">n =</span> <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 280 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  2.01 Ideal   I     VS2      66.7    56 15729  7.75  7.65  5.14
+ 2  0.71 Ideal   E     SI2      65.5    55  2511  5.62  5.56  3.66
+ 3  3.01 Ideal   J     I1       65.4    60 16538  8.99  8.93  5.86
+ 4  0.8  Premium G     SI1      63      59  2760  5.9   5.81  3.69
+ 5  0.9  Premium I     VS2      63      58  2761  6.16  6.12  3.87
+ 6  0.72 Premium I     IF       63      57  2795  5.72  5.7   3.6 
+ 7  0.72 Premium E     VS2      63      55  2802  5.79  5.61  3.59
+ 8  0.7  Premium E     VS2      63      60  2818  5.64  5.6   3.54
+ 9  0.81 Premium G     SI1      63      60  2832  5.87  5.81  3.68
+10  0.7  Premium G     VS1      63      60  2838  5.64  5.57  3.53
+# ℹ 270 more rows</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the 1% lowest-carat diamonds for each value of color</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_min</span>(carat, <span class="at">by =</span> color, <span class="at">prop =</span> <span class="fl">0.01</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 926 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.2  Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+ 2  0.2  Premium   E     VS2      59.8    62   367  3.79  3.77  2.26
+ 3  0.2  Premium   E     VS2      59      60   367  3.81  3.78  2.24
+ 4  0.2  Premium   E     VS2      61.1    59   367  3.81  3.78  2.32
+ 5  0.2  Premium   E     VS2      59.7    62   367  3.84  3.8   2.28
+ 6  0.2  Ideal     E     VS2      59.7    55   367  3.86  3.84  2.3 
+ 7  0.2  Very Good E     VS2      63.4    59   367  3.74  3.71  2.36
+ 8  0.2  Ideal     E     VS2      62.2    57   367  3.76  3.73  2.33
+ 9  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+10  0.21 Very Good E     VS2      63.2    54   386  3.82  3.78  2.4 
+# ℹ 916 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The full set of <code>slice_</code> functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>slice_head(n = 1)</code> takes the first row.</li>
+<li><code>slice_tail(n = 1)</code> takes the last row</li>
+<li><code>slice_min(x, n = 1)</code> takes the row with the smallest value in column <code>x</code>.</li>
+<li><code>slice_max(x, n = 1)</code> takes the row with the largest value in column <code>x</code>.</li>
+<li><code>slice_sample(n = 1)</code> takes one random row.</li>
+<li><code>slice(15)</code> takes the 15th row.</li>
+</ul>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="the-count-function" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="the-count-function"><span class="header-section-number">5</span> The <code>count()</code> function</h2>
+<p>Above, we used the <code>n()</code> helper with <code>summarize()</code> to get the number of rows with each value of <code>cut</code> (i.e.&nbsp;the group sizes) along with other computed summaries.</p>
+<p>Getting a “count table” like that is such a common part of Exploratory Data Analysis (EDA) that there’s another <em>dplyr</em> function available for it, <a href="https://dplyr.tidyverse.org/reference/count.html"><code>count()</code></a>. And unless you’re already <code>summarize</code>-ing, this one is simpler to use:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> <span class="fu">count</span>(cut)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut           n
+  &lt;ord&gt;     &lt;int&gt;
+1 Fair       1610
+2 Good       4906
+3 Very Good 12082
+4 Premium   13791
+5 Ideal     21551</code></pre>
+</div>
+</div>
+<p>We may also want to sort the output by frequency, which can be useful especially when there are many different values for the focal variable (not really the case here, but you get the point):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> <span class="fu">count</span>(cut, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  cut           n
+  &lt;ord&gt;     &lt;int&gt;
+1 Ideal     21551
+2 Premium   13791
+3 Very Good 12082
+4 Good       4906
+5 Fair       1610</code></pre>
+</div>
+</div>
+<p>And you can also create counts for value combinations across multiple columns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> <span class="fu">count</span>(cut, color)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 35 × 3
+   cut   color     n
+   &lt;ord&gt; &lt;ord&gt; &lt;int&gt;
+ 1 Fair  D       163
+ 2 Fair  E       224
+ 3 Fair  F       312
+ 4 Fair  G       314
+ 5 Fair  H       303
+ 6 Fair  I       175
+ 7 Fair  J       119
+ 8 Good  D       662
+ 9 Good  E       933
+10 Good  F       909
+# ℹ 25 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Base R’s <code>table()</code> function
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Also worth mentioning is the base R <code>table()</code> function, which is similar to <code>count()</code>. While its output format is unwieldy for follow-up analyses<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, you may prefer its formatting especially when wanting to glance at a 2-way count table to see patterns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(diamonds<span class="sc">$</span>cut, diamonds<span class="sc">$</span>color)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>           
+               D    E    F    G    H    I    J
+  Fair       163  224  312  314  303  175  119
+  Good       662  933  909  871  702  522  307
+  Very Good 1513 2400 2164 2299 1824 1204  678
+  Premium   1603 2337 2331 2924 2360 1428  808
+  Ideal     2834 3903 3826 4884 3115 2093  896</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>Additionally, as a <em>dplyr</em> function, <code>count()</code> only works with data frames. Occasionally, you may also need to create a count table for a <strong>vector</strong>, and <code>table()</code> can do that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>cut_vec <span class="ot">&lt;-</span> diamonds<span class="sc">$</span>cut</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(cut_vec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>cut_vec
+     Fair      Good Very Good   Premium     Ideal 
+     1610      4906     12082     13791     21551 </code></pre>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-ii" class="level2 exercise" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">6</span> Exercises II</h2>
+<section id="no-ties-please" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="no-ties-please"><span class="header-section-number">6.1</span> No ties, please</h3>
+<p>Above, when we first used <code>slice_max()</code>, we got multiple rows for some groups. Check out the help for this function (<code>?slice_max</code>) and get it to print only one row per group, even in the case of ties.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>The <code>with_ties</code> argument controls this. The default is <code>TRUE</code> (do include ties), so we want to set it to <code>FALSE</code> (don’t include ties):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_max</span>(carat, <span class="at">by =</span> cut, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+2  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+3  3.01 Good      I     SI2      63.9    60 18242  9.06  9.01  5.77
+4  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+5  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="random-diamonds" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="random-diamonds"><span class="header-section-number">6.2</span> Random diamonds</h3>
+<p>Use <code>slice_sample()</code> to get 5 random diamonds for each combination of <code>cut</code>, <code>color</code> and <code>clarity</code>.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_sample</span>(<span class="at">n =</span> <span class="dv">5</span>, <span class="at">by =</span> <span class="fu">c</span>(cut, color, clarity))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 1,342 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  1.2  Ideal   E     SI2      61.3  56    6006  6.85  6.88  4.21
+ 2  1.02 Ideal   E     SI2      62.6  54.6  4983  6.4   6.44  4.02
+ 3  0.78 Ideal   E     SI2      61    56    3053  5.92  5.98  3.63
+ 4  1.11 Ideal   E     SI2      61.2  57    4969  6.7   6.74  4.11
+ 5  1    Ideal   E     SI2      60.7  55    4077  6.39  6.33  3.86
+ 6  0.71 Premium E     SI1      60.3  60    2674  5.77  5.74  3.47
+ 7  0.82 Premium E     SI1      61.2  61    3211  5.98  5.95  3.65
+ 8  0.51 Premium E     SI1      61.3  54    1546  5.18  5.13  3.16
+ 9  0.57 Premium E     SI1      62.2  55    1590  5.36  5.31  3.32
+10  0.41 Premium E     SI1      62.4  58     755  4.75  4.77  2.97
+# ℹ 1,332 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="count" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="count"><span class="header-section-number">6.3</span> <code>count()</code></h3>
+<p><strong>A)</strong> Create a sorted count table of diamond <code>clarity</code>s</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span> <span class="fu">count</span>(clarity, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 8 × 2
+  clarity     n
+  &lt;ord&gt;   &lt;int&gt;
+1 SI1     13065
+2 VS2     12258
+3 SI2      9194
+4 VS1      8171
+5 VVS2     5066
+6 VVS1     3655
+7 IF       1790
+8 I1        741</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> What are the least common combinations of <code>clarity</code> and <code>depth</code> for diamonds costing less than $5,000?</p>
+<details>
+<summary>
+<b>Hints</b> (click here)
+</summary>
+<ul>
+<li>You’ll have to <code>filter()</code> first.</li>
+<li>Can you sort in reverse order with <code>count()</code>? If not, you’ll have to use a separate <code>arrange()</code></li>
+</ul>
+</details>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(price <span class="sc">&lt;</span> <span class="dv">5000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(clarity, color) <span class="sc">|&gt;</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(n)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 56 × 3
+   clarity color     n
+   &lt;ord&gt;   &lt;ord&gt; &lt;int&gt;
+ 1 I1      J        26
+ 2 I1      D        32
+ 3 IF      D        39
+ 4 IF      J        40
+ 5 VVS1    J        51
+ 6 I1      I        65
+ 7 VVS2    J        67
+ 8 I1      E        84
+ 9 I1      H       108
+10 I1      G       114
+# ℹ 46 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="bonus-sort-then-slice" class="level3" data-number="6.4">
+<h3 data-number="6.4" class="anchored" data-anchor-id="bonus-sort-then-slice"><span class="header-section-number">6.4</span> Bonus: sort then slice</h3>
+<p><code>slice_head()</code> will print the <em>first-occurring</em> row(s), and its twin <code>slice_tail()</code> prints the <em>last</em> row(s). In combination with sorting, these can give more flexibility than the min-max functions.</p>
+<p>For each <code>color</code>, use <code>arrange()</code> and <code>slice_head()</code> to get the 3 diamonds with the highest carat, with ties in carat broken by price (highest first).</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>diamonds <span class="sc">|&gt;</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(carat), <span class="fu">desc</span>(price)) <span class="sc">|&gt;</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">3</span>, <span class="at">by =</span> color)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 21 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98
+ 2  4.5  Fair      J     I1       65.8    58 18531 10.2  10.2   6.72
+ 3  4.01 Premium   J     I1       62.5    62 15223 10.0   9.94  6.24
+ 4  4.13 Fair      H     I1       64.8    61 17329 10     9.85  6.43
+ 5  3.65 Fair      H     I1       67.1    53 11668  9.53  9.48  6.38
+ 6  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+ 7  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+ 8  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+ 9  3.67 Premium   I     I1       62.4    56 16193  9.86  9.81  6.13
+10  3.4  Fair      D     I1       66.8    52 15964  9.42  9.34  6.27
+# ℹ 11 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>It’s not actually a data frame…<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
