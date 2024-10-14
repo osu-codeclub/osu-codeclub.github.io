@@ -50,7 +50,7 @@
 <blockquote class="blockquote">
 <p><em>“The most basic principle for reproducible research is: Do everything via code.”</em> —Karl Broman, University of Wisconsin-Madison</p>
 </blockquote>
-<p>It is inherently more reproducible to write code, such as in R, as opposed to clicking around in a program with a Graphical User Interface (GUI).</p>
+<p>It is inherently more reproducible to write code, such as in R, as opposed to clicking around in a program with a Graphical User Interface (GUI). This is because it would generally be necessary but very tedious to record every single click that you make in a GUI, whereas it is easy to save your code.<sup>1</sup></p>
 <p>In addition, R is open source and freely available. If you use a proprietary program that requires an expensive license, your work may be reproducible in principle, but won’t be in practice for many people.</p>
 <hr style="height:1pt; visibility:hidden;">
 </section>
@@ -65,7 +65,7 @@
 <li>Data and code sharing</li>
 <li>Software management</li>
 </ul>
-<p>This series of Code Club sessions will not extensively cover the above, but we will cover three topics that touch on all of them:</p>
+<p>This series of Code Club sessions will not extensively cover all of the above, but we will teach three topics that do touch on all of them:</p>
 <ol type="1">
 <li><strong>File organization and “RStudio Projects” (today)</strong></li>
 <li>Combining code and text (“literate programming”) with Quarto (sessions 2 and 3)</li>
@@ -89,7 +89,7 @@
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-dirs-1.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></p>
-<figcaption>Two project folder hierarchies, nicely separated and self-contained.</figcaption>
+<figcaption><em>Two project folder hierarchies, nicely separated and self-contained.<br>The gray <code>$HOME</code> folder is a Home folder which exists for Mac and Linux users.<br>For Windows users, you can think of this e.g.&nbsp;as your Documents or Desktop folder.</em></figcaption>
 </figure>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -117,6 +117,7 @@
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-ex_annot.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%"></p>
+<figcaption><em>An example research project folder structure.<br>Folders are shown in blue and the README Markdown (<code>.md</code>) file is shown in black.</em></figcaption>
 </figure>
 </div>
 <p><br></p>
@@ -125,7 +126,7 @@
 <section id="directories-and-paths" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="directories-and-paths"><span class="header-section-number">3</span> Directories and paths</h2>
 <p>First, <strong>“directory”</strong> (<strong>“dir”</strong> for short) is just <em>another word for folder</em> that you will see commonly used for anything coding-related.</p>
-<p>Second, your <strong>“working directory”</strong> is the <em>directory where you are currently located</em>. When you open R (or Python, or a Terminal, etc.), it will always have a starting point at a specific location in your computer<sup>1</sup>.</p>
+<p>Second, your <strong>“working directory”</strong> is the <em>directory where you are currently located</em>. When you open R (or Python, or a Terminal, etc.), it will always have a starting point at a specific location in your computer<sup>2</sup>.</p>
 <p>There are functions to <em>change your working dir</em> as well as ways to refer to any location on the computer regardless of whether you are there. That brings us to the third term, <strong>path</strong>, which is a specification of the location of a file or folder on the computer.</p>
 <p>The key concept here is that folders are separated by slashes – forward slashes in Mac and Linux, for example:</p>
 <pre class="bash-out-solo"><code>/Users/John Doe/Desktop/cats.png</code></pre>
@@ -182,8 +183,8 @@ font-style: inherit;">getwd</span>()</span></code></pre></div>
 <pre class="styled-output"><code>[1] "/Users/poelstra.1/Library/CloudStorage/Dropbox/mcic/teach/codeclub/codeclub-site/posts/S09E06_reprod_01"</code></pre>
 </div>
 </div>
-<p>You can see that the output path is <strong>MY</strong> working directory – yours will be different as the set up of your computer organization structure is different from mine (and recall that you will see backslashes if you have Windows).</p>
-<p>You can change (set) your working directory using the function <code>setwd()</code>:</p>
+<p>You can see that the output path is <strong>my</strong> working directory – yours will be different as the set up of your computer organization structure is different from mine (and recall that you will see backslashes if you have Windows).</p>
+<p>You can change your working directory using the function <code>setwd()</code>…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -191,10 +192,21 @@ font-style: inherit;">setwd</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"/this/should/be/your/working-directory/path"</span>)</span></code></pre></div>
 </div>
+<p>…<strong>and we recommend always using forward slashes, even on Windows!</strong> This may seem strange given what I explained above, but even though Windows natively uses backslashes, in R, you can use backslashes as it will take care of the conversion. Using forward slashes even on Windows is better for two reasons:</p>
+<ol type="1">
+<li>It makes the path specification universal (independent of the operating system).</li>
+<li>Backslashes have a separate purpose in R. Therefore, you would actually need to use <strong>two</strong> backslashes inside <code>setwd()</code> (e.g.&nbsp;<code>setwd("C:\\Users\\John Doe")</code>) and in other contexts where you use paths.</li>
+</ol>
+<hr style="height:1pt; visibility:hidden;">
+<section id="exercise-change-your-working-dir" class="level3 unnumbered exercise">
+<h3 class="unnumbered anchored" data-anchor-id="exercise-change-your-working-dir">Exercise: Change your working dir</h3>
+<p>Find a location on your computer that you would like to move to (it doesn’t matter where or what that is, this is just for practice). Then, move to that directory using <code>setwd()</code>.</p>
+</section>
 <p><br></p>
 </section>
 <section id="use-an-rstudio-project-instead" class="level2" data-number="5">
 <h2 data-number="5" class="anchored" data-anchor-id="use-an-rstudio-project-instead"><span class="header-section-number">5</span> Use an RStudio Project instead!</h2>
+<p>Instead of changing working directories whenever you fire up R, you can (should!) use an RStudio Project instead.</p>
 <p><strong>RStudio Projects are an RStudio-specific concept that create a special file (<code>.Rproj</code>)</strong>, primarily to designate a directory as the working directory for everything within it, and to make it easy to switch between projects.</p>
 <hr style="height:1pt; visibility:hidden;">
 <section id="create-an-rstudio-project-for-code-club" class="level3" data-number="5.1">
@@ -221,9 +233,16 @@ font-style: inherit;">getwd</span>()</span></code></pre></div>
 <li><p>They record which scripts (and R Markdown files) are open in RStudio, and will reopen all of those when you reopen the project. This becomes quite handy, say, when you work on three different projects, each of which uses a number of scripts.</p>
 <p>Additionally, when you switch between Projects, R will restart, which is a good thing, since you don’t want to randomly carry over objects and loaded packages across research projects.</p></li>
 </ul>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="exercise-create-an-rstudio-project-for-a-research-project-folder" class="level3 unnumbered exercise">
+<h3 class="unnumbered anchored" data-anchor-id="exercise-create-an-rstudio-project-for-a-research-project-folder">Exercise: Create an RStudio Project for a research project folder</h3>
+<p>(Or whatever other folder with R code that you may have.)</p>
+<p>Then, switch back and forth between your two Projects.</p>
+</section>
+<p><br></p>
 <hr>
 <p><br></p>
-</section>
 </section>
 <section id="bonus-file-naming" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="bonus-file-naming"><span class="header-section-number">6</span> Bonus: File naming</h2>
@@ -305,11 +324,11 @@ DE-03_process-significant.R</code></pre>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p> You can think of this along the lines of opening a file browser (Finder / File Explorer etc.) – it will always have a starting point, and you can move around to go to other locations.↩︎</p></li>
+<li id="fn1"><p> Though this is not without caveats. For example, some programs with GUIs may be able to report the exact procedure that was used along with the results.<br><br> Conversely, if you also save say alternative R code that gives different results, and do so without annotation, you may not know what produced the results that you ended up writing down in your manuscripts.↩︎</p></li>
+<li id="fn2"><p> You can think of this along the lines of opening a file browser (Finder / File Explorer etc.) – it will always have a starting point, and you can move around to go to other locations.↩︎</p></li>
 </ol>
 </section></div> ]]></description>
-  <category>r-basics</category>
-  <category>tidyverse</category>
+  <category>reproducibility</category>
   <guid>https://osu-codeclub.github.io/posts/S09E06_reprod_01/</guid>
   <pubDate>Mon, 14 Oct 2024 04:00:00 GMT</pubDate>
 </item>
