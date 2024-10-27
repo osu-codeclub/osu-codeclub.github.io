@@ -1,0 +1,379 @@
+---
+title: "Reproducibility 1: <br> Intro, File Organization, and RStudio Projects"
+author: "Jelmer Poelstra"
+date: "2024-10-14"
+categories: [r-basics, tidyverse]
+title-block-banner: false
+number-depth: 3
+editor_options:
+  chunk_output_type: console
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+---
+
+------------------------------------------------------------------------
+
+![Artwork by [\@allison_horst](https://twitter.com/allison_horst)](img/rproj.png)
+
+<br>
+
+## Introduction: A series on reproducibility
+
+Today is the first of a series of 6 Code Club sessions that will cover several
+topics under the umbrella of "reproducibility".
+
+What do we mean by **reproducibility**?
+Your research is reproducible when third parties are 
+_able to perform the same analysis on your data, and produce the same results._
+
+Reproducibility is perhaps a low bar compared to the related concept of **replicability**,
+which is the ability to produce the same (qualitative) results when applying the
+_same analysis to different data_.
+Here is a helpful table showing these two and two other related concepts:
+
+![From [The Turing Way](https://book.the-turing-way.org/reproducible-research/reproducible-research)](img/reproducible-matrix.jpg)
+
+For example:
+
+- Say that you've written a paper in which you present the results of one of your
+  research projects.
+  When this research is fully reproducible,
+  it means that someone else should be able to be able to run the exact same analysis
+  and produce all the results and figures using your paper and its associated documentation.
+
+- Relatedly, when you work in a reproducible manner and you abandon an analysis for say two years,
+  you will be able to pick up from where you left off without much trouble.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Using R is already a big step in the right direction!
+
+> *"The most basic principle for reproducible research is: Do everything via code."*
+> —Karl Broman, University of Wisconsin-Madison
+
+It is inherently more reproducible to write code, such as in R,
+as opposed to clicking around in a program with a Graphical User Interface (GUI).
+
+In addition, R is open source and freely available.
+If you use a proprietary program that requires an expensive license,
+your work may be reproducible in principle,
+but won't be in practice for many people.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Additional aspects & the plan for this series
+
+Research that is fully reproducible should use a set of tools and best-practice
+related to:
+
+- File organization
+- File version management
+- Project documentation
+- Code style and organization
+- Data and code sharing
+- Software management
+
+This series of Code Club sessions will not extensively cover the above,
+but we will cover three topics that touch on all of them:
+
+1. **File organization and "RStudio Projects" (today)**
+2. Combining code and text ("literate programming") with Quarto (sessions 2 and 3)
+3. File version control and code sharing with Git and GitHub (sessions 4 and 5)
+4. Using RStudio at OSC (session 6, part I)
+5. R version & package management (session 6, part II)
+
+<br>
+
+## Research project file organization
+
+### Recommendation 1: Use one folder hierarchy for one project
+
+Using one folder, or really a hierarchy of folders, for one project means that you:
+
+- Don't mix files for multiple distinct projects inside one folder.
+- Don't keep files for one project in multiple places.
+
+For example:
+
+![Two project folder hierarchies, nicely separated and self-contained.](img/proj-dirs-1.svg){fig-align="center" width="60%"}
+
+<hr style="height:1pt; visibility:hidden;" />
+
+When you have a single folder hierarchy for each project, it is:
+
+- Easier to find files and to share your project, harder to accidentally throw away stuff, etc.
+- Possible to use *relative paths* within a project's scripts,
+  which improves reproducibility (see below).
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Recommendation 2: Separate different kinds of files using a consistent subfolder structure
+
+Within your project's directory hierarchy:
+
+- Separate code from data.
+- Separate raw data from processed data and from results.
+
+Also:
+
+- Treat raw data as read-only.
+- Treat generated output as somewhat disposable and as possible to regenerate.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+For example,
+here is one good way of organizing a (bioinformatics) research project:
+
+![](img/proj-ex_annot.png){fig-align="center" width="70%"}
+
+<br>
+
+## Directories and paths
+
+First, **"directory"** (**"dir"** for short) is just _another word for folder_ that you will
+see commonly used for anything coding-related.
+
+Second, your **"working directory"** is the _directory where you are currently located_.
+When you open R (or Python, or a Terminal, etc.),
+it will always have a starting point at a specific location in your computer^[
+You can think of this along the lines of opening a file browser (Finder / File Explorer etc.) --
+it will always have a starting point, and you can move around to go to other locations.].
+
+There are functions to _change your working dir_ as well as ways to refer to
+any location on the computer regardless of whether you are there.
+That brings us to the third term, **path**, which is a specification of the location
+of a file or folder on the computer.
+
+The key concept here is that folders are separated by slashes -- 
+forward slashes in Mac and Linux, for example:
+
+```{.bash-out-solo}
+/Users/John Doe/Desktop/cats.png
+```
+
+...and backward slashes in Windows, for example:
+
+```{.bash-out-solo}
+C:\Users\John Doe\Desktop\cats.png
+```
+
+There are two types of paths:
+
+- **Absolute paths** start from a root (top-level) directory,
+  and correctly point to a file or folder regardless of what your working dir is.
+  If you think of a path as a way to point to a geographic location,
+  then absolute paths are like GPS coordinates.
+  The two paths above are examples of absolute (or "full") paths.
+
+- **Relative paths** start from a specific *working dir*
+  (and won't work if you're elsewhere).
+  If you think of a path as a way to point to a geographic location,
+  then relative paths are like directions like "Take the second left".
+  For example:
+  
+```{.bash-out-solo}
+results/fastqc/sampleA.html
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+<details><summary>Could a file name by itself, like `myscript.R`, be considered a path? If so, what kind, and what is the implied location of the file?</summary>
+
+A file name that does not include a folder, like  `myscript.R`,
+can indeed be considered a path: a relative path that assumes the file is in
+your current working directory.
+
+</details>
+
+<details><summary>Don't absolute paths sound better? What could be a disadvantage of them?</summary>
+
+Absolute paths:
+
+- Don't generally work across computers
+- Break when your move a project folder hierarchy to a a different place on your computer
+
+On the other hand, relative paths that use the root of the project folder hierarchy
+as the working dir, also work when moving the folder within and between computers.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+![Two project dir hierarchies, and the absolute and relative path to a (FASTQ) file.](img/proj-dirs-2.svg){fig-align="center" width="70%"}
+
+<hr style="height:1pt; visibility:hidden;" />
+
+![Now everything was moved into `Dropbox`.<br>The absolute path has changed, but the relative path remains the same.](img/proj-dirs-3.svg){fig-align="center" width="70%"}
+
+</details>
+
+<br>
+
+## Getting and setting the working directory in R
+
+In R, we can see what our working directory is using the function `getwd()`
+(short for "get working dir"):
+
+```{r}
+getwd()
+```
+
+You can see that the output path is **MY** working directory --
+yours will be different as the set up of your computer organization structure is different from mine
+(and recall that you will see backslashes if you have Windows).
+
+You can change (set) your working directory using the function `setwd()`:
+
+```{r, eval = FALSE}
+setwd("/this/should/be/your/working-directory/path")
+```
+
+<br>
+
+## Use an RStudio Project instead!
+
+**RStudio Projects are an RStudio-specific concept that create a special file (`.Rproj`)**,
+primarily to designate a directory as the working directory for everything within it,
+and to make it easy to switch between projects.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Create an RStudio Project for Code Club
+
+- You may already have a folder on your computer for all things Code Club.
+  **If not, please create one now**.
+  You can do this outside of R in your regular file browser
+  (or if you feel adventurous you can use the R function `dir.create()`,
+  e.g. `dir.create("path/to/your/dir")`).
+
+- Click `File` (top menu bar) > `New Project`, and then select `Existing Directory`.
+  Select the folder for Code Club that you created in the previous step.
+  
+After RStudio automatically reloads,
+**the R working directory will be set to the place where your RStudio Project file is located.**
+
+Therefore, you should see the file ending in `.Rproj`
+in the RStudio `Files` tab in the lower right pane.
+Also, you can check your working dir:
+
+```{r, eval=FALSE}
+getwd()
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Why RStudio Projects are useful
+
+In brief, RStudio Projects help you to organize your work and make it more reproducible:
+
+- When using Projects, you can avoid manually setting your working directory
+  and **can therefore use relative file paths** to refer to files within the project.
+  This way, even if you move the project directory,
+  or copy it to a different computer, the same paths will still work.
+  (Just make sure your Project is in the appropriate location: 
+  in the top-level dir of your folder hierarchy for 
+  your research project or stuff like Code Club.)
+
+- Projects encourage you to organize research projects inside self-contained folder
+  hierarchies exactly as recommended above.
+  
+- They record which scripts (and R Markdown files) are open in RStudio,
+  and will reopen all of those when you reopen the project.
+  This becomes quite handy, say, when you work on three different projects,
+  each of which uses a number of scripts.
+  
+  Additionally, when you switch between Projects, R will restart,
+  which is a good thing, since you don't want to randomly carry over objects and
+  loaded packages across research projects.
+
+---------------
+
+<br>
+
+## Bonus: File naming
+
+We'll go through three principles for good file names
+([from Jenny Bryan](https://speakerdeck.com/jennybc/how-to-name-files)) ---
+good file names:
+
+- Are machine-readable
+- Are human-readable
+- Play well with default file ordering
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Machine-readable
+
+Consistent and informative naming helps you to programmatically find and process files.
+
+- In file names, provide **metadata** like Sample ID, date, and treatment --
+  with such file names, you can easily select samples from e.g. a certain month or treatment:
+  - `sample032_2016-05-03_low.txt`  
+  - `samples_soil_treatmentA_2019-01.txt`
+
+- Avoid spaces in file names.
+  More generally, only use the following in file names:
+  
+  - Alphanumeric characters <kbd>A-Z</kbd>, <kbd>a-z</kbd>, <kbd>0-9</kbd>
+  
+  - Underscores <kbd>_</kbd>
+  
+  - Hyphens (dashes) <kbd>-</kbd>
+  
+  - Periods (dots) <kbd>.</kbd>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Human-readable
+
+> *"Name all files to reflect their content or function.*
+> *For example, use names such as bird_count_table.csv, manuscript.md,*
+> *or sightings_analysis.py.*"  
+> --- [Wilson et al. 2017](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510)
+
+One good way to combine machine- and human-readable (opinionated recommendations):
+
+- Use **underscores** (<kbd>_</kbd>) to delimit units you may later want to
+  separate on: sampleID, treatment, date.
+- Within such units, use **dashes** (<kbd>-</kbd>) to delimit words: `grass-samples`.
+- Limit the use of **periods** (<kbd>.</kbd>) to indicate file extensions.
+- Generally *avoid capitals*.
+
+For example:
+  
+```{.bash-out-solo}
+mmus001_treatmentA_filtered-by-quality.bam
+mmus001_treatmentA_filtered-by-quality.bam
+.
+.
+mmus086_treatmentA_filtered-by-quality.bam
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Play well with default file ordering
+
+- Use **leading zeros** for lexicographic sorting: `sample005`.
+- **Dates** should always be written as `YYYY-MM-DD`: `2020-10-11`.
+- **Group similar files together** by starting with same phrase,
+  and **number scripts** by execution order:
+  
+```{.bash-out-solo}
+DE-01_normalize.R
+DE-02_test.R
+DE-03_process-significant.R
+```
+
+<br>
+
+---------------
+
+<br>
+
+#### Further resources
+
+- ["The Turing Way" E-book on Reproducible Research](https://book.the-turing-way.org/reproducible-research)
+- Wilson et al. 2017, PLOS Computational Biology:
+  "[Good enough practices in scientific computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510)"
+- Kieran Healy:
+  ["The Plain Person's Guide to Plain Text Social Science"](https://plain-text.co/)
