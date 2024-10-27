@@ -10,11 +10,845 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 21 Oct 2024 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 28 Oct 2024 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>Reproducibility 2: Intoduction to Quarto</title>
+  <title>Reproducibility 3: More about Quarto</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S08E08_reprod_03/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<section id="a-recap" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> A recap</h1>
+<p>Last week we introduced Quarto, and using Quarto within RStudio. Next week, we will go over how to push our Quarto document to Github.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/quarto-gazing.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+<p>Open up the <code>.Rproj</code> you are using for Code Club. We can open up a new Quarto document by going to <code>File</code> &gt; <code>New File</code> &gt; <code>Quarto Document</code>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Does everyone have an <code>.Rproj</code> set up? We are going to need this for next week!</p>
+</div>
+</div>
+<p>Let’s add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we’ve been going over in Code Club this semester.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>Let’s go back to what we started with this semester. Let’s revisit data from <a href="https://www.cia.gov/the-world-factbook/">The World Factbook</a>, put together by the CIA to “provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities.” I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.</p>
+<p>The data we are going to download can be found <a href="https://www.cia.gov/the-world-factbook/field/population/country-comparison/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(</span>
+<span id="cb3-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv"</span>,</span>
+<span id="cb3-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span></span>
+<span id="cb3-4">)</span></code></pre></div>
+</div>
+<p>You should now see the file “factbook_download.csv” in your working directory.</p>
+<p>We can read it in using the tidyverse function from the <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> package called <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># i've stored mine in a folder called data for organizational sake</span></span>
+<span id="cb4-2">factbook <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/factbook_download.csv"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 11072 Columns: 20
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (20): Series Name, Series Code, Country Name, Country Code, 2000 [YR2000...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Let’s look at our data.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">View</span>(factbook)</span></code></pre></div>
+</div>
+<p>Let’s pull just the data for total population.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">factbook_pop <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb7-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Series Name</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Population, total"</span>)</span></code></pre></div>
+</div>
+<p>And then we can look at it:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(factbook_pop)</span></code></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 6%">
+<col style="width: 4%">
+<col style="width: 5%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Series Name</th>
+<th style="text-align: left;">Series Code</th>
+<th style="text-align: left;">Country Name</th>
+<th style="text-align: left;">Country Code</th>
+<th style="text-align: left;">2000 [YR2000]</th>
+<th style="text-align: left;">2001 [YR2001]</th>
+<th style="text-align: left;">2002 [YR2002]</th>
+<th style="text-align: left;">2003 [YR2003]</th>
+<th style="text-align: left;">2004 [YR2004]</th>
+<th style="text-align: left;">2005 [YR2005]</th>
+<th style="text-align: left;">2006 [YR2006]</th>
+<th style="text-align: left;">2007 [YR2007]</th>
+<th style="text-align: left;">2008 [YR2008]</th>
+<th style="text-align: left;">2009 [YR2009]</th>
+<th style="text-align: left;">2010 [YR2010]</th>
+<th style="text-align: left;">2011 [YR2011]</th>
+<th style="text-align: left;">2012 [YR2012]</th>
+<th style="text-align: left;">2013 [YR2013]</th>
+<th style="text-align: left;">2014 [YR2014]</th>
+<th style="text-align: left;">2015 [YR2015]</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">Afghanistan</td>
+<td style="text-align: left;">AFG</td>
+<td style="text-align: left;">19542982</td>
+<td style="text-align: left;">19688632</td>
+<td style="text-align: left;">21000256</td>
+<td style="text-align: left;">22645130</td>
+<td style="text-align: left;">23553551</td>
+<td style="text-align: left;">24411191</td>
+<td style="text-align: left;">25442944</td>
+<td style="text-align: left;">25903301</td>
+<td style="text-align: left;">26427199</td>
+<td style="text-align: left;">27385307</td>
+<td style="text-align: left;">28189672</td>
+<td style="text-align: left;">29249157</td>
+<td style="text-align: left;">30466479</td>
+<td style="text-align: left;">31541209</td>
+<td style="text-align: left;">32716210</td>
+<td style="text-align: left;">33753499</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">Albania</td>
+<td style="text-align: left;">ALB</td>
+<td style="text-align: left;">3089027</td>
+<td style="text-align: left;">3060173</td>
+<td style="text-align: left;">3051010</td>
+<td style="text-align: left;">3039616</td>
+<td style="text-align: left;">3026939</td>
+<td style="text-align: left;">3011487</td>
+<td style="text-align: left;">2992547</td>
+<td style="text-align: left;">2970017</td>
+<td style="text-align: left;">2947314</td>
+<td style="text-align: left;">2927519</td>
+<td style="text-align: left;">2913021</td>
+<td style="text-align: left;">2905195</td>
+<td style="text-align: left;">2900401</td>
+<td style="text-align: left;">2895092</td>
+<td style="text-align: left;">2889104</td>
+<td style="text-align: left;">2880703</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">Algeria</td>
+<td style="text-align: left;">DZA</td>
+<td style="text-align: left;">30774621</td>
+<td style="text-align: left;">31200985</td>
+<td style="text-align: left;">31624696</td>
+<td style="text-align: left;">32055883</td>
+<td style="text-align: left;">32510186</td>
+<td style="text-align: left;">32956690</td>
+<td style="text-align: left;">33435080</td>
+<td style="text-align: left;">33983827</td>
+<td style="text-align: left;">34569592</td>
+<td style="text-align: left;">35196037</td>
+<td style="text-align: left;">35856344</td>
+<td style="text-align: left;">36543541</td>
+<td style="text-align: left;">37260563</td>
+<td style="text-align: left;">38000626</td>
+<td style="text-align: left;">38760168</td>
+<td style="text-align: left;">39543154</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">American Samoa</td>
+<td style="text-align: left;">ASM</td>
+<td style="text-align: left;">58230</td>
+<td style="text-align: left;">58324</td>
+<td style="text-align: left;">58177</td>
+<td style="text-align: left;">57941</td>
+<td style="text-align: left;">57626</td>
+<td style="text-align: left;">57254</td>
+<td style="text-align: left;">56837</td>
+<td style="text-align: left;">56383</td>
+<td style="text-align: left;">55891</td>
+<td style="text-align: left;">55366</td>
+<td style="text-align: left;">54849</td>
+<td style="text-align: left;">54310</td>
+<td style="text-align: left;">53691</td>
+<td style="text-align: left;">52995</td>
+<td style="text-align: left;">52217</td>
+<td style="text-align: left;">51368</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">Andorra</td>
+<td style="text-align: left;">AND</td>
+<td style="text-align: left;">66097</td>
+<td style="text-align: left;">67820</td>
+<td style="text-align: left;">70849</td>
+<td style="text-align: left;">73907</td>
+<td style="text-align: left;">76933</td>
+<td style="text-align: left;">79826</td>
+<td style="text-align: left;">80221</td>
+<td style="text-align: left;">78168</td>
+<td style="text-align: left;">76055</td>
+<td style="text-align: left;">73852</td>
+<td style="text-align: left;">71519</td>
+<td style="text-align: left;">70567</td>
+<td style="text-align: left;">71013</td>
+<td style="text-align: left;">71367</td>
+<td style="text-align: left;">71621</td>
+<td style="text-align: left;">71746</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Population, total</td>
+<td style="text-align: left;">SP.POP.TOTL</td>
+<td style="text-align: left;">Angola</td>
+<td style="text-align: left;">AGO</td>
+<td style="text-align: left;">16394062</td>
+<td style="text-align: left;">16941587</td>
+<td style="text-align: left;">17516139</td>
+<td style="text-align: left;">18124342</td>
+<td style="text-align: left;">18771125</td>
+<td style="text-align: left;">19450959</td>
+<td style="text-align: left;">20162340</td>
+<td style="text-align: left;">20909684</td>
+<td style="text-align: left;">21691522</td>
+<td style="text-align: left;">22507674</td>
+<td style="text-align: left;">23364185</td>
+<td style="text-align: left;">24259111</td>
+<td style="text-align: left;">25188292</td>
+<td style="text-align: left;">26147002</td>
+<td style="text-align: left;">27128337</td>
+<td style="text-align: left;">28127721</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook_pop)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>Rows: 217
+Columns: 20
+$ `Series Name`   &lt;chr&gt; "Population, total", "Population, total", "Population,…
+$ `Series Code`   &lt;chr&gt; "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.T…
+$ `Country Name`  &lt;chr&gt; "Afghanistan", "Albania", "Algeria", "American Samoa",…
+$ `Country Code`  &lt;chr&gt; "AFG", "ALB", "DZA", "ASM", "AND", "AGO", "ATG", "ARG"…
+$ `2000 [YR2000]` &lt;chr&gt; "19542982", "3089027", "30774621", "58230", "66097", "…
+$ `2001 [YR2001]` &lt;chr&gt; "19688632", "3060173", "31200985", "58324", "67820", "…
+$ `2002 [YR2002]` &lt;chr&gt; "21000256", "3051010", "31624696", "58177", "70849", "…
+$ `2003 [YR2003]` &lt;chr&gt; "22645130", "3039616", "32055883", "57941", "73907", "…
+$ `2004 [YR2004]` &lt;chr&gt; "23553551", "3026939", "32510186", "57626", "76933", "…
+$ `2005 [YR2005]` &lt;chr&gt; "24411191", "3011487", "32956690", "57254", "79826", "…
+$ `2006 [YR2006]` &lt;chr&gt; "25442944", "2992547", "33435080", "56837", "80221", "…
+$ `2007 [YR2007]` &lt;chr&gt; "25903301", "2970017", "33983827", "56383", "78168", "…
+$ `2008 [YR2008]` &lt;chr&gt; "26427199", "2947314", "34569592", "55891", "76055", "…
+$ `2009 [YR2009]` &lt;chr&gt; "27385307", "2927519", "35196037", "55366", "73852", "…
+$ `2010 [YR2010]` &lt;chr&gt; "28189672", "2913021", "35856344", "54849", "71519", "…
+$ `2011 [YR2011]` &lt;chr&gt; "29249157", "2905195", "36543541", "54310", "70567", "…
+$ `2012 [YR2012]` &lt;chr&gt; "30466479", "2900401", "37260563", "53691", "71013", "…
+$ `2013 [YR2013]` &lt;chr&gt; "31541209", "2895092", "38000626", "52995", "71367", "…
+$ `2014 [YR2014]` &lt;chr&gt; "32716210", "2889104", "38760168", "52217", "71621", "…
+$ `2015 [YR2015]` &lt;chr&gt; "33753499", "2880703", "39543154", "51368", "71746", "…</code></pre>
+</div>
+</div>
+<p>Looks like our year columns are characters, let’s convert them to be numeric, and in the process practice pivoting.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">factbook_pop_long <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook_pop <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2"</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick columns start with 2</span></span>
+<span id="cb11-3">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"year"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># take names to new col "year"</span></span>
+<span id="cb11-4">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pop"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># values in cells to new col "pop"</span></span>
+<span id="cb11-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parse_number</span>(year)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use mutate to remove extra year garbage</span></span>
+<span id="cb11-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pop =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(pop)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># convert pop to be numeric</span></span></code></pre></div>
+</div>
+<p>Now that we’ve cleaned that up, let’s go back wide to calculate which country had the largest percent population growth from 2000 to 2015.</p>
+<p>Go wide!</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">factbook_pop_wide <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook_pop_long <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb12-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> year,</span>
+<span id="cb12-3">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> pop)</span></code></pre></div>
+</div>
+<p>Let’s now see which country had the largest percent population growth from 2000 to 2015.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">perc_pop_growth =</span> ((<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2015</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2000</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2000</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Country Name</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>, perc_pop_growth) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pull only the columns we want</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(perc_pop_growth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick top 5</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  `Country Name`           perc_pop_growth
+  &lt;chr&gt;                              &lt;dbl&gt;
+1 Qatar                              274. 
+2 United Arab Emirates               172. 
+3 Kuwait                             102. 
+4 Equatorial Guinea                   96.6
+5 Turks and Caicos Islands            94.9</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">perc_pop_growth =</span> ((<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2015</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2000</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">2000</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb15-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Country Name</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span>, perc_pop_growth) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pull only the columns we want</span></span>
+<span id="cb15-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_min</span>(perc_pop_growth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick top 5</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 5 × 2
+  `Country Name`           perc_pop_growth
+  &lt;chr&gt;                              &lt;dbl&gt;
+1 Northern Mariana Islands           -35.9
+2 Lithuania                          -17.0
+3 Latvia                             -16.5
+4 Bosnia and Herzegovina             -15.7
+5 Bulgaria                           -12.1</code></pre>
+</div>
+</div>
+<p>Now that we have some stuff, we can now see how making changes to our Quarto document affects the output.</p>
+<p>Remember, there are three parts of a Quarto document:</p>
+<ul>
+<li>The YAML (rhymes with camel) header</li>
+<li>Text</li>
+<li>Code</li>
+</ul>
+</section>
+<section id="yaml" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> YAML</h1>
+<p>Horacio talked last week about the YAML. The YAML is where you can set the content that will show up on the top of your knitted document, as well as control how your document is rendered.</p>
+<p>The YAML is surrounded by three dashes <code>---</code>.</p>
+<p>Here’s a simple example:</p>
+<div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb17-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb17-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my descriptive title"</span></span>
+<span id="cb17-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Jessica Cooperstone"</span></span>
+<span id="cb17-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"October 28, 2024"</span></span>
+<span id="cb17-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> html</span></span>
+<span id="cb17-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">editor</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> visual </span></span>
+<span id="cb17-7"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>But we can make some changes to arguments we pass to our YAML that will adjust how our resulting report looks. For example, the code below will add a table of contents, and number the sections according to the header levels we set.</p>
+<div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb18-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My document"</span></span>
+<span id="cb18-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb18-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # set parameters under the html category</span></span>
+<span id="cb18-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # add a table of contents</span></span>
+<span id="cb18-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">number_sections</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # incremental numbering of sections</span></span>
+<span id="cb18-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span></span>
+<span id="cb18-8"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>Let’s look at what our options are for rendering to <code>.html</code> <a href="https://quarto.org/docs/output-formats/html-basics.html">here</a>.</p>
+<section id="rendering-to-other-formats" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="rendering-to-other-formats"><span class="header-section-number">2.1</span> Rendering to other formats</h2>
+<p>We’ve been practicing by rendering to a <code>.html</code>file, but you can render your <code>.qmd</code> document to other formats, including PDFs, Microsoft Word, Markdown, and a special one that we will talk about in the coming weeks called Github (or Github Flavored Markdown (GFM)). <a href="https://github.com/CooperstoneLab/tomato-liver-omics/blob/main/metabolomics/Dzakovich_MouseLiverMetabolomics_20221211_githubdoc.md">Here</a> is an example of what some code that comes from my team that you push to Github could look like, and could serve as supplementary material for a paper, for example.</p>
+<p>You can see all the different formats you can render a Quarto document to <a href="https://quarto.org/docs/output-formats/all-formats.html">here</a>.</p>
+</section>
+<section id="themes" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="themes"><span class="header-section-number">2.2</span> Themes</h2>
+<p>You can also change the theming of your document to make it look very pretty. Quarto comes with some complete themes, which we can look at here with <a href="https://bootswatch.com/">Bootswatch</a>. You can see the full list of complete themes <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a>.</p>
+<p>This website for example, uses the theme <code>flatly</code> (and <code>darkly</code> if you are a dark mode afficionado). The Quarto website uses the theme <code>cosmo</code>.</p>
+<p>You can set your theme in your YAML like this:</p>
+<div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb19-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb19-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My document"</span></span>
+<span id="cb19-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span></span>
+<span id="cb19-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # set parameters under the html category</span></span>
+<span id="cb19-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> litera</span></span>
+<span id="cb19-6"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+</section>
+<section id="practice" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="practice"><span class="header-section-number">2.3</span> Practice</h2>
+<ol type="1">
+<li>Try adding a theme to your <code>.qmd</code></li>
+<li>Add a new parameter to your YAML - you can pick one from <a href="https://quarto.org/docs/reference/formats/html.html">here</a> and see how that goes.</li>
+</ol>
+</section>
+</section>
+<section id="text" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Text</h1>
+<p>Unlike an R script (<code>.R</code>), where R by default interprets anything as code (and material that isn’t code needed to be commented out by using <code>#</code>), in an Quarto, the <em>default is text</em> (and code exists only within code chunks or backticks).</p>
+<p>The text portion of the document is written in a language called <a href="https://pandoc.org/MANUAL.html#pandocs-markdown">Markdown</a>. The philosophy of Markdown is that it is easy to both write and read. If you want to learn more about markup languages I’d recommend the this <a href="https://biodash.github.io/codeclub/s02e03_rmarkdown/#i-markdown">brief explanation by Michael Broe from a past Code Club Session</a> and the <a href="https://en.m.wikipedia.org/wiki/Markup_language">Markup language wikipedia page</a>.</p>
+<p>Below I’m compiling some commonly used markdown syntax.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/syntax.png" class="img-fluid figure-img" style="width:120.0%" alt="A list of the commonly used markdown syntax."></p>
+<figcaption class="figure-caption">Figure from <a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf?_ga=2.18808953.1342527773.1652110638-1577376121.1638478125">R Markdown Reference Guide</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="code" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Code</h1>
+<p>Like Horacio taught us last week, Code chunks are sections of your Quarto document designated for executing code. To insert a new code chunk, you can:</p>
+<ol type="1">
+<li>Use the keyboard shortcut <code>Cmd</code> + <code>Option</code> + <code>I</code> (Mac) or <code>Ctrl</code> + <code>Alt</code> + <code>I</code> (Windows).</li>
+<li>Type <code>```{r}</code> to start the chunk and <code>```</code> to end it, placing your code in between.</li>
+<li>Use the “Add Chunk” command from the editor toolbar and select R.</li>
+</ol>
+<p>Code chunks appear as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/chunk_screenshot.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<p>You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.</p>
+<ul>
+<li>The gear icon allows you to modify chunk options, which we will discuss in more detail later.</li>
+<li>The triangle with a line below it executes all code chunks that precede the current one.</li>
+<li>The play button runs the current chunk.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you render your Quarto document, the process will execute all the code within it. This means that if your code contains errors or doesn’t function properly, your document <strong>will not be rendered</strong>.</p>
+</div>
+</div>
+<section id="code-chunk-options" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="code-chunk-options"><span class="header-section-number">4.1</span> Code chunk options</h2>
+<p>We can set different options for our code chunks to adjust if/how they are run. Here are some that we can set.</p>
+<ul>
+<li><code>echo: FALSE</code> runs your code chunk, displays output, but does not display code in your final doc (this is useful if you want to show a figure but not the code used to create it)</li>
+<li><code>eval: FALSE</code> does not run your code, but does display it in your final doc</li>
+<li><code>include: FALSE</code> runs your code but does not display the code or its output in your final doc</li>
+<li><code>message: FALSE</code> prevents messages from showing up in your final doc</li>
+<li><code>warning: FALSE</code> prevents earnings from showing up in your final doc</li>
+<li><code>fig.height: X</code> and <code>fig.width: Y</code> will allow you to specify the dimensions of your figures (in inches)</li>
+<li><code>fig.align:</code> can be set to “left”, “right”, or “center”</li>
+<li><code>fig.cap: "Your figure caption"</code> will allow you to set a figure caption</li>
+<li><code>fig.alt: "Your alt text"</code> will allow you to set alt text for screen readers</li>
+<li><code>cache: TRUE</code> will cache results, meaning if you have a chunk that takes a long time to run, if you haven’t changed anything and you knit again, the code won’t run again but access the cache.</li>
+</ul>
+<p>You can find a long list of code chunk options <a href="https://quarto.org/docs/reference/cells/cells-knitr.html#code-output">here</a>.</p>
+<p>We can set the code chunk options by using the syntax <code>|#</code> within the chunk, like this:</p>
+<div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">{r}</span>
+<span id="cb20-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: TRUE </span></span>
+<span id="cb20-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| warning: FALSE</span></span></code></pre></div>
+<p>The options can be very useful to get your document to render exactly how you want it.</p>
+</section>
+<section id="practice-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">4.2</span> Practice</h2>
+<ol type="1">
+<li>Try adjusting your code chunk options and see how that affects the rendering of your document.</li>
+<li>Notice what gets printed after you load the tidyverse with <code>library(tidyverse)</code> - can you get that to go away?</li>
+</ol>
+</section>
+</section>
+<section id="other-things-you-can-make-with-quarto" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Other things you can make with Quarto</h1>
+<p>We have focused on using Quarto to store and annotate code, and create reports based on that information. But, there is lots more you can do with Quarto, including:</p>
+<ul>
+<li>Websites: we have a <a href="https://osu-codeclub.github.io/#category=website">whole series of Code Club sessions</a> on making a website with Quarto. This website is made with Quarto!</li>
+<li>Presentations: you can make pretty nice looking presentations, here’s a <a href="https://osu-codeclub.github.io/#category=quarto%20presentations">Code Club session on the basics of making presentations</a></li>
+<li><a href="https://quarto.org/docs/books/">Books</a></li>
+<li><a href="https://quarto.org/docs/manuscripts/">Manuscripts</a></li>
+<li><a href="https://quarto.org/docs/dashboards/">Dashboards</a></li>
+<li>and <a href="https://quarto.org/docs/guide/">more</a></li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>reproducibility</category>
+  <category>quarto</category>
+  <guid>https://osu-codeclub.github.io/posts/S08E08_reprod_03/index.html</guid>
+  <pubDate>Mon, 28 Oct 2024 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/quarto-selfie.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>Reproducibility 2: Introduction to Quarto</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S09E07_reprod_02/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S08E07_reprod_02/index.html</link>
   <description><![CDATA[ 
 
 
@@ -26,7 +860,7 @@
 <p>Quarto documents include all code and data analysis steps, which improves understanding and reproducibility for readers. Reproducibility ensures that analyses can be independently verified, enhancing credibility and transparency.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/Quarto_MultiLanguage.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/Quarto_MultiLanguage.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
@@ -61,7 +895,7 @@ Note
 <p>Quarto (<code>.qmd</code> files) is a versatile document format that enables the integration of narrative text, R code, and the results of code execution into a single document. In RStudio, navigate to <em>File &gt; New File &gt; Quarto Document</em> to create a new document.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/Create_Quarto_Doc.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/Create_Quarto_Doc.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 <p>Initially, this document will be titled <code>Untitled.qmd</code>. Let’s rename it to something more recognizable for future reference. To do so, go to <em>File &gt; Save As</em>, place this new Quarto document alongside your other course materials, and give it a meaningful name.</p>
@@ -75,26 +909,26 @@ Note
 </section>
 <section id="rendering-your-quarto-document" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Rendering your Quarto document</h1>
-<p>Once you create and save your Quarto document (<code>.qmd</code>), open it in RStudio, and click on <img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render.</p>
-<p>To render the file and preview the output quickly in the RStudio IDE, simply click the <img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button or use the keyboard shortcut (⇧⌘K).</p>
+<p>Once you create and save your Quarto document (<code>.qmd</code>), open it in RStudio, and click on <img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render.</p>
+<p>To render the file and preview the output quickly in the RStudio IDE, simply click the <img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button or use the keyboard shortcut (⇧⌘K).</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 <p>If you prefer to have the file render automatically every time you save, you can enable the “Render on Save” option located on the editor toolbar. This ensures the preview updates each time you re-render the document. The side-by-side preview feature supports both HTML and PDF outputs.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render-on-save.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render-on-save.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
-<p>Additionally, more options can be discovered by clicking the gear icon next to the <img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button.</p>
+<p>Additionally, more options can be discovered by clicking the gear icon next to the <img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button.</p>
 <section id="how-does-it-works" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="how-does-it-works"><span class="header-section-number">3.1</span> How does it works</h2>
-<p>When you render a Quarto document, the process begins with <a href="https://yihui.org/knitr/">knitr</a> executing all the code chunks and generating a new markdown (<code>.md</code>) document that includes both the code and its output. This Markdown file is then processed by <a href="https://pandoc.org">Pandoc</a>, which creates the final, polished format. The <img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button automates and organizes these steps, executing them in the correct sequence for you.</p>
+<p>When you render a Quarto document, the process begins with <a href="https://yihui.org/knitr/">knitr</a> executing all the code chunks and generating a new markdown (<code>.md</code>) document that includes both the code and its output. This Markdown file is then processed by <a href="https://pandoc.org">Pandoc</a>, which creates the final, polished format. The <img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/rstudio-render-button.png" width="25" height="20"> Render button automates and organizes these steps, executing them in the correct sequence for you.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="https://quarto.org/docs/get-started/"><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/Quarto_Rendering.png" class="img-fluid figure-img"></a></p>
+<p><a href="https://quarto.org/docs/get-started/"><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/Quarto_Rendering.png" class="img-fluid figure-img"></a></p>
 </figure>
 </div>
 <p>During the rendering process, Quarto creates a new file that includes the selected text, code, and results from the <code>.qmd</code> file. This new file can be formatted as an <a href="https://quarto.org/docs/output-formats/html-basics.html">HTML</a>, <a href="https://quarto.org/docs/output-formats/pdf-basics.html">PDF</a>, <a href="https://quarto.org/docs/output-formats/ms-word.html">MS Word</a> document, <a href="https://quarto.org/docs/presentations/">presentation</a>, <a href="https://quarto.org/docs/websites/">website</a>, <a href="https://quarto.org/docs/books/">book</a>, <a href="https://quarto.org/docs/interactive/">interactive document</a>, or <a href="https://quarto.org/docs/output-formats/all-formats.html">other formats</a>.</p>
@@ -266,7 +1100,7 @@ Tip
 <p>Code chunks appear as follows:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/chunk_screenshot.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/chunk_screenshot.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 <p>You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.</p>
@@ -349,14 +1183,14 @@ font-style: inherit;">6</span></span></code></pre></div>
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>reproducibility</category>
   <category>quarto</category>
-  <guid>https://osu-codeclub.github.io/posts/S09E07_reprod_02/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S08E07_reprod_02/index.html</guid>
   <pubDate>Mon, 21 Oct 2024 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S09E07_reprod_02/img/Quarto.png" medium="image" type="image/png" height="81" width="144"/>
+  <media:content url="https://osu-codeclub.github.io/posts/S08E07_reprod_02/img/Quarto.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
   <title>Reproducibility 1:  Intro, File Organization, and RStudio Projects</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S09E06_reprod_01/index.html</link>
+  <link>https://osu-codeclub.github.io/posts/S08E06_reprod_01/index.html</link>
   <description><![CDATA[ 
 
 
@@ -364,7 +1198,7 @@ font-style: inherit;">6</span></span></code></pre></div>
 <hr>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/rproj.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/rproj.png" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
 </figure>
 </div>
@@ -376,7 +1210,7 @@ font-style: inherit;">6</span></span></code></pre></div>
 <p>Reproducibility is perhaps a low bar compared to the related concept of <strong>replicability</strong>, which is the ability to produce the same (qualitative) results when applying the <em>same analysis to different data</em>. Here is a helpful table showing these two and two other related concepts:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/reproducible-matrix.jpg" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/reproducible-matrix.jpg" class="img-fluid figure-img"></p>
 <figcaption class="figure-caption">From <a href="https://book.the-turing-way.org/reproducible-research/reproducible-research">The Turing Way</a></figcaption>
 </figure>
 </div>
@@ -429,7 +1263,7 @@ font-style: inherit;">6</span></span></code></pre></div>
 <p>For example:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-dirs-1.svg" class="img-fluid figure-img" style="width:60.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/proj-dirs-1.svg" class="img-fluid figure-img" style="width:60.0%"></p>
 <figcaption class="figure-caption">Two project folder hierarchies, nicely separated and self-contained.</figcaption>
 </figure>
 </div>
@@ -457,7 +1291,7 @@ font-style: inherit;">6</span></span></code></pre></div>
 <p>For example, here is one good way of organizing a (bioinformatics) research project:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-ex_annot.png" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/proj-ex_annot.png" class="img-fluid figure-img" style="width:70.0%"></p>
 </figure>
 </div>
 <p><br></p>
@@ -498,14 +1332,14 @@ Don’t absolute paths sound better? What could be a disadvantage of them?
 <hr style="height:1pt; visibility:hidden;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-dirs-2.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/proj-dirs-2.svg" class="img-fluid figure-img" style="width:70.0%"></p>
 <figcaption class="figure-caption">Two project dir hierarchies, and the absolute and relative path to a (FASTQ) file.</figcaption>
 </figure>
 </div>
 <hr style="height:1pt; visibility:hidden;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E06_reprod_01/img/proj-dirs-3.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E06_reprod_01/img/proj-dirs-3.svg" class="img-fluid figure-img" style="width:70.0%"></p>
 <figcaption class="figure-caption">Now everything was moved into <code>Dropbox</code>.<br>The absolute path has changed, but the relative path remains the same.</figcaption>
 </figure>
 </div>
@@ -520,7 +1354,7 @@ Don’t absolute paths sound better? What could be a disadvantage of them?
 background-color: null;
 font-style: inherit;">getwd</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="styled-output"><code>[1] "/Users/poelstra.1/Library/CloudStorage/Dropbox/mcic/teach/codeclub/codeclub-site/posts/S09E06_reprod_01"</code></pre>
+<pre class="styled-output"><code>[1] "/Users/jessicacooperstone/Library/CloudStorage/OneDrive-TheOhioStateUniversity/BuckeyeBox Data/JLC_Files/OSU/research/code club/osu-codeclub.github.io/posts/S08E06_reprod_01"</code></pre>
 </div>
 </div>
 <p>You can see that the output path is <strong>MY</strong> working directory – yours will be different as the set up of your computer organization structure is different from mine (and recall that you will see backslashes if you have Windows).</p>
@@ -651,7 +1485,7 @@ DE-03_process-significant.R</code></pre>
 </section></div> ]]></description>
   <category>r-basics</category>
   <category>tidyverse</category>
-  <guid>https://osu-codeclub.github.io/posts/S09E06_reprod_01/index.html</guid>
+  <guid>https://osu-codeclub.github.io/posts/S08E06_reprod_01/index.html</guid>
   <pubDate>Mon, 14 Oct 2024 04:00:00 GMT</pubDate>
 </item>
 <item>
@@ -17834,659 +18668,6 @@ font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
   <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</guid>
   <pubDate>Fri, 26 Jan 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/R2D2.png" medium="image" type="image/png" height="108" width="144"/>
-</item>
-<item>
-  <title>R Basics 2: Scripts and Objects</title>
-  <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<section id="recap-of-last-week" class="level4">
-<h4 class="anchored" data-anchor-id="recap-of-last-week">Recap of last week</h4>
-<p>Last week, we installed R and RStudio, learned about the distinction between the two, familiarized ourselves with RStudio, learned about “working directories” and RStudio Projects, and had our first interactions with R by using it as a calculator.</p>
-</section>
-<section id="learning-objectives-for-today" class="level4">
-<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
-<ul>
-<li><p>A little more basic interaction with R: <strong>missing prompts</strong> and <strong>data types</strong></p></li>
-<li><p>Writing code in <strong>R scripts</strong> instead of the console, and <strong>commenting</strong> your code</p></li>
-<li><p>Using and naming <strong>R objects</strong>, and (not) saving your <strong>environment</strong></p></li>
-</ul>
-</section>
-<section id="setting-up" class="level4">
-<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
-<p>If you created an RStudio Project for Code Club last week, then be sure to <strong>have that Project open before we get started</strong>. When you start RStudio, it may well have already opened that project for you (check the top-right corner, and see the screenshots below) — if not, click <code>File</code> (top menu bar) &gt; <code>Recent Projects</code>, and select your Project for Code Club from the list.</p>
-<div class="columns">
-<div class="column" style="width:45%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_open.png" class="img-fluid figure-img" style="width:50.0%"></p>
-<figcaption class="figure-caption">You have an open project “codeclub”</figcaption>
-</figure>
-</div>
-</div><div class="column" style="width:45%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/project_none.png" class="img-fluid figure-img" style="width:60.0%"></p>
-<figcaption class="figure-caption">You have no Project open</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>If you don’t have an RStudio Project, no worries. We’ll be saving a file today, but you can always save it in an appropriate directory on the fly.</p>
-<p><br></p>
-</section>
-</section>
-<section id="a-little-more-basic-interaction-with-r" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="a-little-more-basic-interaction-with-r"><span class="header-section-number">2</span> A little more basic interaction with R</h2>
-<section id="the-r-prompt-revisited" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="the-r-prompt-revisited"><span class="header-section-number">2.1</span> The R prompt, revisited</h3>
-<p>The <strong><code>&gt;</code></strong> sign in your console is the R “prompt”. It indicates that R is ready for you to type something.</p>
-<p>When you are not seeing the <code>&gt;</code> prompt, R is either <strong>busy</strong> (because you asked it to do a longer-running computation) or <strong>waiting</strong> for you to complete an incomplete command.</p>
-<p>Type the following into your console, and press <kbd>Enter</kbd> (called <kbd>Return</kbd> on a Mac, but you get the idea):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">203</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span></span></code></pre></div>
-</div>
-<p>You should notice that your prompt turned into a <strong><code>+</code></strong>.</p>
-<details>
-<summary>
-<b>What is going on here?</b> (Click for the answer)
-</summary>
-<p><strong>R is waiting for you to finish the command, since you typed an incomplete command</strong>: something has to follow the division sign <code>/</code>.</p>
-</details>
-<p>To get out of this situation, one option is to try and finish the command (in this case, by typing another number) — but here, let’s practice another option: <strong>aborting</strong> <strong>the command by pressing</strong> <kbd><strong>Esc</strong></kbd>.</p>
-<p>While it was obvious here that our command was incomplete, you will often type incomplete commands without realizing you did so (typical cases include forgetting a closing parenthesis <code>)</code>). Aborting and fixing the command in full is often the way to go, especially if you’re writing code in a script (as we’ll do below).</p>
-<p><br></p>
-</section>
-<section id="r-data-types" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="r-data-types"><span class="header-section-number">2.2</span> R data types</h3>
-<p>If we just type a <strong>number</strong> and press <kbd>Enter</kbd>…</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">203</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 203</code></pre>
-</div>
-</div>
-<p>… then R will simply <strong>print the number back to us</strong>.</p>
-<p>Under the hood, R is calling a <em>function</em> called <code>print()</code><sup>1</sup>, and we saw an example of this last week, too — typing the name of an object will print it’s value:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span>
-<span id="cb4-2">x</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-</div>
-<p>Rather than a number, what if we want R to print back to us some <strong>text</strong>, which in programming lingo is called a “<strong>character string</strong>”?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">Fantastic</span></code></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in eval(expr, envir, enclos): object 'Fantastic' not found</code></pre>
-</div>
-</div>
-<details>
-<summary>
-<b>What seems to be going wrong?</b> (Click for the answer)
-</summary>
-<p>Whenever you type a character string, <strong>R expects to find an <em>object</em> with that name</strong> (we saw our first object <code>x</code> last week, and will talk more about them today).</p>
-<p>When no object exists with that name, R will throw an error.</p>
-</details>
-<p>We <em>can</em> get R to print character strings back to us, and use them in other ways, as long as they are quoted:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Fantastic"</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Fantastic"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Code Club"</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "Code Club"</code></pre>
-</div>
-</div>
-<p>So, R treats numbers and character strings differently: <strong>unlike numbers, character strings need to be quoted.</strong> This <em>avoids confusion with objects</em> because unquoted character strings are assumed to be objects, and also <em>allows for “special characters”</em> like spaces.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Quote types
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Double quotes (<code>"Fantastic"</code>) and single quotes (<code>'Fantastic'</code>) can be used interchangeably in R. Double quotes are preferred by most “style guides”.</p>
-</div>
-</div>
-<p>A little more on R’s main “data types”:</p>
-<ul>
-<li><p>Numbers are by default of the data type <strong><code>numeric</code></strong> (and can also be <code>integer</code> - whole numbers only)</p></li>
-<li><p>Character strings are by default of the data type <strong><code>character</code></strong> (and can also be <code>factor</code> for categorical data)</p></li>
-<li><p>The final main data type is <code>logical</code>, which can be either <code>TRUE</code> or <code>FALSE</code>.</p></li>
-</ul>
-<p><br></p>
-</section>
-</section>
-<section id="exercises-1" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="exercises-1"><span class="header-section-number">3</span> Exercises 1</h2>
-<p><strong>A)</strong> Which of the following do you think would work and which would return an error:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">session_topic <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"introduction"</span></span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">session_topic <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> introduction</span></code></pre></div>
-</div>
-<p>Try both to see which works and what error you get for the other one. Also, try to describe in words what the correct line of code is doing.</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>The first of the two options was correct R code, while the second returns an error.</p>
-<p>In general, keep in mind that <strong>unquoted character strings represent objects</strong> whereas <strong>quoted character strings are “literals”</strong>. Here, we wanted to assign the literal string <code>"introduction"</code> to the object <code>session_topic</code> — so the former should be quoted and the latter not.</p>
-<p>An error is produced when you run the second option, because the object <code>introduction</code> does not exist (unless, of course, you had created an object of that name!):</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">session_topic <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> introduction</span></code></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in eval(expr, envir, enclos): object 'introduction' not found</code></pre>
-</div>
-</div>
-</details>
-<p><strong>B)</strong> Having run the code above, which of the following would make R print <code>"introduction"</code>?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"session_topic"</span></span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">session_topic</span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>The second option is the correct one: here, we want to have R print the value of the <strong>object <code>session_topic</code></strong> (which we had just created in exercise A), so we shouldn’t use quotes.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">session_topic</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "introduction"</code></pre>
-</div>
-</div>
-</details>
-<p><strong>C)</strong> Do you think the following code would successfully add <code>5</code> and <code>7</code>? If not, what might happen instead?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"5"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"7"</span></span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>In the code above, the “numbers” are saved not as numbers (in R lingo: as a <code>numeric</code>) but as character strings (<code>character</code>).</p>
-<p>R can’t add character strings, so it will return an error:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"5"</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"7"</span></span></code></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in "5" + "7": non-numeric argument to binary operator</code></pre>
-</div>
-</div>
-<p>(Perhaps you expected it to combine/“concatenate” the two strings in some way — this is in fact what Python would do. Or to automatically convert the characters to numbers, since you’re clearly wanting them to be numbers — but it doesn’t do that either.)</p>
-</details>
-<p><strong>D) (Bonus)</strong> Execute the following code and check its output:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span></span></code></pre></div>
-</div>
-<p>Had you expected this result? If not, can you make sense of it: the fact that it works, the specific results, and the fact that we are not using quotes in the code.</p>
-<p>And based on your deliberations, what do you expect the following code to return?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span></span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<ul>
-<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) can be used as numbers, in which case <code>TRUE</code> is equivalent to 1, and <code>FALSE</code> is equivalent to 0.</p></li>
-<li><p>Therefore, <code>TRUE + FALSE</code> will return <code>1</code>, and <code>TRUE + TRUE</code> will therefore return <code>2</code>.</p></li>
-<li><p>Logicals (<code>TRUE</code> and <code>FALSE</code>) are made up of letters but are <strong>not</strong> character strings, so they shouldn’t be quoted.</p></li>
-</ul>
-</details>
-<p><br></p>
-</section>
-<section id="r-scripts" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="r-scripts"><span class="header-section-number">4</span> R scripts</h2>
-<section id="the-editor-pane" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="the-editor-pane"><span class="header-section-number">4.1</span> The editor pane</h3>
-<p>Jess showed us the four quadrants of RStudio last week:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rstudio-ide-simplified.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-<p>One of those contains a “<strong>Source Editor</strong>” pane, as in a <em>Text Editor</em>. Here, we can open and edit all sorts of text files — including R scripts. This quadrant will disappear if you have no files open:</p>
-<blockquote class="blockquote">
-<p><strong>Create and open a new R script by clicking</strong> <strong><code>File</code> (top menu bar) &gt; <code>New File</code> &gt; <code>R Script</code>.</strong></p>
-</blockquote>
-<p><br></p>
-</section>
-<section id="why-use-a-script" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="why-use-a-script"><span class="header-section-number">4.2</span> Why use a script?</h3>
-<p>An R script is a text file that contains R code.</p>
-<p>So far, we have been typing commands directly into the R console. But it’s a good idea to write and save most of our code in scripts.</p>
-<p>This helps us <strong>keep track of what we’ve been doing</strong>, especially in the longer run, and to <strong>re-run our code</strong> after modifying input data or one of the lines of code.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Interactive scripts
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>For those of you who are familiar with the notion of a script from other contexts or programming languages — saving our code as a script does not mean that we necessarily need to run the entire script all at once.</p>
-<p>In R, it is instead most common to write and run code interactively, often line by line.</p>
-</div>
-</div>
-<p><br></p>
-</section>
-<section id="saving-the-script" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="saving-the-script"><span class="header-section-number">4.3</span> Saving the script</h3>
-<p>Let’s save this new script right away…</p>
-<blockquote class="blockquote">
-<p><strong>Click <code>File</code> &gt; <code>Save As</code></strong></p>
-</blockquote>
-<p>… and give it a descriptive name like <code>codeclub_02.R</code>:</p>
-<ul>
-<li><p>You may want to put the script in a folder for Code Club — which should be automatically selected if you are using your Code Club RStudio Project.</p></li>
-<li><p>Make sure it has the <strong>file extension <code>.R</code></strong> — which should also have been automatically suggested by the pop-up window.</p></li>
-</ul>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-File extensions
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>An R script is just a <strong>plain-text file</strong> and you <em>could</em> also save it with, for example, a <code>.txt</code> extension — this will not break the file, but does have drawbacks.</p>
-<p>When you use a <code>.R</code> extension, your computer and RStudio alike will recognize it as an R script. In RStudio, this means you’ll get some formatting that helps when writing your R code, and it can even recognize and warn you about certain errors in your code.</p>
-</div>
-</div>
-<p><br></p>
-</section>
-<section id="sending-code-to-the-console" class="level3" data-number="4.4">
-<h3 data-number="4.4" class="anchored" data-anchor-id="sending-code-to-the-console"><span class="header-section-number">4.4</span> Sending code to the console</h3>
-<p>If you write most of your code in a script in the Editor, as we recommended above, wouldn’t it be a hassle to execute it? Do you need to copy-and-paste the code into the console? Luckily not.</p>
-<p>Start by by typing another simple calculation, this time <strong>in your R script</strong>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">203</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.54</span></span></code></pre></div>
-</div>
-<p>With the cursor still on this line of code in the script, <strong>press</strong> <kbd><strong>Ctrl</strong></kbd> <strong>+</strong> <kbd><strong>Enter</strong></kbd> (or, on a Mac: <kbd>Cmd</kbd> + <kbd>Enter</kbd>).</p>
-<p>The code will be <em>copied to the R console and executed</em> (so you should see the result printed as shown below), and additionally, the <em>cursor will move</em> to the next line in the script.</p>
-<div class="cell">
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 79.92126</code></pre>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-More on sending code to the console
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Note that it <em>doesn’t matter where on the line your cursor is</em>: <kbd>Ctrl</kbd> + <kbd>Enter</kbd> will always <strong>execute the entire line</strong> unless you have selected only part of it. (And when you have selected multiple lines of code, it will execute them all.)</p>
-<p>To execute a line of code, an alternative to the keyboard shortcut is to <strong>click the <code>Run</code> button</strong> in the bar right above your script, but we recommend using the keyboard shortcut — it is much faster, at least once you get used to it.</p>
-</div>
-</div>
-<p>For the rest of this Code Club session, try to write your code in your script, and send it to the console using the keyboard shortcut.</p>
-<p><br></p>
-</section>
-<section id="commenting" class="level3" data-number="4.5">
-<h3 data-number="4.5" class="anchored" data-anchor-id="commenting"><span class="header-section-number">4.5</span> Commenting</h3>
-<p>You can use <strong><code>#</code> signs</strong> to comment your code:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Divide by 2.54 to get the wingspan in inches:</span></span>
-<span id="cb27-2"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">203</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.54</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Original measurement was in cm</span></span></code></pre></div>
-</div>
-<ul>
-<li><p>Anything to the right of a <code>#</code> is ignored by R, meaning it won’t be executed</p></li>
-<li><p>You can use <code>#</code> both <strong>at the start of a line</strong> (entire line is a comment) or anywhere in a line <strong>following code</strong> (rest of the line is a comment)</p></li>
-<li><p>In your R script, comments are formatted differently so you can clearly distinguish them from code</p></li>
-</ul>
-<p>We recommend that you <strong>use lots of comments in your R scripts</strong>! They are useful not only for others that you may share your code with, but also for yourself when you look back at your code a day, a month, or a year later.</p>
-<p><br></p>
-</section>
-</section>
-<section id="r-objects" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="r-objects"><span class="header-section-number">5</span> R Objects</h2>
-<section id="assigning-stuff-to-r-objects" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="assigning-stuff-to-r-objects"><span class="header-section-number">5.1</span> Assigning stuff to R objects</h3>
-<p>As we’ve seen a couple of times now, we can assign a value to an object with the <strong>assignment operator <code>&lt;-</code></strong>. A few more examples:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">wingspan_cm <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">203</span></span>
-<span id="cb28-2">conversion <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.54</span></span></code></pre></div>
-</div>
-<p>Type that into your script, and use <kbd>Ctrl/Cmd</kbd> + <kbd>Enter</kbd> twice to send it to the console.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-The Environment tab
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Recall also that the objects you create get added to your “environment”, which RStudio shows in the <strong>Environment tab</strong> in the top-right panel — check that <code>wingspan_cm</code> and <code>conversion</code> are indeed there.</p>
-</div>
-</div>
-<p>After you’ve assigned a number to an object, you can use it in calculations like so:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">wingspan_cm <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> conversion</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 79.92126</code></pre>
-</div>
-</div>
-<p>Or, similarly:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">wingspan_inch <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> wingspan_cm <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> conversion</span>
-<span id="cb31-2">wingspan_inch</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 79.92126</code></pre>
-</div>
-</div>
-<p>This illustrates that when you execute code with objects, R substitutes the object name that you provide by its contents under the hood. In other words, <em>the object is just a reference to the underlying value(s)</em>.</p>
-<p>“Object” is a general term that encompasses R items of any size or complexity:</p>
-<ul>
-<li><p>Objects can also contain character strings, collections of numbers or character strings (including in table or matrix format), and functions.</p></li>
-<li><p>The above does not mean that “anything goes” — R distinguishes between a limited number of “<strong>data structures</strong>”, each with their own defined structure. We’ll learn about the most important ones next week.</p></li>
-<li><p>The objects we created so far are called <strong>vectors</strong>, which are more commonly thought of as containing a <em>series of values</em>, but in R, can have a length of one<sup>2</sup>.</p></li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-More on assignment operators
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The keyboard shortcut for the assignment operator is <kbd>Alt/Option</kbd> + <kbd>-</kbd>.</p>
-<p>Note that <strong>you can also use <code>=</code> as an assignment operator</strong>, as is common in other programming languages. But because <code>=</code> can have other meanings, we recommend sticking with the <code>&lt;-</code> combination.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># This also works to assign the value 5 to x (but we recommend using &lt;- instead)</span></span>
-<span id="cb33-2">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span></code></pre></div>
-</div>
-</div>
-</div>
-<p><br></p>
-</section>
-<section id="object-names" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="object-names"><span class="header-section-number">5.2</span> Object names</h3>
-<p>Objects can be given almost any name such as <code>x</code>, <code>current_temperature</code>, or <code>subject_id</code>. Some pointers on object names:</p>
-<ul>
-<li><p>Because R is <strong>case sensitive</strong>, <code>wingspan_inch</code> is different from <code>Wingspan_inch</code>!</p></li>
-<li><p>An object name <strong>cannot contain spaces</strong> — so for readability, you should <em>separate words</em> using:</p>
-<ul>
-<li><strong>Underscores:</strong> <code>wingspan_inch</code> (this is called “snake case”, which we often use in Code Club)</li>
-<li><strong>Periods</strong>: <code>wingspan.inch</code></li>
-<li><strong>Capitalization:</strong> <code>wingspanInch</code> or <code>WingspanInch</code> (“camel case”)</li>
-</ul></li>
-<li><p>You will make things easier for yourself by naming objects in a consistent way, for instance by always sticking to your favorite case style like “snake case.”<sup>3</sup></p></li>
-<li><p>Object names can <em>contain</em> but cannot <em>start</em> with a number: <code>x2</code> is valid but <code>2x</code> is not. (There are also some other restrictions that are beyond the scope of this introduction<sup>4</sup>.)</p></li>
-<li><p>Make object names descriptive yet not too long — this is not always easy!</p></li>
-</ul>
-<p><br></p>
-<blockquote class="blockquote">
-<p>There are only two hard things in Computer Science: cache invalidation and naming things.</p>
-<p>– Phil Karlton</p>
-</blockquote>
-<p><br></p>
-</section>
-<section id="saving-the-environment" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="saving-the-environment"><span class="header-section-number">5.3</span> Saving the environment</h3>
-<p>Recall that your environment contains all the R objects that you created. When you close R, it will probably ask you whether you want to save your environment (AKA workspace) — something like:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/rdata-popup.png" class="img-fluid figure-img" style="width:55.0%"></p>
-</figure>
-</div>
-<p>When you do save this, the next time you start R, R will reload your environment so you can pick up right where you left off. While this may seem convenient, we recommend that you don’t do this.</p>
-<details>
-<summary>
-<b>Can you think of a reason why automatically saving and reloading your workspace may not be a good idea?</b> (Click for the answer)
-</summary>
-<p>The main reason why this is generally not considered good practice relates to the idea that you should be able to <em>reproduce your</em> environment <em>(and more broadly speaking, your analysis) from the code in your script</em>.</p>
-<p>Remember that you can modify your environment either by entering commands in the console directly, or by running them from a script — or even from multiple different scripts. Additionally, it is common to run lines in a script out of order, or write lines in the script that you don’t execute.</p>
-<p>Therefore, if you “carry around” the same environment across multiple different sessions, you run a greater risk of not having a reproducible set of steps in your script.</p>
-</details>
-<p>Generally, a better way of working in R than saving your entire environment is to <strong>use and save script</strong>s (as we’ve seen today) and to <strong>save <em>specific</em> outputs</strong> such as tables and plots (as we’ll see soon).</p>
-<p>To make RStudio stop asking you about saving your workspace, click <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>General</code> and (un)check the boxes as follows:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" class="img-fluid figure-img" style="width:50.0%"></p>
-</figure>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Restarting R
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Taking the ideas about reproducibility a step further, it can be a good idea to <strong>occasionally restart R</strong> in the middle of working on some code.</p>
-<p>That way, you can check whether the code in your script is correct and complete, that you are not relying on code that is not in the script, and so on.</p>
-<p>To do so, you don’t need to close and reopen RStudio itself: under <code>Session</code> in the top menu bar, you can click <code>Restart R</code> (and you should also see the keyboard shortcut for it in the menu bar: <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F10</kbd> (Windows) / <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>0</kbd> (Mac).</p>
-</div>
-</div>
-<p><br></p>
-</section>
-</section>
-<section id="exercises-2" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="exercises-2"><span class="header-section-number">6</span> Exercises 2</h2>
-<p><strong>A)</strong> Why do the following bits of code fail with an error?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">session number <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span></span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">Expert_Level <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span></span>
-<span id="cb35-2">Expert_level</span></code></pre></div>
-</div>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>The first fails because an object name cannot contain a space.</p>
-<p>The second fails because of a difference in capitalization (<code>Level</code> vs <code>level)</code>: recall that R is case sensitive.</p>
-</details>
-<p><strong>B)</strong> What will be the value of <code>distance_miles</code> after executing the following lines in R: <code>31</code> or <code>62</code>?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">distance_km <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span></span>
-<span id="cb36-2">distance_miles <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> distance_km <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.62</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># distance_miles is now 31 </span></span>
-<span id="cb36-3">distance_km <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span></span>
-<span id="cb36-4"></span>
-<span id="cb36-5">distance_miles                          <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># What is the value of distance_miles now?</span></span></code></pre></div>
-</div>
-<p>Come up with an expectation, then run the code above and see if you were right. What does this tell you about “linkage” between objects in R?</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<p>Objects don’t get “linked” to each other at all in R.</p>
-<p>In other words, <code>distance_miles</code> was really assigned <strong>the outcome</strong> of <code>distance_km * 2</code>, which is <code>31</code>, rather than its “formula”.</p>
-<p>Therefore, <code>distance_miles</code> wasn’t (and couldn’t be!) “updated” after we changed the value of <code>distance_km</code>, and continued to be <code>31</code>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">distance_km <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span></span>
-<span id="cb37-2">distance_miles <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> distance_km <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.62</span>    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># distance_miles is now 31.07 </span></span>
-<span id="cb37-3">distance_km <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span></span>
-<span id="cb37-4"></span>
-<span id="cb37-5">distance_miles                          <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># What is the value of distance_miles now?</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 31</code></pre>
-</div>
-</div>
-</details>
-<p><br></p>
-<hr>
-<p><br></p>
-<p><strong>Attribution</strong></p>
-<p>This was modified after material from <a href="https://carpentries.org/">The Carpentries</a>, especially from <a href="http://uw-madison-aci.github.io/2016-06-01-uwmadison/">this Data Carpentry workshop</a> and <a href="https://datacarpentry.org/R-ecology-lesson">this “R for Ecology” workshop</a>.</p>
-
-
-</section>
-
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p>We’ll talk about functions soon, likely next week.↩︎</p></li>
-<li id="fn2"><p>Objects that contain a single value are a distinct data structure called “<strong>scalars</strong>” in some languages, and are more informally also called “<strong>variables</strong>”.↩︎</p></li>
-<li id="fn3"><p>It is also recommended to use <em>nouns</em> for variable names, and <em>verbs</em> for function names. For more, two popular R style guides are <a href="http://adv-r.had.co.nz/Style.html">Hadley Wickham’s</a> and <a href="https://google.github.io/styleguide/Rguide.xml">Google’s</a>.↩︎</p></li>
-<li id="fn4"><p>For example, there are some names that cannot be used because they are the names of fundamental keywords in R (e.g., <code>if</code>, <code>else</code>, <code>for</code>, see <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Reserved.html">here</a> for a complete list). In general, it’s also best not to use the names of existing <strong>functions</strong>, even though this <em>is</em> possible.↩︎</p></li>
-</ol>
-</section></div> ]]></description>
-  <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E02_basics_02/index.html</guid>
-  <pubDate>Fri, 19 Jan 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S07E02_basics_02/img/r_environment.png" medium="image" type="image/png" height="54" width="144"/>
 </item>
 </channel>
 </rss>
