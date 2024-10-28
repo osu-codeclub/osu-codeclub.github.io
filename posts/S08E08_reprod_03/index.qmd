@@ -97,26 +97,27 @@ factbook_pop_long <- factbook_pop |>
 
 Now that we've cleaned that up, let's go back wide to calculate which country had the largest percent population growth from 2000 to 2015.
 
-Go wide!
+Go wide! And let's clean up those column names at the same time.
 ```{r}
 factbook_pop_wide <- factbook_pop_long |> 
-  pivot_wider(names_from = year,
-              values_from = pop)
+  pivot_wider(names_from = year, # go from long to wide data
+              values_from = pop) |> 
+  janitor::clean_names()
 ```
 
 Let's now see which country had the largest percent population growth from 2000 to 2015.
 ```{r}
 factbook_pop_wide |> 
-  mutate(perc_pop_growth = ((`2015` - `2000`)/`2000` * 100)) |> 
-  select(`Country Name`, perc_pop_growth) |> # pull only the columns we want
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
   slice_max(perc_pop_growth, n = 5) # pick top 5
 ```
 
 ```{r}
 factbook_pop_wide |> 
-  mutate(perc_pop_growth = ((`2015` - `2000`)/`2000` * 100)) |> 
-  select(`Country Name`, perc_pop_growth) |> # pull only the columns we want
-  slice_min(perc_pop_growth, n = 5) # pick top 5
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
+  slice_min(perc_pop_growth, n = 5) # pick lowest 5
 ```
 
 Now that we have some stuff, we can now see how making changes to our Quarto document affects the output.
@@ -210,7 +211,7 @@ Like Horacio taught us last week, Code chunks are sections of your Quarto docume
 
 Code chunks appear as follows:
 
-![](img/chunk_screenshot.png){fig-align="center"}
+![](img/chunk-screenshot.png){fig-align="center"}
 
 You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.
 
@@ -239,12 +240,25 @@ We can set different options for our code chunks to adjust if/how they are run. 
 
 You can find a long list of code chunk options [here](https://quarto.org/docs/reference/cells/cells-knitr.html#code-output).
 
-We can set the code chunk options by using the syntax `|#` within the chunk, like this:
+We can set the code chunk options 3 ways:
+
+1. by using the syntax `|#` within the chunk, like this:
 
 ``` r
 {r}
 #| echo: TRUE 
 #| warning: FALSE
+```
+
+2. by clicking on the gear icon in the top right corner of a code chunk.
+
+![](img/chunk-screenshot.png){fig-align="center"}
+
+3. within the `{r}` of a chunk
+
+``` r
+{r, echo = TRUE, fig.width = 6}
+
 ```
 
 The options can be very useful to get your document to render exactly how you want it.
