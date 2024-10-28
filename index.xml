@@ -406,7 +406,7 @@ background-color: null;
 font-style: inherit;"># convert pop to be numeric</span></span></code></pre></div>
 </div>
 <p>Now that we’ve cleaned that up, let’s go back wide to calculate which country had the largest percent population growth from 2000 to 2015.</p>
-<p>Go wide!</p>
+<p>Go wide! And let’s clean up those column names at the same time.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">factbook_pop_wide <span class="ot" style="color: #003B4F;
 background-color: null;
@@ -417,10 +417,19 @@ font-style: inherit;">|&gt;</span> </span>
 background-color: null;
 font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">names_from =</span> year,</span>
+font-style: inherit;">names_from =</span> year, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># go from long to wide data</span></span>
 <span id="cb12-3">              <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">values_from =</span> pop)</span></code></pre></div>
+font-style: inherit;">values_from =</span> pop) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb12-4">  janitor<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">clean_names</span>()</span></code></pre></div>
 </div>
 <p>Let’s now see which country had the largest percent population growth from 2000 to 2015.</p>
 <div class="cell" data-layout-align="center">
@@ -431,29 +440,11 @@ font-style: inherit;">|&gt;</span> </span>
 background-color: null;
 font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((<span class="st" style="color: #20794D;
+font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
+font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">2015</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">2000</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">2000</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -462,13 +453,7 @@ background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb13-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">select</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Country Name</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span>, perc_pop_growth) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -483,14 +468,14 @@ font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pick top 5</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="styled-output"><code># A tibble: 5 × 2
-  `Country Name`           perc_pop_growth
-  &lt;chr&gt;                              &lt;dbl&gt;
-1 Qatar                              274. 
-2 United Arab Emirates               172. 
-3 Kuwait                             102. 
-4 Equatorial Guinea                   96.6
-5 Turks and Caicos Islands            94.9</code></pre>
+<pre class="styled-output"><code># A tibble: 5 × 4
+  country_name             perc_pop_growth   x2000   x2015
+  &lt;chr&gt;                              &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 Qatar                              274.   645937 2414573
+2 United Arab Emirates               172.  3275333 8916899
+3 Kuwait                             102.  1934901 3908743
+4 Equatorial Guinea                   96.6  684977 1346973
+5 Turks and Caicos Islands            94.9   18744   36538</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -501,29 +486,11 @@ font-style: inherit;">|&gt;</span> </span>
 background-color: null;
 font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((<span class="st" style="color: #20794D;
+font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
+font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">2015</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">2000</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">2000</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -532,13 +499,7 @@ background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb15-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">select</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Country Name</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span>, perc_pop_growth) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -551,16 +512,16 @@ font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># pick top 5</span></span></code></pre></div>
+font-style: inherit;"># pick lowest 5</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre class="styled-output"><code># A tibble: 5 × 2
-  `Country Name`           perc_pop_growth
-  &lt;chr&gt;                              &lt;dbl&gt;
-1 Northern Mariana Islands           -35.9
-2 Lithuania                          -17.0
-3 Latvia                             -16.5
-4 Bosnia and Herzegovina             -15.7
-5 Bulgaria                           -12.1</code></pre>
+<pre class="styled-output"><code># A tibble: 5 × 4
+  country_name             perc_pop_growth   x2000   x2015
+  &lt;chr&gt;                              &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+1 Northern Mariana Islands           -35.9   80338   51514
+2 Lithuania                          -17.0 3499536 2904910
+3 Latvia                             -16.5 2367550 1977527
+4 Bosnia and Herzegovina             -15.7 4179350 3524324
+5 Bulgaria                           -12.1 8170172 7177991</code></pre>
 </div>
 </div>
 <p>Now that we have some stuff, we can now see how making changes to our Quarto document affects the output.</p>
@@ -767,7 +728,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <p>Code chunks appear as follows:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/chunk_screenshot.png" class="img-fluid figure-img"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/chunk-screenshot.png" class="img-fluid figure-img"></p>
 </figure>
 </div>
 <p>You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.</p>
@@ -805,7 +766,10 @@ Warning
 <li><code>cache: TRUE</code> will cache results, meaning if you have a chunk that takes a long time to run, if you haven’t changed anything and you knit again, the code won’t run again but access the cache.</li>
 </ul>
 <p>You can find a long list of code chunk options <a href="https://quarto.org/docs/reference/cells/cells-knitr.html#code-output">here</a>.</p>
-<p>We can set the code chunk options by using the syntax <code>|#</code> within the chunk, like this:</p>
+<p>We can set the code chunk options 3 ways:</p>
+<ol type="1">
+<li>by using the syntax <code>|#</code> within the chunk, like this:</li>
+</ol>
 <div class="sourceCode" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">{r}</span>
 <span id="cb20-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -813,6 +777,26 @@ font-style: inherit;">#| echo: TRUE </span></span>
 <span id="cb20-3"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">#| warning: FALSE</span></span></code></pre></div>
+<ol start="2" type="1">
+<li>by clicking on the gear icon in the top right corner of a code chunk.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/chunk-screenshot.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+<ol start="3" type="1">
+<li>within the <code>{r}</code> of a chunk</li>
+</ol>
+<div class="sourceCode" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">{r, echo <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, fig.width <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>}</span></code></pre></div>
 <p>The options can be very useful to get your document to render exactly how you want it.</p>
 </section>
 <section id="practice-1" class="level2" data-number="4.2">
