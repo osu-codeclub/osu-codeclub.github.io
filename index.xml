@@ -10,7 +10,210 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 28 Oct 2024 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Mon, 04 Nov 2024 05:00:00 GMT</lastBuildDate>
+<item>
+  <title>Reproducibility 04: Getting started with Git and GitHub 🐱</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S08E09_reprod_04/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>We are continuing this semester’s Code Club series on reproducible research. So far, we have gone through:</p>
+<ol type="1">
+<li><a href="https://osu-codeclub.github.io/posts/S08E06_reprod_01/">Some basics of reproducibility, file organization, and RStudio projects</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S08E07_reprod_02/">An intro to Quarto</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S08E08_reprod_03/">A little more about Quarto</a></li>
+</ol>
+<p>Today, we are going to take some code we’ve written and push it to a repository on GitHub. To do this we will need to:</p>
+<ul>
+<li>Install <a href="https://git-scm.com/downloads">Git</a></li>
+<li>Create a <a href="https://github.com/join">GitHub account</a></li>
+<li>Install <a href="https://desktop.github.com/">GitHub desktop</a> and link it to your GitHub account</li>
+<li>Render a GitHub flavored markdown document</li>
+<li>Add our repository to GitHub desktop and add version control</li>
+<li>Publish your repository</li>
+</ul>
+<p>The book <a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a> is a super good resource by Jenny Bryan that talks about all this in extreme detail. Some of my materials below are inspired by some of this material.</p>
+<section id="what-is-git" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="what-is-git"><span class="header-section-number">1.1</span> What is Git?</h2>
+<p><a href="https://git-scm.com/">Git</a> is a version control system that allows materials (mostly code), in an organized way where changes are tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.</p>
+<p>We are going to use Git (combined with GitHub, more on that in a second) to take the information embedde within our Quarto document and make it available on GitHub. You could opt use Git for just yourself because it would allow you to always revert back to a previous version of any of your files in case you make a big mistake.</p>
+<p>Here is a nice illustration by <a href="https://allisonhorst.com/allison-horst">Allison Horst</a> that shows the basics of git (at least the basics of what we will be using).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-is-github" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="what-is-github"><span class="header-section-number">1.2</span> What is GitHub?</h2>
+<p><a href="https://github.com/">GitHub</a> hosts Git-based projects. GitHub can be free (especially for academic projects), and is where we house all our <a href="https://github.com/osu-codeclub/osu-codeclub.github.io">Code Club content</a>. I additionally use GitHub in my lab for <a href="https://github.com/CooperstoneLab">creating code repositories that go along with our publications</a>.</p>
+</section>
+<section id="what-is-github-desktop" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="what-is-github-desktop"><span class="header-section-number">1.3</span> What is GitHub Desktop?</h2>
+<p><a href="https://desktop.github.com/">GitHub Desktop</a> is a application that lets you use Git and GitHub in a less-scary-than-working-in-your-terminal way. <a href="https://www.simplilearn.com/how-to-use-github-desktop-tutorial-article">Here</a> is a longer tutorial on how to use GitHub desktop.</p>
+</section>
+</section>
+<section id="install-git" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Install Git</h1>
+<p>If you don’t already have Git, download and install it: <a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a>.</p>
+</section>
+<section id="create-a-github-account" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Create a GitHub account</h1>
+<p>In order to connect your local files to GitHub, you need a GitHub account.</p>
+<p>Create a GitHub account by going to <a href="https://github.com/join">github.com/join</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/create-gh-account.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of getting a GitHub account</figcaption>
+</figure>
+</div>
+<p>You will have to pick a username - remember that other people will see this username so use one you’d feel comfortable with. <a href="https://happygitwithr.com/github-acct.html">Here</a> is some advice for picking a username. I use my OSU email address with GitHub but you can use a personal one too.</p>
+<p>You will then have a profile on GitHub, here’s an example of <a href="https://github.com/jcooperstone">mine</a>.</p>
+</section>
+<section id="install-github-desktop-and-link-it-to-your-account" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Install GitHub Desktop and link it to your account</h1>
+<p>We are going to interface with GitHub via Github Desktop because I think this is the easiest way to do it/teach it. It is definitely not the only way.</p>
+<p>First download GitHub Desktop and install it: <a href="https://desktop.github.com/" class="uri">https://desktop.github.com/</a></p>
+<p>Open GitHub Desktop and log into your GitHub account by going to <code>Preferences</code> &gt; <code>Accounts</code> &gt; <code>Sign in</code></p>
+</section>
+<section id="render-a-github-flavored-markdown-gfm-document-to-prepare-to-push" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Render a GitHub flavored markdown (GFM) document to prepare to push</h1>
+<p>We need some material to put in our new repository. We can use the <a href="https://osu-codeclub.github.io/posts/S08E08_reprod_03/">code that we practiced wrangling with last week</a>.</p>
+<p>Open up this <code>.qmd</code> and set your YAML such that it renders as the format GitHub flavored markdown.</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My first code on GitHub"</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Jessica Cooperstone"</span></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"November 4, 2024"</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> gfm</span></span>
+<span id="cb1-6"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>Render this document. You should now see in the <code>Files</code> quadrant a new file called <code>name-of-quarto-doc.md</code> which contains your rendered document in GitHub flavored markdown (markdown is what the <code>.md</code> is).</p>
+<p>In the folder of my repo, I have the following content:</p>
+<ul>
+<li>an .<code>Rproj</code> file</li>
+<li>a <code>.qmd</code> file</li>
+<li>a <code>.md</code> file that rendered from the <code>.qmd</code></li>
+<li>a data folder where I store the data I read in</li>
+</ul>
+<p>We can upload all, or only some of this material to GitHub. I am going to show you how to send it all today, and in the next lesson on Git, we will go over gitignore.</p>
+</section>
+<section id="add-a-local-repository-to-github-desktop-and-add-version-control" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Add a local repository to GitHub desktop and add version control</h1>
+<p>Now we are going to add the folder containing our <code>.Rproj</code> to be tracked with GitHub Desktop.</p>
+<p>In GitHub Desktop, click <code>File</code> &gt; <code>Add Local Repository</code>, select the directory with your <code>.Rproj</code>’s top-level folder, and click <code>Add Repository</code>.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/add-local-repo.png" class="img-fluid"></p>
+<p>When we go to do this, we see that GitHub desktop is telling us that this directory does not appear to be a Git repository. We can click “create a repository” to initiate version control on this folder.</p>
+<p>Here, you want to:</p>
+<ul>
+<li>give your repo a name (mine is first-repo)</li>
+<li>provide a description</li>
+<li>provide a local path to your folder (this should have already been done in the previous step)</li>
+<li>check if you want to initialize with a README (we do, check yes)</li>
+<li>select if you want a git ignore (we do, set the type as R, and we will talk about it more next week)</li>
+<li>indicate if you want a license on your repo (I am not going to set one up)</li>
+</ul>
+<p>Then you can click the blue button <code>Create Repository</code>.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/create-repo-github-desktop.png" class="img-fluid"></p>
+<p>You will notice that now in our <code>.Rproj</code> folder, we have some new files, including:</p>
+<ul>
+<li><code>.gitattributes</code> (which gives attributes for pathnames)</li>
+<li><code>.gitignore</code> (which tells git which files to ignore, and we are going to go over this in the next sessions)</li>
+<li><code>README.md</code> (contains the information that will be a part of your readme file)</li>
+</ul>
+</section>
+<section id="publish-our-repo" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Publish our repo</h1>
+<p>Now, we can publish our repo on GitHub. This will create the repo on GitHub, and it will contain all of our content in it.</p>
+<p>What we can see that GitHub desktop has done for us, since we are setting our repo up for the first time, is automatically made an Initial Commit (see bottom left). We are going to click Undo next to this so we can practice doing this ourselves. You won’t have to do this step in the future.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/undo-initial-commit.png" class="img-fluid"></p>
+<p>Now we can see in GitHub desktop all of the files that are going to be sent to our repository on the lefthand side of the screen.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/before-first-commit.png" class="img-fluid"></p>
+<p>Remember, this is the process of interacting with GitHub.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption class="figure-caption">Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can then add a message about our first commit and click <code>Commit to main</code>.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/first-commit.png" class="img-fluid"></p>
+<p>Now we need to send our repository to GitHub. Since we are doing this for the first time, we see a button that says <code>Publish repository</code>. In the future, this button will say <code>Push to origin</code>.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/publish-repository-post-commit.png" class="img-fluid"></p>
+<p>We are getting one last popup asking us to confirm our repo info, which can do with the <code>Publish Repository</code> button.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/publish-repo-final-conf.png" class="img-fluid"></p>
+<p>Our repo is now on GitHub, and we can see it online if we go to the repositories tab of your personal GitHub page. It should have the structure https://github.com/your-user-name?tab=repositories. You can see how this looks on my page - this is probably your first repo, and although I’ve called mine <code>first-repo</code> it is not for me.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/git-repo-screenshot.png" class="img-fluid"></p>
+<p>We can click on our repo and see what it contains. If we click on our file that ends in <code>.md</code>, we can see our GitHub flavored markdown rendered document. Here is <a href="https://github.com/jcooperstone/first-repo/blob/main/first-push.md">mine</a>.</p>
+</section>
+<section id="next-time" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Next time</h1>
+<p>Next session we are going to go over:</p>
+<ul>
+<li>Making changes and pushing them to GitHub</li>
+<li>Setting our gitignore</li>
+<li>Maybe some other stuff</li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>git</category>
+  <category>github</category>
+  <category>version control</category>
+  <category>quarto</category>
+  <guid>https://osu-codeclub.github.io/posts/S08E09_reprod_04/index.html</guid>
+  <pubDate>Mon, 04 Nov 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/github-cartoon.png" medium="image" type="image/png" height="144" width="144"/>
+</item>
 <item>
   <title>Reproducibility 3: More about Quarto</title>
   <dc:creator>Jessica Cooperstone</dc:creator>
@@ -628,7 +831,7 @@ font-style: inherit;"> # add a table of contents</span></span>
 background-color: null;
 font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">number_sections</span><span class="kw" style="color: #003B4F;
+font-style: inherit;">number-sections</span><span class="kw" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">:</span><span class="at" style="color: #657422;
 background-color: null;
@@ -805,6 +1008,50 @@ font-style: inherit;">6</span>}</span></code></pre></div>
 <li>Try adjusting your code chunk options and see how that affects the rendering of your document.</li>
 <li>Notice what gets printed after you load the tidyverse with <code>library(tidyverse)</code> - can you get that to go away?</li>
 </ol>
+</section>
+<section id="prep-for-next-week" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="prep-for-next-week"><span class="header-section-number">4.3</span> Prep for next week</h2>
+<p>We are going to render our <code>.qmd</code> file to GitHub Flavored Markdown (GFM) to prepare to push it to GitHub next week. Let’s do that by adjusting our YAML and rendering our document.</p>
+<div class="sourceCode" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb22-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb22-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My first GitHub document"</span></span>
+<span id="cb22-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Jessica Cooperstone"</span></span>
+<span id="cb22-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"October 28, 2024"</span></span>
+<span id="cb22-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> gfm</span></span>
+<span id="cb22-6"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
 </section>
 </section>
 <section id="other-things-you-can-make-with-quarto" class="level1" data-number="5">
@@ -17937,721 +18184,6 @@ font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
   <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</guid>
   <pubDate>Fri, 02 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" medium="image" type="image/png" height="119" width="144"/>
-</item>
-<item>
-  <title>R Basics 3: Built-in functions, Vectors, and Help</title>
-  <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<section id="recap-of-last-week" class="level4">
-<h4 class="anchored" data-anchor-id="recap-of-last-week"><strong>Recap of last week</strong></h4>
-<p>Last week, we did a little more basic interaction with R (missing prompts and data types), we wrote code in R scripts (and added comments to our code), and used and named R objects.</p>
-<p>Here are some additional tips from our previous session: Go to <kbd>Tools</kbd> and then <kbd>Keyboard Shortcuts Help</kbd>. Identify useful keyboard shortcuts and use them during today’s session.</p>
-</section>
-<section id="learning-objectives-for-today" class="level4">
-<h4 class="anchored" data-anchor-id="learning-objectives-for-today"><strong>Learning objectives for today</strong></h4>
-<ul>
-<li><p><strong>Built-in Functions</strong></p></li>
-<li><p><strong>Vectors in R</strong></p></li>
-<li><p><strong>Getting Help with R</strong></p></li>
-</ul>
-<p><br></p>
-</section>
-</section>
-<section id="types-of-functions-in-r" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="types-of-functions-in-r"><span class="header-section-number">2</span> Types of Functions in R</h2>
-<p>Functions are the foundation of almost everything in R. In programming, they are sets of organized instructions designed to perform specific tasks. The purpose of functions is to create self-contained programs that can be called upon as needed.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://www.google.com/url?sa=i&amp;url=https%3A%2F%2Fwww.codingninjas.com%2Fstudio%2Flibrary%2Fwhat-are-the-functions-in-r&amp;psig=AOvVaw1EyYcYzGf65a8LlRDmR8UO&amp;ust=1706296144697000&amp;source=images&amp;cd=vfe&amp;opi=89978449&amp;ved=0CBMQjRxqGAoTCKjXn9Ke-YMDFQAAAAAdAAAAABCDAg"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Types_of_Functions.png" class="img-fluid figure-img" alt="Types of Functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 1. Types of Functions in R</figcaption>
-</figure>
-</div>
-<section id="whats-in-a-function" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="whats-in-a-function"><span class="header-section-number">2.1</span> What’s in a function?</h3>
-<p>What exactly is a function? Let’s recall from our math knowledge:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fimages%2Ffunction-rules.png&amp;tbnid=_J3drvXZ3dYIPM&amp;vet=12ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi..i&amp;imgrefurl=https%3A%2F%2Fwww.basic-mathematics.com%2Fwrite-a-function-rule.html&amp;docid=Sv_R0La-1wD7kM&amp;w=395&amp;h=278&amp;q=example%20function%20in%20R%20rule&amp;client=safari&amp;ved=2ahUKEwjZy_j4yfmDAxUQyMkDHdknD40QMygFegQIARBi"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/function-rules.png" class="img-fluid figure-img" alt="Function Rules"></a></p>
-<figcaption class="figure-caption">Fig. 2. Function Rules</figcaption>
-</figure>
-</div>
-<p>A function in R is a collection of statements that can be reused in a program. This is the syntax of <strong><em>defining</em></strong> a function in R:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://www.learnbyexample.org/r-functions/"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-function-syntax.png" class="img-fluid figure-img" alt="R Function Syntax"></a></p>
-<figcaption class="figure-caption">Fig. 3. R Function Syntax</figcaption>
-</figure>
-</div>
-<details>
-<summary>
-<b>Which function was covered during our first session of Code Club?</b> (Click for the answer)
-</summary>
-<p>During our first session of Code Club, we examined the <code>setwd</code> function.</p>
-</details>
-</section>
-<section id="types-of-built-in-functions-in-r" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="types-of-built-in-functions-in-r"><span class="header-section-number">2.2</span> Types of built-in functions in R?</h3>
-<p>Built-in functions, which are already created or defined in the programming framework, are referred to as built-in functions. R offers a comprehensive collection of functions that can effectively handle almost any task for the user. These built-in functions are categorized based on their functionality as follows.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="https://www.javatpoint.com/r-built-in-functions"><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/r-built-in-functions.png" class="img-fluid figure-img" alt="Types of built-in functions in R"></a></p>
-<figcaption class="figure-caption">Fig. 4. Types of built-in functions in R</figcaption>
-</figure>
-</div>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Before we begin examining various functions
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Please refer to:</p>
-<ul>
-<li><p><a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html#A">The R Base Package</a></p></li>
-<li><p><a href="https://iqss.github.io/dss-workshops/R/Rintro/base-r-cheat-sheet.pdf">Base R Cheat Sheet</a></p></li>
-</ul>
-</div>
-</div>
-<p><br></p>
-<section id="math-functions" class="level4">
-<h4 class="anchored" data-anchor-id="math-functions"><strong>Math functions</strong></h4>
-<p>A numeric function in R is defined as a function that can accept either a set of numeric values or a numeric vector (see below) as an input argument to carry out specific tasks. Here are several frequently used numeric functions in R programming.</p>
-<table class="table">
-<colgroup>
-<col style="width: 46%">
-<col style="width: 54%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><strong>Function</strong></td>
-<td><strong>Description</strong></td>
-</tr>
-<tr class="even">
-<td><strong>abs(</strong><em>x</em><strong>)</strong></td>
-<td>absolute value</td>
-</tr>
-<tr class="odd">
-<td><strong>sqrt(</strong><em>x</em><strong>)</strong></td>
-<td>square root</td>
-</tr>
-<tr class="even">
-<td><strong>ceiling(</strong><em>x</em><strong>)</strong></td>
-<td>ceiling(3.475) is 4</td>
-</tr>
-<tr class="odd">
-<td><strong>floor(</strong><em>x</em><strong>)</strong></td>
-<td>floor(3.475) is 3</td>
-</tr>
-<tr class="even">
-<td><strong>trunc(</strong><em>x</em><strong>)</strong></td>
-<td>trunc(5.99) is 5</td>
-</tr>
-<tr class="odd">
-<td><strong>round(</strong><em>x</em>&nbsp;<strong>, digits=</strong>&nbsp;<em>n</em><strong>)</strong></td>
-<td>round(3.475, digits=2) is 3.48</td>
-</tr>
-<tr class="even">
-<td><strong>signif(</strong><em>x</em>&nbsp;<strong>, digits=</strong>&nbsp;<em>n</em><strong>)</strong></td>
-<td>signif(3.475, digits=2) is 3.5</td>
-</tr>
-<tr class="odd">
-<td><strong>cos(</strong><em>x</em><strong>), sin(</strong><em>x</em><strong>), tan(</strong><em>x</em><strong>)</strong></td>
-<td>also asin(x), acos(<em>x</em>), cosh(<em>x</em>), acosh(<em>x</em>), etc.</td>
-</tr>
-<tr class="even">
-<td><strong>log(</strong><em>x</em><strong>)</strong></td>
-<td>natural logarithm</td>
-</tr>
-<tr class="odd">
-<td><strong>log10(</strong><em>x</em><strong>)</strong></td>
-<td>common logarithm</td>
-</tr>
-<tr class="even">
-<td><strong>exp(</strong><em>x</em><strong>)</strong></td>
-<td>e^<em>x</em></td>
-</tr>
-</tbody>
-</table>
-</section>
-<section id="exercises-1" class="level4">
-<h4 class="anchored" data-anchor-id="exercises-1"><strong>Exercises 1</strong></h4>
-<p>A) Let’s explore one function in particular: <code>sum</code></p>
-<p>Last week we used R as a calculator. Add 5 and 7 the way we did last week and then try using the built-in function <code>sum</code>.</p>
-<p>Using R as a calculator to add 5 and 7:</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 12</code></pre>
-</div>
-</div>
-</details>
-<p>Using the <code>sum</code> built-in function in R, add 5 and 7:</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 12</code></pre>
-</div>
-</div>
-</details>
-<p>B) Now, let’s combine functions by adding 3, 7, 9, and 11. After that, we will multiply the sum by 3. Lastly, we will calculate the square root of this result and round it to the nearest whole number.</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">11</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 9</code></pre>
-</div>
-</div>
-</details>
-<p>C) Below is a very common example in my data analysis.</p>
-<details>
-<summary>
-<b>In the field of Plant Pathology, data such as disease incidence or severity is typically collected as a percentage or proportion. To prepare the data for analysis, it is common to apply a data transformation known as the <code>arc-sine square root</code>. You have gathered disease severity data from three plots: 0.75 (control), 0.70 (Trt 1), and 0.30 (Trt 2). Apply the transformation mentioned above to your data for analysis. </b> (Click for the answer)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">Control <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.75</span></span>
-<span id="cb7-2">Trt1 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.70</span></span>
-<span id="cb7-3">Trt2 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.30</span></span>
-<span id="cb7-4"></span>
-<span id="cb7-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(Control))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1.047198</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(Trt1))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.9911566</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">asin</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sqrt</span>(Trt2))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.5796397</code></pre>
-</div>
-</div>
-</details>
-</section>
-<section id="statistical-probability-functions" class="level4">
-<h4 class="anchored" data-anchor-id="statistical-probability-functions"><strong>Statistical probability functions</strong></h4>
-<p>The table below provides descriptions of functions pertaining to probability distributions.</p>
-<table class="table">
-<colgroup>
-<col style="width: 38%">
-<col style="width: 61%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><strong>Function</strong></td>
-<td><strong>Description</strong></td>
-</tr>
-<tr class="even">
-<td><strong>dnorm(</strong><em>x</em><strong>)</strong></td>
-<td>normal density function (by default m=0 sd=1)</td>
-</tr>
-<tr class="odd">
-<td><strong>pnorm(</strong><em>q</em><strong>)</strong></td>
-<td>cumulative normal probability for q<br>
-(area under the normal curve to the left of q)<br>
-pnorm(1.96) is 0.975</td>
-</tr>
-<tr class="even">
-<td><strong>qnorm(</strong><em>p</em><strong>)</strong></td>
-<td>normal quantile.&nbsp;<br>
-value at the p percentile of normal distribution<br>
-qnorm(.9) is 1.28 # 90th percentile</td>
-</tr>
-<tr class="odd">
-<td><strong>rnorm(</strong><em>n</em><strong>, m=0, sd=1)</strong></td>
-<td>n random normal deviates with mean m<br>
-and standard deviation sd.</td>
-</tr>
-</tbody>
-</table>
-<p>Let’s generate 10 random normal variates with mean=50, sd=10.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">m=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>)</span>
-<span id="cb13-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(x) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Rounding to the nearest whole number. </span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] 50 62 78 58 51 38 47 56 66 57</code></pre>
-</div>
-</div>
-<p>Now let’s do the same thing, but call it <code>y</code> .</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Did you get the same result?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>To ensure reproducibility of pseudo-random numbers for the random number generators listed, you can utilize set.seed(1234) or any other integer.</p>
-</div>
-</div>
-<details>
-<summary>
-<b>Example</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">set.seed</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1234</span>)</span>
-<span id="cb15-2">x <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">m=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd=</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>))</span>
-<span id="cb15-3">x</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] 38 53 61 27 54 55 44 45 44 41</code></pre>
-</div>
-</div>
-</details>
-</section>
-<section id="other-statistical-and-useful-functions" class="level4">
-<h4 class="anchored" data-anchor-id="other-statistical-and-useful-functions"><strong>Other statistical and useful functions</strong></h4>
-<p>Other useful statistical functions are provided in the following table.</p>
-<table class="table">
-<colgroup>
-<col style="width: 58%">
-<col style="width: 41%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><strong>Function</strong></td>
-<td><strong>Description</strong></td>
-</tr>
-<tr class="even">
-<td><strong>seq(</strong><em>from</em>&nbsp;<strong>,</strong>&nbsp;<em>to</em>&nbsp;<strong>,</strong>&nbsp;<em>by</em><strong>)</strong></td>
-<td>generate a sequence<br>
-indices &lt;- seq(1,10,2)<br>
-#indices is c(1, 3, 5, 7, 9)</td>
-</tr>
-<tr class="odd">
-<td><strong>rep(</strong><em>x</em>&nbsp;<strong>,</strong>&nbsp;<em>ntimes</em><strong>)</strong></td>
-<td>repeat&nbsp;<em>x</em>&nbsp;<em>n</em>&nbsp;times<br>
-y &lt;- rep(1:3, 2)<br>
-# y is c(1, 2, 3, 1, 2, 3)</td>
-</tr>
-</tbody>
-</table>
-<p>Each has the option <code>na.rm</code> to strip missing values before calculations. Otherwise the presence of missing values will lead to a missing result.</p>
-<table class="table">
-<colgroup>
-<col style="width: 50%">
-<col style="width: 48%">
-</colgroup>
-<tbody>
-<tr class="odd">
-<td><strong>mean(</strong><em>x</em>&nbsp;<strong>, trim=</strong><em>0</em><strong>,</strong><br>
-<strong>na.rm=</strong>&nbsp;FALSE&nbsp;<strong>)</strong></td>
-<td>mean of object x</td>
-</tr>
-<tr class="even">
-<td><strong>sd(</strong><em>x</em><strong>)</strong></td>
-<td>standard deviation of object(x).</td>
-</tr>
-<tr class="odd">
-<td><strong>median(</strong><em>x</em><strong>)</strong></td>
-<td>median</td>
-</tr>
-<tr class="even">
-<td><strong>range(</strong><em>x</em><strong>)</strong></td>
-<td>range</td>
-</tr>
-<tr class="odd">
-<td><strong>sum(</strong><em>x</em><strong>)</strong></td>
-<td>sum</td>
-</tr>
-<tr class="even">
-<td><strong>min(</strong><em>x</em><strong>)</strong></td>
-<td>minimum</td>
-</tr>
-<tr class="odd">
-<td><strong>max(</strong><em>x</em><strong>)</strong></td>
-<td>maximum</td>
-</tr>
-</tbody>
-</table>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<em>Nota bene</em>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Object can be a numeric vector or data frame.</p>
-</div>
-</div>
-</section>
-<section id="exercises-2" class="level4">
-<h4 class="anchored" data-anchor-id="exercises-2"><strong>Exercises 2</strong></h4>
-<p>A) Let’s explore the following functions together using the group of numbers: 5, 7, 3, and 9 (in this order). These functions include: <code>sum</code>, <code>min</code>, <code>max</code>, and <code>range</code></p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 24</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">min</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">max</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 9</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">range</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3 9</code></pre>
-</div>
-</div>
-</details>
-<p>B) Let’s now get the average, standard deviation, and sort these numbers using <code>mean</code>, <code>sd</code>, and <code>sort</code>.</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in sd(5, 7, 3, 9): unused arguments (3, 9)</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sort</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span></code></pre></div>
-<div class="cell-output cell-output-error">
-<pre><code>Error in sort(5, 7, 3, 9): 'decreasing' must be a length-1 logical vector.
-Did you intend to set 'partial'?</code></pre>
-</div>
-</div>
-</details>
-<p><br></p>
-</section>
-</section>
-</section>
-<section id="vectors-in-r" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="vectors-in-r"><span class="header-section-number">3</span> Vectors in R</h2>
-<p>Depending on the type of data that one needs to store in R, different data structures can be used. The four most commonly used data structures in R are vectors, lists, matrices, and data frames. In this session, we will only be working with vectors.</p>
-<p>The fundamental data structure in R is vectors, which are 1-dimensional data structures that can only contain one type of data (e.g., all entries must have the same mode). To create a vector in R, the <strong>function</strong> <code>c()</code> (concatenate or combine) is used, as shown below.</p>
-<p>Let’s create a vector named “my_vector” with 5 entries.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">my_vector <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>)</span>
-<span id="cb31-2">my_vector</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10 30 50 20 40</code></pre>
-</div>
-</div>
-<p>The output generated on the previous <code>code chunk</code> displays the entries in your vector, with the 1 in squared brackets indicating the position of the entry to its right in the vector. In this case, 10 is the first entry of the vector.</p>
-<p>If, for any reason, we only wish to extract the value 50 from this vector, we can utilize our knowledge of it being in the third position to do so.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">my_vector[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 50</code></pre>
-</div>
-</div>
-<p>Since a vector can only contain one data type, all its members need to be of the same type. If you attempt to combine data of different types into a vector, R will not provide a warning, but rather <strong>coerce</strong> it to the most flexible type. (The order of flexibility, from least to most, is: logical, integer, double, character). Therefore, if you add a number to a logical vector, the entire vector will be converted to a numeric vector.</p>
-<p>To check what data type an object is, run the R built-in function <code>class()</code>, with the object as the only parameter.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">class</span>(my_vector)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "numeric"</code></pre>
-</div>
-</div>
-<p>If you for any reason want to have more information about any object you have stored in your R session the command&nbsp;<code>str()</code>&nbsp;is very helpful.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str</span>(my_vector)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> num [1:5] 10 30 50 20 40</code></pre>
-</div>
-</div>
-<section id="exercises-3" class="level4">
-<h4 class="anchored" data-anchor-id="exercises-3"><strong>Exercises 3</strong></h4>
-<p>A) Let’s revisit <code>mean</code>, <code>sd</code>, <code>sort</code>, and other basic R operators.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(my_vector)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 30</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(my_vector)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 15.81139</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sort</span>(my_vector)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10 20 30 40 50</code></pre>
-</div>
-</div>
-<p>B) Add 7 to the my_vector, multiply 3 by my_vector, and check which values are greater than 25.</p>
-<details>
-<summary>
-<b>Solution</b> (click here)
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">7</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> my_vector</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 17 37 57 27 47</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb47" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> my_vector</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  30  90 150  60 120</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">25</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;=</span> my_vector</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1]  TRUE FALSE FALSE  TRUE FALSE</code></pre>
-</div>
-</div>
-</details>
-<p>C) Please create <code>another_vector</code> and add it to <code>my_vector</code>. Next, use the <code>sum</code> function to combine these vectors.</p>
-<p><br></p>
-</section>
-</section>
-<section id="getting-help-with-r" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="getting-help-with-r"><span class="header-section-number">4</span> Getting Help with R</h2>
-<p>Before seeking assistance from others, it is generally advisable for you to attempt to resolve the problem on your own. R provides comprehensive tools for accessing documentation and searching for help.</p>
-<section id="r-help-help-and" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="r-help-help-and"><span class="header-section-number">4.1</span> <strong>R Help: <code>help()</code> and <code>?</code></strong></h3>
-<p>The <code>help()</code> function and <code>?</code> help operator in R offer access to documentation pages for R functions, data sets, and other objects. They provide access to both packages in the standard R distribution and contributed packages.</p>
-<section id="exercises-4" class="level4">
-<h4 class="anchored" data-anchor-id="exercises-4"><strong>Exercises 4</strong></h4>
-<p>A) Can you obtain information about the type of R object that <code>mean()</code> and <code>sum()</code> functions take by using the <code>help()</code> or <code>?</code> functions?</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/Help.png" class="img-fluid figure-img"></p>
-</figure>
-</div>
-
-
-</section>
-</section>
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html</guid>
-  <pubDate>Fri, 26 Jan 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S07E03_basics_03/img/R2D2.png" medium="image" type="image/png" height="108" width="144"/>
 </item>
 </channel>
 </rss>
