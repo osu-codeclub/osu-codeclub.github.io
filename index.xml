@@ -41,8 +41,8 @@
 <p>The book <a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a> is a super good resource by Jenny Bryan that talks about all this in extreme detail. Some of my materials below are inspired by some of this material.</p>
 <section id="what-is-git" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="what-is-git"><span class="header-section-number">1.1</span> What is Git?</h2>
-<p><a href="https://git-scm.com/">Git</a> is a version control system that allows materials (mostly code), in an organized way where changes are tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.</p>
-<p>We are going to use Git (combined with GitHub, more on that in a second) to take the information embedde within our Quarto document and make it available on GitHub. You could opt use Git for just yourself because it would allow you to always revert back to a previous version of any of your files in case you make a big mistake.</p>
+<p><a href="https://git-scm.com/">Git</a> is a version control system that allows materials (mostly code) to be tracked in an organized way. Every time any changes to the files that are being monitored by Git are changed, that change is tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.</p>
+<p>We are going to use Git (combined with GitHub, more on that in a second) to take the information embedded within our Quarto document and make it available on GitHub. You could opt use Git for just yourself because it would allow you to always revert back to a previous version of any of your files in case you make a big mistake.</p>
 <p>Here is a nice illustration by <a href="https://allisonhorst.com/allison-horst">Allison Horst</a> that shows the basics of git (at least the basics of what we will be using).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -90,6 +90,7 @@
 <section id="render-a-github-flavored-markdown-gfm-document-to-prepare-to-push" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Render a GitHub flavored markdown (GFM) document to prepare to push</h1>
 <p>We need some material to put in our new repository. We can use the <a href="https://osu-codeclub.github.io/posts/S08E08_reprod_03/">code that we practiced wrangling with last week</a>.</p>
+<p>If you missed last week, you can download a <code>.qmd</code> file to work from <a href="">here</a>.</p>
 <p>Open up this <code>.qmd</code> and set your YAML such that it renders as the format GitHub flavored markdown.</p>
 <div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
 background-color: null;
@@ -132,6 +133,8 @@ font-style: inherit;"> gfm</span></span>
 background-color: null;
 font-style: inherit;">---</span></span></code></pre></div>
 <p>Render this document. You should now see in the <code>Files</code> quadrant a new file called <code>name-of-quarto-doc.md</code> which contains your rendered document in GitHub flavored markdown (markdown is what the <code>.md</code> is).</p>
+<p>Your rendered document should look something like this:</p>
+<p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/md-rendered-screenshot.png" class="img-fluid"></p>
 <p>In the folder of my repo, I have the following content:</p>
 <ul>
 <li>an .<code>Rproj</code> file</li>
@@ -189,7 +192,7 @@ font-style: inherit;">---</span></span></code></pre></div>
 <p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/publish-repository-post-commit.png" class="img-fluid"></p>
 <p>We are getting one last popup asking us to confirm our repo info, which can do with the <code>Publish Repository</code> button.</p>
 <p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/publish-repo-final-conf.png" class="img-fluid"></p>
-<p>Our repo is now on GitHub, and we can see it online if we go to the repositories tab of your personal GitHub page. It should have the structure https://github.com/your-user-name?tab=repositories. You can see how this looks on my page - this is probably your first repo, and although I’ve called mine <code>first-repo</code> it is not for me.</p>
+<p>Our repo is now on GitHub, and we can see it online if we go to the repositories tab of your personal GitHub page. You can see how this looks on my page - this is probably your first repo, and although I’ve called mine <code>first-repo</code> it is not for me.</p>
 <p><img src="https://osu-codeclub.github.io/posts/S08E09_reprod_04/img/git-repo-screenshot.png" class="img-fluid"></p>
 <p>We can click on our repo and see what it contains. If we click on our file that ends in <code>.md</code>, we can see our GitHub flavored markdown rendered document. Here is <a href="https://github.com/jcooperstone/first-repo/blob/main/first-push.md">mine</a>.</p>
 </section>
@@ -1075,6 +1078,288 @@ font-style: inherit;">---</span></span></code></pre></div>
   <guid>https://osu-codeclub.github.io/posts/S08E08_reprod_03/index.html</guid>
   <pubDate>Mon, 28 Oct 2024 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/quarto-selfie.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>My first GitHub document</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S08E09_reprod_04/factbook_20241028.html</link>
+  <description><![CDATA[ 
+
+
+
+
+<section id="load-libraries" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Load libraries</h1>
+<p>Let’s add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we’ve been going over in Code Club this semester.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+</div>
+</section>
+<section id="download-data" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Download data</h1>
+<p>Let’s go back to what we started with this semester. Let’s revisit data from <a href="https://www.cia.gov/the-world-factbook/">The World Factbook</a>, put together by the CIA to “provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities.” I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.</p>
+<p>The data we are going to download can be found <a href="https://www.cia.gov/the-world-factbook/field/population/country-comparison/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(</span>
+<span id="cb2-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv"</span>,</span>
+<span id="cb2-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span></span>
+<span id="cb2-4">)</span></code></pre></div>
+</div>
+<p>You should now see the file “factbook_download.csv” in your working directory.</p>
+</section>
+<section id="read-in-data" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Read in data</h1>
+<p>We can read it in using the tidyverse function from the <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> package called <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># i've stored mine in a folder called data for organizational sake</span></span>
+<span id="cb3-2">factbook <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/factbook_download.csv"</span>)</span></code></pre></div>
+</div>
+<p>Let’s look at our data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">View</span>(factbook)</span></code></pre></div>
+</div>
+</section>
+<section id="wrangle" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Wrangle</h1>
+<p>Let’s pull just the data for total population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">factbook_pop <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb5-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Series Name</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Population, total"</span>)</span></code></pre></div>
+</div>
+<p>And then we can look at it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(factbook_pop)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook_pop)</span></code></pre></div>
+</div>
+<section id="pivot" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="pivot"><span class="header-section-number">4.1</span> Pivot</h2>
+<p>Looks like our year columns are characters, let’s convert them to be numeric, and in the process practice pivoting.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">factbook_pop_long <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook_pop <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb8-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"2"</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick columns start with 2</span></span>
+<span id="cb8-3">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"year"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># take names to new col "year"</span></span>
+<span id="cb8-4">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"pop"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># values in cells to new col "pop"</span></span>
+<span id="cb8-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">parse_number</span>(year)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use mutate to remove extra year garbage</span></span>
+<span id="cb8-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">pop =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">as.numeric</span>(pop)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># convert pop to be numeric</span></span>
+<span id="cb8-7"></span>
+<span id="cb8-8"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook_pop_long)</span></code></pre></div>
+</div>
+<p>Now that we’ve cleaned that up, let’s go back wide to calculate which country had the largest percent population growth from 2000 to 2015.</p>
+<p>Go wide! And let’s clean up those column names at the same time.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">factbook_pop_wide <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> factbook_pop_long <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">names_from =</span> year, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># go from long to wide data</span></span>
+<span id="cb9-3">              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values_from =</span> pop) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb9-4">  janitor<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">clean_names</span>()</span></code></pre></div>
+</div>
+</section>
+<section id="calculate-percent-population-growth" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="calculate-percent-population-growth"><span class="header-section-number">4.2</span> Calculate percent population growth</h2>
+<p>Let’s now see which country had the largest percent population growth from 2000 to 2015.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">perc_pop_growth =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(perc_pop_growth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">digits =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb10-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pull only the columns we want</span></span>
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_max</span>(perc_pop_growth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick top 5</span></span></code></pre></div>
+</div>
+<p>And which country had the smallest percent population growth from 2000 to 2015.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pull only the columns we want</span></span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">slice_min</span>(perc_pop_growth, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pick lowest 5</span></span></code></pre></div>
+</div>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <guid>https://osu-codeclub.github.io/posts/S08E09_reprod_04/factbook_20241028.html</guid>
+  <pubDate>Mon, 28 Oct 2024 04:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Reproducibility 2: Introduction to Quarto</title>
@@ -17139,1051 +17424,6 @@ font-style: inherit;">"long"</span>)</span></code></pre></div>
   <guid>https://osu-codeclub.github.io/posts/S07E05_basics_05/index.html</guid>
   <pubDate>Fri, 09 Feb 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E05_basics_05/img/Allison_Horst.png" medium="image" type="image/png" height="80" width="144"/>
-</item>
-<item>
-  <title>R Basics 4: Vectorized Operations and Data Frames</title>
-  <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<p>We are going to continue our discussion about vectors that <a href="https://osu-codeclub.github.io/posts/basics_03/#vectors-in-r">Horacio started last week</a> and talk about vectorized operations. It’s fine if you don’t know what this means, you will by the end of today’s session. We are also going to introduce the idea of a data frame.</p>
-</section>
-<section id="what-are-vectorized-operations" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="what-are-vectorized-operations"><span class="header-section-number">2</span> What are vectorized operations?</h2>
-<p>I think its easier to see 👀 an example of a vectorized operation, and then we can explain what is happening under the hood.</p>
-<p>Let’s create a vector of high temperatures for the weather in Columbus OH in Fahrenheit from the last 7 days. I took this data from January 19 to 25, 2024.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1">temps_F <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">26</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">21</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">24</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">33</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">41</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">51</span>)</span></code></pre></div>
-</div>
-<p>We can call our vector to see what it contains.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">temps_F</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 26 21 24 32 33 41 51</code></pre>
-</div>
-</div>
-<p>A reminder that:</p>
-<p><img src="https://latex.codecogs.com/png.latex?%0A%C2%B0F%20=%201.8%20*%20%C2%B0C%20+%2032%0A"></p>
-<p>With some light rearrangement, we can write the code below so we can plug in a temp in Fahrenheit, and get out one in Celsius.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">temps_C <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> (temps_F <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1.8</span></span>
-<span id="cb4-2"></span>
-<span id="cb4-3">temps_C</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -3.3333333 -6.1111111 -4.4444444  0.0000000  0.5555556  5.0000000 10.5555556</code></pre>
-</div>
-</div>
-<p>Here, we simply use the vector <code>temps_F</code> as we would any single number in a smple mathematical operation, and we convert each element or number in our our entire vector using the formula we provide. As a result, we can convert every element of our vector from Fahrenheit to Celsius.</p>
-<blockquote class="blockquote">
-<p>It is worth mentioning that this is <em>unique in R</em> - many other programming languages would require a for loop or similar to do this operation, but because R is a <strong>vectorized language</strong>, this works easily and simply.</p>
-</blockquote>
-<p>Here is another example. Imagine you have a vector of values and you want to calculate the log base 2 value for each element.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">raw <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">20</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">36</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">42</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">53</span>)</span>
-<span id="cb6-2"></span>
-<span id="cb6-3">log2 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">log2</span>(raw)</span>
-<span id="cb6-4"></span>
-<span id="cb6-5">log2</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4.321928 5.169925 5.392317 5.727920</code></pre>
-</div>
-</div>
-<p>This is an example where we apply a formula transformation to a vector, but we can also use vectorized operations with two vectors.</p>
-</section>
-<section id="vector-by-vector-operations" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="vector-by-vector-operations"><span class="header-section-number">3</span> Vector by vector operations</h2>
-<p>Let’s create some vectors. Note I am not using the <code>c()</code> function to create the vector - since I am using the <code>:</code> to indicate a string of integers from number 1 to number 2, under the hood, R automatically makes this a vector. If you were to use the <code>c()</code> function though you would get the same result.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create a vector with the values from 1 to 10, incrementing by 1</span></span>
-<span id="cb8-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># vector_1to10 &lt;- c(1:10) would also work</span></span>
-<span id="cb8-3">vector_1to10 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span></span>
-<span id="cb8-4"></span>
-<span id="cb8-5">vector_1to5 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span></span>
-<span id="cb8-6"></span>
-<span id="cb8-7">vector_1to3 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span></span>
-<span id="cb8-8"></span>
-<span id="cb8-9">vector_0to4 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span></span></code></pre></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="What do you think will happen if we try and add `vector_1to10` and `vector_1to5`?">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-What do you think will happen if we try and add <code>vector_1to10</code> and <code>vector_1to5</code>?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-1" class="callout-1-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># a vector reminder</span></span>
-<span id="cb9-2">vector_1to10</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">vector_1to5</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4 5</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># adding</span></span>
-<span id="cb13-2">vector_1to10 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> vector_1to5</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  2  4  6  8 10  7  9 11 13 15</code></pre>
-</div>
-</div>
-<p>We see that <code>vector_1to5</code> gets recycled, meaning once the 5 elements in the vector have been used, the addition starts back from the beginning again. If we want to be explicit:</p>
-<ul>
-<li>Element 1 of <code>vector_1to10</code> gets added to element 1 of <code>vector_1to5</code></li>
-<li>Element 2 of <code>vector_1to10</code> gets added to element 2 of <code>vector_1to5</code></li>
-<li>Element 3 of <code>vector_1to10</code> gets added to element 3 of <code>vector_1to5</code></li>
-<li>Element 4 of <code>vector_1to10</code> gets added to element 4 of <code>vector_1to5</code></li>
-<li>Element 5 of <code>vector_1to10</code> gets added to element 5 of <code>vector_1to5</code>.</li>
-<li>Element 6 of <code>vector_1to10</code> gets added to <strong>element 1</strong> of <code>vector_1to5</code></li>
-</ul>
-<p>and so on…</p>
-<p>⚠️ <strong>This happens without R explicitly telling you this is happening. We do not get a warning.</strong></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="What do you think will happen if we try and add `vector_1to10` and `vector_1to3`?">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-What do you think will happen if we try and add <code>vector_1to10</code> and <code>vector_1to3</code>?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-2" class="callout-2-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># a vector reminder</span></span>
-<span id="cb15-2">vector_1to10</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">vector_1to3</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># adding</span></span>
-<span id="cb19-2">vector_1to10 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> vector_1to3</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning in vector_1to10 + vector_1to3: longer object length is not a multiple
-of shorter object length</code></pre>
-</div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]  2  4  6  5  7  9  8 10 12 11</code></pre>
-</div>
-</div>
-<p>⚠️ <strong>We see that <code>vector_1to3</code> gets recycled, but now we have a warning. We get this because the vector lengths are not divisible by each other to produce an integer. R still will perform our operation, but it tells us hey this might not be exactly what you want.</strong></p>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="What do you think will happen if we try and divide `vector_1to10` by `vector_0to4`?">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-What do you think will happen if we try and divide <code>vector_1to10</code> by <code>vector_0to4</code>?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">vector_1to10 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> vector_0to4</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]      Inf 2.000000 1.500000 1.333333 1.250000      Inf 7.000000 4.000000
- [9] 3.000000 2.500000</code></pre>
-</div>
-</div>
-<p>We see that <code>vector_0to4</code> gets recycled, but now we have a new output we haven’t seen before, <code>Inf</code> which stands for infinity/infinite.</p>
-<p>If we are then to try and sum this vector:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(vector_1to10 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span> vector_0to4)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] Inf</code></pre>
-</div>
-</div>
-<p>We get an answer of infinite. This is because we have at least one infinite value, so including it as part of a sum makes that sum infinite too.</p>
-<p>⚠️ <strong>Think about how this might work if you have NAs in your vector</strong></p>
-</div>
-</div>
-</div>
-</section>
-<section id="filtering-vectors" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="filtering-vectors"><span class="header-section-number">4</span> Filtering vectors</h2>
-<p>We can also write code that allows us to filter our vector based on certain conditions. What if we wanted to know which observations had data where the temperature was above freezing? We could use a mathematical operator (in this case, <code>&gt;</code>) to find instances when the statement we provide is true.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">temps_C <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] FALSE FALSE FALSE FALSE  TRUE  TRUE  TRUE</code></pre>
-</div>
-</div>
-<p>When we run this code, we get a series of values corresponding to each element of the vector, and whether or not the statement we have prompted with (<code>temps_C &gt; 0</code>) is true or false.</p>
-<p>If we wanted to see how many observations meet these criteria, we can take advantage of the fact that <code>TRUE</code> is coded as 1, and <code>FALSE</code> and 0.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(temps_C <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3</code></pre>
-</div>
-</div>
-<p>We know then that there are 3 observations where the temperature is above freezing.</p>
-<p>If we want to know <strong>which</strong> observations are above freezing, we can use the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/which"><code>which()</code></a> which shows us the indices of the elements in our vector for which our code evaluates to <code>TRUE</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">which</span>(temps_C <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5 6 7</code></pre>
-</div>
-</div>
-<p>This tells us that the 5th, 6th, and 7th elements in our data have temperatures higher than freezing. In our vector we don’t have the specific days associated with each temperature embedded. We can assign meta-data to our values by using the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/names"><code>names()</code></a> for our vector. I’ll show you how to do that below.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create a new vector that has the dates we want to assign</span></span>
-<span id="cb32-2">dates <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/19"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/20"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/21"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/22"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/23"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/24"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"1/25"</span>)</span>
-<span id="cb32-3"></span>
-<span id="cb32-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># we can assign these dates as the "names" of our vector temps_C</span></span>
-<span id="cb32-5"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">names</span>(temps_C) <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> dates</span>
-<span id="cb32-6"></span>
-<span id="cb32-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># now our temps have dates associated with them</span></span>
-<span id="cb32-8">temps_C</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>      1/19       1/20       1/21       1/22       1/23       1/24       1/25 
--3.3333333 -6.1111111 -4.4444444  0.0000000  0.5555556  5.0000000 10.5555556 </code></pre>
-</div>
-</div>
-<p>If you knew you wanted to do this at the outset, you could create the vector along with its names all at once using the handy function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/structure"><code>structure()</code></a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">(temps_F_names <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">structure</span>(temps_F,</span>
-<span id="cb34-2">                           <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names =</span> dates))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>1/19 1/20 1/21 1/22 1/23 1/24 1/25 
-  26   21   24   32   33   41   51 </code></pre>
-</div>
-</div>
-<blockquote class="blockquote">
-<p>You can also set other attributes using the function <code>structure()</code>.</p>
-</blockquote>
-<p>You might use the sometimes, but more likely you would want to work using a data frame.</p>
-</section>
-<section id="practice" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="practice"><span class="header-section-number">5</span> Practice</h2>
-<div class="callout callout-style-default callout-note callout-titled" title="Create a vector of 10 numbers, beginning at 2, incrementing by 11. Remember, if you call `help()` or put a `?` before a function, you can learn more about its arguments and use. You might want to look back to last week's Code Club if you don't remember the simplified function for doing this.">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Create a vector of 10 numbers, beginning at 2, incrementing by 11. Remember, if you call <code>help()</code> or put a <code>?</code> before a function, you can learn more about its arguments and use. You might want to look back to last week’s Code Club if you don’t remember the simplified function for doing this.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">a_vector <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">from =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">11</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">length.out =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>)</span>
-<span id="cb36-2"></span>
-<span id="cb36-3">a_vector</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1]   2  13  24  35  46  57  68  79  90 101</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="How many of these values are even? Yes I know that I haven't showed you how to do this but I am confident you can figure out how to :)">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-How many of these values are even? Yes I know that I haven’t showed you how to do this but I am confident you can figure out how to :)
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-5" class="callout-5-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>A zero remainder means the number is even.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># use modulo operator %% to see if a number is even</span></span>
-<span id="cb38-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># if the remainer is 0, it is even</span></span>
-<span id="cb38-3">a_vector <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> [1] 0 1 0 1 0 1 0 1 0 1</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># how many are even?</span></span>
-<span id="cb40-2"><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sum</span>(a_vector <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<section id="what-is-a-data-frame" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="what-is-a-data-frame"><span class="header-section-number">6</span> What is a data frame?</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" class="img-fluid figure-img" width="469"></p>
-</figure>
-</div>
-<p>Below I am creating a simple data frame, this is a rectangular data object with rows and columns. In reality, you will probably be reading your data in from a <code>.csv</code> or <code>.xlsx</code> file, but you can also construct a data frame directly in R. We are doing this with the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/data.frame"><code>data.frame()</code></a> which is a part of base R.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create a simple 3 by 4 data frame called small_df</span></span>
-<span id="cb42-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># columns are a, b, and c</span></span>
-<span id="cb42-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># values are numbers from 1 to 4, 5 to 8, and 9 to 12</span></span>
-<span id="cb42-4">small_df <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">a =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, </span>
-<span id="cb42-5">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">b =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">8</span>, </span>
-<span id="cb42-6">                       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">c =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">12</span>)</span></code></pre></div>
-</div>
-<p>Let’s look at <code>small_df</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1">small_df</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  a b  c
-1 1 5  9
-2 2 6 10
-3 3 7 11
-4 4 8 12</code></pre>
-</div>
-</div>
-<p>We can think about a data frame as being composed of a series of vectors (as columns) squished together. In the case above, each column is of the same type, integer or numeric but this doesn’t have to be true. Note the first column of 1:4 is actually the row index - you can tell this as it doesn’t have a column name.</p>
-<blockquote class="blockquote">
-<p>Vectors all must be of the same object type (i.e., character, numeric, logical). In a data frame, each column can be a different object type. This is very useful especially when you have to have meta-data combined with numeric data.</p>
-</blockquote>
-<p>We call use some new functions to look more at our data frame.</p>
-<p><code>View()</code> will open our data frame like you might be used to looking at a spreadsheet in Excel.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">View</span>(small_df)</span></code></pre></div>
-</div>
-<p><code>str()</code> gives us the structure of the object x.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str</span>(small_df)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   4 obs. of  3 variables:
- $ a: int  1 2 3 4
- $ b: int  5 6 7 8
- $ c: int  9 10 11 12</code></pre>
-</div>
-</div>
-<p><code>dim()</code> gives us the dimensions of x.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dim</span>(small_df)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 4 3</code></pre>
-</div>
-</div>
-<div class="callout callout-style-default callout-important callout-titled" title="Note that when referring to a two-dimensional piece of data, R uses the syntax [rows, columns]">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note that when referring to a two-dimensional piece of data, R uses the syntax [rows, columns]
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-<p>Note, that if you use <code>dim()</code> on a vector (which has only one dimension), you will get something unexpected.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># this doesn't work</span></span>
-<span id="cb50-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dim</span>(temps_C)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>NULL</code></pre>
-</div>
-</div>
-<p>For a vector, instead you should use the function <code>length()</code> to figure out how many elements are in the vector.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># this does work</span></span>
-<span id="cb52-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">length</span>(temps_C)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 7</code></pre>
-</div>
-</div>
-</section>
-<section id="performing-operations-on-a-data-frame" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="performing-operations-on-a-data-frame"><span class="header-section-number">7</span> Performing operations on a data frame</h2>
-<p>Now that we have our <code>small_df</code> we can try performing some operations on it.</p>
-<p>What if you wanted to take the log base 2 for every value in <code>small_df</code>? Just like we did for a vector, we can simply use the function <code>log2()</code> on <code>small_df</code>. Here I am assigning the output of this to a new data frame called <code>small_df_log2</code>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1">(small_df_log2 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">log2</span>(small_df))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         a        b        c
-1 0.000000 2.321928 3.169925
-2 1.000000 2.584963 3.321928
-3 1.584963 2.807355 3.459432
-4 2.000000 3.000000 3.584963</code></pre>
-</div>
-</div>
-<p>Remember, if you assign something to an object, but also want it to print at the same time, just surround the whole thing in parentheses.</p>
-<p>What if I wanted to take the log base 2 of only column <code>a</code>? There are a few ways I can do that.</p>
-<section id="by-indexing" class="level3" data-number="7.1">
-<h3 data-number="7.1" class="anchored" data-anchor-id="by-indexing"><span class="header-section-number">7.1</span> By indexing</h3>
-<p>I can use the square brackets <code>[]</code> to access certain parts of my data frame. Remember for data frames, the syntax is [rows, columns]. Let’s try some example where we access by using indices (i.e., the position of the row, column, or the combination) to grab different parts of our data frame.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># first row, second column</span></span>
-<span id="cb56-2">small_df[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># all rows, second column</span></span>
-<span id="cb58-2">small_df[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 5 6 7 8</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># third row, all columns</span></span>
-<span id="cb60-2">small_df[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  a b  c
-3 3 7 11</code></pre>
-</div>
-</div>
-<p>Is there any difference as to the types of objects we get when doing these different types of selection? We can use the function <code>str()</code> to see what type of R object we have in the different scenarios.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># first row, second column</span></span>
-<span id="cb62-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str</span>(small_df[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>])</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> int 5</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb64" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># all rows, second column</span></span>
-<span id="cb64-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str</span>(small_df[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>])</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> int [1:4] 5 6 7 8</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># third row, all columns</span></span>
-<span id="cb66-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">str</span>(small_df[<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>,])</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>'data.frame':   1 obs. of  3 variables:
- $ a: int 3
- $ b: int 7
- $ c: int 11</code></pre>
-</div>
-</div>
-<p>Back to the original idea - how would we take the data only from column <code>a</code> and log base 2 transform it, but leave the rest of <code>small_df</code> as it is?</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># first save our df with a new name</span></span>
-<span id="cb68-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># this is like doing a "save as" for an existing df</span></span>
-<span id="cb68-3">small_df_log2_a <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> small_df</span>
-<span id="cb68-4"></span>
-<span id="cb68-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># log2 transform the first column, and then assign that back to the first column</span></span>
-<span id="cb68-6">small_df_log2_a[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">log2</span>(small_df[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>])</span>
-<span id="cb68-7"></span>
-<span id="cb68-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># check to see if it worked</span></span>
-<span id="cb68-9">small_df_log2_a</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>         a b  c
-1 0.000000 5  9
-2 1.000000 6 10
-3 1.584963 7 11
-4 2.000000 8 12</code></pre>
-</div>
-</div>
-<p>Note that column <code>a</code> now is the object type “dbl” or numeric, instead of “int” or integer, since our log2 transformation has made our values no longer integers.</p>
-</section>
-<section id="by-name" class="level3" data-number="7.2">
-<h3 data-number="7.2" class="anchored" data-anchor-id="by-name"><span class="header-section-number">7.2</span> By name</h3>
-<p>We can also index by providing column names - this is a nice approach since when going back to read code, a column name is often more informative than a column index/number. Note that in this case the column name <code>a</code> is in quotes since it is a character string.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb70" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># all rows, the column "a"</span></span>
-<span id="cb70-2">small_df[,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"a"</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4</code></pre>
-</div>
-</div>
-<p>We can also use the dollar sign accessor <code>$</code> to extract an element in a data frame or list. In the case of a data frame, you are accessing a column (though you could be accessing something else if a different type of object). Note that when you type the name of a data frame, and then the $, R will prompt you with some possible column names.</p>
-<p><img src="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/autofill-dollarsign.png" class="img-fluid"></p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1">small_df<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>a</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 1 2 3 4</code></pre>
-</div>
-</div>
-<p>By using this syntax, you are turning your data frame into a vector. This may or may not be what you want to do, so just be aware.</p>
-<div class="callout callout-style-default callout-tip callout-titled" title="Accessing certain observations can also be performed using the `tidyverse` functions `select()` and `filter()`. If you don't know what I'm talking about simply ignore this, we will go over it in a future Code Club.">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Accessing certain observations can also be performed using the <code>tidyverse</code> functions <code>select()</code> and <code>filter()</code>. If you don’t know what I’m talking about simply ignore this, we will go over it in a future Code Club.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-</section>
-</section>
-<section id="practice-1" class="level2" data-number="8">
-<h2 data-number="8" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">8</span> Practice</h2>
-<div class="callout callout-style-default callout-note callout-titled" title="Create a new data frame and assign it to the variable df. Give is 5 columns and 3 rows, and add some numbers in each of the cells, it doesn't matter what they are.">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Create a new data frame and assign it to the variable df. Give is 5 columns and 3 rows, and add some numbers in each of the cells, it doesn’t matter what they are.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-8" class="callout-8-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># i'm just using different ways to creating strings of numbers </span></span>
-<span id="cb74-2">df <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col_1 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>),</span>
-<span id="cb74-3">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col_2 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">seq</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">from =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">to =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">by =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.5</span>),</span>
-<span id="cb74-4">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col_3 =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>,</span>
-<span id="cb74-5">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col_4 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rnorm</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">10</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">sd =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>),</span>
-<span id="cb74-6">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">col_5 =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">rep</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">times =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>))</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb75" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1">df</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  col_1 col_2 col_3     col_4 col_5
-1     2   5.0     4  8.706182     6
-2     3   7.5     5 13.453908     6
-3     4  10.0     6  7.366212     6</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="Multiply all of column 1 by column 2.">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Multiply all of column 1 by column 2.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Here are some different ways to do this.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb77" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1">df<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>col_1 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> df<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>col_2</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.0 22.5 40.0</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb79" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1">df[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>] <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> df[,<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.0 22.5 40.0</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb81" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1">df[,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"col_1"</span>] <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> df[,<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"col_2"</span>]</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 10.0 22.5 40.0</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="Create a sixth column that is the result of the addition of columns 3 and 4.">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Create a sixth column that is the result of the addition of columns 3 and 4.
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-10" class="callout-10-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb83" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1">col_6 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> df<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>col_3 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> df<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>col_4</span>
-<span id="cb83-2"></span>
-<span id="cb83-3">new_df <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(df,</span>
-<span id="cb83-4">                     col_6)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb84" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1">new_df</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  col_1 col_2 col_3     col_4 col_5    col_6
-1     2   5.0     4  8.706182     6 12.70618
-2     3   7.5     5 13.453908     6 18.45391
-3     4  10.0     6  7.366212     6 13.36621</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled" title="How does having NAs in a vector change the class of your vector?">
-<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-How does having NAs in a vector change the class of your vector?
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-11" class="callout-11-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<div class="cell">
-<div class="sourceCode cell-code" id="cb86" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb86-1">test_NA_1 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">NA</span>)</span>
-<span id="cb86-2"></span>
-<span id="cb86-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">class</span>(test_NA_1)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "numeric"</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb88" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb88-1">test_NA_2 <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">3</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">4</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"NA"</span>)</span>
-<span id="cb88-2"></span>
-<span id="cb88-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">class</span>(test_NA_2)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "character"</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-
-
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>r-basics</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E04_basics_04/index.html</guid>
-  <pubDate>Fri, 02 Feb 2024 05:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S07E04_basics_04/img/vector-vs-df.png" medium="image" type="image/png" height="119" width="144"/>
 </item>
 </channel>
 </rss>
