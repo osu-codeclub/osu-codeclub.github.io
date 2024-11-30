@@ -1,0 +1,111 @@
+---
+title: "My first GitHub document"
+author: "Jessica Cooperstone"
+date: "October 28, 2024"
+execute:
+  eval: false
+---
+
+# Load libraries
+
+Let's add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we've been going over in Code Club this semester.
+
+```{r}
+library(tidyverse)
+```
+
+# Download data
+
+Let's go back to what we started with this semester. Let's revisit data from [The World Factbook](https://www.cia.gov/the-world-factbook/), put together by the CIA to "provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities." I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.
+
+The data we are going to download can be found [here](https://www.cia.gov/the-world-factbook/field/population/country-comparison/), though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.
+
+```{r}
+download.file(
+  url = "https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv",
+  destfile = "factbook_download.csv"
+)
+```
+
+You should now see the file "factbook_download.csv" in your working directory.
+
+# Read in data
+
+We can read it in using the tidyverse function from the [`readr`](https://readr.tidyverse.org/index.html) package called [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html).
+
+```{r}
+# i've stored mine in a folder called data for organizational sake
+factbook <- read_csv("data/factbook_download.csv")
+```
+
+Let's look at our data.
+
+```{r, eval = FALSE}
+View(factbook)
+```
+
+# Wrangle
+
+Let's pull just the data for total population.
+
+```{r}
+factbook_pop <- factbook |> 
+  filter(`Series Name` == "Population, total")
+```
+
+And then we can look at it:
+
+```{r}
+head(factbook_pop)
+```
+
+```{r}
+glimpse(factbook_pop)
+```
+
+## Pivot
+
+Looks like our year columns are characters, let's convert them to be numeric, and in the process practice pivoting.
+
+```{r}
+factbook_pop_long <- factbook_pop |> 
+  pivot_longer(cols = starts_with("2"), # pick columns start with 2
+               names_to = "year", # take names to new col "year"
+               values_to = "pop") |> # values in cells to new col "pop"
+  mutate(year = parse_number(year)) |> # use mutate to remove extra year garbage
+  mutate(pop = as.numeric(pop)) # convert pop to be numeric
+
+glimpse(factbook_pop_long)
+```
+
+Now that we've cleaned that up, let's go back wide to calculate which country had the largest percent population growth from 2000 to 2015.
+
+Go wide! And let's clean up those column names at the same time.
+
+```{r}
+factbook_pop_wide <- factbook_pop_long |> 
+  pivot_wider(names_from = year, # go from long to wide data
+              values_from = pop) |> 
+  janitor::clean_names()
+```
+
+## Calculate percent population growth
+
+Let's now see which country had the largest percent population growth from 2000 to 2015.
+
+```{r}
+factbook_pop_wide |> 
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  mutate(perc_pop_growth = round(perc_pop_growth, digits = 1)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
+  slice_max(perc_pop_growth, n = 5) # pick top 5
+```
+
+And which country had the smallest percent population growth from 2000 to 2015.
+
+```{r}
+factbook_pop_wide |> 
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
+  slice_min(perc_pop_growth, n = 5) # pick lowest 5
+```

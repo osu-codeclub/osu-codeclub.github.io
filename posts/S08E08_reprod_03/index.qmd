@@ -1,0 +1,293 @@
+---
+title: "Reproducibility 3: More about Quarto"
+author:
+  - "Jessica Cooperstone"
+date: "2024-10-28"
+categories: [reproducibility, quarto]
+title-block-banner: false
+image: img/quarto-selfie.png
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+# A recap
+
+Last week we introduced Quarto, and using Quarto within RStudio. Next week, we will go over how to push our Quarto document to Github.
+
+![Artwork by [\@allison_horst](https://twitter.com/allison_horst)](img/quarto-gazing.png)
+
+Open up the `.Rproj` you are using for Code Club. We can open up a new Quarto document by going to `File` \> `New File` \> `Quarto Document`.
+
+::: callout-important
+Does everyone have an `.Rproj` set up? We are going to need this for next week! 
+:::
+
+Let's add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we've been going over in Code Club this semester.
+
+```{r}
+library(tidyverse)
+```
+
+Let's go back to what we started with this semester. Let's revisit data from [The World Factbook](https://www.cia.gov/the-world-factbook/), put together by the CIA to "provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities." I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.
+
+The data we are going to download can be found [here](https://www.cia.gov/the-world-factbook/field/population/country-comparison/), though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.
+
+```{r, eval = FALSE}
+download.file(
+  url = "https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv",
+  destfile = "factbook_download.csv"
+)
+```
+
+You should now see the file "factbook_download.csv" in your working directory.
+
+We can read it in using the tidyverse function from the [`readr`](https://readr.tidyverse.org/index.html) package called [`read_csv()`](https://readr.tidyverse.org/reference/read_delim.html).
+
+```{r}
+# i've stored mine in a folder called data for organizational sake
+factbook <- read_csv("data/factbook_download.csv")
+```
+
+Let's look at our data.
+
+```{r, eval = FALSE}
+View(factbook)
+```
+
+Let's pull just the data for total population.
+
+```{r}
+factbook_pop <- factbook |> 
+  filter(`Series Name` == "Population, total")
+```
+
+And then we can look at it:
+```{r, eval = FALSE}
+head(factbook_pop)
+```
+
+```{r, echo = FALSE}
+knitr::kable(head(factbook_pop))
+```
+
+```{r}
+glimpse(factbook_pop)
+```
+
+
+Looks like our year columns are characters, let's convert them to be numeric, and in the process practice pivoting.
+
+```{r}
+factbook_pop_long <- factbook_pop |> 
+  pivot_longer(cols = starts_with("2"), # pick columns start with 2
+               names_to = "year", # take names to new col "year"
+               values_to = "pop") |> # values in cells to new col "pop"
+  mutate(year = parse_number(year)) |> # use mutate to remove extra year garbage
+  mutate(pop = as.numeric(pop)) # convert pop to be numeric
+```
+
+Now that we've cleaned that up, let's go back wide to calculate which country had the largest percent population growth from 2000 to 2015.
+
+Go wide! And let's clean up those column names at the same time.
+```{r}
+factbook_pop_wide <- factbook_pop_long |> 
+  pivot_wider(names_from = year, # go from long to wide data
+              values_from = pop) |> 
+  janitor::clean_names()
+```
+
+Let's now see which country had the largest percent population growth from 2000 to 2015.
+```{r}
+factbook_pop_wide |> 
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
+  slice_max(perc_pop_growth, n = 5) # pick top 5
+```
+
+```{r}
+factbook_pop_wide |> 
+  mutate(perc_pop_growth = ((x2015 - x2000)/x2000 * 100)) |> 
+  select(country_name, perc_pop_growth, x2000, x2015) |> # pull only the columns we want
+  slice_min(perc_pop_growth, n = 5) # pick lowest 5
+```
+
+Now that we have some stuff, we can now see how making changes to our Quarto document affects the output.
+
+Remember, there are three parts of a Quarto document:
+
+-   The YAML (rhymes with camel) header
+-   Text
+-   Code
+
+# YAML
+
+Horacio talked last week about the YAML. The YAML is where you can set the content that will show up on the top of your knitted document, as well as control how your document is rendered.
+
+The YAML is surrounded by three dashes `---`.
+
+Here's a simple example:
+
+``` yaml
+---
+title: "This is my descriptive title"
+author: "Jessica Cooperstone"
+date: "October 28, 2024"
+format: html
+editor: visual 
+---
+```
+
+But we can make some changes to arguments we pass to our YAML that will adjust how our resulting report looks. For example, the code below will add a table of contents, and number the sections according to the header levels we set.
+
+``` yaml
+---
+title: "My document"
+format:
+  html: # set parameters under the html category
+    toc: true # add a table of contents
+    number-sections: true # incremental numbering of sections
+    
+---
+```
+
+Let's look at what our options are for rendering to `.html` [here](https://quarto.org/docs/output-formats/html-basics.html).
+
+## Rendering to other formats
+
+We've been practicing by rendering to a `.html`file, but you can render your `.qmd` document to other formats, including PDFs, Microsoft Word, Markdown, and a special one that we will talk about in the coming weeks called Github (or Github Flavored Markdown (GFM)). [Here](https://github.com/CooperstoneLab/tomato-liver-omics/blob/main/metabolomics/Dzakovich_MouseLiverMetabolomics_20221211_githubdoc.md) is an example of what some code that comes from my team that you push to Github could look like, and could serve as supplementary material for a paper, for example.
+
+You can see all the different formats you can render a Quarto document to [here](https://quarto.org/docs/output-formats/all-formats.html).
+
+## Themes
+
+You can also change the theming of your document to make it look very pretty. Quarto comes with some complete themes, which we can look at here with [Bootswatch](https://bootswatch.com/). You can see the full list of complete themes [here](https://quarto.org/docs/output-formats/html-themes.html).
+
+This website for example, uses the theme `flatly` (and `darkly` if you are a dark mode afficionado). The Quarto website uses the theme `cosmo`.
+
+You can set your theme in your YAML like this:
+
+``` yaml
+---
+title: "My document"
+format:
+  html: # set parameters under the html category
+    theme: litera
+---
+```
+
+## Practice
+
+1.  Try adding a theme to your `.qmd`
+2.  Add a new parameter to your YAML - you can pick one from [here](https://quarto.org/docs/reference/formats/html.html) and see how that goes.
+
+# Text
+
+Unlike an R script (`.R`), where R by default interprets anything as code (and material that isn't code needed to be commented out by using `#`), in an Quarto, the *default is text* (and code exists only within code chunks or backticks).
+
+The text portion of the document is written in a language called [Markdown](https://pandoc.org/MANUAL.html#pandocs-markdown). The philosophy of Markdown is that it is easy to both write and read. If you want to learn more about markup languages I'd recommend the this [brief explanation by Michael Broe from a past Code Club Session](https://biodash.github.io/codeclub/s02e03_rmarkdown/#i-markdown) and the [Markup language wikipedia page](https://en.m.wikipedia.org/wiki/Markup_language).
+
+Below I'm compiling some commonly used markdown syntax.
+
+```{r syntax, fig.alt = "A list of the commonly used markdown syntax.", fig.cap= "Figure from [R Markdown Reference Guide](https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf?_ga=2.18808953.1342527773.1652110638-1577376121.1638478125)", fig.align = "center", out.width = "120%", echo = FALSE}
+knitr::include_graphics("img/syntax.png")
+```
+
+# Code
+
+Like Horacio taught us last week, Code chunks are sections of your Quarto document designated for executing code. To insert a new code chunk, you can:
+
+1.  Use the keyboard shortcut `Cmd` + `Option` + `I` (Mac) or `Ctrl` + `Alt` + `I` (Windows).
+2.  Type ```` ```{r} ```` to start the chunk and ```` ``` ```` to end it, placing your code in between.
+3.  Use the "Add Chunk" command from the editor toolbar and select R.
+
+Code chunks appear as follows:
+
+![](img/chunk-screenshot.png){fig-align="center"}
+
+You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.
+
+-   The gear icon allows you to modify chunk options, which we will discuss in more detail later.
+-   The triangle with a line below it executes all code chunks that precede the current one.
+-   The play button runs the current chunk.
+
+::: callout-warning
+When you render your Quarto document, the process will execute all the code within it. This means that if your code contains errors or doesn't function properly, your document **will not be rendered**.
+:::
+
+## Code chunk options
+
+We can set different options for our code chunks to adjust if/how they are run. Here are some that we can set.
+
+-   `echo: FALSE` runs your code chunk, displays output, but does not display code in your final doc (this is useful if you want to show a figure but not the code used to create it)
+-   `eval: FALSE` does not run your code, but does display it in your final doc
+-   `include: FALSE` runs your code but does not display the code or its output in your final doc
+-   `message: FALSE` prevents messages from showing up in your final doc
+-   `warning: FALSE` prevents earnings from showing up in your final doc
+-   `fig.height: X` and `fig.width: Y` will allow you to specify the dimensions of your figures (in inches)
+-   `fig.align:` can be set to "left", "right", or "center"
+-   `fig.cap: "Your figure caption"` will allow you to set a figure caption
+-   `fig.alt: "Your alt text"` will allow you to set alt text for screen readers
+-   `cache: TRUE` will cache results, meaning if you have a chunk that takes a long time to run, if you haven't changed anything and you knit again, the code won't run again but access the cache.
+
+You can find a long list of code chunk options [here](https://quarto.org/docs/reference/cells/cells-knitr.html#code-output).
+
+We can set the code chunk options 3 ways:
+
+1. by using the syntax `|#` within the chunk, like this:
+
+``` r
+{r}
+#| echo: TRUE 
+#| warning: FALSE
+```
+
+2. by clicking on the gear icon in the top right corner of a code chunk.
+
+![](img/chunk-screenshot.png){fig-align="center"}
+
+3. within the `{r}` of a chunk
+
+``` r
+{r, echo = TRUE, fig.width = 6}
+
+```
+
+The options can be very useful to get your document to render exactly how you want it.
+
+## Practice
+
+1.  Try adjusting your code chunk options and see how that affects the rendering of your document.
+2.  Notice what gets printed after you load the tidyverse with `library(tidyverse)` - can you get that to go away?
+
+## Prep for next week
+
+We are going to render our `.qmd` file to GitHub Flavored Markdown (GFM) to prepare to push it to GitHub next week. Let's do that by adjusting our YAML and rendering our document.
+
+``` yaml
+---
+title: "My first GitHub document"
+author: "Jessica Cooperstone"
+date: "October 28, 2024"
+format: gfm
+---
+```
+
+# Other things you can make with Quarto
+
+We have focused  on using Quarto to store and annotate code, and create reports based on that information. But, there is lots more you can do with Quarto, including:
+
+-   Websites: we have a [whole series of Code Club sessions](https://osu-codeclub.github.io/#category=website) on making a website with Quarto. This website is made with Quarto! 
+-   Presentations: you can make pretty nice looking presentations, here's a [Code Club session on the basics of making presentations](https://osu-codeclub.github.io/#category=quarto%20presentations)
+-   [Books](https://quarto.org/docs/books/)
+-   [Manuscripts](https://quarto.org/docs/manuscripts/)
+-   [Dashboards](https://quarto.org/docs/dashboards/)
+-   and [more](https://quarto.org/docs/guide/)
