@@ -1688,572 +1688,6 @@ font-style: inherit;">---</span></span></code></pre></div>
   <media:content url="https://osu-codeclub.github.io/posts/S08E08_reprod_03/img/quarto-selfie.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 <item>
-  <title>My first GitHub document</title>
-  <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S08E10_reprod_05/factbook_20241028.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="load-libraries" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Load libraries</h1>
-<p>Let’s add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we’ve been going over in Code Club this semester.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
-</div>
-</section>
-<section id="download-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Download data</h1>
-<p>Let’s go back to what we started with this semester. Let’s revisit data from <a href="https://www.cia.gov/the-world-factbook/">The World Factbook</a>, put together by the CIA to “provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities.” I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.</p>
-<p>The data we are going to download can be found <a href="https://www.cia.gov/the-world-factbook/field/population/country-comparison/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">download.file</span>(</span>
-<span id="cb2-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">url =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv"</span>,</span>
-<span id="cb2-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"factbook_download.csv"</span></span>
-<span id="cb2-4">)</span></code></pre></div>
-</div>
-<p>You should now see the file “factbook_download.csv” in your working directory.</p>
-</section>
-<section id="read-in-data" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Read in data</h1>
-<p>We can read it in using the tidyverse function from the <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> package called <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># i've stored mine in a folder called data for organizational sake</span></span>
-<span id="cb3-2">factbook <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/factbook_download.csv"</span>)</span></code></pre></div>
-</div>
-<p>Let’s look at our data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">View</span>(factbook)</span></code></pre></div>
-</div>
-</section>
-<section id="wrangle" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Wrangle</h1>
-<p>Let’s pull just the data for total population.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">factbook_pop <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb5-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Series Name</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population, total"</span>)</span></code></pre></div>
-</div>
-<p>And then we can look at it:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(factbook_pop)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(factbook_pop)</span></code></pre></div>
-</div>
-<section id="pivot" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="pivot"><span class="header-section-number">4.1</span> Pivot</h2>
-<p>Looks like our year columns are characters, let’s convert them to be numeric, and in the process practice pivoting.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">factbook_pop_long <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook_pop <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb8-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2"</span>), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick columns start with 2</span></span>
-<span id="cb8-3">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"year"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># take names to new col "year"</span></span>
-<span id="cb8-4">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pop"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># values in cells to new col "pop"</span></span>
-<span id="cb8-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">parse_number</span>(year)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># use mutate to remove extra year garbage</span></span>
-<span id="cb8-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pop =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(pop)) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># convert pop to be numeric</span></span>
-<span id="cb8-7"></span>
-<span id="cb8-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(factbook_pop_long)</span></code></pre></div>
-</div>
-<p>Now that we’ve cleaned that up, let’s go back wide to calculate which country had the largest percent population growth from 2000 to 2015.</p>
-<p>Go wide! And let’s clean up those column names at the same time.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">factbook_pop_wide <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook_pop_long <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb9-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_from =</span> year, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># go from long to wide data</span></span>
-<span id="cb9-3">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values_from =</span> pop) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb9-4">  janitor<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">clean_names</span>()</span></code></pre></div>
-</div>
-</section>
-<section id="calculate-percent-population-growth" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="calculate-percent-population-growth"><span class="header-section-number">4.2</span> Calculate percent population growth</h2>
-<p>Let’s now see which country had the largest percent population growth from 2000 to 2015.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">digits =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pull only the columns we want</span></span>
-<span id="cb10-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">slice_max</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick top 5</span></span></code></pre></div>
-</div>
-<p>And which country had the smallest percent population growth from 2000 to 2015.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb11-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pull only the columns we want</span></span>
-<span id="cb11-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">slice_min</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick lowest 5</span></span></code></pre></div>
-</div>
-
-
-</section>
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <guid>https://osu-codeclub.github.io/posts/S08E10_reprod_05/factbook_20241028.html</guid>
-  <pubDate>Mon, 28 Oct 2024 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>My first GitHub document</title>
-  <dc:creator>Jessica Cooperstone</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S08E09_reprod_04/factbook_20241028.html</link>
-  <description><![CDATA[ 
-
-
-
-
-
-<section id="load-libraries" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Load libraries</h1>
-<p>Let’s add some material to our document so we can better see what our resulting documents will look like. This will also give us an opportunity to practice some of what we’ve been going over in Code Club this semester.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
-</div>
-</section>
-<section id="download-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Download data</h1>
-<p>Let’s go back to what we started with this semester. Let’s revisit data from <a href="https://www.cia.gov/the-world-factbook/">The World Factbook</a>, put together by the CIA to “provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities.” I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.</p>
-<p>The data we are going to download can be found <a href="https://www.cia.gov/the-world-factbook/field/population/country-comparison/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it. This is a little bit different than the data we started with which included only info from 2015. This dataset includes many more years.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">download.file</span>(</span>
-<span id="cb2-2">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">url =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv"</span>,</span>
-<span id="cb2-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"factbook_download.csv"</span></span>
-<span id="cb2-4">)</span></code></pre></div>
-</div>
-<p>You should now see the file “factbook_download.csv” in your working directory.</p>
-</section>
-<section id="read-in-data" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Read in data</h1>
-<p>We can read it in using the tidyverse function from the <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> package called <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># i've stored mine in a folder called data for organizational sake</span></span>
-<span id="cb3-2">factbook <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/factbook_download.csv"</span>)</span></code></pre></div>
-</div>
-<p>Let’s look at our data.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">View</span>(factbook)</span></code></pre></div>
-</div>
-</section>
-<section id="wrangle" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Wrangle</h1>
-<p>Let’s pull just the data for total population.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">factbook_pop <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb5-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span><span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">Series Name</span><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">`</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Population, total"</span>)</span></code></pre></div>
-</div>
-<p>And then we can look at it:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">head</span>(factbook_pop)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(factbook_pop)</span></code></pre></div>
-</div>
-<section id="pivot" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="pivot"><span class="header-section-number">4.1</span> Pivot</h2>
-<p>Looks like our year columns are characters, let’s convert them to be numeric, and in the process practice pivoting.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">factbook_pop_long <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook_pop <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb8-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_longer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">starts_with</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"2"</span>), <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick columns start with 2</span></span>
-<span id="cb8-3">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_to =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"year"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># take names to new col "year"</span></span>
-<span id="cb8-4">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values_to =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"pop"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># values in cells to new col "pop"</span></span>
-<span id="cb8-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">year =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">parse_number</span>(year)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># use mutate to remove extra year garbage</span></span>
-<span id="cb8-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">pop =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">as.numeric</span>(pop)) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># convert pop to be numeric</span></span>
-<span id="cb8-7"></span>
-<span id="cb8-8"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(factbook_pop_long)</span></code></pre></div>
-</div>
-<p>Now that we’ve cleaned that up, let’s go back wide to calculate which country had the largest percent population growth from 2000 to 2015.</p>
-<p>Go wide! And let’s clean up those column names at the same time.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1">factbook_pop_wide <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> factbook_pop_long <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb9-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pivot_wider</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">names_from =</span> year, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># go from long to wide data</span></span>
-<span id="cb9-3">              <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values_from =</span> pop) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb9-4">  janitor<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">clean_names</span>()</span></code></pre></div>
-</div>
-</section>
-<section id="calculate-percent-population-growth" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="calculate-percent-population-growth"><span class="header-section-number">4.2</span> Calculate percent population growth</h2>
-<p>Let’s now see which country had the largest percent population growth from 2000 to 2015.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">digits =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb10-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pull only the columns we want</span></span>
-<span id="cb10-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">slice_max</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick top 5</span></span></code></pre></div>
-</div>
-<p>And which country had the smallest percent population growth from 2000 to 2015.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">factbook_pop_wide <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb11-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">perc_pop_growth =</span> ((x2015 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> x2000)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>x2000 <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">select</span>(country_name, perc_pop_growth, x2000, x2015) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pull only the columns we want</span></span>
-<span id="cb11-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">slice_min</span>(perc_pop_growth, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">n =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pick lowest 5</span></span></code></pre></div>
-</div>
-
-
-</section>
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <guid>https://osu-codeclub.github.io/posts/S08E09_reprod_04/factbook_20241028.html</guid>
-  <pubDate>Mon, 28 Oct 2024 04:00:00 GMT</pubDate>
-</item>
-<item>
   <title>Reproducibility 2: Introduction to Quarto</title>
   <dc:creator>Horacio Lopez-Nicora</dc:creator>
   <link>https://osu-codeclub.github.io/posts/S08E07_reprod_02/</link>
@@ -15791,6 +15225,1891 @@ font-style: inherit;">by =</span> color)</span></code></pre></div>
   <guid>https://osu-codeclub.github.io/posts/S07E08_tidy_03/</guid>
   <pubDate>Fri, 01 Mar 2024 05:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E08_tidy_03/img/dplyr.jpeg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Tidyverse 2: More dplyr Data Wrangling</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<p><br></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:75.0%"></p>
+</figure>
+</div>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="recap-of-last-week" class="level4">
+<h4 class="anchored" data-anchor-id="recap-of-last-week">Recap of last week</h4>
+<p>Last week, Jess introduced us to to the <em>tidyverse</em>, a collection of packages to facilitate doing data science with R, including data manipulation and visualization.</p>
+<p>We saw two general properties of the tidyverse: that it has a strong focus on <strong>data frames</strong> and that operations are usually connected using the <strong>“pipe” (<code>|&gt;</code>) operator</strong>.</p>
+<p>We also learned about two key functions from the tidyverse’s <em>dplyr</em> package:</p>
+<ul>
+<li><strong><code>filter()</code></strong> to pick rows (which typically represent observations/samples/individuals)</li>
+<li><strong><code>select()</code></strong> to pick columns (which typically represent variables/properties)</li>
+</ul>
+</section>
+<section id="learning-objectives-for-today" class="level4">
+<h4 class="anchored" data-anchor-id="learning-objectives-for-today">Learning objectives for today</h4>
+<p>We will continue learning about <em>dplyr</em>:</p>
+<ul>
+<li>An overview of key <em>dplyr</em> functionality</li>
+<li>Sorting data frame rows with <code>arrange()</code></li>
+<li>Renaming data frame columns with <code>rename()</code></li>
+<li>Adding and manipulating data frame columns with <code>mutate()</code></li>
+</ul>
+<p>Like last week, we will practice with the <code>diamonds</code> dataframe that is automatically loaded along with the tidyverse.</p>
+</section>
+<section id="setting-up" class="level4">
+<h4 class="anchored" data-anchor-id="setting-up">Setting up</h4>
+<p>Load the tidyverse:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.3     ✔ readr     2.1.4
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.2     ✔ tidyr     1.3.0
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Still need to install the tidyverse? <em>Click here for instructions</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+</section>
+<section id="overview-of-key-dplyr-functionality" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="overview-of-key-dplyr-functionality"><span class="header-section-number">2</span> Overview of key <em>dplyr</em> functionality</h2>
+<p>Functions from the <a href="https://dplyr.tidyverse.org/index.html"><em>dplyr</em> package</a> have the following <strong>commonalities</strong>:</p>
+<ul>
+<li>The first argument is always a data frame (this makes them pipe-friendly)</li>
+<li>Subsequent arguments typically describe which columns to operate on</li>
+<li>The output is always a data frame</li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+<p>Key functions for <strong>row-wise</strong> operations include:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/reference/filter.html"><code>filter()</code></a> — picks rows based on values in one or more columns <em>(last week)</em></li>
+<li><a href="https://dplyr.tidyverse.org/reference/arrange.html"><code>arrange()</code></a> — orders rows based on values in selected columns <em>(this week)</em></li>
+</ul>
+<p>Key functions for <strong>column-wise</strong> operations include:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/reference/select.html"><code>select()</code></a> — picks columns <em>(last week)</em></li>
+<li><a href="https://dplyr.tidyverse.org/reference/rename.html"><code>rename</code>()</a> — changes column names <em>(this week)</em></li>
+<li><a href="https://dplyr.tidyverse.org/reference/mutate.html"><code>mutate()</code></a> — creates new columns and changes the values of columns <em>(this week)</em></li>
+</ul>
+<p>Key functions for <strong>groups of rows</strong> include:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/reference/summarise.html"><code>summarise()</code></a> — collapses a group into a single row with the purpose of summarizing data</li>
+</ul>
+<p>Finally, there are functions to <strong>combine multiple data frames</strong> (joins, with for example <code>inner_join()</code>).</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>This week, we will cover the remaining functions listed above for row- and column-wise operations. In subsequent sessions, we will cover the more complex summarizing and joining functions.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+The <em>tidyr</em> package contains additional data wrangling functions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a separate core tidyverse package (<em>tidyr</em>) with closely related functions that can “reshape” (“pivot”) data frames between wider and longer formats — we will also cover those in a later dedicated Code Club session.</p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="sorting-with-arrange" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="sorting-with-arrange"><span class="header-section-number">3</span> Sorting with <code>arrange()</code></h2>
+<p>The <code>arrange()</code> function is like the sort function in Excel: it changes the order of the rows based on the values in one or more columns. For example, you might want to sort entries by their cost or size, or by their names in alphabetical order.</p>
+<p>We’ll see a first example using the <code>diamonds</code> data frame. Keep in mind that in this data frame, each row represents a single diamond, and the columns provide different pieces of information about a diamond:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Note the initial order in the 'carat' column:</span></span>
+<span id="cb4-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(diamonds)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 10
+  carat cut       color clarity depth table price     x     y     z
+  &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43
+2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31
+3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31
+4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63
+5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75
+6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48</code></pre>
+</div>
+</div>
+<p>Therefore, sorting this data frame means rearranging the order of the diamonds based on their properties — in the example below, based on the carat of the diamond:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Now, we'll sort by the values in the 'carat' column:</span></span>
+<span id="cb6-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb6-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(carat)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1   0.2 Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+ 2   0.2 Premium   E     VS2      59.8    62   367  3.79  3.77  2.26
+ 3   0.2 Premium   E     VS2      59      60   367  3.81  3.78  2.24
+ 4   0.2 Premium   E     VS2      61.1    59   367  3.81  3.78  2.32
+ 5   0.2 Premium   E     VS2      59.7    62   367  3.84  3.8   2.28
+ 6   0.2 Ideal     E     VS2      59.7    55   367  3.86  3.84  2.3 
+ 7   0.2 Premium   F     VS2      62.6    59   367  3.73  3.71  2.33
+ 8   0.2 Ideal     D     VS2      61.5    57   367  3.81  3.77  2.33
+ 9   0.2 Very Good E     VS2      63.4    59   367  3.74  3.71  2.36
+10   0.2 Ideal     E     VS2      62.2    57   367  3.76  3.73  2.33
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>As you can see, there are many rows with the same, smallest value of <code>carat</code>, so we may be interested in <strong>sorting by an additional column</strong>, which will break the ties in our first sorting column:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Sort first by carat, then by cut:</span></span>
+<span id="cb8-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb8-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(carat, cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1   0.2 Very Good E     VS2      63.4    59   367  3.74  3.71  2.36
+ 2   0.2 Premium   E     SI2      60.2    62   345  3.79  3.75  2.27
+ 3   0.2 Premium   E     VS2      59.8    62   367  3.79  3.77  2.26
+ 4   0.2 Premium   E     VS2      59      60   367  3.81  3.78  2.24
+ 5   0.2 Premium   E     VS2      61.1    59   367  3.81  3.78  2.32
+ 6   0.2 Premium   E     VS2      59.7    62   367  3.84  3.8   2.28
+ 7   0.2 Premium   F     VS2      62.6    59   367  3.73  3.71  2.33
+ 8   0.2 Premium   D     VS2      62.3    60   367  3.73  3.68  2.31
+ 9   0.2 Premium   D     VS2      61.7    60   367  3.77  3.72  2.31
+10   0.2 Ideal     E     VS2      59.7    55   367  3.86  3.84  2.3 
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<details>
+<summary>
+<strong>Question:</strong> Does the resulting order of entries in the <code>cut</code> column make sense to you? If not, what might be going on? <em>(Click to see the solution)</em>
+</summary>
+<p>Clearly, the order is not alphabetical, but it could be so in <em>descending</em> order — though this is not in fact the case.</p>
+<p>As we briefly saw last week, the <code>cut</code> column (as well as the <code>color</code> and <code>clarity</code> columns) are of the “ordered factor” type: therefore, when we sort by this column, the order as initially defined by whoever created this data frame will be respected:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(diamonds<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>[1] Ideal     Premium   Good      Premium   Good      Very Good
+Levels: Fair &lt; Good &lt; Very Good &lt; Premium &lt; Ideal</code></pre>
+</div>
+</div>
+<p>This also implies that there are no 0.2-carat (the lowest value) diamonds with <code>Fair</code> or <code>Good</code> cuts, because the first-listed and therefore lowest cut was <code>Very Good</code>.</p>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<p>By default, the sorting is done in <em>ascending order</em> (small-to-big), as you probably expected. But of course we may sometimes want to sort in <strong>descending</strong> (big-to-small) order, which we can do with the <code>desc()</code> helper function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Sort first by carat, then by price:</span></span>
+<span id="cb12-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb12-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(carat))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  5.01 Fair      J     I1       65.5    59 18018 10.7  10.5   6.98
+ 2  4.5  Fair      J     I1       65.8    58 18531 10.2  10.2   6.72
+ 3  4.13 Fair      H     I1       64.8    61 17329 10     9.85  6.43
+ 4  4.01 Premium   I     I1       61      61 15223 10.1  10.1   6.17
+ 5  4.01 Premium   J     I1       62.5    62 15223 10.0   9.94  6.24
+ 6  4    Very Good I     I1       63.3    58 15984 10.0   9.94  6.31
+ 7  3.67 Premium   I     I1       62.4    56 16193  9.86  9.81  6.13
+ 8  3.65 Fair      H     I1       67.1    53 11668  9.53  9.48  6.38
+ 9  3.51 Premium   J     VS2      62.5    59 18701  9.66  9.63  6.03
+10  3.5  Ideal     H     I1       62.8    57 12587  9.65  9.59  6.03
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Saving the output?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the examples above, and in all of today’s examples and exercises, we are simply <em>printing</em> the output data frame. This means that we are leaving the original data frame <code>diamonds</code> <strong>unchanged</strong> and that we are not storing our results elsewhere either.</p>
+<p>Recall that you can assign to a new dataframe as one way to store your results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">diamonds_sorted <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(carat)</span></code></pre></div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="renaming-columns-with-rename-and-select" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="renaming-columns-with-rename-and-select"><span class="header-section-number">4</span> Renaming columns with <code>rename()</code> (and <code>select()</code>)</h2>
+<p>It is pretty common that you are not happy with the names of columns in your data frame and want to rename one or more. This can be done with the <code>rename()</code> function, which uses the syntax <code>&lt;new-name&gt; = &lt;old-name&gt;</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Below, we rename the 'x' column to 'length', and the 'y' column to 'width':</span></span>
+<span id="cb15-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb15-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length =</span> x, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> y)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price length width     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326   3.95  3.98  2.43
+ 2  0.21 Premium   E     SI1      59.8    61   326   3.89  3.84  2.31
+ 3  0.23 Good      E     VS1      56.9    65   327   4.05  4.07  2.31
+ 4  0.29 Premium   I     VS2      62.4    58   334   4.2   4.23  2.63
+ 5  0.31 Good      J     SI2      63.3    58   335   4.34  4.35  2.75
+ 6  0.24 Very Good J     VVS2     62.8    57   336   3.94  3.96  2.48
+ 7  0.24 Very Good I     VVS1     62.3    57   336   3.95  3.98  2.47
+ 8  0.26 Very Good H     SI1      61.9    55   337   4.07  4.11  2.53
+ 9  0.22 Fair      E     VS2      65.1    61   337   3.87  3.78  2.49
+10  0.23 Very Good H     VS1      59.4    61   338   4     4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>As an aside, it is also possible rename the columns that you pick with the <code>select()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length =</span> x, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> y, z)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 3
+   length width     z
+    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1   3.95  3.98  2.43
+ 2   3.89  3.84  2.31
+ 3   4.05  4.07  2.31
+ 4   4.2   4.23  2.63
+ 5   4.34  4.35  2.75
+ 6   3.94  3.96  2.48
+ 7   3.95  3.98  2.47
+ 8   4.07  4.11  2.53
+ 9   3.87  3.78  2.49
+10   4     4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Need to rename many columns?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If your data frame has many columns that need to be renamed, the <a href="https://sfirke.github.io/janitor/reference/clean_names.html"><strong><code>janitor::clean_names()</code></strong></a> function provides automated column name cleaning that can be extremely handy.</p>
+<p>For example, you might read in an Excel sheet with 20 columms, many of which have spaces in their names, and some of which have other special characters like <code>%</code> or <code>&amp;</code>. Those kinds of column names don’t play well with R, and <code>clean_names()</code> would automatically replace such characters with (by default) underscores (<code>_</code>).</p>
+<p>You can try this function in the last Bonus exercise.</p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-i" class="level2 exercise" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="exercises-i"><span class="header-section-number">5</span> Exercises I</h2>
+<section id="renaming" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="renaming"><span class="header-section-number">5.1</span> Renaming</h3>
+<p>Above, we renamed the cryptically named <code>x</code> and <code>y</code> columns, but there’s a third single-letter column name: <strong><code>z</code></strong>.</p>
+<ol type="1">
+<li><p>Check the help for this data frame by typing <code>?diamonds</code>, and figure out what the <code>z</code> column represents.</p></li>
+<li><p>Rename the <code>z</code> column to give it a more descriptive name like we did above for <code>x</code> and <code>y</code>. <em>(You may run into a problem here! If so, try to understand and resolve it.)</em></p></li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<ol type="1">
+<li><strong>The <code>z</code> column represents the depth of the diamond in mm:</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">?diamonds</span></code></pre></div>
+</div>
+<pre class="bash-out"><code># The output will include:
+
+z
+    depth in mm (0–31.8)
+
+depth
+    total depth percentage = z / mean(x, y) = 2 * z / (x + y) (43–79)</code></pre>
+<hr style="height:1pt; visibility:hidden;">
+<ol start="2" type="1">
+<li><strong>So let’s try to rename it to <code>depth</code>:</strong></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb21-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth =</span> z)</span></code></pre></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error in `rename()`:
+! Names must be unique.
+✖ These names are duplicated:
+  * "depth" at locations 5 and 10.</code></pre>
+</div>
+</div>
+<p>Ouch! That didn’t work, because a column named <code>depth</code> already exists, and <strong>column names must be unique</strong>. That other depth column is the diamond’s “total depth percentage” rather than the raw depth.</p>
+<p>There’s no one right way to resolve this (and of course one option would be to refrain from renaming <code>z</code> altogether), but we could for example use <code>depth_mm</code> etc. notations for these columns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb23-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_mm =</span> x, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width_mm =</span> y, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth_mm =</span> z)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price length_mm width_mm depth_mm
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326      3.95     3.98     2.43
+ 2  0.21 Premium   E     SI1      59.8    61   326      3.89     3.84     2.31
+ 3  0.23 Good      E     VS1      56.9    65   327      4.05     4.07     2.31
+ 4  0.29 Premium   I     VS2      62.4    58   334      4.2      4.23     2.63
+ 5  0.31 Good      J     SI2      63.3    58   335      4.34     4.35     2.75
+ 6  0.24 Very Good J     VVS2     62.8    57   336      3.94     3.96     2.48
+ 7  0.24 Very Good I     VVS1     62.3    57   336      3.95     3.98     2.47
+ 8  0.26 Very Good H     SI1      61.9    55   337      4.07     4.11     2.53
+ 9  0.22 Fair      E     VS2      65.1    61   337      3.87     3.78     2.49
+10  0.23 Very Good H     VS1      59.4    61   338      4        4.05     2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="arranging" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="arranging"><span class="header-section-number">5.2</span> Arranging</h3>
+<p>See the prices (and other properties) of the <em>most expensive diamonds</em> in the data frame by using the <code>arrange()</code> function like we did above.</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>To see the most expensive (highest-priced) diamond first, we’ll have to arrange by the <code>price</code> column in descending order:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb25-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(price))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  2.29 Premium   I     VS2      60.8    60 18823  8.5   8.47  5.16
+ 2  2    Very Good G     SI1      63.5    56 18818  7.9   7.97  5.04
+ 3  1.51 Ideal     G     IF       61.7    55 18806  7.37  7.41  4.56
+ 4  2.07 Ideal     G     SI2      62.5    55 18804  8.2   8.13  5.11
+ 5  2    Very Good H     SI1      62.8    57 18803  7.95  8     5.01
+ 6  2.29 Premium   I     SI1      61.8    59 18797  8.52  8.45  5.24
+ 7  2.04 Premium   H     SI1      58.1    60 18795  8.37  8.28  4.84
+ 8  2    Premium   I     VS1      60.8    59 18795  8.13  8.02  4.91
+ 9  1.71 Premium   F     VS2      62.3    59 18791  7.57  7.53  4.7 
+10  2.15 Ideal     G     SI2      62.6    54 18791  8.29  8.35  5.21
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<p><br></p>
+<section id="manipulating-with-mutate" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="manipulating-with-mutate"><span class="header-section-number">6</span> Manipulating with <code>mutate()</code></h2>
+<p>Let’s take a look at the official <code>mutate()</code> documentation figure (😛):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/arrange.png" class="img-fluid figure-img" style="width:75.0%"></p>
+<figcaption>Illustration by Allison Horst</figcaption>
+</figure>
+</div>
+<p>It says “<em>add column(s), keep existing</em>” and shows that a third column, <code>C</code>, is being added to a data frame.</p>
+<details>
+<summary>
+What do the values in column <code>C</code> appear to represent (compare with <code>A</code> and <code>B</code>)? <em>(Click for the solution)</em>
+</summary>
+<p>Column <code>C</code> appears to be columns <code>A</code> + <code>B</code>, e.g in the first row, <code>1</code> + <code>2</code> = <code>3</code>.</p>
+</details>
+<p>Let’s try to do something similar –creating a new column that is based on the values of other columns– with diamond dimensions. We’ll add a column named <code>volume</code> that is generated by multiplying the length, width, and depth columns:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (I'm first using select just to limit the output that is printed)</span></span>
+<span id="cb27-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb27-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(x, y, z) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb27-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">volume =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> z)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 4
+       x     y     z volume
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+ 1  3.95  3.98  2.43   38.2
+ 2  3.89  3.84  2.31   34.5
+ 3  4.05  4.07  2.31   38.1
+ 4  4.2   4.23  2.63   46.7
+ 5  4.34  4.35  2.75   51.9
+ 6  3.94  3.96  2.48   38.7
+ 7  3.95  3.98  2.47   38.8
+ 8  4.07  4.11  2.53   42.3
+ 9  3.87  3.78  2.49   36.4
+10  4     4.05  2.39   38.7
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>As you could see in above examples, the operation is executed in a (vectorized) <strong>row-wise fashion</strong>: the <code>volume</code> that we see in the first row was created by multiplying <code>x</code>, <code>y</code> and <code>z</code> in the first row, and so on.</p>
+<p>Also note that the new column created by <code>mutate()</code> is (by default) added as the <em>last</em> column.</p>
+<hr style="height:1pt; visibility:hidden;">
+<hr>
+<p>Instead of creating a new column with <code>mutate()</code>, it is also possible to simply <strong>change the values in a column</strong> (without creating a new column) by assigning back to the same column name. For example, say that we wanted diamond length to be in cm <em>instead of</em> in mm:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb29-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(x, y, z) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb29-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 3
+       x     y     z
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 0.395  3.98  2.43
+ 2 0.389  3.84  2.31
+ 3 0.405  4.07  2.31
+ 4 0.42   4.23  2.63
+ 5 0.434  4.35  2.75
+ 6 0.394  3.96  2.48
+ 7 0.395  3.98  2.47
+ 8 0.407  4.11  2.53
+ 9 0.387  3.78  2.49
+10 0.4    4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="exercises-ii" class="level2 exercise" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="exercises-ii"><span class="header-section-number">7</span> Exercises II</h2>
+<section id="more-unit-conversion" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="more-unit-conversion"><span class="header-section-number">7.1</span> More unit conversion</h3>
+<p>Above, we converted the diamond lengths (column <code>x</code>) from mm to cm.</p>
+<ul>
+<li>Expand on that code to convert all three dimension columns (<code>x</code>, <code>y</code>, and, <code>z</code>).</li>
+<li>Also give the converted columns names that indicate the measurements are in cm.</li>
+</ul>
+<details>
+<summary>
+<b>Solution so far</b> (click here)
+</summary>
+<p>Several naming schemes are reasonable, but I will use <code>length_cm</code> etc:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb31-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_cm =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb31-3">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width_cm =</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb31-4">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth_cm =</span> z <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 13
+   carat cut       color clarity depth table price     x     y     z length_cm
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326  3.95  3.98  2.43     0.395
+ 2  0.21 Premium   E     SI1      59.8    61   326  3.89  3.84  2.31     0.389
+ 3  0.23 Good      E     VS1      56.9    65   327  4.05  4.07  2.31     0.405
+ 4  0.29 Premium   I     VS2      62.4    58   334  4.2   4.23  2.63     0.42 
+ 5  0.31 Good      J     SI2      63.3    58   335  4.34  4.35  2.75     0.434
+ 6  0.24 Very Good J     VVS2     62.8    57   336  3.94  3.96  2.48     0.394
+ 7  0.24 Very Good I     VVS1     62.3    57   336  3.95  3.98  2.47     0.395
+ 8  0.26 Very Good H     SI1      61.9    55   337  4.07  4.11  2.53     0.407
+ 9  0.22 Fair      E     VS2      65.1    61   337  3.87  3.78  2.49     0.387
+10  0.23 Very Good H     VS1      59.4    61   338  4     4.05  2.39     0.4  
+# ℹ 53,930 more rows
+# ℹ 2 more variables: width_cm &lt;dbl&gt;, depth_cm &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+<ul>
+<li>Next, expand your “pipeline” to either remove the columns with mm measurements, or rename the original <code>x</code>, <code>y</code>, and <code>z</code> columns to clarify that those are in mm.</li>
+</ul>
+<details>
+<summary>
+<b>Hint: how to remove specific columns with <code>select()</code></b> (click here)
+</summary>
+<p>If you just want to remove one or a few columns from a data frame with many columns, you’d want to be able to directly mark them for removal (rather than listing all columns you want to keep), which you can do as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># This will remove the carat and cut columns:</span></span>
+<span id="cb33-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb33-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>carat, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>cut)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 8
+   color clarity depth table price     x     y     z
+   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 E     SI2      61.5    55   326  3.95  3.98  2.43
+ 2 E     SI1      59.8    61   326  3.89  3.84  2.31
+ 3 E     VS1      56.9    65   327  4.05  4.07  2.31
+ 4 I     VS2      62.4    58   334  4.2   4.23  2.63
+ 5 J     SI2      63.3    58   335  4.34  4.35  2.75
+ 6 J     VVS2     62.8    57   336  3.94  3.96  2.48
+ 7 I     VVS1     62.3    57   336  3.95  3.98  2.47
+ 8 H     SI1      61.9    55   337  4.07  4.11  2.53
+ 9 E     VS2      65.1    61   337  3.87  3.78  2.49
+10 H     VS1      59.4    61   338  4     4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+</details>
+<details>
+<summary>
+<b>Full solution</b> (click here)
+</summary>
+<ul>
+<li>Option 1 — remove the columns with mm measurements:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (Note that the final 2 added columns are hidden in the output!)</span></span>
+<span id="cb35-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb35-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_cm =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb35-4">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width_cm =</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb35-5">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth_cm =</span> z <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb35-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>x, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>y, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span>z)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 10
+   carat cut       color clarity depth table price length_cm width_cm depth_cm
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326     0.395    0.398    0.243
+ 2  0.21 Premium   E     SI1      59.8    61   326     0.389    0.384    0.231
+ 3  0.23 Good      E     VS1      56.9    65   327     0.405    0.407    0.231
+ 4  0.29 Premium   I     VS2      62.4    58   334     0.42     0.423    0.263
+ 5  0.31 Good      J     SI2      63.3    58   335     0.434    0.435    0.275
+ 6  0.24 Very Good J     VVS2     62.8    57   336     0.394    0.396    0.248
+ 7  0.24 Very Good I     VVS1     62.3    57   336     0.395    0.398    0.247
+ 8  0.26 Very Good H     SI1      61.9    55   337     0.407    0.411    0.253
+ 9  0.22 Fair      E     VS2      65.1    61   337     0.387    0.378    0.249
+10  0.23 Very Good H     VS1      59.4    61   338     0.4      0.405    0.239
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<ul>
+<li>Option 2 — also keep the cm columns, but rename them:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb37-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_cm =</span> x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb37-3">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width_cm =</span> y <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>,</span>
+<span id="cb37-4">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth_cm =</span> z <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb37-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rename</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">length_mm =</span> x,</span>
+<span id="cb37-6">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width_mm =</span> y,</span>
+<span id="cb37-7">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">depth_mm =</span> z)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 53,940 × 13
+   carat cut       color clarity depth table price length_mm width_mm depth_mm
+   &lt;dbl&gt; &lt;ord&gt;     &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;    &lt;dbl&gt;    &lt;dbl&gt;
+ 1  0.23 Ideal     E     SI2      61.5    55   326      3.95     3.98     2.43
+ 2  0.21 Premium   E     SI1      59.8    61   326      3.89     3.84     2.31
+ 3  0.23 Good      E     VS1      56.9    65   327      4.05     4.07     2.31
+ 4  0.29 Premium   I     VS2      62.4    58   334      4.2      4.23     2.63
+ 5  0.31 Good      J     SI2      63.3    58   335      4.34     4.35     2.75
+ 6  0.24 Very Good J     VVS2     62.8    57   336      3.94     3.96     2.48
+ 7  0.24 Very Good I     VVS1     62.3    57   336      3.95     3.98     2.47
+ 8  0.26 Very Good H     SI1      61.9    55   337      4.07     4.11     2.53
+ 9  0.22 Fair      E     VS2      65.1    61   337      3.87     3.78     2.49
+10  0.23 Very Good H     VS1      59.4    61   338      4        4.05     2.39
+# ℹ 53,930 more rows
+# ℹ 3 more variables: length_cm &lt;dbl&gt;, width_cm &lt;dbl&gt;, depth_cm &lt;dbl&gt;</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="price-per-carat" class="level3" data-number="7.2">
+<h3 data-number="7.2" class="anchored" data-anchor-id="price-per-carat"><span class="header-section-number">7.2</span> Price per carat</h3>
+<p>Include the following steps in a single “pipeline”:</p>
+<ol type="1">
+<li>Add a new column with the price per carat, rounded to whole dollars.</li>
+<li>Sort by price per carat in descending order</li>
+<li>Only keep diamonds with a price per carat above $5,000.</li>
+</ol>
+<p>What is the highest price per carat, and how many diamonds are you left with?</p>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<p>We are left with 13,115 rows and the highest price per carat is $17,829:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb39-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">price_per_carat =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">round</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span> carat)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb39-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">arrange</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">desc</span>(price_per_carat)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb39-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price_per_carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5000</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 13,115 × 11
+   carat cut   color clarity depth table price     x     y     z price_per_carat
+   &lt;dbl&gt; &lt;ord&gt; &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;           &lt;dbl&gt;
+ 1  1.04 Very… D     IF       61.3    56 18542  6.53  6.55  4.01           17829
+ 2  1.07 Prem… D     IF       60.9    58 18279  6.67  6.57  4.03           17083
+ 3  1.03 Ideal D     IF       62      56 17590  6.55  6.44  4.03           17078
+ 4  1.07 Very… D     IF       60.9    58 18114  6.57  6.67  4.03           16929
+ 5  1.02 Very… D     IF       61.7    59 17100  6.42  6.52  3.99           16765
+ 6  1.07 Very… D     IF       59      59 17909  6.63  6.72  3.94           16737
+ 7  1.09 Very… D     IF       61.7    58 18231  6.55  6.65  4.07           16726
+ 8  1    Ideal D     IF       60.7    57 16469  6.44  6.48  3.92           16469
+ 9  1    Very… D     IF       63.3    59 16073  6.37  6.33  4.02           16073
+10  1.01 Prem… D     IF       61.6    56 16234  6.46  6.43  3.97           16073
+# ℹ 13,105 more rows</code></pre>
+</div>
+</div>
+</details>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="bonus-renaming-columns-with-janitorclean_names" class="level3" data-number="7.3">
+<h3 data-number="7.3" class="anchored" data-anchor-id="bonus-renaming-columns-with-janitorclean_names"><span class="header-section-number">7.3</span> Bonus: Renaming columns with <code>janitor::clean_names()</code></h3>
+<ol type="1">
+<li>Install and then load the package <em>janitor</em>.</li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<ul>
+<li>Install:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"janitor"</span>)</span></code></pre></div>
+</div>
+<ul>
+<li>Load:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(janitor)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+</div>
+</details>
+<ol start="2" type="1">
+<li>Run the following code to create a “tibble” (tidyverse-style dataframe) with poor column names:</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># (The backticks ` around the column names are necessary to assign such unwieldy names)</span></span>
+<span id="cb45-2">sale_stats <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">tibble</span>(</span>
+<span id="cb45-3">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Abbreviated ID</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"DZ"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"GA"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"PT"</span>),</span>
+<span id="cb45-4">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">% Sold</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">62</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">98</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">18</span>),</span>
+<span id="cb45-5">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Nr Stored</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">372</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">13</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">175</span>),</span>
+<span id="cb45-6">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">Lost&amp;Found</span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">`</span> <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>)</span>
+<span id="cb45-7">)</span></code></pre></div>
+</div>
+<ol start="3" type="1">
+<li>Print the <code>sale_stats</code> data frame and take a look at how the column names are shown.</li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">sale_stats</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 4
+  `Abbreviated ID` `% Sold` `Nr Stored` `Lost&amp;Found`
+  &lt;chr&gt;               &lt;dbl&gt;       &lt;dbl&gt;        &lt;dbl&gt;
+1 DZ                     62         372            0
+2 GA                     98          13            0
+3 PT                     18         175            2</code></pre>
+</div>
+</div>
+</details>
+<ol start="4" type="1">
+<li>Run the <code>clean_names()</code> function on the <code>sale_stats</code> data frame. (It will take a data frame as its first argument and return a dataframe, much like the dplyr functions we’ve seen). Take a close look at the output — can you spot at least 3 types of changes that it made?</li>
+</ol>
+<details>
+<summary>
+<b>Solution</b> (click here)
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1">sale_stats <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">clean_names</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 3 × 4
+  abbreviated_id percent_sold nr_stored lost_found
+  &lt;chr&gt;                 &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 DZ                       62       372          0
+2 GA                       98        13          0
+3 PT                       18       175          2</code></pre>
+</div>
+</div>
+<p>Or equivalently (output not shown):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">clean_names</span>(sale_stats)</span></code></pre></div>
+</div>
+<p>The <code>clean_names()</code> function made the following changes to the column names:</p>
+<ul>
+<li>Spaces were converted to underscores</li>
+<li>The <code>&amp;</code> was converted to an underscore</li>
+<li>The <code>%</code> was converted to <code>percent</code> (!)</li>
+<li>Uppercase (capital) letters were converted to lowercase</li>
+</ul>
+</details>
+</section>
+</section>
+
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>r-basics</category>
+  <category>tidyverse</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E07_tidy_02/</guid>
+  <pubDate>Fri, 23 Feb 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E07_tidy_02/img/run.jpeg" medium="image" type="image/jpeg"/>
+</item>
+<item>
+  <title>Tidyverse 1: Introduction to the tidyverse</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>We are going to introduce a new package and series of functions today that are designed for data science.</p>
+</section>
+<section id="what-is-the-tidyverse" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="what-is-the-tidyverse"><span class="header-section-number">2</span> What is the <code>tidyverse</code>?</h2>
+<p><a href="https://www.tidyverse.org/">“The tidyverse”</a> is a collection of packages called that are designed for data science. You can certainly use R without using the tidyverse, but it has many packages that I think will make your life a lot easier. We will be using mostly tidyverse functions in this class, with some base R syntax scattered throughout.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" class="img-fluid figure-img"></p>
+<figcaption>Figure from <a href="https://teachdatascience.com/tidyverse/">teachdatascience.com</a></figcaption>
+</figure>
+</div>
+<p>The “core tidyverse” contains the 8 packages below:</p>
+<ul>
+<li><a href="https://dplyr.tidyverse.org/"><code>dplyr</code></a>: for data manipulation</li>
+<li><a href="https://ggplot2.tidyverse.org/"><code>ggplot2</code></a>: a “grammar of graphics” for creating beautiful plots</li>
+<li><a href="https://readr.tidyverse.org/"><code>readr</code></a>: for reading in rectangular data (i.e., Excel-style formatting)</li>
+<li><a href="https://tibble.tidyverse.org/"><code>tibble</code></a>: using tibbles as modern/better dataframes</li>
+<li><a href="https://stringr.tidyverse.org/"><code>stringr</code></a>: handling strings (i.e., text or stuff in quotes)</li>
+<li><a href="https://forcats.tidyverse.org/"><code>forcats</code></a>: for handling categorical variables (i.e., factors) (meow!)</li>
+<li><a href="https://tidyr.tidyverse.org/"><code>tidyr</code></a>: to make “tidy data”</li>
+<li><a href="https://purrr.tidyverse.org/"><code>purrr</code></a>: for enhancing functional programming (also meow!)</li>
+</ul>
+<p>We will be using many of these other packages in Code Club and we will talk about them as we go. There are more tidyverse packages outside of these core eight, and we will talk about some of them another time.</p>
+<blockquote class="blockquote">
+<p><strong>tl;dr</strong> Tidyverse has a lot of packages that make data analysis easier. None of them are required, but I think you’ll find many tidyverse approaches easier and more intuitive than using base R.</p>
+</blockquote>
+</section>
+<section id="installing-new-packages" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="installing-new-packages"><span class="header-section-number">3</span> Installing new packages</h2>
+<p>So far, we have used only functions and data that exist within “base R” - or the portion of R that comes with the default install. R is an open source language, meaning people all around the world can develop tools that can be used within R. These tools are always evolving, and there are way too many of them for them to all come pre-downloaded.</p>
+<p>These tools mostly live within something called a “package”. You can think about a package as a unit of code that can be shared and reused. These packages can include both functions and data. A person (or team) can create a package, make that available for download, and then anyone can use it.</p>
+<p>To install packages in R that are on the <a href="https://cran.r-project.org/">Comprehensive R Archive Network (CRAN)</a>, you can use the function <code>install.packages()</code>. There are packages that are not on CRAN but we are not going to talk about them today. Be sure that you provide the name of your packages as a string, and put it in quotes.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+</div>
+</section>
+<section id="loading-packages" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="loading-packages"><span class="header-section-number">4</span> Loading packages</h2>
+<p>Once you have downloaded a package, you now have it, you can think about it as a book that you now own. When you want to read the book, you don’t need to go buy it again, you need to simply take it off your shelf and open it. Using the function <a href="https://www.rdocumentation.org/packages/base/versions/3.6.2/topics/library"><code>library()</code></a> takes your package from where it is stored on the “shelf” in your computer, and opens it. I hope this is an ok metaphor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>It’s a good habit to not ignore warnings/messages that R gives you.</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="What does this warning mean?">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What does this warning mean?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<blockquote class="blockquote">
+<p>We only need to install packages once. But, every time we want to use them, we need to “load” them, and can do this using the function <code>library()</code>.</p>
+</blockquote>
+</section>
+<section id="practice" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="practice"><span class="header-section-number">5</span> Practice</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Please install the tidyverse and then load it.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Please install the tidyverse and then load it.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># it doesn't matter here if you put tidyverse in quotes or not</span></span>
+<span id="cb5-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># without quotes will work since you can think about it as an object</span></span>
+<span id="cb5-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># that already exists (and not just a string of characters)</span></span>
+<span id="cb5-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># works</span></span>
+<span id="cb5-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># also works</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="data-for-today" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="data-for-today"><span class="header-section-number">6</span> Data for today</h2>
+<p>In addition to having functions, packages also can contain data. Within the <code>tidyverse</code> package, there is a bunch of embedded data we can use to play around with.</p>
+<p>If you type the function <code>data()</code> and then place your cursor between the parentheses and hit tab, you will see what pre-loaded data in R you have access to.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">data</span>()</span></code></pre></div>
+</div>
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/data.png" class="img-fluid"></p>
+<p>Today we are going to use a dataset called <code>diamonds</code> that is embedded within the package <code>ggplot</code> (which we have since it gets automatically installed when we load the <code>tidyverse</code>).</p>
+<p>Let’s learn about <code>diamonds</code> using some of the functions <a href="https://osu-codeclub.github.io/posts/basics_04/#what-is-a-data-frame">we learned already</a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">str</span>(diamonds)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tibble [53,940 × 10] (S3: tbl_df/tbl/data.frame)
+ $ carat  : num [1:53940] 0.23 0.21 0.23 0.29 0.31 0.24 0.24 0.26 0.22 0.23 ...
+ $ cut    : Ord.factor w/ 5 levels "Fair"&lt;"Good"&lt;..: 5 4 2 4 2 3 3 3 1 3 ...
+ $ color  : Ord.factor w/ 7 levels "D"&lt;"E"&lt;"F"&lt;"G"&lt;..: 2 2 2 6 7 7 6 5 2 5 ...
+ $ clarity: Ord.factor w/ 8 levels "I1"&lt;"SI2"&lt;"SI1"&lt;..: 2 3 5 4 2 6 7 3 4 5 ...
+ $ depth  : num [1:53940] 61.5 59.8 56.9 62.4 63.3 62.8 62.3 61.9 65.1 59.4 ...
+ $ table  : num [1:53940] 55 61 65 58 58 57 57 55 61 61 ...
+ $ price  : int [1:53940] 326 326 327 334 335 336 336 337 337 338 ...
+ $ x      : num [1:53940] 3.95 3.89 4.05 4.2 4.34 3.94 3.95 4.07 3.87 4 ...
+ $ y      : num [1:53940] 3.98 3.84 4.07 4.23 4.35 3.96 3.98 4.11 3.78 4.05 ...
+ $ z      : num [1:53940] 2.43 2.31 2.31 2.63 2.75 2.48 2.47 2.53 2.49 2.39 ...</code></pre>
+</div>
+</div>
+<p>Tidyverse has a version of <code>str()</code> called <a href="https://dplyr.tidyverse.org/reference/glimpse.html"><code>glimpse()</code></a> which does a similar thing but tries to show you more data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(diamonds)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 53,940
+Columns: 10
+$ carat   &lt;dbl&gt; 0.23, 0.21, 0.23, 0.29, 0.31, 0.24, 0.24, 0.26, 0.22, 0.23, 0.…
+$ cut     &lt;ord&gt; Ideal, Premium, Good, Premium, Good, Very Good, Very Good, Ver…
+$ color   &lt;ord&gt; E, E, E, I, J, J, I, H, E, H, J, J, F, J, E, E, I, J, J, J, I,…
+$ clarity &lt;ord&gt; SI2, SI1, VS1, VS2, SI2, VVS2, VVS1, SI1, VS2, VS1, SI1, VS1, …
+$ depth   &lt;dbl&gt; 61.5, 59.8, 56.9, 62.4, 63.3, 62.8, 62.3, 61.9, 65.1, 59.4, 64…
+$ table   &lt;dbl&gt; 55, 61, 65, 58, 58, 57, 57, 55, 61, 61, 55, 56, 61, 54, 62, 58…
+$ price   &lt;int&gt; 326, 326, 327, 334, 335, 336, 336, 337, 337, 338, 339, 340, 34…
+$ x       &lt;dbl&gt; 3.95, 3.89, 4.05, 4.20, 4.34, 3.94, 3.95, 4.07, 3.87, 4.00, 4.…
+$ y       &lt;dbl&gt; 3.98, 3.84, 4.07, 4.23, 4.35, 3.96, 3.98, 4.11, 3.78, 4.05, 4.…
+$ z       &lt;dbl&gt; 2.43, 2.31, 2.31, 2.63, 2.75, 2.48, 2.47, 2.53, 2.49, 2.39, 2.…</code></pre>
+</div>
+</div>
+<blockquote class="blockquote">
+<p>Note that we do <strong>not</strong> see diamonds as an object in our enrivonrment, even though clearly it’s there.</p>
+</blockquote>
+</section>
+<section id="the-pipe-or" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="the-pipe-or"><span class="header-section-number">7</span> The pipe <code>|&gt;</code> or <code>%&gt;%</code></h2>
+<p><a href="https://r4ds.had.co.nz/pipes.html">The pipe</a> <code>|&gt;</code> or <code>%&gt;%</code> is a tool that allows you to take the output of one function, and send it to the next function.</p>
+<p>You can read the pipe as “and then” - here is a theoretical example.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">take_this_data <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb11-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">then_this_function</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb11-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">then_another_function</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb11-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">finally_a_last_function</span>()</span></code></pre></div>
+</div>
+<p>The easiest way to see how the pipe works is with an example. We are going to go over some examples in a minute.</p>
+<p>Some reasons I like the pipe:</p>
+<ul>
+<li>its easier to read (and doesn’t have a lot of nested parentheses)</li>
+<li>it doesn’t require you to create lots of interim objects which you won’t use again</li>
+<li>its easy to troubleshoot</li>
+</ul>
+<blockquote class="blockquote">
+<p>The keyboard shortcut for <code>|&gt;</code> is <code>Ctrl/Cmd</code> + <code>Shift</code> + <code>M</code></p>
+</blockquote>
+<p>We can change our R options so that the newer version of the pipe <code>|&gt;</code> is used over the older one <code>%&gt;%</code> when we use the keyboard shortcut. I try and remember to use the new one but it doesn’t always happen, so do be familiar with both.</p>
+<p>You can go to <code>Tools</code> &gt; <code>Global Options</code> &gt; <code>Code</code> and make sure the tick mark is checked next to “Use the native pipe operator, |&gt; (requires R 4.1+).</p>
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/pipe-options.png" class="img-fluid"></p>
+<p>Of course you can assign the output of a pipe to something using the assignment operator <code>&lt;-</code> and then use it for other things.</p>
+<p>Ssome functions are not “pipe friendly” meaning they will not work using pipes. This is often because the data is not the first argument passed to the function. All tidyverse functions work with piping.</p>
+</section>
+<section id="selecting-columns-with-select" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="selecting-columns-with-select"><span class="header-section-number">8</span> Selecting columns with <code>select()</code></h2>
+<p>Often you will want to pick only certain columns in your dataframe, and you can do this with the function <a href="https://dplyr.tidyverse.org/reference/select.html"><code>select()</code></a>. You can pick columns by:</p>
+<ul>
+<li>their names</li>
+<li>their position (i.e., index)</li>
+<li>characteristics of that column</li>
+</ul>
+<p>If we want to know how the arguments to <code>select()</code> work, we can access the documentation material about the function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1">?<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>()</span></code></pre></div>
+</div>
+<p>The arguments to <code>select()</code> are:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(.data, ...)</span></code></pre></div>
+</div>
+<p>This tells us that <code>select()</code> accepts a data frame (that’s good, <code>diamonds</code> is one), and we can pass many other expressions.</p>
+<p>Let’s select first by name.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.data =</span> diamonds, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># our df</span></span>
+<span id="cb14-2">       carat, cut, price) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the columns we want to pull</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53,940 × 3
+   carat cut       price
+   &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt;
+ 1  0.23 Ideal       326
+ 2  0.21 Premium     326
+ 3  0.23 Good        327
+ 4  0.29 Premium     334
+ 5  0.31 Good        335
+ 6  0.24 Very Good   336
+ 7  0.24 Very Good   336
+ 8  0.26 Very Good   337
+ 9  0.22 Fair        337
+10  0.23 Very Good   338
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>Or, we could more simply use the pipe <code>|&gt;</code> or <code>%&gt;%</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb16-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(carat, cut, price)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53,940 × 3
+   carat cut       price
+   &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt;
+ 1  0.23 Ideal       326
+ 2  0.21 Premium     326
+ 3  0.23 Good        327
+ 4  0.29 Premium     334
+ 5  0.31 Good        335
+ 6  0.24 Very Good   336
+ 7  0.24 Very Good   336
+ 8  0.26 Very Good   337
+ 9  0.22 Fair        337
+10  0.23 Very Good   338
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>We can read this as, take the dataset diamonds, then select the columns carat, cut, and price. That was pretty easy to read!</p>
+<p>Note that when you use the pipe, the potential column names will auto-fill for you after you type 3 letters. You should use this option as it will help prevent misspellings. You can also hit <code>tab</code> to scroll through all the potential objects to select.</p>
+<p>We can also select by index. In general I would recommend against this because its really hard to remember which column indices are which variables today, nevermind returning back to old code 1 year from now. Still I will show you how.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb18-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">7</span>)) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># you could also use the colon syntax if your columns are sequential</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53,940 × 3
+   carat cut       price
+   &lt;dbl&gt; &lt;ord&gt;     &lt;int&gt;
+ 1  0.23 Ideal       326
+ 2  0.21 Premium     326
+ 3  0.23 Good        327
+ 4  0.29 Premium     334
+ 5  0.31 Good        335
+ 6  0.24 Very Good   336
+ 7  0.24 Very Good   336
+ 8  0.26 Very Good   337
+ 9  0.22 Fair        337
+10  0.23 Very Good   338
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>You can also select using selection helpers like:</p>
+<ul>
+<li><a href="https://tidyselect.r-lib.org/reference/everything.html"><code>everything()</code></a>: picks all variables</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>starts_with()</code></a>: starts with some prefix</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>contains()</code></a>: contains a specific string</li>
+<li><a href="https://tidyselect.r-lib.org/reference/where.html"><code>where()</code></a>: selects columns where the statement given in the argument is TRUE</li>
+</ul>
+<p>Here is an example of using <code>where()</code> to select only the columns that are numeric. The function <code>where()</code> asks whether the following function is TRUE or FALSE, and keeps only the occurences that evaluate to TRUE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">where</span>(is.numeric))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 53,940 × 7
+   carat depth table price     x     y     z
+   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.23  61.5    55   326  3.95  3.98  2.43
+ 2  0.21  59.8    61   326  3.89  3.84  2.31
+ 3  0.23  56.9    65   327  4.05  4.07  2.31
+ 4  0.29  62.4    58   334  4.2   4.23  2.63
+ 5  0.31  63.3    58   335  4.34  4.35  2.75
+ 6  0.24  62.8    57   336  3.94  3.96  2.48
+ 7  0.24  62.3    57   336  3.95  3.98  2.47
+ 8  0.26  61.9    55   337  4.07  4.11  2.53
+ 9  0.22  65.1    61   337  3.87  3.78  2.49
+10  0.23  59.4    61   338  4     4.05  2.39
+# ℹ 53,930 more rows</code></pre>
+</div>
+</div>
+<p>You can find more helpers <a href="https://dplyr.tidyverse.org/reference/select.html">here</a>.</p>
+<p>Using <code>select()</code> will also set the order of your columns. More about this in practice.</p>
+</section>
+<section id="choosing-observations-with-filter" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="choosing-observations-with-filter"><span class="header-section-number">9</span> Choosing observations with <code>filter()</code></h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/filter.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Sometimes you want to select observations (rows) based on values. To do this you use <a href="https://dplyr.tidyverse.org/reference/filter.html"><code>filter()</code></a>. Try not to confuse this with <code>select()</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="`select()` picks columns, while `filter()` picks rows.">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>select()</code> picks columns, while <code>filter()</code> picks rows.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p>The function <code>filter()</code> will keep only observations that meet your filtering criteria.</p>
+<p>Let’s say we want to only keep the diamonds that are bigger than 3 carats.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># without the pipe</span></span>
+<span id="cb22-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># i find this harder to read</span></span>
+<span id="cb22-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.data =</span> diamonds, </span>
+<span id="cb22-4">       carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  3.01 Premium I     I1       62.7    58  8040  9.1   8.97  5.67
+ 2  3.11 Fair    J     I1       65.9    57  9823  9.15  9.02  5.98
+ 3  3.01 Premium F     I1       62.2    56  9925  9.24  9.13  5.73
+ 4  3.05 Premium E     I1       60.9    58 10453  9.26  9.25  5.66
+ 5  3.02 Fair    I     I1       65.2    56 10577  9.11  9.02  5.91
+ 6  3.01 Fair    H     I1       56.1    62 10761  9.54  9.38  5.31
+ 7  3.65 Fair    H     I1       67.1    53 11668  9.53  9.48  6.38
+ 8  3.24 Premium H     I1       62.1    58 12300  9.44  9.4   5.85
+ 9  3.22 Ideal   I     I1       62.6    55 12545  9.49  9.42  5.92
+10  3.5  Ideal   H     I1       62.8    57 12587  9.65  9.59  6.03
+# ℹ 22 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the pipe/my preferred way</span></span>
+<span id="cb24-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb24-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 32 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  3.01 Premium I     I1       62.7    58  8040  9.1   8.97  5.67
+ 2  3.11 Fair    J     I1       65.9    57  9823  9.15  9.02  5.98
+ 3  3.01 Premium F     I1       62.2    56  9925  9.24  9.13  5.73
+ 4  3.05 Premium E     I1       60.9    58 10453  9.26  9.25  5.66
+ 5  3.02 Fair    I     I1       65.2    56 10577  9.11  9.02  5.91
+ 6  3.01 Fair    H     I1       56.1    62 10761  9.54  9.38  5.31
+ 7  3.65 Fair    H     I1       67.1    53 11668  9.53  9.48  6.38
+ 8  3.24 Premium H     I1       62.1    58 12300  9.44  9.4   5.85
+ 9  3.22 Ideal   I     I1       62.6    55 12545  9.49  9.42  5.92
+10  3.5  Ideal   H     I1       62.8    57 12587  9.65  9.59  6.03
+# ℹ 22 more rows</code></pre>
+</div>
+</div>
+<p>Here I made use of the greater than <code>&gt;</code> sign, and there are other operators you could also use to help you filter.</p>
+<ul>
+<li><code>==</code>: equal to (I usually read this as exactly equal to, and is different than using an equal sign in an equation)</li>
+<li><code>&lt;</code>, <code>&gt;</code>: less than or greater than</li>
+<li><code>&lt;=</code>, <code>&gt;=</code>: less than or equal to, great than or equal to</li>
+<li><code>&amp;</code>: and</li>
+<li><code>|</code>: or</li>
+<li><code>!</code>: not equal</li>
+<li><code>is.na</code>: is NA</li>
+</ul>
+<p>You can also layer your filtering. This can include in both an AND or OR fashion.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># include diamonds that are bigger than 3 carats and a Premium cut</span></span>
+<span id="cb26-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb26-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&amp;</span> cut <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Premium"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  3.01 Premium I     I1       62.7    58  8040  9.1   8.97  5.67
+ 2  3.01 Premium F     I1       62.2    56  9925  9.24  9.13  5.73
+ 3  3.05 Premium E     I1       60.9    58 10453  9.26  9.25  5.66
+ 4  3.24 Premium H     I1       62.1    58 12300  9.44  9.4   5.85
+ 5  3.01 Premium G     SI2      59.8    58 14220  9.44  9.37  5.62
+ 6  4.01 Premium I     I1       61      61 15223 10.1  10.1   6.17
+ 7  4.01 Premium J     I1       62.5    62 15223 10.0   9.94  6.24
+ 8  3.67 Premium I     I1       62.4    56 16193  9.86  9.81  6.13
+ 9  3.01 Premium I     SI2      60.2    59 18242  9.36  9.31  5.62
+10  3.04 Premium I     SI2      59.3    60 18559  9.51  9.46  5.62
+11  3.51 Premium J     VS2      62.5    59 18701  9.66  9.63  6.03
+12  3.01 Premium J     SI2      60.7    59 18710  9.35  9.22  5.64
+13  3.01 Premium J     SI2      59.7    58 18710  9.41  9.32  5.59</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># include diamonds that are bigger than 3 carats OR a Premium cut</span></span>
+<span id="cb28-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># "|" (above the return key) is the symbol for "or"</span></span>
+<span id="cb28-3">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb28-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|</span> cut <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Premium"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13,810 × 10
+   carat cut     color clarity depth table price     x     y     z
+   &lt;dbl&gt; &lt;ord&gt;   &lt;ord&gt; &lt;ord&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1  0.21 Premium E     SI1      59.8    61   326  3.89  3.84  2.31
+ 2  0.29 Premium I     VS2      62.4    58   334  4.2   4.23  2.63
+ 3  0.22 Premium F     SI1      60.4    61   342  3.88  3.84  2.33
+ 4  0.2  Premium E     SI2      60.2    62   345  3.79  3.75  2.27
+ 5  0.32 Premium E     I1       60.9    58   345  4.38  4.42  2.68
+ 6  0.24 Premium I     VS1      62.5    57   355  3.97  3.94  2.47
+ 7  0.29 Premium F     SI1      62.4    58   403  4.24  4.26  2.65
+ 8  0.22 Premium E     VS2      61.6    58   404  3.93  3.89  2.41
+ 9  0.22 Premium D     VS2      59.3    62   404  3.91  3.88  2.31
+10  0.3  Premium J     SI2      59.3    61   405  4.43  4.38  2.61
+# ℹ 13,800 more rows</code></pre>
+</div>
+</div>
+<p>You can play around with combining these different operators to see what happens.</p>
+</section>
+<section id="practice-1" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">10</span> Practice</h2>
+<div class="callout callout-style-default callout-note callout-titled" title="Create a new dataframe called `small_diamonds` that includes only the diamonds that are less than 0.5 carats. How many diamonds does this include?">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Create a new dataframe called <code>small_diamonds</code> that includes only the diamonds that are less than 0.5 carats. How many diamonds does this include?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">small_diamonds <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb30-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>)</span>
+<span id="cb30-3"></span>
+<span id="cb30-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>(small_diamonds)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17674</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="Subset diamonds into a new df (`diamonds_subset`) so that it only includes diamonds less than $10,000, and only information for carat, cut, price, and color, in that specific order.">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Subset diamonds into a new df (<code>diamonds_subset</code>) so that it only includes diamonds less than $10,000, and only information for carat, cut, price, and color, in that specific order.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">diamonds_subset <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb32-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb32-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">select</span>(carat, cut, price, color) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># select both picks and orders!</span></span></code></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="What is the mean and standard deviation of carat of the diamonds that passed your critieria in `diamonds_subset`?">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What is the mean and standard deviation of carat of the diamonds that passed your critieria in <code>diamonds_subset</code>?
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Using the <code>$</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mean</span></span>
+<span id="cb33-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(diamonds_subset<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>carat)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6968262</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sd</span></span>
+<span id="cb35-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(diamonds_subset<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>carat)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3574645</code></pre>
+</div>
+</div>
+<p>Using the pipe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># mean another way</span></span>
+<span id="cb37-2">diamonds_subset <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb37-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pull</span>(carat) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this is necessary because mean requires a vector!</span></span>
+<span id="cb37-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6968262</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or you could go full pipe!</span></span>
+<span id="cb39-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb39-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb39-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pull</span>(carat) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb39-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.6968262</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># sd another way</span></span>
+<span id="cb41-2">diamonds_subset <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb41-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pull</span>(carat) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this is necessary because mean requires a vector!</span></span>
+<span id="cb41-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3574645</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># or you could go full pipe!</span></span>
+<span id="cb43-2">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb43-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb43-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">pull</span>(carat) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb43-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.3574645</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="How many diamonds in this dataset are both Ideal cut, less than $10,000, and bigger than 1.5 carats??">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+How many diamonds in this dataset are both Ideal cut, less than $10,000, and bigger than 1.5 carats??
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>When you are trying to filter using “and” and have more than 2 items, use a comma in between them.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">diamonds <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb45-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(price <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&lt;</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10000</span>, cut <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Ideal"</span>, carat <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">&gt;</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb45-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">nrow</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 327</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>r-basics</category>
+  <category>tidyverse</category>
+  <guid>https://osu-codeclub.github.io/posts/S07E06_tidy_01/</guid>
+  <pubDate>Fri, 16 Feb 2024 05:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S07E06_tidy_01/img/tidyverse-package-workflow.png" medium="image" type="image/png" height="78" width="144"/>
 </item>
 </channel>
 </rss>
