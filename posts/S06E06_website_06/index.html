@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2023-10-09">
+
+<title>OSU Code Club - Quarto website 6: Quarto features</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html" rel="" target="">
+ <span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html" rel="" target="">
+ <span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/other.html" rel="" target="">
+ <span class="menu-text">Other stuff</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-new-here" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">New here?</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-new-here">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html" rel="" target="">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/r_resources.html" rel="" target="">
+ <span class="dropdown-text">R resources for beginners</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#creating-a-document-for-practice" id="toc-creating-a-document-for-practice" class="nav-link" data-scroll-target="#creating-a-document-for-practice"><span class="header-section-number">1.1</span> Creating a document for practice</a></li>
+  </ul></li>
+  <li><a href="#sec-introduction" id="toc-sec-introduction" class="nav-link" data-scroll-target="#sec-introduction"><span class="header-section-number">2</span> Basic formatting</a>
+  <ul class="collapse">
+  <li><a href="#options-from-the-format-dropdown-menu" id="toc-options-from-the-format-dropdown-menu" class="nav-link" data-scroll-target="#options-from-the-format-dropdown-menu"><span class="header-section-number">2.1</span> Options from the “Format” dropdown menu</a></li>
+  <li><a href="#headers" id="toc-headers" class="nav-link" data-scroll-target="#headers"><span class="header-section-number">2.2</span> Headers</a></li>
+  <li><a href="#options-from-the-insert-dropdown" id="toc-options-from-the-insert-dropdown" class="nav-link" data-scroll-target="#options-from-the-insert-dropdown"><span class="header-section-number">2.3</span> Options from the “Insert” dropdown</a></li>
+  </ul></li>
+  <li><a href="#citations" id="toc-citations" class="nav-link" data-scroll-target="#citations"><span class="header-section-number">3</span> Citations</a></li>
+  <li><a href="#sec-chunks" id="toc-sec-chunks" class="nav-link" data-scroll-target="#sec-chunks"><span class="header-section-number">4</span> Code blocks and chunks</a></li>
+  <li><a href="#figures-and-tables" id="toc-figures-and-tables" class="nav-link" data-scroll-target="#figures-and-tables"><span class="header-section-number">5</span> Figures and Tables</a>
+  <ul class="collapse">
+  <li><a href="#figures-images" id="toc-figures-images" class="nav-link" data-scroll-target="#figures-images"><span class="header-section-number">5.1</span> Figures / images</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables"><span class="header-section-number">5.2</span> Tables</a></li>
+  </ul></li>
+  <li><a href="#other-options" id="toc-other-options" class="nav-link" data-scroll-target="#other-options"><span class="header-section-number">6</span> Other options</a>
+  <ul class="collapse">
+  <li><a href="#tabsets" id="toc-tabsets" class="nav-link" data-scroll-target="#tabsets"><span class="header-section-number">6.1</span> Tabsets</a></li>
+  <li><a href="#callouts" id="toc-callouts" class="nav-link" data-scroll-target="#callouts"><span class="header-section-number">6.2</span> Callouts</a></li>
+  <li><a href="#miscellaneous" id="toc-miscellaneous" class="nav-link" data-scroll-target="#miscellaneous"><span class="header-section-number">6.3</span> Miscellaneous</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S06E06_website_06/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Quarto website 6: Quarto features</h1>
+<p class="subtitle lead">Basic formatting, citations, code chunks, tabsets, callouts, and more.</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">website</div>
+    <div class="quarto-category">quarto</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jelmer Poelstra </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 9, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>The source documents for your website’s pages are in the Quarto (<code>.qmd</code>) format. Today, we will learn more about options to format Quarto documents, and to include code and its output.</p>
+<p>As we have mentioned before, <em>Quarto is a type of Markdown format</em> (and essentially the successor to “R Markdown”) with extensions such as:</p>
+<ul>
+<li><p>Making it possible to include executable <strong>code</strong> and its results. This code will typically be R code, but Quarto also supports Python, for instance.</p></li>
+<li><p>A more extensive set of <strong>built-in formatting options</strong>, like “callout boxes” and “tabsets”, which we’ll see today.</p></li>
+</ul>
+<p>Your website’s Quarto documents will all produce <strong>HTML</strong> output, and this is also the default (and generally preferred) output format for stand-alone Quarto documents, but it is also possible to output to <strong>Word</strong> and <strong>PDF</strong> formats.</p>
+<p>A common use case for stand-alone Quarto documents is a <strong>digital notebook or report</strong> that includes results produced by R code. If you use R to produce some results and/or figures that you need to share or compile with accompanying notes, then using Quarto to do so is a lot easier, more robust, and reproducible than copying and pasting figures into (e.g.) a Powerpoint document.</p>
+<p>Because it’s straightforward to make the output look polished, and because you can include citations too, it is also a good option for more <strong>formal reports</strong> and even <strong>manuscripts</strong>. As mentioned last week, you can also output a <strong>slide deck</strong>, and it is even possible to include these directly on your website since the output format for slides can be HTML.</p>
+<p>We will continue to use RStudio’s <strong>Visual Editor</strong>, and will basically make our way through the options in the bar that is right above your main editor window (but only when you’re in “Visual” mode):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/menu.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+<section id="creating-a-document-for-practice" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="creating-a-document-for-practice"><span class="header-section-number">1.1</span> Creating a document for practice</h3>
+<p>I will start by creating a new Quarto document to practice using these features. If you want to follow along:</p>
+<ul>
+<li>In RStudio, click “File” =&gt; “New File” =&gt; “Quarto Document”.</li>
+<li>Check the box “Use visual markdown editor”, and optionally add a Title and an Author.</li>
+</ul>
+<p><br></p>
+</section>
+</section>
+<section id="sec-introduction" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="sec-introduction"><span class="header-section-number">2</span> Basic formatting</h2>
+<section id="options-from-the-format-dropdown-menu" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="options-from-the-format-dropdown-menu"><span class="header-section-number">2.1</span> Options from the “Format” dropdown menu</h3>
+<p>The following options are available under the “Format” dropdown:</p>
+<ul>
+<li><p>“<strong>Code</strong>” formatting <code>looks like this</code> and can be used for e.g.&nbsp;code snippets, file names, and software names.</p></li>
+<li><p><strong>Bold</strong>, <em>italic</em>, <u>underlined</u>, <del>Strikeout</del>, <sup>superscript</sup>, <sub>subscript</sub> , <span class="smallcaps">small caps</span> (some of these are under the “Text” subheading)</p></li>
+<li><p><strong>Bullet lists and numbered lists</strong>, which can optionally be in a “tight” layout: press the <code>…</code> at the top-right.</p>
+<ul class="task-list">
+<li><input type="checkbox">Within a list, you can have an “Item Checkbox” to make a checklist…</li>
+<li><input type="checkbox" checked="">…and these boxes can be checked.</li>
+</ul></li>
+<li><p>“Blockquotes”, which can be used to provide a quote or even to highlight a bit of text in a different format:</p></li>
+</ul>
+<blockquote class="blockquote">
+<p>“Blockquotes are great” — J. Doe</p>
+</blockquote>
+<p>Several of these items are also present as separate buttons directly in the top bar.</p>
+<p><br></p>
+</section>
+<section id="headers" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="headers"><span class="header-section-number">2.2</span> Headers</h3>
+<p>The dropdown menu to the left of the bullet list icon (it will say “Normal” unless you’re cursor is on a header line) allows you to pick a <strong>header level</strong> as opposed to the default, “Normal” formatting for your focal paragraph. Recall that headers will:</p>
+<ul>
+<li><p>Be <strong>numbered</strong> if you use the YAML option <code>number-sections: true</code> either site-wide (in <code>_quarto.yml</code>) or at the top of your focal document</p></li>
+<li><p>Show up in a <strong>Table of Contents</strong> if you use the YAML option <code>toc: true</code>.</p></li>
+<li><p>By default have “<strong>anchors</strong>” that you can see when you hover over or near them in the output. Clicking on an anchor will give you a <em>direct link</em> to this section in your document.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Cross-references
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can use regular hyperlinks (see below) to refer to different pages and specific headers on your website. Additionally, it is possible to insert clickable cross-references to e.g.&nbsp;figures and tables — see <a href="https://quarto.org/docs/authoring/cross-references.html">these Quarto docs</a>.</p>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="options-from-the-insert-dropdown" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="options-from-the-insert-dropdown"><span class="header-section-number">2.3</span> Options from the “Insert” dropdown</h3>
+<ul>
+<li><p>“<strong><em>Link</em></strong>” to include a clickable <a href="https://quarto.org/docs/reference/formats/html.html">link</a> with custom text.</p></li>
+<li><p><strong><em>Footnote</em></strong><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>, which shows up as a superscripted number in the main text, with the full footnote printed at the bottom of the page. Best of all, you can also <em>hover over the superscripted number</em> to see the footnote text.</p></li>
+<li><p>“Special characters” =&gt; “Insert <strong><em>Emoji</em></strong>” =&gt; 🤓.</p></li>
+<li><p>“<strong><em>Horizontal rule</em></strong>”, which can be nice to break up your content:</p></li>
+</ul>
+<hr>
+<p><br></p>
+</section>
+</section>
+<section id="citations" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="citations"><span class="header-section-number">3</span> Citations</h2>
+<p>Addings citations is also possible via the “Insert” drop-down menu. Any citation you add will be automatically included in a reference list at the bottom of the document! In the text, the citation will show up as a link to the reference list and you can also hover over the link to see the full reference: <span class="citation" data-cites="m.horst2022">(<a href="#ref-m.horst2022" role="doc-biblioref">M. Horst, Presmanes Hill, and B. Gorman 2022</a>)</span>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/reflist.png" class="img-fluid figure-img" style="width:90.0%"></p>
+<figcaption class="figure-caption">A reference list is automatically added to the end of the document</figcaption>
+</figure>
+</div>
+<p>This is a really nice feature that benefits a lot from the RStudio Visual Editor. Without the Visual Editor, you’ll have to make a text file yourself with all the information for each reference (a bibliography in BibTex (<code>.bib</code>) format) — this can be exported from your reference manager, but that’s still a hassle because you often add citations one-by-one to a piece of text. With the Visual Editor, you can search for references online and when you include a reference:</p>
+<ul>
+<li>It will be automatically saved in a bibliography file.</li>
+<li>When adding your first citation, the following line will be automatically added to the YAML header of your Quarto document: <code>bibliography: references.bib</code>. This line will make sure a reference list is added to the end of the document.</li>
+</ul>
+<p>If you have Zotero installed on your computer, then your Zotero library will be automatically available. Otherwise, you can search for references in several ways, as shown by the following screenshots:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">CrossRef search</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">DOI search</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Zotero library</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/crossref.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/doi.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/zotero.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<p>To <strong><em>format your citations</em></strong>, both in terms of how they appear in the text and in your reference list, see <a href="https://quarto.org/docs/authoring/footnotes-and-citations.html">this Quarto documentation page</a>.</p>
+<p><br></p>
+<section id="your-turn-try-to-use-some-of-the-features-discussed-above" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="your-turn-try-to-use-some-of-the-features-discussed-above">Your turn: Try to use some of the features discussed above</h4>
+<ul>
+<li><p>If you didn’t already do so, it probably makes sense to create a new Quarto document for this experimentation.</p></li>
+<li><p>After you’ve used a couple of features, switch from “Visual” to “Source” editor mode, and check what the syntax is for these features!</p></li>
+</ul>
+</section>
+<p><br></p>
+</section>
+<section id="sec-chunks" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="sec-chunks"><span class="header-section-number">4</span> Code blocks and chunks</h2>
+<p>Both under the “Format” and “Insert” drop-down menus, you can find the “<strong>Code block</strong>” item, which will insert a block (one or more lines) of code-formatted text — but code in this type of block will not be executed. When the pop-up window asks you to type the name of a language, you can type “R”, but this information is only used for code <em>formatting</em> purposes. These kind of blocks can be useful if you just want to demonstrate/explain some code:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">*</span> <span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>By contrast, the “<strong>Executable Cell</strong>” item (again, choose “R” as the language) will produce blocks also known as “Code Chunks”, which contain code that <em>can</em> be executed. By default, the code will in fact be executed and its results (if any) will be printed below the code chunk:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="dv">5</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>x <span class="sc">*</span> <span class="dv">6</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 30</code></pre>
+</div>
+</div>
+<p>Because code output consisting of just a number is a little boring, let’s insert a chunk with the following code, which will <strong>produce a plot</strong> — and that plot will similarly be shown below the code as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> iris,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> Sepal.Length, <span class="at">y =</span> Sepal.Width, <span class="at">color =</span> Species)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>…Or a chunk that <strong>produces a simple table</strong>: in this case, simply the first lines of the <code>iris</code> dataframe. This dataframe output will display as shown below (which is a little nicer than the default formatting) when you include a line <code>df-print: kable</code> in the YAML header of your document:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(iris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">Sepal.Length</th>
+<th style="text-align: right;">Sepal.Width</th>
+<th style="text-align: right;">Petal.Length</th>
+<th style="text-align: right;">Petal.Width</th>
+<th style="text-align: left;">Species</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">3.5</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">4.7</td>
+<td style="text-align: right;">3.2</td>
+<td style="text-align: right;">1.3</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">4.6</td>
+<td style="text-align: right;">3.1</td>
+<td style="text-align: right;">1.5</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">3.6</td>
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5.4</td>
+<td style="text-align: right;">3.9</td>
+<td style="text-align: right;">1.7</td>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: left;">setosa</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Configuring code chunk behavior
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Default behaviors for code chunks are to <strong><em>print the code</em></strong> (<code>echo: true</code>), to <strong><em>execute the code</em></strong> (<code>eval: true</code>), and to <strong><em>show the output produced by the code</em></strong> (<code>output: true</code>), including any <strong><em>warnings</em></strong> produced by the code (<code>warning: true</code>).</p>
+<p>Any of these can be changed both at a website-wide or document-wide level, as well as at the level of individual code chunks (the latter would override the former).</p>
+<p>To change <strong><em>settings at the site or document-level</em></strong>, use the <code>execute</code> key in your YAML file or header (see <a href="https://quarto.org/docs/reference/formats/html.html#execution">these Quarto docs</a>) — in the example below, we turn off printing of the code itself as well of any warnings that the code might produce:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">echo</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>To change <strong><em>settings for an individual chunk</em></strong>, the same YAML keys like <code>echo</code> can be used, but in special comment lines (with <code>#|</code> prefixes) at the start of a code chunk:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/chunk_options.png" class="img-fluid figure-img" style="width:90.0%"></p>
+</figure>
+</div>
+<p><strong>A really useful option is to “fold” the code by using <code>code-fold: true</code> in the YAML header.</strong> That way, code will not be shown by default, but can be shown for each individual code chunk by unfolding it. This is great when you want to emphasize your results, but do want make the underlying code available to anyone who might be interested.</p>
+<p>For example, for the plot we produced above, if we set code-folding to true, it would produce a box like this above the plot — and clicking on that box would then show the code:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/code_fold.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="figures-and-tables" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="figures-and-tables"><span class="header-section-number">5</span> Figures and Tables</h2>
+<section id="figures-images" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="figures-images"><span class="header-section-number">5.1</span> Figures / images</h3>
+<p>Above, we saw that we can create plots and include them in the document. Of course, we can also include figures made elsewhere, or photos, etc — and you have probably already done this for your website. When inserting a figure (e.g.&nbsp;by clicking the picture icon in the top bar), you can for example include a caption and specify how you want it aligned:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/insert_figure.png" class="img-fluid figure-img" style="width:60.0%"></p>
+</figure>
+</div>
+<p>Somewhat oddly, the options for the figure <strong>size</strong> only show up once you’ve clicked OK to insert the figure — you’ll see this box below the figure:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/size_figure.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>There are different ways/units to size the figure: I prefer <strong>“%”</strong>, which will allow you to specify the width in percentage of the total page (or focal box) width, as shown above.</p>
+</section>
+<section id="tables" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="tables"><span class="header-section-number">5.2</span> Tables</h3>
+<p>When Clicking “Insert Table” in the “Table” dropdown menu in the top bar, you’ll get a pop-up to create a table, similar to how this works in Word:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/table1.png" class="img-fluid figure-img" style="width:50.0%"></p>
+</figure>
+</div>
+<p>This will produce a table skeleton like the one shown below, which you can then fill out:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/table2.png" class="img-fluid figure-img" style="width:70.0%"></p>
+</figure>
+</div>
+<p>Here is an example of what a rendered table will look like, with previous Code Club sessions this semester:</p>
+<table class="table">
+<caption><em>Table 1: Previous Code Club sessions</em></caption>
+<thead>
+<tr class="header">
+<th>Session</th>
+<th>Date</th>
+<th>Presenter</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>S06E01</td>
+<td>Aug 28</td>
+<td>Jess</td>
+<td><a href="../../posts/website_01_initiation/">Quarto website 1: <strong>Initiating a website</strong></a></td>
+</tr>
+<tr class="even">
+<td>S06E02</td>
+<td>Sep 11</td>
+<td>Jelmer</td>
+<td><a href="../../posts/website_02/">Quarto website 2: <strong>Adding a page &amp; YAML formatting</strong></a></td>
+</tr>
+<tr class="odd">
+<td>S06E03</td>
+<td>Sept 18</td>
+<td>Jess</td>
+<td><a href="../../posts/website_03_deploy-github/">Quarto website 3: <strong>Deploying to GitHub</strong></a></td>
+</tr>
+<tr class="even">
+<td>S06E04</td>
+<td>Sept 25</td>
+<td>Jelmer</td>
+<td><a href="../../posts/website_04/">Quarto website 4: <strong>Interacting with your repository</strong></a></td>
+</tr>
+<tr class="odd">
+<td>S06E05</td>
+<td>Oct 2</td>
+<td>Jess</td>
+<td><a href="../../posts/website_05">Quarto website 5: <strong>Modifying your site</strong></a></td>
+</tr>
+</tbody>
+</table>
+<p>These tables are fairly basic in their appearance and there aren’t many simple formatting options. If you’d like fancy or even interactive tables, you are better off creating them in R with packages like <a href="https://gt.rstudio.com/"><em>gt</em></a>, and then including them like we included part of the <code>iris</code> dataframe above.</p>
+<p><br></p>
+</section>
+</section>
+<section id="other-options" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="other-options"><span class="header-section-number">6</span> Other options</h2>
+<section id="tabsets" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="tabsets"><span class="header-section-number">6.1</span> Tabsets</h3>
+<p>“Tabsets” create a section with content spread across different “tabs”, kind of like tabs in your browser; you saw an example above, in the Citations section. Tabsets can help keep your document clear when you have many outputs, especially when there are <strong>alternative or mutually exclusive ways of showing something</strong>, like results from alternative statistical models you ran on your data, alternative ways of visualizing the same data, or installation instructions for different operating systems.</p>
+<p>When you click “Insert” =&gt; “Tabset…”, you can first enter names for two or more tabs, and doing this will also determine how many tabs you’ll get (up to 6):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/tabset1.png" class="img-fluid figure-img" style="width:65.0%"></p>
+</figure>
+</div>
+<p>Then, inside the gray box, below each header that was created for each tab name, you can enter any content that will show up in each tab:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/tabset2.png" class="img-fluid figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<p>And here is what the output for the above setup would look like:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Sepal length vs sepal width</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Sepal length vs petal length</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p><br></p>
+</section>
+<section id="callouts" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="callouts"><span class="header-section-number">6.2</span> Callouts</h3>
+<p>So-called “Callouts blocks” are boxes that we regularly use on the Code Club website, like the ones shown below:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example of a “tip” callout box
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This tip will help you make the most of your life</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Example of a “warning” callout box
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This warning will help you avoid blowing up your computer</p>
+</div>
+</div>
+<p>When you click “Insert” =&gt; “Callout..”, you can select one of the five types of available Callouts, which only differ in their colors and the symbol in the header (see these <a href="https://quarto.org/docs/authoring/callouts.html">Quarto docs</a>).</p>
+<p><br></p>
+</section>
+<section id="miscellaneous" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="miscellaneous"><span class="header-section-number">6.3</span> Miscellaneous</h3>
+<ul>
+<li>In your Quarto document, rather than finding a formatting feature in the top bar, you can press <kbd>/</kbd> to see a list of features you can insert, which you can subset by typing some text:</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/insert.png" class="img-fluid figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+<ul>
+<li>As is true for any Markdown format, you can directly include any HTML code/tags, like <strong><code>&lt;br&gt;</code></strong> <strong><em>to insert an empty line</em></strong> (i.e., to add vertical white space — see the box below) or <code>&lt;kbd&gt;Enter&lt;/kbd&gt;</code> to make text appear formatted as keyboard keys.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Whitespace in Markdown
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In all Markdown flavors, including Quarto, whitespace is dealt with differently than you may be used to:</p>
+<ul>
+<li><p>If you leave <strong>multiple spaces between words</strong>, those will be <strong>collapsed</strong> to a single space.</p></li>
+<li><p>If you type on <strong>a new line without creating a new paragraph</strong> (in the Visual Editor, that would actually require you to use <kbd>Shift</kbd>+<kbd>Enter</kbd>, since Enter will start a new paragraph), the output would still be on the <strong>same line</strong>.</p></li>
+<li><p>If you leave <strong>multiple blank lines between paragraphs</strong>, these will be <strong>collapsed</strong> to a single blank (half-)line. Therefore, if you want to add additional vertical whitespace, use the HTML tag <code>&lt;br&gt;</code>.</p></li>
+</ul>
+</div>
+</div>
+<p><br></p>
+<section id="your-turn-again-try-to-use-some-of-the-features-discussed-above" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="your-turn-again-try-to-use-some-of-the-features-discussed-above">Your turn: Again, try to use some of the features discussed above</h4>
+<ul>
+<li>If you have time after trying some of the features we discussed, then read about ways of manipulating code chunk behavior in the box at the end of <a href="#sec-chunks">Section&nbsp;4</a>, and try some of them.</li>
+</ul>
+</section>
+<p><br></p>
+
+
+
+</section>
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-m.horst2022" class="csl-entry" role="listitem">
+M. Horst, Allison, Alison Presmanes Hill, and Kristen B. Gorman. 2022. <span>“Palmer Archipelago Penguins Data in the Palmerpenguins R Package - An Alternative to Anderson’s Irises.”</span> <em>The R Journal</em> 14 (1): 244–54. <a href="https://doi.org/10.32614/rj-2022-020">https://doi.org/10.32614/rj-2022-020</a>.
+</div>
+</div></section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p><strong><em>After reading this footnote, you’ll be exceptionally well-informed</em></strong><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

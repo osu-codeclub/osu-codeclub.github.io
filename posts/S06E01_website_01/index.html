@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Cooperstone">
+<meta name="dcterms.date" content="2023-08-28">
+
+<title>OSU Code Club - Quarto website 1: Initiating a website 🌐</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html" rel="" target="">
+ <span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html" rel="" target="">
+ <span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/other.html" rel="" target="">
+ <span class="menu-text">Other stuff</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-new-here" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">New here?</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-new-here">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html" rel="" target="">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/r_resources.html" rel="" target="">
+ <span class="dropdown-text">R resources for beginners</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation"><span class="header-section-number">2</span> Installation</a></li>
+  <li><a href="#initiating-your-website-project" id="toc-initiating-your-website-project" class="nav-link" data-scroll-target="#initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</a></li>
+  <li><a href="#orienting-to-your-website" id="toc-orienting-to-your-website" class="nav-link" data-scroll-target="#orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</a></li>
+  <li><a href="#building-your-site" id="toc-building-your-site" class="nav-link" data-scroll-target="#building-your-site"><span class="header-section-number">5</span> Building your site</a></li>
+  <li><a href="#looking-around" id="toc-looking-around" class="nav-link" data-scroll-target="#looking-around"><span class="header-section-number">6</span> Looking around</a></li>
+  <li><a href="#index.qmd" id="toc-index.qmd" class="nav-link" data-scroll-target="#index.qmd"><span class="header-section-number">7</span> index.qmd</a></li>
+  <li><a href="#about.qmd" id="toc-about.qmd" class="nav-link" data-scroll-target="#about.qmd"><span class="header-section-number">8</span> about.qmd</a></li>
+  <li><a href="#quarto.yml" id="toc-quarto.yml" class="nav-link" data-scroll-target="#quarto.yml"><span class="header-section-number">9</span> _quarto.yml</a></li>
+  <li><a href="#playing-around" id="toc-playing-around" class="nav-link" data-scroll-target="#playing-around"><span class="header-section-number">10</span> Playing around</a></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S06E01_website_01/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Quarto website 1: Initiating a website 🌐</h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">website</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jessica Cooperstone </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 28, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>We are going to begin this semester’s Code Club with a series on making yourself a website. There are lots of reasons why you might want a website, including to:</p>
+<ul>
+<li>have a web presence about yourself (so when people google you, they can find your relevant info)</li>
+<li>have a blog where you post about whatever it is you want to post about</li>
+<li>share your research or data</li>
+</ul>
+<p>Some of you may already have a simple free or paid website for yourself, that you made through <a href="https://u.osu.edu/">www.u.osu.edu</a>, <a href="https://www.squarespace.com/">Squarespace</a>, or <a href="https://sites.google.com/">Google Sites</a>. These tools don’t require you to be able to code, and allow you to create a website with different levels of customization and interactivity.</p>
+<p>For the next few sessions, we are going to go over making a website using <a href="https://quarto.org/">Quarto</a>. Quarto can be used as an open-source publishing system and you can integrate content from Jupyter notebooks, plain text markdown, Python, R, Julia and others. We are going to use Quarto integrated with R.</p>
+<blockquote class="blockquote">
+<p>Take a look at a <a href="https://quarto.org/docs/gallery/#websites">gallery of Quarto website examples</a>.</p>
+</blockquote>
+<p>We picked this particular platform to go over in Code Club since its lightweight, customizable, free, and integrates with R which you’re probably learning anyway. I am going to start going through an example that will be my personal website. I picked this example because I thought this might be of interest to most of you.</p>
+</section>
+<section id="installation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="installation"><span class="header-section-number">2</span> Installation</h2>
+<p>To render your website in RStudio, you will need to have the <em>rmarkdown</em> R package installed. You can do so by typing (or copying) the following into your R Console inside RStudio:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>While not necessary for basic website building inside RStudio, it will also be a good idea to have Quarto installed moving forward. This is not an R package, but is a separate piece of software. To install it, go to <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a> and the correct installer for your operating system should be highlighted in a blue box. Click on that box to download and once downloaded, click on the installer to install Quarto.</p>
+<p align="center">
+<img style="border:1px solid gray;" src="img/install_quarto.png" width="75%">
+</p><figcaption>
+The blue box should highlight the installer for your operating system.
+</figcaption>
+<p></p>
+</section>
+<section id="initiating-your-website-project" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="initiating-your-website-project"><span class="header-section-number">3</span> Initiating your website project</h2>
+<p>The first step to getting a website is to open up a new project in RStudio.</p>
+<p>Start by going to <em>File</em> &gt; <em>New Project</em> &gt; <em>New Directory</em>. When asked which Project Type you want, pick <em>Quarto Website</em>. Note that you can also initiate a <em>Quarto Blog</em> which is a type of <em>Quarto Website</em> - since the website template is simpler we are going to start there, and can change back in the future if you want. If you want to read ahead, here is a nice website about <a href="https://samanthacsik.github.io/posts/2022-10-24-quarto-blogs/">making your Quarto website into a blog</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/project-type.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard - we are picking Quarto Website, or the third from the bottom choice</figcaption>
+</figure>
+</div>
+<p>You will then be asked where you want this website to live in your computer. Under <em>Directory Name</em> pick the name of the folder you want your content to be in, and <em>Create project as subdirectory of</em> as where you want the location on your computer. I have used the Knitr engine for website building.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/create-quarto-website.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screen shot of the new project wizard where we indicate our directory name and where that directory will reside. we use knitr engine to run, and are not creating a git repo, using renv, or using visual markdown editor. we are opening in a new session</figcaption>
+</figure>
+</div>
+<p>I am not creating a <a href="https://www.tutorialspoint.com/what-is-a-git-repository">git repository</a> (since we haven’t gone over that yet, we will add it later after we finish our site), am not using <a href="https://docs.posit.co/ide/user/ide/guide/environments/r/renv.html#:~:text=The%20renv%20package%20helps%20you,its%20own%20private%20package%20library.">renv</a> with this project (which automatically saves your environment), and I am not default using the <a href="https://quarto.org/docs/visual-editor/">visual editor</a> (which let’s you look at your markdown files how they will look when executed) since I want you to get used to looking at markdown. You can always toggle the visual editor later.</p>
+<p>Once you do this basically you have all the bones of a website! Congratulations 🥳</p>
+</section>
+<section id="orienting-to-your-website" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="orienting-to-your-website"><span class="header-section-number">4</span> Orienting to your website</h2>
+<p>A new RStudio window should have opened (since we checked the box in the previous step <em>Open in new session</em>) that has your new R project opened.</p>
+<p>We now see the four quadrants of RStudio:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/orienting.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of four quadrants of rstudio</figcaption>
+</figure>
+</div>
+<ul>
+<li>the top left where the two website files <code>index.qmd</code> and <code>_quarto.yml</code> are open</li>
+<li>the bottom left where we see the console</li>
+<li>the top right where we see the tabs: Environment (which is currently empty), History (which we won’t use), Connections (which we won’t use), Tutorial (which we won’t use), and a new one Build (which is how we render our site)</li>
+<li>the bottom right where we see Files (which houses the new files that populate our website), Plots (which you’ve seen before and where plots can be rendered if you don’t like them inline), Packages (which shows all the packages loaded in your R), Help (which you’ve seen before, and where you can get help), Viewer (a new one where we can see a preview rendering of our website), and Presentation (where we can see a preview rendering a presentation but we aren’t doing that right now).</li>
+</ul>
+</section>
+<section id="building-your-site" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="building-your-site"><span class="header-section-number">5</span> Building your site</h2>
+<p>Let’s see what our website looks like before we’ve done anything. If you go to the Build tab in the top right quadrant and click <em>Render Website</em> your site will render and show up in the Viewer in the bottom right.</p>
+</section>
+<section id="looking-around" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="looking-around"><span class="header-section-number">6</span> Looking around</h2>
+<p>You can now click around in your new and very unexciting website. Let’s look around and then we will go through the file structure to see how the two are related.</p>
+<p>Along the top, or if you click the three lines in the top right (depending on the size of your browser page) you can see by default we get a Home and About page. If we click ‘website’ at the top, we go back to Home. We also have a search bar that allows us to search on our site.</p>
+<p>Now that we know what information we see on our site, we can look at the files that are used to build the site and try and interpret them.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/files.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the files generated by creating our skeleton website in the bottom right quadrant</figcaption>
+</figure>
+</div>
+<p>Before we open the files, let’s talk about the file extensions and what they mean:</p>
+<ul>
+<li><code>.yml</code> is a <a href="https://quarto.org/docs/projects/quarto-projects.html#shared-metadata">YAML</a> or the file that indicates how the website will be configured</li>
+<li><code>.qmd</code> is a <a href="https://quarto.org/docs/get-started/hello/rstudio.html">Quarto markdown document</a>, and if you’re familiar with RMarkdown <code>.Rmd</code> documents its very similar. It contains both text written in markdown and executable code.</li>
+<li><code>.css</code> is a <a href="https://www.w3schools.com/css/css_intro.asp#:~:text=CSS%20stands%20for%20Cascading%20Style,are%20stored%20in%20CSS%20files">Cascading Style Sheets</a> file that indicates the way to style an HTML document (i.e., your website)</li>
+<li><code>.Rproj</code> is a <a href="https://bookdown.org/ndphillips/YaRrr/projects-in-rstudio.html">R Project</a> file that designates your working directory</li>
+</ul>
+<p>We also have a folder <code>_site</code> which houses the knitted website files. More about this later.</p>
+</section>
+<section id="index.qmd" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="index.qmd"><span class="header-section-number">7</span> index.qmd</h2>
+<p>This <code>index.qmd</code> file indicates what the home page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/index.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the index.qmd file</figcaption>
+</figure>
+</div>
+<p>Intuitively we can compare this file to what the homepage of the website looks like. You can try editing this website, saving, and then click Render and see how this changes what the site looks like in the Viewer (bottom right quadrant). You can check Render on Save so that whenever you save, the file automatically renders.</p>
+<p>Play around with adding text, code, headers, images, whatever you might want on your website homepage.</p>
+</section>
+<section id="about.qmd" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="about.qmd"><span class="header-section-number">8</span> about.qmd</h2>
+<p>This <code>about.qmd</code> file indicates what the about page of the site will look like.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/about.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the about.qmd file</figcaption>
+</figure>
+</div>
+<p>Just like with the <code>index.qmd</code> file, you can play around with this page.</p>
+</section>
+<section id="quarto.yml" class="level2" data-number="9">
+<h2 data-number="9" class="anchored" data-anchor-id="quarto.yml"><span class="header-section-number">9</span> _quarto.yml</h2>
+<p>The YAML file indicates how the site should be configured.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/yaml.png" class="img-fluid figure-img"></p>
+<figcaption class="figure-caption">a screenshot of the _quarto.yml file</figcaption>
+</figure>
+</div>
+<p>You’re probably not familiar with these <code>.yml</code> files but still its not horribly difficult to figure out what the different bits do.</p>
+<p>At the top, project type is indicated as website. We don’t want to change that now.</p>
+<p>In the next section beginning at line 4, we can have some specific information for how the website populates. The title is listed as “website” - we can change that to what we want at the top of our website. There is also a specification for what are the items in your navitation bar - here we have that the Home text will link to the <code>index.qmd</code>, and the next link is <code>about.qmd</code>. You can make more .qmd files that have other information and refer to them here and they will also populate in your navigation bar.</p>
+<p>In the third section at line 12, we can see some information on the setting of the website format. We have a html site, the theme is something called “cosmo” (see <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a> for some other options), we are using the styles.css file for css theming (actually that file is currently blank but thats ok), and we are indicating toc (or table of contents) as true, therefore we have a table of contents.</p>
+<p>Here you can find some <a href="https://quarto.org/docs/reference/projects/websites.html#section">documentation</a> about all the different stuff you can put in your YAML for a website.</p>
+</section>
+<section id="playing-around" class="level2" data-number="10">
+<h2 data-number="10" class="anchored" data-anchor-id="playing-around"><span class="header-section-number">10</span> Playing around</h2>
+<p>Now that we have a general understanding of whats in our site, try playing around to begin customization to be how you want. We will do this for the rest of the session and please ask any questions on problems you come across, or share cool things you find!</p>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
