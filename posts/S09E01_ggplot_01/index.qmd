@@ -107,7 +107,7 @@ ggplot(data = penguins)
 
 Why do we not see a plot? Well we haven't told R what to plot! We are getting the first "base" layer of the plot.
 
-You can also pipe `|>` or `%>%`, the data to the ggplot function. When reading code, you can interpret the pipe as "and then." Here, take the `garden_harvest_tomato` data, and then, run `ggplot()`. Writing code in this way is my preference so I tend to code like this. We talked in more detail about the pipe last week, so you can go back [there](https://datavisualizing.netlify.app/2_04_wrangling/04_wrangling#The_pipe_|) and read more if you like.
+You can also pipe `|>` or `%>%`, the data to the ggplot function. When reading code, you can interpret the pipe as "and then." Here, take the `penguins` data, and then, run `ggplot()`. Writing code in this way is my preference so I tend to code like this. We talked in more detail about the pipe in past Code Clubs.
 ```{r data and pipe}
 penguins |> 
   ggplot()
@@ -203,6 +203,12 @@ penguins |>
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
   geom_point(aes(color = species)) +
   geom_smooth(method = "lm") # the method is a linear model
+
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  geom_smooth(aes(color = species), method = "lm") +
+  geom_smooth(method = "lm", color = "black") # the method is a linear model
 ```
 
 When we set `color` only in `geom_point()`, we do not "group" by `color` (here, by `species`) so we get our smoothed line for all the data (instead of by `species`).
@@ -214,7 +220,7 @@ If you want to map a variable to an aesthetic, it MUST be within the `aes()` sta
 ```{r}
 penguins |> 
   ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point(color = "blue") 
+  geom_point(color = "#088F8F") 
 ```
 
 If we put "blue" instead our aesthetic mappings, we get something that doesn't make sense.
