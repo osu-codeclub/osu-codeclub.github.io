@@ -135,6 +135,186 @@ penguins |>
   geom_point()
 ```
 
-We have a plot! It's not a really good plot, but its a plot and we can work from here.
+We have a plot! It's not a finished plot, but its a plot and we can work from here.
+
+Let's say we wanted to see whether penguins of different `species` are in different places on our plot.  We can take the variable `species` and map it to the aesthetic `color`.
+```{r, color}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point()
+```
+
+Note what R has done for us - we now see each dot colored based on which species it is, and we also have a new legend.
+
+What if we wanted to add a line that shows the relationship between `bill_length_mm` and `bill_depth_mm` for each `species`? We can layer in another geom, here we will use [geom_smooth](https://ggplot2.tidyverse.org/reference/geom_smooth.html).
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") # the method is a linear model
+```
+
+
+### Global vs. local `aes()`
+A note about aesthetic mappings now that we have introduced geoms -`aes()` can go in two places:
+
+* in the `ggplot()` call, and this means they will inherit for every layer of the plot
+* in a specific `geom_`, and those aesthetics will only be for that specific geom.
+
+So we can make the same plot we saw above by mapping aesthetics within `geom_point()`. 
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point()
+```
+
+```{r, local aes}
+penguins |> 
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species))
+```
+
+Let's look at example where changing the location of the aesthetic mappings does make a difference.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_point() +
+  geom_smooth(method = "lm") # the method is a linear model
+```
+
+```{r, error = TRUE}
+penguins |> 
+  ggplot() +
+  geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) +
+  geom_smooth(method = "lm") # the method is a linear model
+```
+
+What happened here? We got an "error in `geom_smooth()... `stat_smooth()` requires the following miss aesthetics: x and y".
+
+This happened because we have only set our x and y aesthetics in `geom_point()` and not in `geom_smooth()` so R doesn't know what to map x and y to. When we map our aesthetics globally, we don't have this problem because x and y inherit for every subsequent layer.
+
+We can also do a combination of global and local setting.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  geom_smooth(method = "lm") # the method is a linear model
+```
+
+When we set `color` only in `geom_point()`, we do not "group" by `color` (here, by `species`) so we get our smoothed line for all the data (instead of by `species`).
+
+### Mapping vs. 'setting'
+
+If you want to map a variable to an aesthetic, it MUST be within the `aes()` statement. If you just want to change the color to "blue" for example, it should be outside the `aes()` statement. Look at the difference.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(color = "blue") 
+```
+
+If we put "blue" instead our aesthetic mappings, we get something that doesn't make sense.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = "blue"))
+```
+
+> **tl:dr** if mapping a variable to an aesthetic, inside `aes()`, if not, then outside.
 
 # Practice
+
+Create a plot that shows the relationship between flipper length and body mass. Color your points based on the sex of the penguins.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Try using the variables `flipper_length`, `body_mass_g`, and `sex`. You can make `x`, `y`, and `color`.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g, color = sex)) + 
+  geom_point()
+```
+
+Not happy with the missing value? We can remove it.
+```{r}
+penguins |> 
+  drop_na(flipper_length_mm, body_mass_g, sex) |> # drop missing values 
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g, color = sex)) + 
+  geom_point()
+```
+
+</details>
+
+## Different geoms
+
+Create a boxplot that shows the distribution of body mass for penguins on the different islands.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+The geom for a boxplot is called [`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html).
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot()
+```
+
+
+</details>
+
+## Mapping to other aesthetics
+
+Create a scatterplot that shows the relationship between bill length and bill depth, but color the points based on what island the penguins are from, and make the points a different shape based on sex.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+You can make the aesthetic `shape = ` in the same way you use color.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  ggplot(aes(x = bill_length_mm, bill_depth_mm, 
+             color = island, shape = sex)) +
+  geom_point()
+```
+
+Not happy with missing values? We can remove them.
+
+```{r}
+penguins |> 
+  drop_na(bill_length_mm, bill_depth_mm, island, sex) |>  # drop missing values
+  ggplot(aes(x = bill_length_mm, bill_depth_mm, 
+             color = island, shape = sex)) +
+  geom_point()
+```
+
+</details>
