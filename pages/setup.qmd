@@ -1,7 +1,7 @@
 ---
 title: "Computer Setup for Code Club"
 toc: true
-date-modified: 2023-08-18
+date-modified: 2025-01-19
 ---
 
 ```{r knitr_options, echo=FALSE}
@@ -41,11 +41,9 @@ and one or more of the organizers should be there already.
   when you start R, and you can also get it by typing `sessionInfo()` and checking
   the first line of the output.
   
-- Currently (August 2023), we would recommend R version `4.2.0` or higher.
-  And since we'll work with the "base R pipe",
-  you'll definitely need version `4.1.0` or higher.
+- Currently (January 2025), we would recommend R version `4.3.0` or higher.
   
-- To update R, [see this page for instructions](/tutorials/r-resources-tips/#updating-r).
+- To update R, [see the bottom of this page for instructions](#updating-r).
 
 :::  
 
@@ -58,26 +56,6 @@ the de facto standard for working with R and is very useful.
 
 To install RStudio, go to the [RStudio download page](https://rstudio.com/products/rstudio/download/#download)
 and download and run the installer file for your operating system. 
-
-## Quarto-website specific installation
-
-For the Fall 2023 sessions on creating a Quarto website,
-you will need to have the _rmarkdown_ R package installed.
-You can do so by typing (or copying) the following into your R Console inside
-RStudio:
-
-```{r}
-install.packages("rmarkdown")
-```
-
-While not necessary for basic website building inside RStudio,
-it will also be a good idea to **install Quarto** itself.
-This is not an R package, but is a separate piece of software.
-To install it,
-go to <https://quarto.org/docs/get-started/> and the correct installer
-for your operating system should be highlighted in a blue box.
-Click on that box to download and once downloaded,
-click on the installer to install Quarto.
 
 <br>
 
@@ -113,7 +91,7 @@ browser and run applications like RStudio.
 2. Click on "Interactive Apps" in the blue top bar, and select "RStudio Server" (near the bottom).
   
 3. Now, you're on a page from which you can launch an RStudio server that will run on an OSC cluster.
-   Select project PAS1838 in the dropdown menu and change the "Number of hours" to `2`.
+   Select project `PAS1838` in the dropdown menu and change the "Number of hours" to `2`.
    Then click "Launch".
 
 4. You will be sent to a page where you can see the status of your "job"
@@ -127,7 +105,79 @@ browser and run applications like RStudio.
 
 <br>
 
-## More info {#more}
+## Alternative: Update an existing R installation
 
-Please see our **[R Resources and Tips](./r_resources.qmd)** 
-if you are new to R or need to update your R version!
+Consider updating R if you have an older version of R installed.
+You can check which version of R you have by looking at the first lines of
+output when running the following command inside R:
+
+```r
+sessionInfo()
+```
+
+To update:
+
+- **Windows**: You can update R from within R.
+  The `updateR()` function will also take care of updating your packages:
+  
+  ```r
+  install.packages("installr")
+  installr::updateR()
+  ```
+
+- **Mac**: Download and install the latest `.pkg` file as if you were installing R for the first time.
+
+<br>
+
+#### Re-installing your packages after updating (Mac and Linux)
+
+While the `installr::updateR()` function for **Windows** users takes care of reinstalling
+your packages along with updating R,
+**Mac** and **Linux** users will have to manually re-install their packages.
+Some people prefer to re-install these packages on the fly, which can end up being a way
+to get rid of packages you no longer use.
+
+But if you want immediately reinstall all your packages, run this before you upgrade:
+
+```r
+my_packages <- installed.packages()
+saveRDS(my_packages, "my_packages.rds")
+```
+
+Then, after you've installed the latest R version:
+```r
+my_packages <- readRDS("CurrentPackages.rds")
+install.packages(my_packages[1, ])
+```
+
+This will only work for packages available on CRAN. Of course, you can check your list
+for Github-only and Bioconductor packages and then install those with their respective commands
+(see below). Yes, this can be a bit of a hassle!
+
+<br>
+
+## New to R?
+
+If you are completely new to R,
+we recommend watching at least the first couple of videos from
+[OSU's Mike Sovic's Youtube playlist of short videos on R](https://www.youtube.com/playlist?list=PLxhIMi78eQegFm3XqsylVa-Lm7nfiUshe),
+to get started.
+
+Here are some additional resources for learning the basics of R:
+
+- A useful and fun written tutorial is [R for cats](https://rforcats.net/).
+
+- For a more systematic and lengthy introduction to R, see 
+  [A Tutorial Introduction to R](https://kingaa.github.io/R_Tutorial/)
+  (this gets fairly advanced after section 9).
+
+- Excellent comprehensive introductions are the [R Basics](https://www.edx.org/course/data-science-r-basics)
+  and [Visualization](https://www.edx.org/course/data-science-visualization) classes by Rafael Irizarry
+  that can be freely accessed; you do have to create an account. 
+
+- OSU TDAI videos:
+  - [Installing R / R Studio](https://mediasite.osu.edu/Mediasite/Play/f7d6605508f842d09fd5b5ec9c88619a1d)
+  - [R / R Studio Introduction](https://mediasite.osu.edu/Mediasite/Play/3d2f076f64854b57a6e5e5a99b60d6781d)
+ 
+Also, don't hesitate to reach out to the [Code Club organizers](/codeclub-about/#organizers)
+if you have any questions!

@@ -5,31 +5,7 @@ toc: true
 
 <br>
 
-## New to R?
 
-If you are completely new to R,
-we recommend watching at least the first couple of videos from
-[OSU's Mike Sovic's Youtube playlist of short videos on R](https://www.youtube.com/playlist?list=PLxhIMi78eQegFm3XqsylVa-Lm7nfiUshe),
-to get started.
-
-Here are some additional resources for learning the basics of R:
-
-- A useful and fun written tutorial is [R for cats](https://rforcats.net/).
-
-- For a more systematic and lengthy introduction to R, see 
-  [A Tutorial Introduction to R](https://kingaa.github.io/R_Tutorial/)
-  (this gets fairly advanced after section 9).
-
-- Excellent comprehensive introductions are the [R Basics](https://www.edx.org/course/data-science-r-basics)
-  and [Visualization](https://www.edx.org/course/data-science-visualization) classes by Rafael Irizarry
-  that can be freely accessed; you do have to create an account. 
-
-- OSU TDAI videos:
-  - [Installing R / R Studio](https://mediasite.osu.edu/Mediasite/Play/f7d6605508f842d09fd5b5ec9c88619a1d)
-  - [R / R Studio Introduction](https://mediasite.osu.edu/Mediasite/Play/3d2f076f64854b57a6e5e5a99b60d6781d)
- 
-Also, don't hesitate to reach out to the [Code Club organizers](/codeclub-about/#organizers)
-if you have any questions! 
 
 <br>
 
@@ -75,66 +51,5 @@ remotes::install_github("kbroman/broman")  # Install from a repository using "<u
 This will install the package *from source*, so you will need to make sure you are able to do so
 by following the instructions in the section right above this one.
 
-#### Installing packages from Bioconductor
-
-If you're doing bioinformatic analyses in R, you will probably run into packages
-that are not on CRAN but on [Bioconductor](https://bioconductor.org/).
-To install a package from Bioconductor, use the *BiocManager* package -- for example:
-
-```r
-install.packages("BiocManager")  # Install the BiocManager package
-BiocManager::install("edgeR")    # Install the edgeR package from Bioconductor
-```
-
 <br>
 
-### Updating R
-
-Consider updating R if you have an older version of R installed.
-**As of August 2023, we would recommend to update R if your version is below 4.1.**
-
-You can check which version of R you have by looking at the first lines of
-output when running the following command inside R:
-
-```r
-sessionInfo()
-```
-
-To update:
-
-- **Windows**: You can update R from within R. The `updateR()` function will also take care
-  of updating your packages:
-  
-  ```r
-  install.packages("installr")
-  installr::updateR()
-  ```
-
-- **Mac**: Download and install the latest `.pkg` file as if you were installing it for the first time.
-
-<br>
-
-#### Re-installing your packages after updating (Mac and Linux)
-
-While the `installr::updateR()` function for **Windows** users takes care of reinstalling
-your packages along with updating R,
-**Mac** and **Linux** users will have to manually re-install their packages.
-Some people prefer to re-install these packages on the fly, which can end up being a way
-to get rid of packages you no longer use.
-
-But if you want immediately reinstall all your packages, run this before you upgrade:
-
-```r
-my_packages <- installed.packages()
-saveRDS(my_packages, "my_packages.rds")
-```
-
-Then, after you've installed the latest R version:
-```r
-my_packages <- readRDS("CurrentPackages.rds")
-install.packages(my_packages[1, ])
-```
-
-This will only work for packages available on CRAN. Of course, you can check your list
-for Github-only and Bioconductor packages and then install those with their respective commands
-(see below). Yes, this can be a bit of a hassle!
