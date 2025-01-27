@@ -94,12 +94,16 @@ $ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 
 <p>What if we want to see what the body mass of penguins looks like on different islands? We can do that using a variety of different geoms.</p>
 <section id="bar-plot-be-wary" class="level2" data-number="2.1">
 <h2 data-number="2.1" class="anchored" data-anchor-id="bar-plot-be-wary"><span class="header-section-number">2.1</span> Bar plot (be wary!)</h2>
-<p>If we want to see what the average body mass is per island, we need to either:</p>
+<p>A bar plot is a very commonly used plot type, but often can hide the true distribution of your data, so be careful when you use it.</p>
+<section id="means" class="level3" data-number="2.1.1">
+<h3 data-number="2.1.1" class="anchored" data-anchor-id="means"><span class="header-section-number">2.1.1</span> Means</h3>
+<p>If we want to plot what the average body mass is per island, we need to either:</p>
 <ul>
 <li>calculate a mean, and then plot it</li>
 <li>use a function that calculates the mean for us</li>
 </ul>
-<p>Calculating a mean manually, then plotting:</p>
+<p>First let’s calculate the mean manually. This way we can know what those averages should be, and we can reference this against our plot later.</p>
+<p>We can go back to some <a href="https://osu-codeclub.github.io/posts/S08E03_wrangling_03/#the-summarize-function">content we’ve gone over in Code Club in the past</a> about the function <a href="https://dplyr.tidyverse.org/reference/summarise.html"><code>summarize()</code></a>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -135,6 +139,7 @@ font-style: inherit;"># summarize by island</span></span></code></pre></div>
 3 Dream              3713.</code></pre>
 </div>
 </div>
+<p>Now we can see what the average mass should be for each island. We can take that same code and pipe that into <code>ggplot()</code> to use that as the data to plot.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -181,6 +186,7 @@ font-style: inherit;">geom_col</span>()</span></code></pre></div>
 <p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>Note that the variable we are plotting to <code>y</code> is <code>mean_body_mass</code> - a new variable we calculated using <code>summarize()</code>.</p>
 <p>See how this is different from passing. your data directly to <code>geom_col()</code>? Pay careful attention to the y-axis values.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
@@ -250,6 +256,244 @@ font-style: inherit;"># geom should be column</span></span></code></pre></div>
 <p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
+<p>It is a good idea to do these calculations yourself first, even if you end up using a function like <code>stat_summary()</code>, this way you can be sure that the result you are getting makes sense.</p>
+</section>
+<section id="error-bars" class="level3" data-number="2.1.2">
+<h3 data-number="2.1.2" class="anchored" data-anchor-id="error-bars"><span class="header-section-number">2.1.2</span> Error bars</h3>
+<p>If we want to add error bars, we can do that too, and in the same way. We can either calculate the values we want to map to the error bars, and then add them, or use another <code>stat_summary()</code> to have <code>ggplot2</code> calculate the values for us. I will show you code for both, but only go through doing this manually (as the other way is a little bit more complicated than I want to get into right now).how to do both.</p>
+<p>Just like we used <code>summarize()</code> to calculate the means, we can also use similar code to calculate a standard deviation. Let’s grab that code, and we can add to it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean_body_mass =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(body_mass_g, </span>
+<span id="cb14-3">                                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove missing values</span></span>
+<span id="cb14-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd_body_mass =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(body_mass_g,</span>
+<span id="cb14-5">                              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove missing values</span></span>
+<span id="cb14-6">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> island) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># summarize by island</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  island    mean_body_mass sd_body_mass
+  &lt;fct&gt;              &lt;dbl&gt;        &lt;dbl&gt;
+1 Torgersen          3706.         445.
+2 Biscoe             4716.         783.
+3 Dream              3713.         417.</code></pre>
+</div>
+</div>
+<p>Now we see both a standard deviation along with our mass. And we can plot this now.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb16-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mean_body_mass =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(body_mass_g, </span>
+<span id="cb16-3">                                  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove missing values</span></span>
+<span id="cb16-4">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">sd_body_mass =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(body_mass_g,</span>
+<span id="cb16-5">                              <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># remove missing values</span></span>
+<span id="cb16-6">            <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.by =</span> island) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># summarize by island</span></span>
+<span id="cb16-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> mean_body_mass)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb16-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_col</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb16-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_errorbar</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ymin =</span> (mean_body_mass <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> sd_body_mass), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set min</span></span>
+<span id="cb16-10">                    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ymax =</span> (mean_body_mass <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> sd_body_mass)), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set max</span></span>
+<span id="cb16-11">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># set width of the bars</span></span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>You can have <code>ggplot()</code> make your error bars for you but it’s a little more complicated than what I want to get into. You can read more about it below.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Or, we could have <code>ggplot()</code> calculate and make our error bars for us. We can start with our code from our original bar plot, and add to it.
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb17-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom  =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"col"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># makes the bars</span></span>
+<span id="cb17-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun.data =</span> mean_sdl, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># function is mean_sd</span></span>
+<span id="cb17-5">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fun.args =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">list</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mult=</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>), <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># more arguments arguments to mean_sdl as a list</span></span>
+<span id="cb17-6">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"errorbar"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No summary function supplied, defaulting to `mean_se()`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+(`stat_summary()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="counting" class="level3" data-number="2.1.3">
+<h3 data-number="2.1.3" class="anchored" data-anchor-id="counting"><span class="header-section-number">2.1.3</span> Counting</h3>
+<p>We could also use bar plots to “count” instead of to display a mean. For this, we use <a href="https://ggplot2.tidyverse.org/reference/geom_bar.html"><code>geom_bar()</code></a>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb21-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> island)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb21-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_bar</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</section>
 </section>
 <section id="boxplot" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="boxplot"><span class="header-section-number">2.2</span> Boxplot</h2>
@@ -266,10 +510,10 @@ font-style: inherit;"># geom should be column</span></span></code></pre></div>
 <p>There is rarely a situation where a bar plot wouldn’t be improved by turning it into a boxplot. A boxplot allows us to see the distribution of our data (instead of just the mean). Lots can be hiding when you summarize before plotting!</p>
 <p>We can make a boxplot simply by using <a href="https://ggplot2.tidyverse.org/reference/geom_boxplot.html"><code>geom_boxplot()</code></a>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb14-2">  <span class="fu" style="color: #4758AB;
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -280,7 +524,7 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb14-3">  <span class="fu" style="color: #4758AB;
+<span id="cb22-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -288,16 +532,16 @@ font-style: inherit;">geom_boxplot</span>()</span></code></pre></div>
 (`stat_boxplot()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can supplement our boxplot with all our actual data too, as that might help us see trends in our data. This is a special type of <code>geom_point()</code> called <code>geom_jitter()</code>, which takes your data points and puts them, in this case, on top of your boxplot.</p>
 <p>Here I will color the points by <code>sex</code> so we can see what that effect is.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb16-2">  <span class="fu" style="color: #4758AB;
+<span id="cb24-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -308,12 +552,12 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb16-3">  <span class="fu" style="color: #4758AB;
+<span id="cb24-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb16-4">  <span class="fu" style="color: #4758AB;
+<span id="cb24-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_jitter</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -329,7 +573,7 @@ font-style: inherit;">color =</span> sex))</span></code></pre></div>
 (`geom_point()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </section>
@@ -354,10 +598,10 @@ Click for the solution
 </summary>
 <p>A density plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+<span id="cb27-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -366,7 +610,7 @@ background-color: null;
 font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb19-3">  <span class="fu" style="color: #4758AB;
+<span id="cb27-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_density</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -374,15 +618,15 @@ font-style: inherit;">geom_density</span>()</span></code></pre></div>
 (`stat_density()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>A histogram, you can play around with <code>bins =</code> and <code>binwidth =</code> to make the plot look how you want:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb21-2">  <span class="fu" style="color: #4758AB;
+<span id="cb29-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -391,7 +635,7 @@ background-color: null;
 font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb21-3">  <span class="fu" style="color: #4758AB;
+<span id="cb29-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_histogram</span>()</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -402,7 +646,7 @@ font-style: inherit;">geom_histogram</span>()</span></code></pre></div>
 (`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </details>
@@ -419,10 +663,10 @@ font-style: inherit;">geom_histogram</span>()</span></code></pre></div>
 </ul>
 <p>Let’s try faceting by <code>species</code> first.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb24-2">  <span class="fu" style="color: #4758AB;
+<span id="cb32-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -433,12 +677,12 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb24-3">  <span class="fu" style="color: #4758AB;
+<span id="cb32-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb24-4">  <span class="fu" style="color: #4758AB;
+<span id="cb32-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -448,22 +692,22 @@ font-style: inherit;">vars</span>(species))</span></code></pre></div>
 (`stat_boxplot()`).</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can also facet by both <code>species</code> and <code>sex</code> - let’s try that.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb26-2">  <span class="fu" style="color: #4758AB;
+<span id="cb34-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>(island, body_mass_g, species, sex) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># remove missing values</span></span>
-<span id="cb26-3">  <span class="fu" style="color: #4758AB;
+<span id="cb34-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -474,12 +718,12 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb26-4">  <span class="fu" style="color: #4758AB;
+<span id="cb34-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb26-5">  <span class="fu" style="color: #4758AB;
+<span id="cb34-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_grid</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -491,22 +735,22 @@ font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(species))</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>If we prefer to be able to compare by <code>sex</code> more easily, we can switch the order of rows and cols.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb27-2">  <span class="fu" style="color: #4758AB;
+<span id="cb35-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>(island, body_mass_g, species, sex) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># remove missing values</span></span>
-<span id="cb27-3">  <span class="fu" style="color: #4758AB;
+<span id="cb35-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -517,12 +761,12 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb27-4">  <span class="fu" style="color: #4758AB;
+<span id="cb35-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb27-5">  <span class="fu" style="color: #4758AB;
+<span id="cb35-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_grid</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -534,7 +778,7 @@ font-style: inherit;">cols =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(sex))</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>The default in both <code>facet_wrap</code> and <code>facet_grid</code> are for the x and y-axis to be fixed and constant among all the plots. This is often what you want to take advance of the comparisons between small multiples, but this is something you can change if you want. You can adjust the scales within facets to:</p>
@@ -558,15 +802,15 @@ Need a hint?
 Click for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb28-2">  <span class="fu" style="color: #4758AB;
+<span id="cb36-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb28-3">  <span class="fu" style="color: #4758AB;
+<span id="cb36-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -579,18 +823,18 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb28-4">  <span class="fu" style="color: #4758AB;
+<span id="cb36-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb28-5">  <span class="fu" style="color: #4758AB;
+<span id="cb36-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(species))</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </details>
@@ -606,15 +850,15 @@ Need a hint?
 Click for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb29-2">  <span class="fu" style="color: #4758AB;
+<span id="cb37-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb29-3">  <span class="fu" style="color: #4758AB;
+<span id="cb37-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -627,12 +871,12 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb29-4">  <span class="fu" style="color: #4758AB;
+<span id="cb37-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb29-5">  <span class="fu" style="color: #4758AB;
+<span id="cb37-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -641,7 +885,7 @@ background-color: null;
 font-style: inherit;">"lm"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb29-6">  <span class="fu" style="color: #4758AB;
+<span id="cb37-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -650,7 +894,7 @@ font-style: inherit;">vars</span>(species))</span></code></pre></div>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </details>
@@ -669,17 +913,17 @@ font-style: inherit;">vars</span>(species))</span></code></pre></div>
 </ul>
 <p>Let’s take a plot we worked on and adjust the labels.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb31-2">  <span class="fu" style="color: #4758AB;
+<span id="cb39-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>(island, body_mass_g, species, sex) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># remove missing values</span></span>
-<span id="cb31-3">  <span class="fu" style="color: #4758AB;
+<span id="cb39-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -690,12 +934,12 @@ background-color: null;
 font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb31-4">  <span class="fu" style="color: #4758AB;
+<span id="cb39-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb31-5">  <span class="fu" style="color: #4758AB;
+<span id="cb39-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_grid</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -708,30 +952,30 @@ background-color: null;
 font-style: inherit;">vars</span>(species)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb31-6">  <span class="fu" style="color: #4758AB;
+<span id="cb39-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Island"</span>,</span>
-<span id="cb31-7">       <span class="at" style="color: #657422;
+<span id="cb39-7">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Body mass (g)"</span>,</span>
-<span id="cb31-8">       <span class="at" style="color: #657422;
+<span id="cb39-8">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Penguin body mass by island and species"</span>,</span>
-<span id="cb31-9">       <span class="at" style="color: #657422;
+<span id="cb39-9">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Data collected from LTER, Antarctica in 2007/08"</span>)</span></code></pre></div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <section id="practice-2" class="level2" data-number="4.1">
@@ -748,15 +992,15 @@ Need a hint?
 Click for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-2">  <span class="fu" style="color: #4758AB;
+<span id="cb40-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-3">  <span class="fu" style="color: #4758AB;
+<span id="cb40-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -769,12 +1013,12 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb32-4">  <span class="fu" style="color: #4758AB;
+<span id="cb40-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb32-5">  <span class="fu" style="color: #4758AB;
+<span id="cb40-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -783,38 +1027,38 @@ background-color: null;
 font-style: inherit;">"lm"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb32-6">  <span class="fu" style="color: #4758AB;
+<span id="cb40-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">facet_wrap</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">vars</span>(species)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb32-7">  <span class="fu" style="color: #4758AB;
+<span id="cb40-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Flipper length (mm)"</span>,</span>
-<span id="cb32-8">       <span class="at" style="color: #657422;
+<span id="cb40-8">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bill length (mm)"</span>,</span>
-<span id="cb32-9">       <span class="at" style="color: #657422;
+<span id="cb40-9">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">""</span>, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># remove the legend title, could also rename this way</span></span>
-<span id="cb32-10">       <span class="at" style="color: #657422;
+<span id="cb40-10">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Relationship between penguin flipper and bill length"</span>,</span>
-<span id="cb32-11">       <span class="at" style="color: #657422;
+<span id="cb40-11">       <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -823,7 +1067,7 @@ font-style: inherit;">"Data collected from LTER, Antarctica"</span>)</span></cod
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E03_ggplot_03/index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 </details>
