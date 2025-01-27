@@ -55,12 +55,19 @@ What if we want to see what the body mass of penguins looks like on different is
 
 ## Bar plot (be wary!)
 
-If we want to see what the average body mass is per island, we need to either:
+A bar plot is a very commonly used plot type, but often can hide the true distribution of your data, so be careful when you use it.
+
+### Means
+
+If we want to plot what the average body mass is per island, we need to either:
 
 - calculate a mean, and then plot it
 - use a function that calculates the mean for us
 
-Calculating a mean manually, then plotting:
+First let's calculate the mean manually. This way we can know what those averages should be, and we can reference this against our plot later. 
+
+We can go back to some [content we've gone over in Code Club in the past](https://osu-codeclub.github.io/posts/S08E03_wrangling_03/#the-summarize-function) about the function [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html). 
+
 ```{r}
 # calculating the mean body mass for each island
 penguins |> 
@@ -68,6 +75,8 @@ penguins |>
                                   na.rm = TRUE), # remove missing values
             .by = island) # summarize by island
 ```
+
+Now we can see what the average mass should be for each island. We can take that same code and pipe that into `ggplot()` to use that as the data to plot. 
 
 ```{r}
 # then plotting
@@ -78,6 +87,8 @@ penguins |>
   ggplot(aes(x = island, y = mean_body_mass)) +
   geom_col()
 ```
+
+Note that the variable we are plotting to `y` is `mean_body_mass` - a new variable we calculated using `summarize()`.
 
 See how this is different from passing. your data directly to `geom_col()`? Pay careful attention to the y-axis values.
 ```{r}
@@ -95,6 +106,65 @@ penguins |>
   ggplot(aes(x = island, y = body_mass_g)) +
   stat_summary(geom  = "col") # geom should be column
 ```
+
+It is a good idea to do these calculations yourself first, even if you end up using a function like `stat_summary()`, this way you can be sure that the result you are getting makes sense.
+
+### Error bars
+
+If we want to add error bars, we can do that too, and in the same way. We can either calculate the values we want to map to the error bars, and then add them, or use another `stat_summary()` to have `ggplot2` calculate the values for us. I will show you code for both, but only go through doing this manually (as the other way is a little bit more complicated than I want to get into right now).how to do both.
+
+Just like we used `summarize()` to calculate the means, we can also use similar code to calculate a standard deviation. Let's grab that code, and we can add to it.
+
+```{r}
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            sd_body_mass = sd(body_mass_g,
+                              na.rm = TRUE), # remove missing values
+            .by = island) # summarize by island
+```
+
+Now we see both a standard deviation along with our mass. And we can plot this now.
+
+```{r}
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            sd_body_mass = sd(body_mass_g,
+                              na.rm = TRUE), # remove missing values
+            .by = island) |> # summarize by island
+  ggplot(aes(x = island, y = mean_body_mass)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin = (mean_body_mass - sd_body_mass), # set min
+                    ymax = (mean_body_mass + sd_body_mass)), # set max
+                width = 0.2) # set width of the bars
+```
+
+You can have `ggplot()` make your error bars for you but it's a little more complicated than what I want to get into. You can read more about it below.
+
+::: {.callout-tip collapse="true"}
+## Or, we could have `ggplot()` calculate and make our error bars for us. We can start with our code from our original bar plot, and add to it.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  stat_summary(geom  = "col") + # makes the bars
+  stat_summary(fun.data = mean_sdl, # function is mean_sd
+               fun.args = list(mult=1), # more arguments arguments to mean_sdl as a list
+               geom = "errorbar")
+```
+:::
+
+### Counting
+
+We could also use bar plots to "count" instead of to display a mean. For this, we use [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island)) +
+  geom_bar()
+```
+
 
 ## Boxplot
 
