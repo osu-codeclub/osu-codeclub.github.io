@@ -219,7 +219,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#adding-points-and-text-to-maps" id="toc-adding-points-and-text-to-maps" class="nav-link" data-scroll-target="#adding-points-and-text-to-maps"><span class="header-section-number">3</span> Adding points and text to maps</a>
   <ul class="collapse">
-  <li><a href="#adding-individual-points-and-bits-of-text" id="toc-adding-individual-points-and-bits-of-text" class="nav-link" data-scroll-target="#adding-individual-points-and-bits-of-text">Adding individual points and bits of text</a></li>
+  <li><a href="#adding-single-points-and-bits-of-text" id="toc-adding-single-points-and-bits-of-text" class="nav-link" data-scroll-target="#adding-single-points-and-bits-of-text">Adding single points and bits of text</a></li>
   <li><a href="#adding-a-set-of-points-from-a-data-frame" id="toc-adding-a-set-of-points-from-a-data-frame" class="nav-link" data-scroll-target="#adding-a-set-of-points-from-a-data-frame">Adding a set of points from a data frame</a></li>
   <li><a href="#exercise-2" id="toc-exercise-2" class="nav-link" data-scroll-target="#exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</a></li>
   </ul></li>
@@ -231,7 +231,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exercise-3" id="toc-exercise-3" class="nav-link" data-scroll-target="#exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</a></li>
   </ul></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E04_maps_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E05_maps_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Plotting geographical maps in R: part I</h1>
-<p class="subtitle lead">Using <em>ggplot</em> to make maps and adding custom points to them</p>
+<p class="subtitle lead">Using <em>ggplot</em> to make maps and adding custom points to them.</p>
   <div class="quarto-categories">
     <div class="quarto-category">maps</div>
     <div class="quarto-category">ggplot2</div>
@@ -628,9 +628,9 @@ Click to see some examples
 </section>
 <section id="adding-points-and-text-to-maps" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="adding-points-and-text-to-maps"><span class="header-section-number">3</span> Adding points and text to maps</h2>
-<section id="adding-individual-points-and-bits-of-text" class="level3">
-<h3 class="anchored" data-anchor-id="adding-individual-points-and-bits-of-text">Adding individual points and bits of text</h3>
-<p>We can add points to a map with the familiar <code>geom_point()</code> function, which we have used to make scatterplots but that can plot individual points as well.</p>
+<section id="adding-single-points-and-bits-of-text" class="level3">
+<h3 class="anchored" data-anchor-id="adding-single-points-and-bits-of-text">Adding single points and bits of text</h3>
+<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have used this to make scatterplots, but it can plot single points too.</p>
 <p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (note, we’re not using <code>aes()</code>). We’ll use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via it’s Hex code</a> as the color for the point:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
@@ -643,7 +643,7 @@ Click to see some examples
 </div>
 </div>
 </div>
-<p>We can pretty easily add arbitrary text in a similar fashion with <code>geom_text()</code>, in which we specify the actual text to print with the <code>label</code> argument — note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it:</p>
+<p>We can pretty easily add arbitrary text in a similar fashion with <code>geom_text()</code>, in which we specify the text we want to print using the <code>label</code> argument — note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">82.99</span>, <span class="at">y =</span> <span class="fl">39.99</span>, <span class="at">colour =</span> <span class="st">"#ba0c2f"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
@@ -654,19 +654,6 @@ Click to see some examples
 <p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Adding individual points and pieces of text with <em>ggplot</em>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>While in “regular” (non-map) ggplots, we usually plot plot points based on information in a data frame with <code>geom_point()</code>, adding individual points and text <em>can</em> be done in the exact same way with regular ggplots, and can occasionally be useful.</p>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -1453,4 +1440,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E04_maps_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E05_maps_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -10,11 +10,11 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Mon, 17 Feb 2025 05:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 18 Feb 2025 05:00:00 GMT</lastBuildDate>
 <item>
   <title>Plotting geographical maps in R: part I</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S09E04_maps_01/</link>
+  <link>https://osu-codeclub.github.io/posts/S09E05_maps_01/</link>
   <description><![CDATA[ 
 
 
@@ -28,12 +28,12 @@
 <ul>
 <li>Plot maps of various regions, learn how to format them, and <strong>add points</strong> (part I, today)</li>
 <li>Make <strong>“choropleth” maps</strong>, where areas are colored depending on a variable like mean temperature (part II)</li>
-<li>Use different <strong>map backgrounds</strong>, like those of Google Maps (part III)</li>
+<li>Use different <strong>map backgrounds</strong>, like those of Google Maps, and make <strong>interactive maps</strong> (part III)</li>
 </ul>
 <p>This content builds to some extent on the previous series of sessions on making plots with <em>ggplot2</em>, as we will mainly use this package to make maps.</p>
 <section id="setting-up" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up">Setting up</h3>
-<p>As we’ll mostly use <em>ggplot2</em> to create maps, we’ll load that package like before by loading the entire tidyverse (we’ll also use functions from at least the <em>dplyr</em> package for data wrangling). You likely already have the tidyverse installed, but if not, run:</p>
+<p>We’ll load the entire tidyverse as we’ll be using functions from <em>dplyr</em> besides today’s main pacakge, <em>ggplot2</em>. You probably have the tidyverse installed already, but if not, run:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
@@ -97,13 +97,13 @@ font-style: inherit;">head</span>(states)</span></code></pre></div>
 </div>
 <p>Each row in this dataframe makes up a single point along the outline of a state:</p>
 <ul>
-<li>The <code>long</code> and <code>lat</code> columns contain longitudes and latitudes in decimal format</li>
-<li>The <code>group</code> column groups the rows (points) into shapes/“polygons” that outline a state, or in some cases, parts of a state<sup>1</sup>. This is complemented by the <code>order</code> column which provides the plotting order.</li>
+<li>The <code>long</code> and <code>lat</code> columns contain <strong>longitudes and latitudes</strong> in decimal format. In the US, all longitudes are negative as we are west of the prime meridian that runs through the UK, and all latitudes are positive as we are north of the equator.</li>
+<li>The <code>group</code> column groups the rows (points) into <strong>shapes/“polygons”</strong> that outline the borders of a state, or in some cases, parts of a state<sup>1</sup>. (This is complemented by the <code>order</code> column which provides the drawing order.)</li>
 <li>The <code>region</code> column contains the state name.</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/img/Latitude_and_Longitude_of_the_Earth.svg" class="img-fluid figure-img" style="width:70.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/img/Latitude_and_Longitude_of_the_Earth.svg" class="img-fluid figure-img" style="width:70.0%"></p>
 <figcaption>Recall: latitude (left) determines the position along the north-south axis,<br> and longitude (right) the position along the east-west axis. <a href="https://commons.wikimedia.org/wiki/File:Latitude_and_Longitude_of_the_Earth.svg">Source: Wikipedia</a></figcaption>
 </figure>
 </div>
@@ -134,13 +134,13 @@ font-style: inherit;">y =</span> lat))</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>That doesn’t look so good – what could be the problem here?</p>
-<p>We need to tell ggplot which <strong>groups of points</strong> together form discrete shapes like an individual state’s outline, and we can do so by additionally mapping the <code>group</code> column from our data frame to the <code>group</code> aesthetic:</p>
+<p>We need to tell ggplot which <strong>groups of points</strong> together form discrete shapes like an individual state’s outline, and can do so by additionally mapping our data frame’s <code>group</code> column to the plot’s <code>group</code> aesthetic:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -161,7 +161,7 @@ font-style: inherit;">group =</span> group))</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -174,7 +174,7 @@ font-style: inherit;">group =</span> group))</span></code></pre></div>
 <p>When creating maps, especially for large geographic areas like the world, continents, or big countries like the US, you need to consider the “projection”. We will not go into the details of map projections here, but will note that:</p>
 <ul>
 <li>Different projections are suitable for different geographic areas</li>
-<li>The projection can be set with the <code>crs</code> (Coordinate Reference System) argument of <code>coord_sf()</code>.</li>
+<li>The <em>ggplot</em> function <code>coord_sf()</code> sets a geographic coordinate system for the plot and with it’s argument <code>crs</code> (Coordinate Reference System, CRS), we can set the specific projection.</li>
 <li>CRS projections have numbers, e.g.:
 <ul>
 <li><code>5070</code> is a projection suitable for the lower 48</li>
@@ -220,7 +220,7 @@ font-style: inherit;">4326</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -233,12 +233,15 @@ font-style: inherit;">4326</span>)</span></code></pre></div>
 <li>With <code>theme_minimal()</code>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Code is the same as above, just with `theme_minimal()` added:</span></span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(states) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb9-2">  <span class="fu" style="color: #4758AB;
+<span id="cb9-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -251,7 +254,7 @@ background-color: null;
 font-style: inherit;">group =</span> group)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb9-3">  <span class="fu" style="color: #4758AB;
+<span id="cb9-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coord_sf</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -264,13 +267,13 @@ background-color: null;
 font-style: inherit;">4326</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb9-4">  <span class="fu" style="color: #4758AB;
+<span id="cb9-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_minimal</span>()</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -279,12 +282,15 @@ font-style: inherit;">theme_minimal</span>()</span></code></pre></div>
 <li>With <code>theme_void()</code>, which omits the plotting panel and axis altogether:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Code is the same as above, just with `theme_void()` added:</span></span>
+<span id="cb10-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(states) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+<span id="cb10-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -297,7 +303,7 @@ background-color: null;
 font-style: inherit;">group =</span> group)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb10-3">  <span class="fu" style="color: #4758AB;
+<span id="cb10-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coord_sf</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -310,18 +316,18 @@ background-color: null;
 font-style: inherit;">4326</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb10-4">  <span class="fu" style="color: #4758AB;
+<span id="cb10-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_void</span>()</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>When you make a lot of plots that should all have similar theming, a nice <em>ggplot</em> trick is to <strong>set an overall theme for the entire session</strong> with the <code>theme_set()</code> function, and optionally modify that with the <code>theme_update()</code> function. Let’s do that here, so we don’t have to keep adding the <code>theme_void()</code> line to every plot — and we’re also saying that we want any legends above the plot rather than besides it:</p>
+<p>When you make many plots that should have similar theming, a nice <em>ggplot</em> trick is to <strong>set an overall theme for the entire session</strong> with the <code>theme_set()</code> function, and optionally modify that with the <code>theme_update()</code> function. Let’s do that here, so we don’t have to keep adding the <code>theme_void()</code> line to every plot — and we’re also saying that we want any legends above the plot rather than besides it:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -364,7 +370,7 @@ font-style: inherit;">"grey85"</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"grey50"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"grey40"</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
 background-color: null;
@@ -387,7 +393,7 @@ font-style: inherit;">4326</span>)</span>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -395,7 +401,7 @@ font-style: inherit;">4326</span>)</span>
 </section>
 <section id="exercise-1" class="level3 exercise">
 <h3 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h3>
-<p><strong>A)</strong> Create a map that does not have visible state lines. While you’re at it, you can also play around with the settings inside <code>geom_polygon()</code> to get a map look that you like — or one that you hate, just for the fun of it.</p>
+<p><strong>A)</strong> Create a map that <em>does not have visible state lines</em>. While you’re at it, you can also play around with the settings inside <code>geom_polygon()</code> to get a map look that you like — or one that you hate, just for the fun of it. And how about a map with a blue panel background? After all, most (but not all) of the area surrounding the US is water.</p>
 <details>
 <summary>
 Click to see some examples
@@ -445,7 +451,7 @@ font-style: inherit;">4326</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -499,19 +505,90 @@ font-style: inherit;">4326</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>A blue panel background:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(states) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb15-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> group),</span>
+<span id="cb15-3">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey85"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey40"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.1</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb15-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_sf</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">crs =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5070</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">default_crs =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4326</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb15-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.background =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dodgerblue"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey20"</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Using the <code>states</code> data as a starting point, can you make a map that only shows Ohio? And/or another state or combination of neighboring states that you would like to Zoom in on?</p>
+<p><strong>B)</strong> Still using the <code>states</code> data frame as a starting point, can you make a map that only shows Ohio? And/or another state or combination of neighboring states that you would like to Zoom in on?</p>
 <details>
 <summary>
 Click to see hints
 </summary>
 <ul>
-<li><p>Try to use <code>filter()</code> to subset <code>states</code> to only Ohio (and/or other states) before you pass the data to <code>ggplot()</code>.</p></li>
+<li><p>Rather than trying to zoom in by setting different axis limits, try to use <code>filter()</code> to subset <code>states</code> to only Ohio (and/or other states) before you pass the data to <code>ggplot()</code>.</p></li>
 <li><p>When plotting individual states, our current CFS does not look that great as states are “tilted”. When you’re not interested in looking up a correct projection, just adding <code>coord_sf()</code> with no arguments can give a reasonable look.</p></li>
 </ul>
 </details>
@@ -523,7 +600,7 @@ Click to see some examples
 <li>What are the state names like? Turns out they are all in lowercase:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">unique</span>(states<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -552,64 +629,6 @@ font-style: inherit;">$</span>region)</span></code></pre></div>
 <li>Plotting only Ohio – first use <code>filter()</code> to only keep the outline for the state of Ohio, then plot like before:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">states <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb17-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(region <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ohio"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb17-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb17-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> group),</span>
-<span id="cb17-5">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"skyblue"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"grey40"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb17-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">coord_sf</span>()</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<ul>
-<li>Plotting Ohio along with two neighboring states:</li>
-</ul>
-<div class="cell">
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">states <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
@@ -617,15 +636,9 @@ font-style: inherit;">|&gt;</span></span>
 background-color: null;
 font-style: inherit;">filter</span>(region <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ohio"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"indiana"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"michigan"</span>)) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">"ohio"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
 <span id="cb18-3">  <span class="fu" style="color: #4758AB;
@@ -648,7 +661,7 @@ font-style: inherit;">group =</span> group),</span>
 background-color: null;
 font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"azure4"</span>, <span class="at" style="color: #657422;
+font-style: inherit;">"skyblue"</span>, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -665,26 +678,188 @@ font-style: inherit;">coord_sf</span>()</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Plotting Ohio along with two neighboring states:</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">states <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span></span>
+<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(region <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%in%</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"ohio"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"indiana"</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"michigan"</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb19-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> group),</span>
+<span id="cb19-5">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"azure4"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey40"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb19-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_sf</span>()</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
 </details>
 </section>
+<hr style="height:1pt; visibility:hidden;">
+<section id="zooming-in" class="level3">
+<h3 class="anchored" data-anchor-id="zooming-in">Zooming in</h3>
+<p>In the exercise above, we plotted only Ohio by filtering the input data frame. Alternatively, we may want to zoom in to a region without considering administrative borders. We can do so with the <code>xlim</code> and <code>ylim</code> arguments of <code>coord_sf()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(states) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">group =</span> group),</span>
+<span id="cb20-3">               <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey85"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey40"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.2</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-4">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Set the x and y limits inside coord_sf:</span></span>
+<span id="cb20-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">coord_sf</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xlim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">79</span>, <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">89</span>), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">ylim =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">35</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">45</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb20-6">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># We may now want to draw a border around the plot since we're cutting of</span></span>
+<span id="cb20-7">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># landmasses:</span></span>
+<span id="cb20-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.border =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_rect</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">NA</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey20"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linewidth =</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.5</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
 <p><br></p>
+</section>
 </section>
 <section id="adding-points-and-text-to-maps" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="adding-points-and-text-to-maps"><span class="header-section-number">3</span> Adding points and text to maps</h2>
-<section id="adding-individual-points-and-bits-of-text" class="level3">
-<h3 class="anchored" data-anchor-id="adding-individual-points-and-bits-of-text">Adding individual points and bits of text</h3>
-<p>We can add points to a map with the familiar <code>geom_point()</code> function, which we have used to make scatterplots but that can plot individual points as well.</p>
+<section id="adding-single-points-and-bits-of-text" class="level3">
+<h3 class="anchored" data-anchor-id="adding-single-points-and-bits-of-text">Adding single points and bits of text</h3>
+<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have used this to make scatterplots, but it can plot single points too.</p>
 <p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (note, we’re not using <code>aes()</code>). We’ll use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via it’s Hex code</a> as the color for the point:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;
+<span id="cb21-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -708,17 +883,17 @@ font-style: inherit;">4</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>We can pretty easily add arbitrary text in a similar fashion with <code>geom_text()</code>, in which we specify the actual text to print with the <code>label</code> argument:</p>
+<p>We can pretty easily add arbitrary text in a similar fashion with <code>geom_text()</code>, in which we specify the text we want to print using the <code>label</code> argument — note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb20-2">  <span class="fu" style="color: #4758AB;
+<span id="cb22-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -741,7 +916,7 @@ background-color: null;
 font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb20-3">  <span class="fu" style="color: #4758AB;
+<span id="cb22-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_text</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -769,22 +944,9 @@ font-style: inherit;">4</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Adding individual points and pieces of text with <em>ggplot</em>
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>While in “regular” (non-map) ggplots, we usually plot plot points based on information in a data frame with <code>geom_point()</code>, adding individual points and text <em>can</em> be done in the exact same way with regular ggplots, and can occasionally be useful.</p>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -793,12 +955,12 @@ Adding individual points and pieces of text with <em>ggplot</em>
 <h3 class="anchored" data-anchor-id="adding-a-set-of-points-from-a-data-frame">Adding a set of points from a data frame</h3>
 <p>In your research, you may want to make a map that plots sampling locations. As a simple fictional example, we can create a dataframe with four sampling locations, a grouping factor (<code>season</code>), and a column with a numerical result for each location (<code>yield</code>):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">locations <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">locations <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data.frame</span>(</span>
-<span id="cb21-2">  <span class="at" style="color: #657422;
+<span id="cb23-2">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">location =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -811,7 +973,7 @@ background-color: null;
 font-style: inherit;">"L03"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"L04"</span>),</span>
-<span id="cb21-3">  <span class="at" style="color: #657422;
+<span id="cb23-3">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">long =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -832,7 +994,7 @@ background-color: null;
 font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">110</span>),</span>
-<span id="cb21-4">  <span class="at" style="color: #657422;
+<span id="cb23-4">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">lat =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -845,7 +1007,7 @@ background-color: null;
 font-style: inherit;">45</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">43</span>),</span>
-<span id="cb21-5">  <span class="at" style="color: #657422;
+<span id="cb23-5">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">season =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -858,7 +1020,7 @@ background-color: null;
 font-style: inherit;">"summer"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"summer"</span>),</span>
-<span id="cb21-6">  <span class="at" style="color: #657422;
+<span id="cb23-6">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">yield =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -871,9 +1033,9 @@ background-color: null;
 font-style: inherit;">39</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">62</span>)</span>
-<span id="cb21-7">)</span>
-<span id="cb21-8"></span>
-<span id="cb21-9">locations</span></code></pre></div>
+<span id="cb23-7">)</span>
+<span id="cb23-8"></span>
+<span id="cb23-9">locations</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  location long lat season yield
 1      L01  -80  35 winter    21
@@ -889,15 +1051,15 @@ font-style: inherit;">62</span>)</span>
 <li>We use point shape 21 (see <a href="https://www.sthda.com/english/wiki/ggplot2-point-shapes">this overview of R point shapes</a>) which allows for a <code>fill</code> color as well as an outline color (the latter via <code>color</code>):</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">p <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb23-2">  <span class="fu" style="color: #4758AB;
+<span id="cb25-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> locations,</span>
-<span id="cb23-3">             <span class="fu" style="color: #4758AB;
+<span id="cb25-3">             <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -906,7 +1068,7 @@ background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> season),</span>
-<span id="cb23-4">             <span class="at" style="color: #657422;
+<span id="cb25-4">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -918,7 +1080,7 @@ font-style: inherit;">21</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -941,92 +1103,6 @@ Click here for some hints
 Click here for possible solutions with point size
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">p <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb24-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> locations,</span>
-<span id="cb24-3">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> season, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> yield),</span>
-<span id="cb24-4">             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">21</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>That produces quite a small point for the location with the lowest yield – we could restrict the size range of the points like so:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1">p <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb25-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> locations,</span>
-<span id="cb25-3">             <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> season, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> yield),</span>
-<span id="cb25-4">             <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">21</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb25-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_size_continuous</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">range =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2.5</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">6</span>))</span></code></pre></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-<details>
-<summary>
-Click here for possible solutions with point fill color
-</summary>
-<p>If we want to use <code>fill</code> color instead for <code>yield</code>, we’ll need another aesthetic for <code>season</code>, e.g.&nbsp;<code>shape</code>:</p>
-<div class="cell">
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
@@ -1043,39 +1119,23 @@ font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">shape =</span> season, <span class="at" style="color: #657422;
+font-style: inherit;">fill =</span> season, <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">fill =</span> yield),</span>
+font-style: inherit;">size =</span> yield),</span>
 <span id="cb26-4">             <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
-font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb26-5">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Make sure the shapes support a fill color (the default ones don't):</span></span>
-<span id="cb26-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_shape_manual</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">21</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">23</span>))</span></code></pre></div>
+font-style: inherit;">21</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>We can change the fill color scale to one of the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a> color scales:</p>
+<p>That produces quite a small point for the location with the lowest yield – we could restrict the size range of the points like so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1">p <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1093,20 +1153,122 @@ font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
+font-style: inherit;">fill =</span> season, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> yield),</span>
+<span id="cb27-4">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb27-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_size_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">range =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2.5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+<details>
+<summary>
+Click here for possible solutions with point fill color
+</summary>
+<p>If we want to use <code>fill</code> color instead for <code>yield</code>, we’ll need another aesthetic for <code>season</code>, e.g.&nbsp;<code>shape</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb28-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> locations,</span>
+<span id="cb28-3">             <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
+background-color: null;
 font-style: inherit;">shape =</span> season, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> yield),</span>
-<span id="cb27-4">             <span class="at" style="color: #657422;
+<span id="cb28-4">             <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb27-5">  <span class="co" style="color: #5E5E5E;
+<span id="cb28-5">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># Make sure the shapes support a fill color (the default ones don't):</span></span>
-<span id="cb27-6">  <span class="fu" style="color: #4758AB;
+<span id="cb28-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_shape_manual</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">values =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">21</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">23</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can change the fill color scale to one of the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a> color scales:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">p <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb29-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> locations,</span>
+<span id="cb29-3">             <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> long, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">shape =</span> season, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> yield),</span>
+<span id="cb29-4">             <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-5">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make sure the shapes support a fill color (the default ones don't):</span></span>
+<span id="cb29-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_shape_manual</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1119,7 +1281,7 @@ background-color: null;
 font-style: inherit;">23</span>)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb27-7">  <span class="fu" style="color: #4758AB;
+<span id="cb29-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_fill_viridis_c</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1129,7 +1291,7 @@ font-style: inherit;">"inferno"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1145,7 +1307,7 @@ font-style: inherit;">"inferno"</span>)</span></code></pre></div>
 <h3 class="anchored" data-anchor-id="getting-county-level-map-data-for-just-ohio">Getting county-level map data for just Ohio</h3>
 <p>We can get a county-level map of the entire United States using <code>map_data(map = "county")</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">map_data</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1168,7 +1330,7 @@ font-style: inherit;">head</span>()</span></code></pre></div>
 </div>
 <p>Let’s filter that so we are only left with Ohio:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1">ohio <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">ohio <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1179,15 +1341,15 @@ background-color: null;
 font-style: inherit;">"county"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
-<span id="cb30-2">  <span class="fu" style="color: #4758AB;
+<span id="cb32-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(region <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"ohio"</span>)</span>
-<span id="cb30-3"></span>
-<span id="cb30-4"><span class="fu" style="color: #4758AB;
+<span id="cb32-3"></span>
+<span id="cb32-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(ohio)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1202,7 +1364,7 @@ font-style: inherit;">head</span>(ohio)</span></code></pre></div>
 </div>
 <p>Let’s get a feel for what’s in the resulting dataframe — the only <code>region</code> (i.e.&nbsp;state) should be <code>ohio</code>, and <code>subregion</code>s are counties:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">ohio <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1211,7 +1373,7 @@ font-style: inherit;">count</span>(region)</span></code></pre></div>
 <pre><code>  region    n
 1   ohio 1427</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1">ohio <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1236,14 +1398,14 @@ font-style: inherit;">head</span>()</span></code></pre></div>
 <h3 class="anchored" data-anchor-id="a-base-map-of-ohio">A base map of Ohio</h3>
 <p>Now we are ready to plot our map of Ohio:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">p_ohio <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1">p_ohio <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(ohio) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb36-2">  <span class="fu" style="color: #4758AB;
+<span id="cb38-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_polygon</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1254,7 +1416,7 @@ background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">group =</span> group),</span>
-<span id="cb36-3">               <span class="at" style="color: #657422;
+<span id="cb38-3">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1265,15 +1427,15 @@ background-color: null;
 font-style: inherit;">"grey70"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb36-4">  <span class="fu" style="color: #4758AB;
+<span id="cb38-4">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">coord_sf</span>()</span>
-<span id="cb36-5"></span>
-<span id="cb36-6">p_ohio</span></code></pre></div>
+<span id="cb38-5"></span>
+<span id="cb38-6">p_ohio</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1286,7 +1448,7 @@ font-style: inherit;">coord_sf</span>()</span>
 <p>For now, without pulling in additional data, say that we want to <strong>print the county names in the map</strong>.</p>
 <p>To do so, we will start by transforming the county names to <strong>“Title Case”</strong> from the original all-lowercase using the <code>tools::toTitleCase()</code> function — and let’s also use the name <code>county</code> (instead of <code>subregion</code> for that new column):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1">ohio <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">ohio <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1302,12 +1464,12 @@ font-style: inherit;">toTitleCase</span>(subregion))</span></code></pre></div>
 </div>
 <p>We’d also need a <em>single pair of coordinates for each county</em>, because we only want to print each county name once. A quick-and-dirty way to get those is to simply compute the <strong>mean</strong> of the longitude and latitude of the points in the dataframe that make up the borders.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1">county_coords <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">county_coords <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
-<span id="cb38-2">  <span class="fu" style="color: #4758AB;
+<span id="cb40-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1320,8 +1482,8 @@ background-color: null;
 font-style: inherit;">mean</span>(lat), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.by =</span> county)</span>
-<span id="cb38-3"></span>
-<span id="cb38-4"><span class="fu" style="color: #4758AB;
+<span id="cb40-3"></span>
+<span id="cb40-4"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">head</span>(county_coords)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1336,15 +1498,15 @@ font-style: inherit;">head</span>(county_coords)</span></code></pre></div>
 </div>
 <p>Now, we can add the county labels to the plot:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1">p_ohio <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">p_ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb40-2">  <span class="fu" style="color: #4758AB;
+<span id="cb42-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_text</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> county_coords,</span>
-<span id="cb40-3">            <span class="fu" style="color: #4758AB;
+<span id="cb42-3">            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1353,7 +1515,7 @@ background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> county),</span>
-<span id="cb40-4">            <span class="at" style="color: #657422;
+<span id="cb42-4">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1365,7 +1527,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1389,7 +1551,7 @@ font-style: inherit;">3</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1412,7 +1574,7 @@ Click here for the solution
 <li>First we filter the <code>county_coords</code> to only keep our focal counties, and store the result in a new data frame:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb41" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1">focal_counties <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1">focal_counties <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1423,20 +1585,20 @@ background-color: null;
 font-style: inherit;">"Wayne"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Allen"</span>,</span>
-<span id="cb41-2">                    <span class="st" style="color: #20794D;
+<span id="cb43-2">                    <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Richland"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Marion"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Licking"</span>) </span>
-<span id="cb41-3"></span>
-<span id="cb41-4">county_coords_sel <span class="ot" style="color: #003B4F;
+<span id="cb43-3"></span>
+<span id="cb43-4">county_coords_sel <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> county_coords <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span></span>
-<span id="cb41-5">  <span class="fu" style="color: #4758AB;
+<span id="cb43-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(county <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1446,15 +1608,15 @@ font-style: inherit;">%in%</span> focal_counties)</span></code></pre></div>
 <li>We use the same plotting code as before, but now with <code>county_coords_sel</code>:</li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1">p_ohio <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">p_ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb42-2">  <span class="fu" style="color: #4758AB;
+<span id="cb44-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_text</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> county_coords_sel,</span>
-<span id="cb42-3">            <span class="fu" style="color: #4758AB;
+<span id="cb44-3">            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1463,7 +1625,7 @@ background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> county),</span>
-<span id="cb42-4">            <span class="at" style="color: #657422;
+<span id="cb44-4">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1475,7 +1637,7 @@ font-style: inherit;">4</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1487,7 +1649,7 @@ font-style: inherit;">4</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1507,10 +1669,10 @@ Click here for some hints
 Click here for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb43" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1">p_ohio <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">p_ohio <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb43-2">  <span class="fu" style="color: #4758AB;
+<span id="cb45-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_polygon</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1521,7 +1683,7 @@ background-color: null;
 font-style: inherit;">filter</span>(county <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">%in%</span> focal_counties),</span>
-<span id="cb43-3">               <span class="fu" style="color: #4758AB;
+<span id="cb45-3">               <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1532,19 +1694,19 @@ background-color: null;
 font-style: inherit;">group =</span> group, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">fill =</span> county),</span>
-<span id="cb43-4">               <span class="at" style="color: #657422;
+<span id="cb45-4">               <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"grey70"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb43-5">  <span class="fu" style="color: #4758AB;
+<span id="cb45-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_text</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">data =</span> county_coords_sel,</span>
-<span id="cb43-6">            <span class="fu" style="color: #4758AB;
+<span id="cb45-6">            <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1553,7 +1715,7 @@ background-color: null;
 font-style: inherit;">y =</span> lat, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">label =</span> county),</span>
-<span id="cb43-7">            <span class="at" style="color: #657422;
+<span id="cb45-7">            <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
@@ -1564,7 +1726,7 @@ background-color: null;
 font-style: inherit;">4</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb43-8">  <span class="fu" style="color: #4758AB;
+<span id="cb45-8">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">guides</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1574,7 +1736,7 @@ font-style: inherit;">"none"</span>)</span></code></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S09E04_maps_01/index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E05_maps_01/index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
 </figure>
 </div>
 </div>
@@ -1596,8 +1758,8 @@ font-style: inherit;">"none"</span>)</span></code></pre></div>
   <category>maps</category>
   <category>ggplot2</category>
   <category>dataviz</category>
-  <guid>https://osu-codeclub.github.io/posts/S09E04_maps_01/</guid>
-  <pubDate>Mon, 17 Feb 2025 05:00:00 GMT</pubDate>
+  <guid>https://osu-codeclub.github.io/posts/S09E05_maps_01/</guid>
+  <pubDate>Tue, 18 Feb 2025 05:00:00 GMT</pubDate>
 </item>
 <item>
   <title>Introduction to ggplot2 - 03</title>
