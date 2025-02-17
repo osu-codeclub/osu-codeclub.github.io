@@ -149,7 +149,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
         <li>
     <a class="dropdown-item" href="../../pages/other.html">
- <span class="dropdown-text">Other code-related OSU activities</span></a>
+ <span class="dropdown-text">Other coding-related OSU activities</span></a>
   </li>  
         <li><hr class="dropdown-divider"></li>
         <li>
@@ -217,7 +217,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exercise-1" id="toc-exercise-1" class="nav-link" data-scroll-target="#exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</a></li>
   <li><a href="#zooming-in" id="toc-zooming-in" class="nav-link" data-scroll-target="#zooming-in">Zooming in</a></li>
   </ul></li>
-  <li><a href="#adding-points-and-text-to-maps" id="toc-adding-points-and-text-to-maps" class="nav-link" data-scroll-target="#adding-points-and-text-to-maps"><span class="header-section-number">3</span> Adding points and text to maps</a>
+  <li><a href="#adding-markers-and-text-to-maps" id="toc-adding-markers-and-text-to-maps" class="nav-link" data-scroll-target="#adding-markers-and-text-to-maps"><span class="header-section-number">3</span> Adding markers and text to maps</a>
   <ul class="collapse">
   <li><a href="#adding-single-points-and-bits-of-text" id="toc-adding-single-points-and-bits-of-text" class="nav-link" data-scroll-target="#adding-single-points-and-bits-of-text">Adding single points and bits of text</a></li>
   <li><a href="#adding-a-set-of-points-from-a-data-frame" id="toc-adding-a-set-of-points-from-a-data-frame" class="nav-link" data-scroll-target="#adding-a-set-of-points-from-a-data-frame">Adding a set of points from a data frame</a></li>
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Plotting geographical maps in R: part I</h1>
-<p class="subtitle lead">Using <em>ggplot</em> to make maps and adding custom points to them.</p>
+<p class="subtitle lead">Using <em>ggplot</em> to make maps and adding custom information to them.</p>
   <div class="quarto-categories">
     <div class="quarto-category">maps</div>
     <div class="quarto-category">ggplot2</div>
@@ -279,14 +279,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1" class="anchored" data-anchor-id="intro"><span class="header-section-number">1</span> Intro</h2>
 <p>Today is the first of three Code Club sessions on <strong>making maps with R</strong>. We will:</p>
 <ul>
-<li>Plot maps of various regions, learn how to format them, and <strong>add points</strong> (part I, today)</li>
+<li>Plot maps of various regions, learn how to format them, and <strong>add points/markers and text</strong> (part I, today)</li>
 <li>Make <strong>“choropleth” maps</strong>, where areas are colored depending on a variable like mean temperature (part II)</li>
 <li>Use different <strong>map backgrounds</strong>, like those of Google Maps, and make <strong>interactive maps</strong> (part III)</li>
 </ul>
 <p>This content builds to some extent on the previous series of sessions on making plots with <em>ggplot2</em>, as we will mainly use this package to make maps.</p>
 <section id="setting-up" class="level3">
 <h3 class="anchored" data-anchor-id="setting-up">Setting up</h3>
-<p>We’ll load the entire tidyverse as we’ll be using functions from <em>dplyr</em> besides today’s main pacakge, <em>ggplot2</em>. You probably have the tidyverse installed already, but if not, run:</p>
+<p>We’ll load the entire tidyverse because we’ll be using functions from <em>dplyr</em> as well as today’s main package, <em>ggplot2</em>. You probably have the tidyverse installed already, but if not, run:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Only run this if you have not yet installed the tidyverse</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -315,7 +315,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="map-data-to-draw-states-in-the-us" class="level3">
 <h3 class="anchored" data-anchor-id="map-data-to-draw-states-in-the-us">Map data to draw states in the US</h3>
 <p>When plotting maps, we typically need a base map that has outlines like administrative borders and coastlines. For today’s maps, we will get this type of map data through <em>ggplot2</em>’s <code>map_data()</code> function.</p>
-<p>Let’s get a dataframe with the outlines of the lower 48 states of the US (i.e.&nbsp;no Alaska or Hawaii), and take a look at what it contains:</p>
+<p>Let’s get a dataframe with the outlines of the lower 48 states of the US (i.e., without Alaska and Hawaii), and take a look at what it contains:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>states <span class="ot">&lt;-</span> <span class="fu">map_data</span>(<span class="at">map =</span> <span class="st">"state"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -334,7 +334,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li>The <code>long</code> and <code>lat</code> columns contain <strong>longitudes and latitudes</strong> in decimal format. In the US, all longitudes are negative as we are west of the prime meridian that runs through the UK, and all latitudes are positive as we are north of the equator.</li>
 <li>The <code>group</code> column groups the rows (points) into <strong>shapes/“polygons”</strong> that outline the borders of a state, or in some cases, parts of a state<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. (This is complemented by the <code>order</code> column which provides the drawing order.)</li>
-<li>The <code>region</code> column contains the state name.</li>
+<li>The <code>region</code> column contains the name of the state that the point applies to.</li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -346,7 +346,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="our-first-map" class="level3">
 <h3 class="anchored" data-anchor-id="our-first-map">Our first map</h3>
-<p>To make a first map, we pass our dataframe to ggplot as per usual, and then use the geom <strong><code>geom_polygon()</code></strong> to draw the polygons that make up the states, mapping:</p>
+<p>To make a first map, we pass our dataframe to <em>ggplot</em> as per usual, and then use the geom <strong><code>geom_polygon()</code></strong> to draw the polygons that make up the states, mapping:</p>
 <ul>
 <li>Longitude (<code>long</code>, east-west axis) to the <code>x</code> aesthetic</li>
 <li>Latitude (<code>lat</code>, north-south axis) to the <code>y</code> aesthetic</li>
@@ -383,7 +383,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When creating maps, especially for large geographic areas like the world, continents, or big countries like the US, you need to consider the “projection”. We will not go into the details of map projections here, but will note that:</p>
 <ul>
 <li>Different projections are suitable for different geographic areas</li>
-<li>The <em>ggplot</em> function <code>coord_sf()</code> sets a geographic coordinate system for the plot and with it’s argument <code>crs</code> (Coordinate Reference System, CRS), we can set the specific projection.</li>
+<li>The <em>ggplot</em> function <code>coord_sf()</code> sets a geographic coordinate system for the plot and with its argument <code>crs</code> (Coordinate Reference System, CRS), we can set the specific projection.</li>
 <li>CRS projections have numbers, e.g.:
 <ul>
 <li><code>5070</code> is a projection suitable for the lower 48</li>
@@ -395,7 +395,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Our data has <code>4326</code>-style GPS coordinates</li>
 </ul></li>
 </ul>
-<p>In the map below, note the curvature of especially the latitudinal lines, which we didn’t have before:</p>
+<p>In the map below, note the curvature of especially the latitudinal lines, which our previous maps didn’t have:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(states) <span class="sc">+</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group)) <span class="sc">+</span></span>
@@ -411,9 +411,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="map-theming" class="level3">
 <h3 class="anchored" data-anchor-id="map-theming">Map theming</h3>
-<p>With maps, more basic themes like <code>theme_minimal()</code> or <code>theme_void()</code> tend to look better since we’re often not that interested in the background panel and the axes.</p>
+<p>With maps, more basic <em>ggplot2</em> themes like <code>theme_minimal()</code> or <code>theme_void()</code> tend to look better since we’re often not that interested in the background panel and the axes.</p>
 <ul>
-<li>With <code>theme_minimal()</code>:</li>
+<li>With <code>theme_minimal()</code> – something like this could be useful for a map in a scientific paper:</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Code is the same as above, just with `theme_minimal()` added:</span></span>
@@ -446,7 +446,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>When you make many plots that should have similar theming, a nice <em>ggplot</em> trick is to <strong>set an overall theme for the entire session</strong> with the <code>theme_set()</code> function, and optionally modify that with the <code>theme_update()</code> function. Let’s do that here, so we don’t have to keep adding the <code>theme_void()</code> line to every plot — and we’re also saying that we want any legends above the plot rather than besides it:</p>
+<p>When you make many plots that should have similar theming, a nice <em>ggplot</em> trick is to <strong>set an overall theme for the entire session</strong> with the <code>theme_set()</code> function, and optionally modify that with the <code>theme_update()</code> function.</p>
+<p>Let’s do that here, so we don’t have to keep adding the <code>theme_void()</code> line to every plot — and we’re also saying that we want any legends above the plot rather than besides it:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_void</span>())</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_update</span>(<span class="at">legend.position =</span> <span class="st">"top"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -473,7 +474,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>A)</strong> Create a map that <em>does not have visible state lines</em>. While you’re at it, you can also play around with the settings inside <code>geom_polygon()</code> to get a map look that you like — or one that you hate, just for the fun of it. And how about a map with a blue panel background? After all, most (but not all) of the area surrounding the US is water.</p>
 <details>
 <summary>
-Click to see some examples
+Click here for hints
+</summary>
+<ul>
+<li><p>If the <code>fill</code> and <code>color</code>(=outlines) colors are assigned the same color, no state lines will be visible.</p></li>
+<li><p>You can set the panel background (which in this case is the area around the US stated) with <code>theme(panel.background = element_rect(...))</code>.</p></li>
+</ul>
+</details>
+<details>
+<summary>
+Click here to see some examples
 </summary>
 <ul>
 <li>You can make sure that the state lines aren’t visible by providing the same color for the <code>color</code> and <code>fill</code> aesthetics:</li>
@@ -525,10 +535,10 @@ Click to see some examples
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Still using the <code>states</code> data frame as a starting point, can you make a map that only shows Ohio? And/or another state or combination of neighboring states that you would like to Zoom in on?</p>
+<p><strong>B)</strong> Still using the <code>states</code> dataframe as a starting point, can you make a map that only shows Ohio? And/or another state, or a combination of neighboring states that you would like to see?</p>
 <details>
 <summary>
-Click to see hints
+Click here to see hints
 </summary>
 <ul>
 <li><p>Rather than trying to zoom in by setting different axis limits, try to use <code>filter()</code> to subset <code>states</code> to only Ohio (and/or other states) before you pass the data to <code>ggplot()</code>.</p></li>
@@ -537,7 +547,7 @@ Click to see hints
 </details>
 <details>
 <summary>
-Click to see some examples
+Click here to see some examples
 </summary>
 <ul>
 <li>What are the state names like? Turns out they are all in lowercase:</li>
@@ -626,11 +636,11 @@ Click to see some examples
 <p><br></p>
 </section>
 </section>
-<section id="adding-points-and-text-to-maps" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="adding-points-and-text-to-maps"><span class="header-section-number">3</span> Adding points and text to maps</h2>
+<section id="adding-markers-and-text-to-maps" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="adding-markers-and-text-to-maps"><span class="header-section-number">3</span> Adding markers and text to maps</h2>
 <section id="adding-single-points-and-bits-of-text" class="level3">
 <h3 class="anchored" data-anchor-id="adding-single-points-and-bits-of-text">Adding single points and bits of text</h3>
-<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have used this to make scatterplots, but it can plot single points too.</p>
+<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have used this to make scatterplots, but it can plot custom, single points too.</p>
 <p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (note, we’re not using <code>aes()</code>). We’ll use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via it’s Hex code</a> as the color for the point:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
@@ -681,7 +691,7 @@ Click to see some examples
 </div>
 <p>Now, we can add a layer to our saved plot <code>p</code> with the sampling locations — note that:</p>
 <ul>
-<li>We are giving <code>geom_point()</code> “it’s own” data set with the <code>data =</code> argument</li>
+<li>We are giving <code>geom_point()</code> “its own” data set with the <code>data =</code> argument</li>
 <li>We map the <code>fill</code> aesthetic to the <code>season</code> column so we can distinguish samples from different seasons</li>
 <li>We use point shape 21 (see <a href="https://www.sthda.com/english/wiki/ggplot2-point-shapes">this overview of R point shapes</a>) which allows for a <code>fill</code> color as well as an outline color (the latter via <code>color</code>):</li>
 </ul>
@@ -837,11 +847,11 @@ Click here for possible solutions with point fill color
 6  auglaize 16</code></pre>
 </div>
 </div>
-<p>The number of entries for each county is simply how many points make up the lines. Those numbers are quite low making this a relatively low-resolution map — but good enough for our purposes.</p>
+<p>The number of entries for each county (<code>n</code> in the output above) is simply how many points make up the lines. Those numbers are quite low, making this a relatively low-resolution map — but good enough for our purposes.</p>
 </section>
 <section id="a-base-map-of-ohio" class="level3">
 <h3 class="anchored" data-anchor-id="a-base-map-of-ohio">A base map of Ohio</h3>
-<p>Now we are ready to plot our map of Ohio:</p>
+<p>Now we are ready to plot our first map of Ohio:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>p_ohio <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ohio) <span class="sc">+</span></span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group),</span>
@@ -863,7 +873,7 @@ Click here for possible solutions with point fill color
 <section id="adding-county-names" class="level3">
 <h3 class="anchored" data-anchor-id="adding-county-names">Adding county names</h3>
 <p>For now, without pulling in additional data, say that we want to <strong>print the county names in the map</strong>.</p>
-<p>To do so, we will start by transforming the county names to <strong>“Title Case”</strong> from the original all-lowercase using the <code>tools::toTitleCase()</code> function — and let’s also use the name <code>county</code> (instead of <code>subregion</code> for that new column):</p>
+<p>To do so, we will start by transforming the county names to <strong>“Title Case”</strong> from the original all-lowercase using the <code>tools::toTitleCase()</code> function — and let’s also use the name <code>county</code> (instead of <code>subregion</code>) for that new column:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ohio <span class="ot">&lt;-</span> ohio <span class="sc">|&gt;</span> <span class="fu">mutate</span>(<span class="at">county =</span> tools<span class="sc">::</span><span class="fu">toTitleCase</span>(subregion))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
