@@ -1,6 +1,6 @@
 ---
 title: "Plotting geographical maps in R: part I"
-subtitle: "Using _ggplot_ to make maps and adding custom points to them."
+subtitle: "Using _ggplot_ to make maps and adding custom information to them."
 pagetitle: "Maps I"
 author: "Jelmer Poelstra"
 date: "2025-02-18"
@@ -26,8 +26,8 @@ editor_options:
 Today is the first of three Code Club sessions on **making maps with R**.
 We will:
 
-- Plot maps of various regions, learn how to format them, and **add points**
-  (part I, today)
+- Plot maps of various regions, learn how to format them,
+  and **add points/markers and text** (part I, today)
 - Make **"choropleth" maps**, where areas are colored depending on a variable
   like mean temperature (part II)
 - Use different **map backgrounds**, like those of Google Maps,
@@ -38,8 +38,8 @@ making plots with _ggplot2_, as we will mainly use this package to make maps.
 
 ### Setting up
 
-We'll load the entire tidyverse as we'll be using functions from _dplyr_
-besides today's main pacakge, _ggplot2_.
+We'll load the entire tidyverse because we'll be using functions from _dplyr_
+as well as today's main package, _ggplot2_.
 You probably have the tidyverse installed already, but if not, run:
 
 ```{r, eval=FALSE}
@@ -65,7 +65,7 @@ For today's maps,
 we will get this type of map data through _ggplot2_'s `map_data()` function.
 
 Let's get a dataframe with the outlines of the lower 48 states of the US
-(i.e. no Alaska or Hawaii), and take a look at what it contains:
+(i.e., without Alaska and Hawaii), and take a look at what it contains:
 
 ```{r}
 states <- map_data(map = "state")
@@ -86,7 +86,7 @@ Each row in this dataframe makes up a single point along the outline of a state:
   for the Upper Peninsula.
   ]. 
   (This is complemented by the `order` column which provides the drawing order.) 
-- The `region` column contains the state name.
+- The `region` column contains the name of the state that the point applies to.
 
 ![Recall: latitude (left) determines the position along the north-south axis,<br> and longitude (right) the position along the east-west axis. [Source: Wikipedia](https://commons.wikimedia.org/wiki/File:Latitude_and_Longitude_of_the_Earth.svg)](img/Latitude_and_Longitude_of_the_Earth.svg){fig-align="center" width="70%"}
 
@@ -94,7 +94,7 @@ Each row in this dataframe makes up a single point along the outline of a state:
 
 ### Our first map
 
-To make a first map, we pass our dataframe to ggplot as per usual,
+To make a first map, we pass our dataframe to _ggplot_ as per usual,
 and then use the geom **`geom_polygon()`** to draw the polygons that make up the
 states, mapping:
 
@@ -130,7 +130,7 @@ We will not go into the details of map projections here, but will note that:
 
 - Different projections are suitable for different geographic areas 
 - The _ggplot_ function `coord_sf()` sets a geographic coordinate system for the
-  plot and with it's argument `crs` (Coordinate Reference System, CRS),
+  plot and with its argument `crs` (Coordinate Reference System, CRS),
   we can set the specific projection.
 - CRS projections have numbers, e.g.:
   - `5070` is a projection suitable for the lower 48
@@ -141,7 +141,7 @@ We will not go into the details of map projections here, but will note that:
   - Our data has `4326`-style GPS coordinates
 
 In the map below, note the curvature of especially the latitudinal lines,
-which we didn't have before:
+which our previous maps didn't have:
 
 ```{r}
 ggplot(states) +
@@ -151,10 +151,12 @@ ggplot(states) +
 
 ### Map theming
 
-With maps, more basic themes like `theme_minimal()` or `theme_void()` tend to look
-better since we're often not that interested in the background panel and the axes.
+With maps, more basic _ggplot2_ themes like `theme_minimal()` or `theme_void()`
+tend to look better since we're often not that interested in the background
+panel and the axes.
 
-- With `theme_minimal()`:
+- With `theme_minimal()` -- something like this could be useful for a map
+  in a scientific paper:
 
 ```{r}
 # Code is the same as above, just with `theme_minimal()` added:
@@ -178,6 +180,7 @@ When you make many plots that should have similar theming,
 a nice _ggplot_ trick is to **set an overall theme for the entire session**
 with the `theme_set()` function,
 and optionally modify that with the `theme_update()` function.
+
 Let's do that here,
 so we don't have to keep adding the `theme_void()` line to every plot ---
 and we're also saying that we want any legends above the plot rather than besides
@@ -209,7 +212,17 @@ to get a map look that you like --- or one that you hate, just for the fun of it
 And how about a map with a blue panel background?
 After all, most (but not all) of the area surrounding the US is water.
 
-<details><summary>Click to see some examples</summary>
+<details><summary>Click here for hints</summary>
+
+- If the `fill` and `color`(=outlines) colors are assigned the same color,
+  no state lines will be visible.
+  
+- You can set the panel background (which in this case is the area around the US
+  stated) with `theme(panel.background = element_rect(...))`.
+
+</details>
+
+<details><summary>Click here to see some examples</summary>
 
 - You can make sure that the state lines aren't visible by providing the same color
   for the `color` and `fill` aesthetics:
@@ -242,12 +255,12 @@ ggplot(states) +
   
 </details>
 
-**B)** Still using the `states` data frame as a starting point,
+**B)** Still using the `states` dataframe as a starting point,
 can you make a map that only shows Ohio?
-And/or another state or combination of neighboring states that you
-would like to Zoom in on?
+And/or another state,
+or a combination of neighboring states that you would like to see?
 
-<details><summary>Click to see hints</summary>
+<details><summary>Click here to see hints</summary>
 
 - Rather than trying to zoom in by setting different axis limits,
   try to use `filter()` to subset `states` to only Ohio (and/or other states)
@@ -259,7 +272,7 @@ would like to Zoom in on?
 
 </details>
 
-<details><summary>Click to see some examples</summary>
+<details><summary>Click here to see some examples</summary>
 
 - What are the state names like? Turns out they are all in lowercase:
 
@@ -316,12 +329,12 @@ ggplot(states) +
 
 <br>
 
-## Adding points and text to maps
+## Adding markers and text to maps
 
 ### Adding single points and bits of text
 
 We can add points to a map with the familiar geom `geom_point()`.
-We have used this to make scatterplots, but it can plot single points too.
+We have used this to make scatterplots, but it can plot custom, single points too.
 
 As a first example, we'll just add a single point to show where the city of 
 Columbus is,
@@ -368,7 +381,7 @@ locations
 Now, we can add a layer to our saved plot `p` with the sampling locations ---
 note that:
 
-- We are giving `geom_point()` "it's own" data set with the `data =` argument
+- We are giving `geom_point()` "its own" data set with the `data =` argument
 - We map the `fill` aesthetic to the `season` column so we can distinguish
   samples from different seasons
 - We use point shape 21
@@ -487,12 +500,14 @@ ohio |> count(region)
 ohio |> count(subregion) |> head()
 ```
 
-The number of entries for each county is simply how many points make up the lines. Those numbers are quite low making this a relatively low-resolution map ---
+The number of entries for each county (`n` in the output above)
+is simply how many points make up the lines.
+Those numbers are quite low, making this a relatively low-resolution map ---
 but good enough for our purposes.
 
 ### A base map of Ohio
 
-Now we are ready to plot our map of Ohio:
+Now we are ready to plot our first map of Ohio:
 
 ```{r}
 p_ohio <- ggplot(ohio) +
@@ -517,7 +532,7 @@ say that we want to **print the county names in the map**.
 
 To do so, we will start by transforming the county names to **"Title Case"**
 from the original all-lowercase using the `tools::toTitleCase()` function ---
-and let's also use the name `county` (instead of `subregion` for that new column):
+and let's also use the name `county` (instead of `subregion`) for that new column:
 
 ```{r}
 ohio <- ohio |> mutate(county = tools::toTitleCase(subregion))
@@ -584,9 +599,6 @@ p_ohio +
 - After that, the plotting code will be identical to that for the previous map,
   just make sure you pass the correct, filtered data frame.
 
-- If you're printing the names of the counties, then you won't want a `fill`
-  legend: you can turn that off using `guides(fill = "none")`.
-
 </details>
 
 <details><summary>Click here for the solution</summary>
@@ -642,6 +654,9 @@ p_ohio +
 - Make sure to add the `geom_text()` layer last,
   or it would be masked by the polygon layer.
 
+- If you're printing the names of the counties, then you won't want a `fill`
+  legend: you can turn that off using `guides(fill = "none")`.
+  
 </details>
 
 <details><summary>Click here for the solution</summary>
