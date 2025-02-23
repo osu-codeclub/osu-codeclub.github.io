@@ -26,12 +26,12 @@ editor_options:
 Today is the first of three Code Club sessions on **making maps with R**.
 We will:
 
-- Plot maps of various regions, learn how to format them,
-  and **add points/markers and text** (part I, today)
+- Plot maps of various regions and learn how to format them (part I, today)
+- Add **points/markers and text** (part II)
 - Make **"choropleth" maps**, where areas are colored depending on a variable
-  like mean temperature (part II)
+  like mean temperature (part III)
 - Use different **map backgrounds**, like those of Google Maps,
-  and make **interactive maps** (part III)
+  and make **interactive maps** (part IV??)
 
 This content builds to some extent on the previous series of sessions on
 making plots with _ggplot2_, as we will mainly use this package to make maps.
@@ -52,6 +52,16 @@ And to actually load it:
 ```{r}
 library(tidyverse)
 ```
+
+We will also need to install two spatial packages:
+
+```{r, eval=FALSE}
+install.packages("maps")
+install.packages("sf")
+```
+
+We don't need to load these,
+they are used in the "background" by some of the ggplot functions we'll use.
 
 <br>
 
@@ -196,15 +206,19 @@ and let's save this map as an object `p` so we can build on it in the next secti
 
 ```{r}
 p <- ggplot(states) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "grey85", color = "grey40", linewidth = 0.1) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "grey85",
+    color = "grey40",
+    linewidth = 0.1
+    ) +
   coord_sf(crs = 5070, default_crs = 4326)
 
 p
 ```
 
 ::: exercise
-### {{< fa user-edit >}} Exercise 1
+### {{< fa user-edit >}} Exercise
 
 **A)** Create a map that _does not have visible state lines_.
 While you're at it, you can also play around with the settings inside `geom_polygon()`
@@ -229,8 +243,11 @@ After all, most (but not all) of the area surrounding the US is water.
   
 ```{r}
 ggplot(states) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "palevioletred", color = "palevioletred") +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "palevioletred",
+    color = "palevioletred"
+    ) +
   coord_sf(crs = 5070, default_crs = 4326)
 ```
 
@@ -238,8 +255,12 @@ ggplot(states) +
 
 ```{r}
 ggplot(states) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "lightblue", color = "darkred", linewidth = 1) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "lightblue",
+    color = "darkred",
+    linewidth = 1
+    ) +
   coord_sf(crs = 5070, default_crs = 4326)
 ```
 
@@ -247,10 +268,16 @@ ggplot(states) +
 
 ```{r}
 ggplot(states) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "grey85", color = "grey40", linewidth = 0.1) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "grey85",
+    color = "grey40",
+    linewidth = 0.1
+    ) +
   coord_sf(crs = 5070, default_crs = 4326) +
-  theme(panel.background = element_rect(fill = "dodgerblue", color = "grey20"))
+  theme(
+    panel.background = element_rect(fill = "dodgerblue", color = "grey20")
+    )
 ```
   
 </details>
@@ -287,8 +314,12 @@ unique(states$region)
 states |>
   filter(region == "ohio") |> 
   ggplot() +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "skyblue", color = "grey40", linewidth = 0.5) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "skyblue",
+    color = "grey40",
+    linewidth = 0.5
+    ) +
   coord_sf()
 ```
 
@@ -298,8 +329,12 @@ states |>
 states |>
   filter(region %in% c("ohio", "indiana", "michigan")) |> 
   ggplot() +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "azure4", color = "grey40", linewidth = 0.5) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "azure4",
+    color = "grey40",
+    linewidth = 0.5
+    ) +
   coord_sf()
 ```
 
@@ -318,361 +353,19 @@ We can do so with the `xlim` and `ylim` arguments of `coord_sf()`:
 
 ```{r}
 ggplot(states) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "grey85", color = "grey40", linewidth = 0.2) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "grey85",
+    color = "grey40",
+    linewidth = 0.2
+    ) +
   # Set the x and y limits inside coord_sf:
   coord_sf(xlim = c(-79, -89), ylim = c(35, 45)) +
   # We may now want to draw a border around the plot since we're cutting of
   # landmasses:
-  theme(panel.border = element_rect(fill = NA, color = "grey20", linewidth = 0.5))
+  theme(
+    panel.border = element_rect(fill = NA, color = "grey20", linewidth = 0.5)
+    )
 ```
-
-<br>
-
-## Adding markers and text to maps
-
-### Adding single points and bits of text
-
-We can add points to a map with the familiar geom `geom_point()`.
-We have used this to make scatterplots, but it can plot custom, single points too.
-
-As a first example, we'll just add a single point to show where the city of 
-Columbus is,
-and set its coordinates on the fly (note, we're not using `aes()`).
-We'll use the [OSU scarlet color via it's Hex code](https://bux.osu.edu/color/primary-colors/) as the color for the point:
-
-```{r}
-p +
-  geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4)
-```
-
-We can pretty easily add arbitrary text in a similar fashion with `geom_text()`,
-in which we specify the text we want to print using the `label` argument ---
-note that I'm subtracting `1` from the latitude so the text ends up a bit below
-the point and not right on top of it:
-
-```{r}
-p +
-  geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4) +
-  geom_text(x = -82.99, y = 39.99 - 1, label = "Columbus", size = 4)
-```
-
-<hr style="height:1pt; visibility:hidden;" />
-
-### Adding a set of points from a data frame
-
-In your research, you may want to make a map that plots sampling locations.
-As a simple fictional example,
-we can create a dataframe with four sampling locations, a grouping factor
-(`season`), and a column with a numerical result for each location (`yield`):
-
-```{r}
-locations <- data.frame(
-  location = c("L01", "L02", "L03", "L04"),
-  long = c(-80, -100, -90, -110),
-  lat = c(35, 33, 45, 43),
-  season = c("winter", "winter", "summer", "summer"),
-  yield = c(21, 94, 39, 62)
-)
-
-locations
-```
-
-Now, we can add a layer to our saved plot `p` with the sampling locations ---
-note that:
-
-- We are giving `geom_point()` "its own" data set with the `data =` argument
-- We map the `fill` aesthetic to the `season` column so we can distinguish
-  samples from different seasons
-- We use point shape 21
-  (see [this overview of R point shapes](https://www.sthda.com/english/wiki/ggplot2-point-shapes)) which allows
-  for a `fill` color as well as an outline color (the latter via `color`):
-
-```{r}
-p +
-  geom_point(data = locations,
-             aes(x = long, y = lat, fill = season),
-             size = 4, shape = 21)
-```
-
-::: exercise
-### {{< fa user-edit >}} Exercise 2
-
-Build on the previous map by making the appearance of the sampling location points
-reflect the values in the `yield` column.
-For example, higher yields could produce larger points, or the fill color of the
-points could depend on the yield.
-
-<details><summary>Click here for some hints</summary>
-
-- To make points vary in size, use the `size` aesthetic `aes(size = ...)`
-
-- To make points vary in fill color, use the `fill` aesthetic and then switch to
-  a different aesthetic for `season`, like point `shape`.
-
-</details>
-
-<details><summary>Click here for possible solutions with point size</summary>
-
-```{r}
-p + 
-  geom_point(data = locations,
-             aes(x = long, y = lat, fill = season, size = yield),
-             shape = 21)
-```
-
-That produces quite a small point for the location with the lowest yield --
-we could restrict the size range of the points like so:
-
-```{r}
-p + 
-  geom_point(data = locations,
-             aes(x = long, y = lat, fill = season, size = yield),
-             shape = 21) +
-  scale_size_continuous(range = c(2.5, 6))
-```
-
-</details>
-
-<details><summary>Click here for possible solutions with point fill color</summary>
-
-If we want to use `fill` color instead for `yield`,
-we'll need another aesthetic for `season`, e.g. `shape`:
-
-```{r}
-p + 
-  geom_point(data = locations,
-             aes(x = long, y = lat, shape = season, fill = yield),
-             size = 4) +
-  # Make sure the shapes support a fill color (the default ones don't):
-  scale_shape_manual(values = c(21, 23))
-```
-
-We can change the fill color scale to one of the
-[viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
-color scales:
-
-```{r}
-p + 
-  geom_point(data = locations,
-             aes(x = long, y = lat, shape = season, fill = yield),
-             size = 4) +
-  # Make sure the shapes support a fill color (the default ones don't):
-  scale_shape_manual(values = c(21, 23)) +
-  scale_fill_viridis_c(option = "inferno")
-```
-
-</details>
-
-:::
-
-<br>
-
-## More examples --- with Ohio
-
-The background map we've been working with so far doesn't have county lines.
-Especially if we want to make a map of single state like Ohio,
-those would come in handy.
-
-### Getting county-level map data for just Ohio
-
-We can get a county-level map of the entire United States using
-`map_data(map = "county")`:
-
-```{r}
-map_data(map = "county") |> head()
-```
-
-Let's filter that so we are only left with Ohio:
-
-```{r}
-ohio <- map_data(map = "county") |>
-  filter(region == "ohio")
-
-head(ohio)
-```
-
-Let's get a feel for what's in the resulting dataframe --- the only `region`
-(i.e. state) should be `ohio`, and `subregion`s are counties:
-
-```{r}
-ohio |> count(region)
-ohio |> count(subregion) |> head()
-```
-
-The number of entries for each county (`n` in the output above)
-is simply how many points make up the lines.
-Those numbers are quite low, making this a relatively low-resolution map ---
-but good enough for our purposes.
-
-### A base map of Ohio
-
-Now we are ready to plot our first map of Ohio:
-
-```{r}
-p_ohio <- ggplot(ohio) +
-  geom_polygon(aes(x = long, y = lat, group = group),
-               fill = "grey90", color = "grey70") +
-  coord_sf()
-
-p_ohio
-```
-
-We can now use this as a **base map** to plot points on,
-like we did above with the US map.
-Or we could create a map where counties differ in fill color depending on some
-variable, like the number of farms or eagle nests in each county.
-
-<hr style="height:1pt; visibility:hidden;" />
-
-### Adding county names
-
-For now, without pulling in additional data,
-say that we want to **print the county names in the map**.
-
-To do so, we will start by transforming the county names to **"Title Case"**
-from the original all-lowercase using the `tools::toTitleCase()` function ---
-and let's also use the name `county` (instead of `subregion`) for that new column:
-
-```{r}
-ohio <- ohio |> mutate(county = tools::toTitleCase(subregion))
-```
-
-We'd also need a _single pair of coordinates for each county_,
-because we only want to print each county name once.
-A quick-and-dirty way to get those is to simply compute the **mean** of the
-longitude and latitude of the points in the dataframe that make up the borders.
-
-```{r}
-county_coords <- ohio |>
-  summarize(long = mean(long), lat = mean(lat), .by = county)
-
-head(county_coords)
-```
-
-Now, we can add the county labels to the plot:
-
-```{r}
-p_ohio +
-  geom_text(data = county_coords,
-            aes(x = long, y = lat, label = county),
-            color = "darkblue", size = 3)
-```
-
-That's not perfect (those "mean coordinates" are not actual centroids),
-but not bad for a quick-and-dirty attempt!
-
-<hr style="height:1pt; visibility:hidden;" />
-
-::: exercise
-### {{< fa user-edit >}} Exercise 3
-
-**A)** OSU has campuses in the following places:
-
-- Columbus, Franklin County
-- Wooster, Wayne County
-- Lima, Allen County
-- Mansfield, Richland County
-- Marion, Marion County
-- Newark, Licking County
-
-Can you create a map similar to our previous one,
-but then with only these 6 counties labeled by name?
-Like in the example below:
-
-```{r, echo=FALSE}
-focal_counties <- c("Franklin", "Wayne", "Allen",
-                    "Richland", "Marion", "Licking") 
-county_coords_sel <- county_coords |>
-  filter(county %in% focal_counties)
-p_ohio +
-  geom_text(data = county_coords_sel,
-            aes(x = long, y = lat, label = county),
-            color = "darkblue", size = 4)
-```
-
-<details><summary>Click here for some hints</summary>
-
-- You'll have to `filter()` the `county_coords` data frame to only keep the 
-  counties of interest.
-  
-- After that, the plotting code will be identical to that for the previous map,
-  just make sure you pass the correct, filtered data frame.
-
-</details>
-
-<details><summary>Click here for the solution</summary>
-
-- First we filter the `county_coords` to only keep our focal counties,
-  and store the result in a new data frame:
-
-```{r}
-focal_counties <- c("Franklin", "Wayne", "Allen",
-                    "Richland", "Marion", "Licking") 
-
-county_coords_sel <- county_coords |>
-  filter(county %in% focal_counties)
-```
-
-- We use the same plotting code as before, but now with `county_coords_sel`:
-
-```{r}
-p_ohio +
-  geom_text(data = county_coords_sel,
-            aes(x = long, y = lat, label = county),
-            color = "darkblue", size = 4)
-```
-
-</details>
-
-<br>
-
-**B) (Bonus)** Can you produce a map that has a different fill color for each
-county, like the one below?
-
-```{r, echo=FALSE}
-#| classes: preview-image
-p_ohio +
-  geom_polygon(data = ohio |> filter(county %in% focal_counties),
-               aes(x = long, y = lat, group = group, fill = county),
-               color = "grey70") +
-  geom_text(data = county_coords_sel,
-            aes(x = long, y = lat, label = county),
-            color = "darkblue", size = 4) +
-  guides(fill = "none")
-
-#ggsave("img/")
-```
-
-<details><summary>Click here for some hints</summary>
-
-- You'll want to keep the original `geom_polygon()` layer with the gray counties,
-  and then add a **second** `geom_polygon()` layer just with the focal counties.
-  
-- In that second layer, map the `county` column to the `fill` aesthetic.
-
-- Make sure to add the `geom_text()` layer last,
-  or it would be masked by the polygon layer.
-
-- If you're printing the names of the counties, then you won't want a `fill`
-  legend: you can turn that off using `guides(fill = "none")`.
-  
-</details>
-
-<details><summary>Click here for the solution</summary>
-
-```{r}
-p_ohio +
-  geom_polygon(data = ohio |> filter(county %in% focal_counties),
-               aes(x = long, y = lat, group = group, fill = county),
-               color = "grey70") +
-  geom_text(data = county_coords_sel,
-            aes(x = long, y = lat, label = county),
-            color = "darkblue", size = 4) +
-  guides(fill = "none")
-```
-</details>
-
-:::
 
 <br>

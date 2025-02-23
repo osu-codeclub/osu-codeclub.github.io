@@ -19,6 +19,10 @@ ggplot(data = nc) +
   scale_fill_viridis_c()
 
 ggplot(data = nc) +
+  geom_sf_interactive(aes(fill = AREA, tooltip = AREA)) +
+  scale_fill_viridis_c()
+
+ggplot(data = nc) +
   geom_sf(aes(fill = BIR74)) +
   scale_fill_viridis_c()
 

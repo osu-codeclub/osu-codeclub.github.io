@@ -1,0 +1,760 @@
+---
+title: "Plotting geographical maps in R: part II"
+subtitle: "Adding markers and text to maps."
+pagetitle: "Maps II"
+author: "Jelmer Poelstra"
+date: "2025-02-25"
+categories: [maps, ggplot2, dataviz]
+title-block-banner: false
+number-depth: 2
+execute: 
+  eval: true
+  cache: false
+knitr:
+  opts_chunk:
+    out.width: "85%"
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+Today is the second of a series of Code Club sessions on **making maps with R**.
+
+In the [first session](../S09E05_maps_01/),
+we learned the basics of making and formatting maps with ggplot functions.
+
+Today, we will learn how to **add points/markers and text** in various ways,
+and we will also see several data wrangling and general _ggplot_ tricks while
+doing so.
+
+<br>
+
+## Setting up
+
+### Installing and loading R packages
+
+Last week, we realized during the session that two additional packages need to
+be installed for some of the ggplot map-related functions to work,
+so let's make sure everyone has these installed:
+
+```{r, eval=FALSE}
+if (! require(maps)) install.packages("maps")
+if (! require(sf)) install.packages("sf")
+```
+
+The above type of code with the `if` statements is likely new to most of you.
+You can read this code as:
+**if the package is not installed, _then_ install it**^[
+Specifically, `! require(...)` will return `TRUE` if the package cannot be loaded
+because it is not installed --- and due to the `if()` statement, 
+the `install.packages("maps")` will be executed _only_ if it returns `TRUE`.].
+
+Additionally, we'll use a package with the quite specific purpose of
+avoiding overlap between text labels in ggplots:
+
+```{r, eval=FALSE}
+if (! require(ggrepel)) install.packages("ggrepel")
+```
+
+Finally, let's load these packages, along with the tidyverse:
+
+```{r}
+library(maps)
+library(sf)
+library(tidyverse)
+library(ggrepel)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Picking up where we left off last week
+
+Like last week,
+
+- We'll set a ggplot theme for all the following plots:
+
+```{r}
+theme_set(theme_void())
+theme_update(legend.position = "top")
+```
+
+- We'll load US state-wise map data:
+
+```{r}
+states <- map_data(map = "state")
+
+head(states)
+```
+
+- And create and store a base plot that we can build on:
+
+```{r}
+p <- ggplot(states) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "grey85",
+    color = "grey40",
+    linewidth = 0.1
+    ) +
+  coord_sf(crs = 5070, default_crs = 4326)
+
+p
+```
+
+<br>
+
+## Adding markers and text to maps
+
+### Adding single text labels and points
+
+We can add points to a map with the familiar geom `geom_point()`.
+We have previoulsy used this to make scatterplots based on data in a data frame,
+but it can plot points at individually-specified locations, too.
+
+As a first example, we'll just add a single point to show where the city of 
+Columbus is,
+and set its coordinates on the fly (note, we're not using `aes()`).
+We'll use the [OSU scarlet color via it's Hex code](https://bux.osu.edu/color/primary-colors/) as the color for the point:
+
+```{r}
+p +
+  geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4)
+```
+
+We can pretty easily add arbitrary text in a similar fashion with `geom_text()`,
+in which we specify the text we want to print using the `label` argument ---
+note that I'm subtracting `1` from the latitude so the text ends up a bit below
+the point and not right on top of it:
+
+```{r}
+p +
+  geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4) +
+  geom_text(x = -82.99, y = 39.99 - 1, label = "Columbus", size = 4)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Adding a set of points from a data frame
+
+In your research, you may want to make a map that plots sampling locations.
+As a simple fictional example,
+we can create a dataframe with four sampling locations, a grouping factor
+(`season`), and a column with a numerical result for each location (`yield`):
+
+```{r}
+locations <- data.frame(
+  location = c("L01", "L02", "L03", "L04"),
+  long = c(-80, -100, -90, -110),
+  lat = c(35, 33, 45, 43),
+  season = c("winter", "winter", "summer", "summer"),
+  yield = c(21, 94, 39, 62)
+)
+
+locations
+```
+
+Now, we can add a layer to our saved plot `p` with the sampling locations ---
+note that:
+
+- We are giving `geom_point()` "its own" data set with the `data =` argument
+- We map the `fill` aesthetic to the `season` column so we can distinguish
+  samples from different seasons
+- We use point shape 21
+  (see [this overview of R point shapes](https://www.sthda.com/english/wiki/ggplot2-point-shapes)) which allows
+  for a `fill` color as well as an outline color (the latter via `color`):
+
+```{r}
+p +
+  geom_point(
+    data = locations,
+    aes(x = long, y = lat, fill = season),
+    size = 4,
+    shape = 21
+    )
+```
+
+::: exercise
+### {{< fa user-edit >}} Exercise 1
+
+Build on the previous map by making the appearance of the sampling location points
+reflect the values in the `yield` column.
+For example, higher yields could produce larger points, or the fill color of the
+points could depend on the yield.
+
+<details><summary>Click here for some hints</summary>
+
+- To make points vary in size, use the `size` aesthetic `aes(size = ...)`
+
+- To make points vary in fill color, use the `fill` aesthetic and then switch to
+  a different aesthetic for `season`, like point `shape`.
+
+</details>
+
+<details><summary>Click here for possible solutions with point size</summary>
+
+```{r}
+p + 
+  geom_point(
+    data = locations,
+    aes(x = long, y = lat, fill = season, size = yield),
+    shape = 21
+    )
+```
+
+That produces quite a small point for the location with the lowest yield --
+we could restrict the size range of the points like so:
+
+```{r}
+p + 
+  geom_point(
+    data = locations,
+    aes(x = long, y = lat, fill = season, size = yield),
+    shape = 21
+    ) +
+  scale_size_continuous(range = c(2.5, 6))
+```
+
+</details>
+
+<details><summary>Click here for possible solutions with point fill color</summary>
+
+If we want to use `fill` color instead for `yield`,
+we'll need another aesthetic for `season`, e.g. `shape`:
+
+```{r}
+p + 
+  geom_point(
+    data = locations,
+    aes(x = long, y = lat, shape = season, fill = yield),
+    size = 4
+    ) +
+  # Make sure the shapes support a fill color (the default ones don't):
+  scale_shape_manual(values = c(21, 23))
+```
+
+For a nicer-looking fill color scale, we can change to one of the
+[viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+color scales:
+
+```{r}
+p + 
+  geom_point(
+    data = locations,
+    aes(x = long, y = lat, shape = season, fill = yield),
+    size = 4
+    ) +
+  # Make sure the shapes support a fill color (the default ones don't):
+  scale_shape_manual(values = c(21, 23)) +
+  scale_fill_viridis_c(option = "inferno")
+```
+
+</details>
+
+:::
+
+<br>
+
+## A county-level map of Ohio
+
+The background map we've been working with so far doesn't have county lines.
+Especially if we want to make a map of single state like Ohio,
+those would come in handy.
+
+### Getting county-level map data for just Ohio
+
+We can get a county-level map of the entire United States using
+`map_data(map = "county")`:
+
+```{r}
+map_data(map = "county") |>
+  head()
+```
+
+We will filter this dataframe so we are only left with data from Ohio:
+
+```{r}
+ohio <- map_data(map = "county") |>
+  filter(region == "ohio")
+
+head(ohio)
+```
+
+Let's get a feel for what's in the resulting dataframe --- the only `region`
+(i.e. state) should be `ohio`, and `subregion`s represent counties:
+
+```{r}
+ohio |> count(region)
+ohio |> count(subregion) |> head()
+```
+
+The number of entries for each county (`n` in the output above)
+is simply how many points make up the lines.
+Those numbers are quite low, making this a relatively low-resolution map ---
+but good enough for our purposes.
+
+### A base map of Ohio
+
+Now we are ready to plot our first map of Ohio:
+
+```{r}
+p_ohio <- ggplot(ohio) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group),
+    fill = "grey90",
+    color = "grey70"
+    ) +
+  coord_sf()
+
+p_ohio
+```
+
+We can now use this as a **base map** to plot points on,
+like we did above with the US map.
+Or we could create a map where counties differ in fill color depending on some
+variable, like the number of farms or eagle nests in each county.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Adding county names
+
+For now, without pulling in additional data,
+say that we want to **print the county names in the map**.
+
+The county names are in all-lowercase,
+so let's start by transforming to **"Title Case"** using the
+`tools::toTitleCase()` function:
+
+```{r}
+ohio <- ohio |>
+  mutate(subregion = tools::toTitleCase(subregion))
+
+head(ohio)
+```
+
+But if we now add text labels with `geom_text()` using the `subregion` colum,
+we'll get the following terrible map:
+
+```{r}
+p_ohio +
+  geom_text(
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 3
+    )
+```
+
+<details><summary>**Why is this happening?**</summary>
+<hr style="height:1pt; visibility:hidden;" />
+The reason is that each county has a number of rows in the dataframe:
+one for each point that makes up its border.
+And right now, we're printing the county label for every single point.
+<hr style="height:1pt; visibility:hidden;" />
+</details>
+
+So, we'll need a _single pair of coordinates for each county_ to print each
+county name once,
+and those should be in the **center of each county**.
+Therefore, we'll need to compute some kind of approximation of the county centers.
+
+Taking the **mean of the border-coordinates** for each county could be a start,
+but looking at the positions of the text labels in the map above,
+can you think of a reason why that may not be optimal?
+
+<details><summary>Click for the answer</summary>
+<hr style="height:1pt; visibility:hidden;" />
+There are more points in irregularly-shaped (i.e., not straight lines) parts 
+of the border.
+In practice, those tend be on specific sides of the border
+(e.g., look at the western border of Ohio and the counties there),
+so the mean values will be drawn towards those sides.
+Using the median wouldn't help.
+<hr style="height:1pt; visibility:hidden;" />
+</details>
+
+A better --though still not perfect-- way to compute this is by subtracting,
+for both latitude and longitude,
+**half of the _range_** (max. - min.) from the maximum value:
+
+```{r}
+county_coords <- ohio |>
+  summarize(
+    long = max(long) - ((max(long) - min(long)) / 2),
+    lat = max(lat) - ((max(lat) - min(lat)) / 2),
+    .by = subregion
+    )
+
+head(county_coords)
+```
+
+Now, we can add the county labels to the plot:
+
+```{r}
+p_ohio +
+  geom_text(
+    data = county_coords,
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 3
+    )
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+### {{< fa user-edit >}} Exercise 2
+
+**A)** OSU has campuses in the following places:
+
+- Columbus, Franklin County
+- Wooster, Wayne County
+- Lima, Allen County
+- Mansfield, Richland County
+- Marion, Marion County
+- Newark, Licking County
+
+Can you create a map similar to our previous one,
+but then with only these 6 counties labeled by name?
+Like in the example below:
+
+```{r, echo=FALSE}
+focal_counties <- c("Franklin", "Wayne", "Allen",
+                    "Richland", "Marion", "Licking")
+
+county_coords_sel <- county_coords |>
+  filter(subregion %in% focal_counties)
+
+p_ohio +
+  geom_text(
+    data = county_coords_sel,
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 4
+    )
+```
+
+<details><summary>Click here for some hints</summary>
+
+- You'll have to `filter()` the `county_coords` data frame to only keep the 
+  counties of interest.
+  
+- After that, the plotting code will be identical to that for the previous map,
+  just make sure you pass the correct, filtered data frame.
+
+</details>
+
+<details><summary>Click here for the solution</summary>
+
+- First we filter the `county_coords` to only keep our focal counties,
+  and store the result in a new data frame:
+
+```{r}
+focal_counties <- c("Franklin", "Wayne", "Allen",
+                    "Richland", "Marion", "Licking") 
+
+county_coords_sel <- county_coords |>
+  filter(subregion %in% focal_counties)
+```
+
+- We use the same plotting code as before, but now with `county_coords_sel`:
+
+```{r}
+p_ohio +
+  geom_text(
+    data = county_coords_sel,
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 4
+    )
+```
+
+</details>
+
+<br>
+
+**B) (Bonus)** Can you produce a map that has a different fill color for each
+county, like the one below?
+
+```{r, echo=FALSE}
+#| classes: preview-image
+p_ohio +
+  geom_polygon(
+    data = ohio |> filter(subregion %in% focal_counties),
+    aes(x = long, y = lat, group = group, fill = subregion),
+    color = "grey70"
+    ) +
+  geom_text(
+    data = county_coords_sel,
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 4
+    ) +
+  guides(fill = "none")
+```
+
+<details><summary>Click here for some hints</summary>
+
+- You'll want to keep the original `geom_polygon()` layer with the gray counties
+  (i.e., you can start with the `p_ohio` map),
+  and then add a **second** `geom_polygon()` layer that only has the selected counties.
+  
+- In that second layer, map the `county` column to the `fill` aesthetic.
+
+- Make sure to add the `geom_text()` layer last,
+  or it would be masked by the polygon layer.
+
+- If you're printing the names of the counties,
+  then you won't need a `fill` legend:
+  you can turn that off using `guides(fill = "none")`.
+  
+</details>
+
+<details><summary>Click here for the solution</summary>
+
+```{r}
+p_ohio +
+  geom_polygon(
+    data = ohio |> filter(subregion %in% focal_counties),
+    aes(x = long, y = lat, group = group, fill = subregion),
+    color = "grey70"
+    ) +
+  geom_text(
+    data = county_coords_sel,
+    aes(x = long, y = lat, label = subregion),
+    color = "darkblue",
+    size = 4
+    ) +
+  guides(fill = "none")
+```
+</details>
+
+:::
+
+<br>
+
+## Plotting Ohio cities
+
+Next, we'll add all larger Ohio cities to our Ohio map.
+From the _maps_ package, we can use the `us.cities` dataframe which contains
+US cities with populations greater than about 40,000:
+
+```{r}
+# 'us.cities' should be available if you have loaded the maps package
+head(us.cities)
+```
+
+Let's pre-process this data a bit by:
+
+- Only taking Ohio cities with populations over 50,000
+- Stripping the state-abbreviation suffix that all cities have, as we saw above.
+  Since we are left with only Ohio cities,
+  we can therefore simply remove ` OH` from the `name`:
+
+```{r}
+oh_cities <- us.cities |>
+  filter(country.etc == "OH", pop > 50000) |>
+  mutate(name = sub(" OH", "", name))
+
+head(oh_cities)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Adding city points
+
+Now, let's add these cities to our Ohio base map (`p_ohio`),
+with larger points for larger cities:
+
+```{r}
+p_ohio_cities <- p_ohio +
+  geom_point(
+    data = oh_cities,
+    aes(x = long, y = lat, size = pop),
+    fill = "steelblue3",
+    shape = 21
+    )
+
+p_ohio_cities
+```
+
+### Adding city names
+
+Next, let's add the names of the cities with `geom_text()`:
+
+```{r}
+p_ohio_cities +
+  geom_text(
+    data = oh_cities,
+    aes(x = long, y = lat + 0.1, label = name)
+    )
+```
+
+Ouch, there are a lot of overlapping labels there!
+We can avoid this with a drop-in replacement for `geom_text()` named
+`geom_text_repel()` from the _ggrepel_ package: 
+
+```{r}
+p_ohio_cities_labeled <- p_ohio_cities +
+  geom_text_repel(
+    data = oh_cities,
+    aes(x = long, y = lat, label = name)
+    )
+
+p_ohio_cities_labeled
+```
+
+### Side note: A better legend
+
+We may want to change the `size` legend a bit:
+
+- Its title is `pop`, which we can change to e.g. `Population size`.
+- The scientific notation of the population sizes is cumbersome to read,
+  and we can change it to a notation with a comma as a thousands-separator
+  (`13,000`, etc.) using `labels = scales:comma`.
+- The legend breaks range from 200,000 - 600,000,
+  while the smallest cities in our dataframe are much smaller than that,
+  so we may instead want to manually define breaks.
+
+```{r}
+p_ohio_cities_labeled +
+  scale_size_continuous(
+    name = "Population size",
+    labels = scales::comma,
+    breaks = c(100, 250, 500) * 1000
+  )
+```
+
+::: {.callout-note collapse="true"}
+#### Want to expand the range of the legend's scale breaks? _(Click to expand)_
+_ggplot_ will refuse to include `breaks` in the legend that are outside of the
+scale's limits, which are by default the range of the data.
+Because the smallest city in the dataset is just larger than 50,000,
+and the largest city is just smaller than 750,000  (see below),
+setting breaks to these values will therefore not work unless we expand the
+scale's limits with the `limits` argument.
+
+Check what the range of population sizes is (min. and max.):
+
+```{r}
+range(oh_cities$pop)
+```
+
+Or if we wanted to see which cities these are:
+
+```{r}
+oh_cities |> arrange(pop) |> head(n = 1)
+oh_cities |> arrange(desc(pop)) |> head(n = 1)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Breaks at `50` and `750` will be ignored by default,
+because they are outside of the scale's limits:
+
+```{r}
+p_ohio_cities_labeled +
+  scale_size_continuous(
+    name = "Population size",
+    labels = scales::comma,
+    breaks = c(50, 100, 250, 500, 750) * 1000
+  )
+```
+
+Expand the `limits` so we can include breaks at `50` and `750`:
+
+```{r}
+p_ohio_cities_labeled +
+  scale_size_continuous(
+    name = "Population size",
+    labels = scales::comma,
+    limits = c(50, 750) * 1000,
+    breaks = c(50, 100, 250, 500, 750) * 1000
+  )
+```
+
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+### {{< fa user-edit >}} Exercise 3
+
+Can you produce a map in which the names of cities with a population larger than
+100,000 are in a **_bold italic_** (`bold.italic`) fontface,
+whereas those of smaller cities are in regular (`plain`) fontface?
+
+See the example below:
+
+```{r, echo=FALSE}
+oh_cities <- oh_cities |>
+  mutate(is_large = ifelse(pop > 100000, "bold.italic", "plain"))
+p_ohio_cities +
+  geom_text_repel(
+    data = oh_cities,
+    aes(x = long, y = lat, label = name, fontface = is_large)
+    )
+```
+
+<details><summary>Click here for some hints</summary>
+
+- Using `mutate()` with an `ifelse()` statement,
+  you'll first want to create a column that specifies whether or not a city
+  has a population larger than 100,000.
+
+- Next, you can map that newly created column to the `fontface` aesthetic
+  (`aes(fontface = ...)`).
+
+- The `fontface` aesthetic is a bit unusual,
+  so using it like you would say the `size` or `color` aesthetic doesn't quite work.
+  Take a look at the
+  [example in the ggplot docs](https://ggplot2.tidyverse.org/articles/ggplot2-specs.html#font-face)
+  and see if you can figure out how to use it.
+
+</details>
+
+<details><summary>Click here for the solution</summary>
+
+- First, we create a new column `is_large` that indicates whether a city has more
+  than 100,000 inhabitants.
+  Instead of coding this column with `TRUE`/`FALSE` (see below),
+  we'll need to directly use the specific fontfaces we want to display for each
+  type of city:
+
+```{r}
+oh_cities <- oh_cities |>
+  mutate(is_large = ifelse(pop > 100000, "bold.italic", "plain"))
+```
+
+- Next, we can map the `fontface` aesthetic to the `is_large` column:
+
+```{r}
+p_ohio_cities +
+  geom_text_repel(
+    data = oh_cities,
+    aes(x = long, y = lat, label = name, fontface = is_large)
+    )
+```
+
+- If we were using any other aesthetic (e.g. `fill`),
+  we would probably use `TRUE`/`FALSE` in the focal column instead,
+  and that would work --- but it returns an error here:
+
+```{r, error=TRUE}
+oh_cities <- oh_cities |>
+  mutate(is_large = ifelse(pop > 100000, TRUE, FALSE))
+
+p_ohio_cities +
+  geom_text_repel(
+    data = oh_cities,
+    aes(x = long, y = lat, label = name, fontface = is_large)
+    )
+```
+
+Along the same lines, there are no `scale_fontface` functions to set the fontfaces:
+this instead has to be done with the values in the column.
+
+</details>
+
+:::
