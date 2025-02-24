@@ -116,18 +116,20 @@ but it can plot points at individually-specified locations, too.
 
 As a first example, we'll just add a single point to show where the city of 
 Columbus is,
-and set its coordinates on the fly (note, we're not using `aes()`).
-We'll use the [OSU scarlet color via it's Hex code](https://bux.osu.edu/color/primary-colors/) as the color for the point:
+and set its coordinates on the fly (_outside of_ `aes()`).
+We will use the
+[OSU scarlet color via its Hex code](https://bux.osu.edu/color/primary-colors/)
+as the color for the point:
 
 ```{r}
 p +
   geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4)
 ```
 
-We can pretty easily add arbitrary text in a similar fashion with `geom_text()`,
-in which we specify the text we want to print using the `label` argument ---
-note that I'm subtracting `1` from the latitude so the text ends up a bit below
-the point and not right on top of it:
+We can add arbitrary text labels in a similar fashion, with the geom `geom_text()`,
+in which we specify the text that we want to print using the `label` argument
+(and note that I'm subtracting `1` from the latitude so the text ends up a bit below
+the point and not right on top of it):
 
 ```{r}
 p +
@@ -150,7 +152,7 @@ locations <- data.frame(
   long = c(-80, -100, -90, -110),
   lat = c(35, 33, 45, 43),
   season = c("winter", "winter", "summer", "summer"),
-  yield = c(21, 94, 39, 62)
+  yield = c(16, 97, 39, 66)
 )
 
 locations
@@ -163,8 +165,9 @@ note that:
 - We map the `fill` aesthetic to the `season` column so we can distinguish
   samples from different seasons
 - We use point shape 21
-  (see [this overview of R point shapes](https://www.sthda.com/english/wiki/ggplot2-point-shapes)) which allows
-  for a `fill` color as well as an outline color (the latter via `color`):
+  (see [this overview of R point shapes](https://www.sthda.com/english/wiki/ggplot2-point-shapes)),
+  which allows for a `fill` color
+  (separate from the outline color which can be set with `color`):
 
 ```{r}
 p +
@@ -195,64 +198,70 @@ points could depend on the yield.
 
 <details><summary>Click here for possible solutions with point size</summary>
 
+<hr style="height:1pt; visibility:hidden;" />
+
+- Make points vary in size according to the values in the `yield` column
+  by including `size = yield` inside `aes()`:
+
 ```{r}
-p + 
+p_size <- p + 
   geom_point(
     data = locations,
     aes(x = long, y = lat, fill = season, size = yield),
     shape = 21
     )
+
+p_size
 ```
 
-That produces quite a small point for the location with the lowest yield --
-we could restrict the size range of the points like so:
+- As an aside,
+  the above legend had quite a small point size for the location with the lowest
+  yield -- to improve that,
+  we can expand the `limits` of the scale,
+  and optionally also play around with the `range` of point sizes and the
+  `breaks`, i.e. the values that get displayed in the legend:
 
 ```{r}
-p + 
-  geom_point(
-    data = locations,
-    aes(x = long, y = lat, fill = season, size = yield),
-    shape = 21
-    ) +
-  scale_size_continuous(range = c(2.5, 6))
+p_size +
+  scale_size_continuous(
+    limits = c(0, 100),
+    breaks = c(10, 50, 100),
+    range = c(1, 10)
+    )
 ```
 
 </details>
 
 <details><summary>Click here for possible solutions with point fill color</summary>
 
-If we want to use `fill` color instead for `yield`,
-we'll need another aesthetic for `season`, e.g. `shape`:
+<hr style="height:1pt; visibility:hidden;" />
+
+- If we want to use `fill` color instead for `yield`,
+  we'll need a different aesthetic for `season`, e.g. `shape`:
 
 ```{r}
-p + 
+p_fill <- p +
   geom_point(
     data = locations,
     aes(x = long, y = lat, shape = season, fill = yield),
-    size = 4
+    size = 5
     ) +
   # Make sure the shapes support a fill color (the default ones don't):
   scale_shape_manual(values = c(21, 23))
+
+p_fill
 ```
 
-For a nicer-looking fill color scale, we can change to one of the
-[viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
-color scales:
+- For a nicer-looking fill color scale, we can change to one of the
+  [viridis](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+  color scales:
 
 ```{r}
-p + 
-  geom_point(
-    data = locations,
-    aes(x = long, y = lat, shape = season, fill = yield),
-    size = 4
-    ) +
-  # Make sure the shapes support a fill color (the default ones don't):
-  scale_shape_manual(values = c(21, 23)) +
+p_fill +
   scale_fill_viridis_c(option = "inferno")
 ```
 
 </details>
-
 :::
 
 <br>
@@ -311,7 +320,7 @@ p_ohio <- ggplot(ohio) +
 p_ohio
 ```
 
-We can now use this as a **base map** to plot points on,
+We can use this as a **base map** to plot points on,
 like we did above with the US map.
 Or we could create a map where counties differ in fill color depending on some
 variable, like the number of farms or eagle nests in each county.
@@ -536,7 +545,7 @@ p_ohio +
 
 ## Plotting Ohio cities
 
-Next, we'll add all larger Ohio cities to our Ohio map.
+Finally, we'll add all larger Ohio cities to our Ohio map.
 From the _maps_ package, we can use the `us.cities` dataframe which contains
 US cities with populations greater than about 40,000:
 
