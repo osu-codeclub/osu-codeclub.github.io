@@ -376,7 +376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="adding-single-text-labels-and-points" class="level3">
 <h3 class="anchored" data-anchor-id="adding-single-text-labels-and-points">Adding single text labels and points</h3>
 <p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have previoulsy used this to make scatterplots based on data in a data frame, but it can plot points at individually-specified locations, too.</p>
-<p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (note, we’re not using <code>aes()</code>). We’ll use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via it’s Hex code</a> as the color for the point:</p>
+<p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (<em>outside of</em> <code>aes()</code>). We will use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via its Hex code</a> as the color for the point:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">82.99</span>, <span class="at">y =</span> <span class="fl">39.99</span>, <span class="at">colour =</span> <span class="st">"#ba0c2f"</span>, <span class="at">size =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -388,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can pretty easily add arbitrary text in a similar fashion with <code>geom_text()</code>, in which we specify the text we want to print using the <code>label</code> argument — note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it:</p>
+<p>We can add arbitrary text labels in a similar fashion, with the geom <code>geom_text()</code>, in which we specify the text that we want to print using the <code>label</code> argument (and note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">82.99</span>, <span class="at">y =</span> <span class="fl">39.99</span>, <span class="at">colour =</span> <span class="st">"#ba0c2f"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
@@ -412,23 +412,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">long =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">80</span>, <span class="sc">-</span><span class="dv">100</span>, <span class="sc">-</span><span class="dv">90</span>, <span class="sc">-</span><span class="dv">110</span>),</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">lat =</span> <span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">33</span>, <span class="dv">45</span>, <span class="dv">43</span>),</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">c</span>(<span class="st">"winter"</span>, <span class="st">"winter"</span>, <span class="st">"summer"</span>, <span class="st">"summer"</span>),</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">yield =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">94</span>, <span class="dv">39</span>, <span class="dv">62</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">yield =</span> <span class="fu">c</span>(<span class="dv">16</span>, <span class="dv">97</span>, <span class="dv">39</span>, <span class="dv">66</span>)</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>locations</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  location long lat season yield
-1      L01  -80  35 winter    21
-2      L02 -100  33 winter    94
+1      L01  -80  35 winter    16
+2      L02 -100  33 winter    97
 3      L03  -90  45 summer    39
-4      L04 -110  43 summer    62</code></pre>
+4      L04 -110  43 summer    66</code></pre>
 </div>
 </div>
 <p>Now, we can add a layer to our saved plot <code>p</code> with the sampling locations — note that:</p>
 <ul>
 <li>We are giving <code>geom_point()</code> “its own” data set with the <code>data =</code> argument</li>
 <li>We map the <code>fill</code> aesthetic to the <code>season</code> column so we can distinguish samples from different seasons</li>
-<li>We use point shape 21 (see <a href="https://www.sthda.com/english/wiki/ggplot2-point-shapes">this overview of R point shapes</a>) which allows for a <code>fill</code> color as well as an outline color (the latter via <code>color</code>):</li>
+<li>We use point shape 21 (see <a href="https://www.sthda.com/english/wiki/ggplot2-point-shapes">this overview of R point shapes</a>), which allows for a <code>fill</code> color (separate from the outline color which can be set with <code>color</code>):</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
@@ -463,13 +463,19 @@ Click here for some hints
 <summary>
 Click here for possible solutions with point size
 </summary>
+<hr style="height:1pt; visibility:hidden;">
+<ul>
+<li>Make points vary in size according to the values in the <code>yield</code> column by including <code>size = yield</code> inside <code>aes()</code>:</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p_size <span class="ot">&lt;-</span> p <span class="sc">+</span> </span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> locations,</span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">fill =</span> season, <span class="at">size =</span> yield),</span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>p_size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -478,15 +484,16 @@ Click here for possible solutions with point size
 </div>
 </div>
 </div>
-<p>That produces quite a small point for the location with the lowest yield – we could restrict the size range of the points like so:</p>
+<ul>
+<li>As an aside, the above legend had quite a small point size for the location with the lowest yield – to improve that, we can expand the <code>limits</code> of the scale, and optionally also play around with the <code>range</code> of point sizes and the <code>breaks</code>, i.e.&nbsp;the values that get displayed in the legend:</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> locations,</span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">fill =</span> season, <span class="at">size =</span> yield),</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="dv">6</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p_size <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -500,16 +507,21 @@ Click here for possible solutions with point size
 <summary>
 Click here for possible solutions with point fill color
 </summary>
-<p>If we want to use <code>fill</code> color instead for <code>yield</code>, we’ll need another aesthetic for <code>season</code>, e.g.&nbsp;<code>shape</code>:</p>
+<hr style="height:1pt; visibility:hidden;">
+<ul>
+<li>If we want to use <code>fill</code> color instead for <code>yield</code>, we’ll need a different aesthetic for <code>season</code>, e.g.&nbsp;<code>shape</code>:</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p_fill <span class="ot">&lt;-</span> p <span class="sc">+</span></span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> locations,</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">shape =</span> season, <span class="at">fill =</span> yield),</span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">5</span></span>
 <span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make sure the shapes support a fill color (the default ones don't):</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">23</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">23</span>))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>p_fill</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -518,17 +530,12 @@ Click here for possible solutions with point fill color
 </div>
 </div>
 </div>
-<p>For a nicer-looking fill color scale, we can change to one of the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a> color scales:</p>
+<ul>
+<li>For a nicer-looking fill color scale, we can change to one of the <a href="https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html">viridis</a> color scales:</li>
+</ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> locations,</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">shape =</span> season, <span class="at">fill =</span> yield),</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Make sure the shapes support a fill color (the default ones don't):</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_shape_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="dv">21</span>, <span class="dv">23</span>)) <span class="sc">+</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"inferno"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p_fill <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">option =</span> <span class="st">"inferno"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -617,7 +624,7 @@ Click here for possible solutions with point fill color
 </div>
 </div>
 </div>
-<p>We can now use this as a <strong>base map</strong> to plot points on, like we did above with the US map. Or we could create a map where counties differ in fill color depending on some variable, like the number of farms or eagle nests in each county.</p>
+<p>We can use this as a <strong>base map</strong> to plot points on, like we did above with the US map. Or we could create a map where counties differ in fill color depending on some variable, like the number of farms or eagle nests in each county.</p>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="adding-county-names" class="level3">
@@ -830,7 +837,7 @@ Click here for the solution
 </section>
 <section id="plotting-ohio-cities" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="plotting-ohio-cities"><span class="header-section-number">4</span> Plotting Ohio cities</h2>
-<p>Next, we’ll add all larger Ohio cities to our Ohio map. From the <em>maps</em> package, we can use the <code>us.cities</code> dataframe which contains US cities with populations greater than about 40,000:</p>
+<p>Finally, we’ll add all larger Ohio cities to our Ohio map. From the <em>maps</em> package, we can use the <code>us.cities</code> dataframe which contains US cities with populations greater than about 40,000:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 'us.cities' should be available if you have loaded the maps package</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(us.cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
