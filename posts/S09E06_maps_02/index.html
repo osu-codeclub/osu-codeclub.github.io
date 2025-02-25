@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#adding-city-points" id="toc-adding-city-points" class="nav-link" data-scroll-target="#adding-city-points">Adding city points</a></li>
   <li><a href="#adding-city-names" id="toc-adding-city-names" class="nav-link" data-scroll-target="#adding-city-names">Adding city names</a></li>
   <li><a href="#side-note-a-better-legend" id="toc-side-note-a-better-legend" class="nav-link" data-scroll-target="#side-note-a-better-legend">Side note: A better legend</a></li>
-  <li><a href="#exercise-3" id="toc-exercise-3" class="nav-link" data-scroll-target="#exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</a></li>
+  <li><a href="#bonus-exercise" id="toc-bonus-exercise" class="nav-link" data-scroll-target="#bonus-exercise"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E06_maps_02/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -375,8 +375,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="2" class="anchored" data-anchor-id="adding-markers-and-text-to-maps"><span class="header-section-number">2</span> Adding markers and text to maps</h2>
 <section id="adding-single-text-labels-and-points" class="level3">
 <h3 class="anchored" data-anchor-id="adding-single-text-labels-and-points">Adding single text labels and points</h3>
-<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have previoulsy used this to make scatterplots based on data in a data frame, but it can plot points at individually-specified locations, too.</p>
-<p>As a first example, we’ll just add a single point to show where the city of Columbus is, and set its coordinates on the fly (<em>outside of</em> <code>aes()</code>). We will use the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via its Hex code</a> as the color for the point:</p>
+<p>We can add points to a map with the familiar geom <code>geom_point()</code>. We have previously used this geom to make scatterplots based on data in a data frame, but it can plot points at individually-specified locations, too.</p>
+<p>As a first example, we’ll just add a single point to show where the city of Columbus is, setting its coordinates “on the fly” (<em>outside of</em> <code>aes()</code>) and using the <a href="https://bux.osu.edu/color/primary-colors/">OSU scarlet color via its Hex code</a> as the point color:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">82.99</span>, <span class="at">y =</span> <span class="fl">39.99</span>, <span class="at">colour =</span> <span class="st">"#ba0c2f"</span>, <span class="at">size =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -388,7 +388,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>We can add arbitrary text labels in a similar fashion, with the geom <code>geom_text()</code>, in which we specify the text that we want to print using the <code>label</code> argument (and note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it):</p>
+<p>We can add arbitrary text labels in a similar way with the geom <code>geom_text()</code>, in which we specify the <strong>text that we want to print using the <code>label</code> argument</strong> (and note that I’m subtracting <code>1</code> from the latitude so the text ends up a bit below the point and not right on top of it):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">x =</span> <span class="sc">-</span><span class="fl">82.99</span>, <span class="at">y =</span> <span class="fl">39.99</span>, <span class="at">colour =</span> <span class="st">"#ba0c2f"</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
@@ -401,7 +401,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="adding-a-set-of-points-from-a-data-frame" class="level3">
 <h3 class="anchored" data-anchor-id="adding-a-set-of-points-from-a-data-frame">Adding a set of points from a data frame</h3>
@@ -550,7 +549,7 @@ Click here for possible solutions with point fill color
 </section>
 <section id="a-county-level-map-of-ohio" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="a-county-level-map-of-ohio"><span class="header-section-number">3</span> A county-level map of Ohio</h2>
-<p>The background map we’ve been working with so far doesn’t have county lines. Especially if we want to make a map of single state like Ohio, those would come in handy.</p>
+<p>The background map we’ve been working with so far doesn’t have county lines. But in some cases, like when making a map of single state such as Ohio, those would come in handy.</p>
 <section id="getting-county-level-map-data-for-just-ohio" class="level3">
 <h3 class="anchored" data-anchor-id="getting-county-level-map-data-for-just-ohio">Getting county-level map data for just Ohio</h3>
 <p>We can get a county-level map of the entire United States using <code>map_data(map = "county")</code>:</p>
@@ -802,7 +801,7 @@ Click here for some hints
 <li><p>You’ll want to keep the original <code>geom_polygon()</code> layer with the gray counties (i.e., you can start with the <code>p_ohio</code> map), and then add a <strong>second</strong> <code>geom_polygon()</code> layer that only has the selected counties.</p></li>
 <li><p>In that second layer, map the <code>county</code> column to the <code>fill</code> aesthetic.</p></li>
 <li><p>Make sure to add the <code>geom_text()</code> layer last, or it would be masked by the polygon layer.</p></li>
-<li><p>If you’re printing the names of the counties, then you won’t need a <code>fill</code> legend: you can turn that off using <code>guides(fill = "none")</code>.</p></li>
+<li><p>If you’re printing the names of the counties, then you won’t need a legend: you can turn that off using <code>theme(legend.position = "none")</code>.</p></li>
 </ul>
 </details>
 <details>
@@ -822,7 +821,7 @@ Click here for the solution
 <span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"darkblue"</span>,</span>
 <span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span></span>
 <span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">guides</span>(<span class="at">fill =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -859,9 +858,10 @@ Click here for the solution
 <div class="cell">
 <div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>oh_cities <span class="ot">&lt;-</span> us.cities <span class="sc">|&gt;</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country.etc <span class="sc">==</span> <span class="st">"OH"</span>, pop <span class="sc">&gt;</span> <span class="dv">50000</span>) <span class="sc">|&gt;</span></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">sub</span>(<span class="st">" OH"</span>, <span class="st">""</span>, name))</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(oh_cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># We'll use the sub() function to substitute " OH" with nothing (""):</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">sub</span>(<span class="at">pattern =</span> <span class="st">" OH"</span>, <span class="at">replacement =</span> <span class="st">""</span>, <span class="at">x =</span> name))</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(oh_cities)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>            name country.etc    pop   lat   long capital
 1          Akron          OH 206634 41.08 -81.52       0
@@ -936,14 +936,14 @@ Click here for the solution
 <ul>
 <li>Its title is <code>pop</code>, which we can change to e.g.&nbsp;<code>Population size</code>.</li>
 <li>The scientific notation of the population sizes is cumbersome to read, and we can change it to a notation with a comma as a thousands-separator (<code>13,000</code>, etc.) using <code>labels = scales:comma</code>.</li>
-<li>The legend breaks range from 200,000 - 600,000, while the smallest cities in our dataframe are much smaller than that, so we may instead want to manually define breaks.</li>
+<li>The range of the legend entries (breaks) is quite a bit more restricted than the sizes of our cites (200-600k versus 50-740k), so we may want to get a better range by manually defining breaks.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>p_ohio_cities_labeled <span class="sc">+</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
 <span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">name =</span> <span class="st">"Population size"</span>,</span>
 <span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span>comma,</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">250</span>, <span class="dv">500</span>) <span class="sc">*</span> <span class="dv">1000</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">400</span>, <span class="dv">700</span>) <span class="sc">*</span> <span class="dv">1000</span></span>
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -959,7 +959,7 @@ Click here for the solution
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Want to expand the range of the legend’s scale breaks? <em>(Click to expand)</em>
+Want to further expand the range of the legend’s scale breaks? <em>(Click to expand)</em>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
@@ -987,7 +987,7 @@ Want to expand the range of the legend’s scale breaks? <em>(Click to expand)</
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
-<p>Breaks at <code>50</code> and <code>750</code> will be ignored by default, because they are outside of the scale’s limits:</p>
+<p>Breaks at <code>50</code> and <code>750</code> will be <strong>ignored</strong> by default (!), because they are outside of the scale’s limits:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>p_ohio_cities_labeled <span class="sc">+</span></span>
 <span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
@@ -1003,7 +1003,7 @@ Want to expand the range of the legend’s scale breaks? <em>(Click to expand)</
 </div>
 </div>
 </div>
-<p>Expand the <code>limits</code> so we can include breaks at <code>50</code> and <code>750</code>:</p>
+<p>If we also <strong>expand the <code>limits</code></strong> of the scale, we <em>can</em> include breaks at <code>50</code> and <code>750</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>p_ohio_cities_labeled <span class="sc">+</span></span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_size_continuous</span>(</span>
@@ -1025,8 +1025,8 @@ Want to expand the range of the legend’s scale breaks? <em>(Click to expand)</
 </div>
 <hr style="height:1pt; visibility:hidden;">
 </section>
-<section id="exercise-3" class="level3 exercise">
-<h3 class="anchored" data-anchor-id="exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</h3>
+<section id="bonus-exercise" class="level3 exercise">
+<h3 class="anchored" data-anchor-id="bonus-exercise"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise</h3>
 <p>Can you produce a map in which the names of cities with a population larger than 100,000 are in a <strong><em>bold italic</em></strong> (<code>bold.italic</code>) fontface, whereas those of smaller cities are in regular (<code>plain</code>) fontface?</p>
 <p>See the example below:</p>
 <div class="cell">
@@ -1052,6 +1052,7 @@ Click here for some hints
 <summary>
 Click here for the solution
 </summary>
+<hr style="height:1pt; visibility:hidden;">
 <ul>
 <li>First, we create a new column <code>is_large</code> that indicates whether a city has more than 100,000 inhabitants. Instead of coding this column with <code>TRUE</code>/<code>FALSE</code> (see below), we’ll need to directly use the specific fontfaces we want to display for each type of city:</li>
 </ul>
