@@ -111,23 +111,23 @@ p
 ### Adding single text labels and points
 
 We can add points to a map with the familiar geom `geom_point()`.
-We have previoulsy used this to make scatterplots based on data in a data frame,
+We have previously used this geom to make scatterplots based on data in a data frame,
 but it can plot points at individually-specified locations, too.
 
 As a first example, we'll just add a single point to show where the city of 
 Columbus is,
-and set its coordinates on the fly (_outside of_ `aes()`).
-We will use the
+setting its coordinates "on the fly" (_outside of_ `aes()`)
+and using the
 [OSU scarlet color via its Hex code](https://bux.osu.edu/color/primary-colors/)
-as the color for the point:
+as the point color:
 
 ```{r}
 p +
   geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4)
 ```
 
-We can add arbitrary text labels in a similar fashion, with the geom `geom_text()`,
-in which we specify the text that we want to print using the `label` argument
+We can add arbitrary text labels in a similar way with the geom `geom_text()`,
+in which we specify the **text that we want to print using the `label` argument**
 (and note that I'm subtracting `1` from the latitude so the text ends up a bit below
 the point and not right on top of it):
 
@@ -136,8 +136,6 @@ p +
   geom_point(x = -82.99, y = 39.99, colour = "#ba0c2f", size = 4) +
   geom_text(x = -82.99, y = 39.99 - 1, label = "Columbus", size = 4)
 ```
-
-<hr style="height:1pt; visibility:hidden;" />
 
 ### Adding a set of points from a data frame
 
@@ -269,7 +267,7 @@ p_fill +
 ## A county-level map of Ohio
 
 The background map we've been working with so far doesn't have county lines.
-Especially if we want to make a map of single state like Ohio,
+But in some cases, like when making a map of single state such as Ohio,
 those would come in handy.
 
 ### Getting county-level map data for just Ohio
@@ -500,7 +498,7 @@ p_ohio +
     color = "darkblue",
     size = 4
     ) +
-  guides(fill = "none")
+  theme(legend.position = "none")
 ```
 
 <details><summary>Click here for some hints</summary>
@@ -515,8 +513,8 @@ p_ohio +
   or it would be masked by the polygon layer.
 
 - If you're printing the names of the counties,
-  then you won't need a `fill` legend:
-  you can turn that off using `guides(fill = "none")`.
+  then you won't need a legend:
+  you can turn that off using `theme(legend.position = "none")`.
   
 </details>
 
@@ -535,7 +533,7 @@ p_ohio +
     color = "darkblue",
     size = 4
     ) +
-  guides(fill = "none")
+  theme(legend.position = "none")
 ```
 </details>
 
@@ -564,7 +562,8 @@ Let's pre-process this data a bit by:
 ```{r}
 oh_cities <- us.cities |>
   filter(country.etc == "OH", pop > 50000) |>
-  mutate(name = sub(" OH", "", name))
+  # We'll use the sub() function to substitute " OH" with nothing (""):
+  mutate(name = sub(pattern = " OH", replacement = "", x = name))
 
 head(oh_cities)
 ```
@@ -622,21 +621,21 @@ We may want to change the `size` legend a bit:
 - The scientific notation of the population sizes is cumbersome to read,
   and we can change it to a notation with a comma as a thousands-separator
   (`13,000`, etc.) using `labels = scales:comma`.
-- The legend breaks range from 200,000 - 600,000,
-  while the smallest cities in our dataframe are much smaller than that,
-  so we may instead want to manually define breaks.
+- The range of the legend entries (breaks) is quite a bit more restricted
+  than the sizes of our cites (200-600k versus 50-740k),
+  so we may want to get a better range by manually defining breaks.
 
 ```{r}
 p_ohio_cities_labeled +
   scale_size_continuous(
     name = "Population size",
     labels = scales::comma,
-    breaks = c(100, 250, 500) * 1000
+    breaks = c(100, 400, 700) * 1000
   )
 ```
 
 ::: {.callout-note collapse="true"}
-#### Want to expand the range of the legend's scale breaks? _(Click to expand)_
+#### Want to further expand the range of the legend's scale breaks? _(Click to expand)_
 _ggplot_ will refuse to include `breaks` in the legend that are outside of the
 scale's limits, which are by default the range of the data.
 Because the smallest city in the dataset is just larger than 50,000,
@@ -659,7 +658,7 @@ oh_cities |> arrange(desc(pop)) |> head(n = 1)
 
 <hr style="height:1pt; visibility:hidden;" />
 
-Breaks at `50` and `750` will be ignored by default,
+Breaks at `50` and `750` will be **ignored** by default (!),
 because they are outside of the scale's limits:
 
 ```{r}
@@ -671,7 +670,8 @@ p_ohio_cities_labeled +
   )
 ```
 
-Expand the `limits` so we can include breaks at `50` and `750`:
+If we also **expand the `limits`** of the scale,
+we _can_ include breaks at `50` and `750`:
 
 ```{r}
 p_ohio_cities_labeled +
@@ -688,7 +688,7 @@ p_ohio_cities_labeled +
 <hr style="height:1pt; visibility:hidden;" />
 
 ::: exercise
-### {{< fa user-edit >}} Exercise 3
+### {{< fa user-edit >}} Bonus exercise
 
 Can you produce a map in which the names of cities with a population larger than
 100,000 are in a **_bold italic_** (`bold.italic`) fontface,
@@ -724,6 +724,8 @@ p_ohio_cities +
 </details>
 
 <details><summary>Click here for the solution</summary>
+
+<hr style="height:1pt; visibility:hidden;" />
 
 - First, we create a new column `is_large` that indicates whether a city has more
   than 100,000 inhabitants.
