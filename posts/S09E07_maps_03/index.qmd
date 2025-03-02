@@ -51,10 +51,10 @@ covering detailed map backgrounds with _ggmap_, and county-level choropleth maps
 We will start by loading (and if necessary, first installing) the packages
 that we also used in the past two weeks.
 
-Recall that we are using _ggplot2_ from the _tidyverse_ to make maps,
+Recall from last week that we are using _ggplot2_ (from the _tidyverse_) to make maps,
 but that we also needs the _maps_ and _sf_ packages for some of the geospatial
 functions in _ggplot2_ to work ---
-and the _maps_ package also contains some base maps data that we've been using.
+and the _maps_ package additionally contains some base map data we've been using.
 
 ```{r, message=FALSE}
 if (! require(tidyverse)) install.packages("tidyverse")
@@ -272,7 +272,7 @@ our `state_map`, as we've seen before, only contain the Lower 48 set of states.
 :::
 
 That looks good --- you'll notice that one is a factor and the other of type
-character, but this will not pose a problem.
+character, but this will not be a problem.
 We'll therefore proceed to combine the dataframes,
 using the `left_join()` function with `state_map` as the _focal_
 (left-hand side) dataframe, so that all its rows will be kept:
@@ -298,11 +298,13 @@ Let's start with the `med_income` column, which is median annual income:
 
 ```{r}
 ggplot(state_map_with_stats) +
+  # Map the `med_income` column to the `fill` aesthetic:
   geom_polygon(aes(x = long, y = lat, group = group, fill = med_income)) +
+  # For details about coords_sf crs values, see the 1st Code Clubs maps session
   coord_sf(crs = 5070, default_crs = 4326)
 ```
 
-We can make some improvements in the formatting of this map:
+We can improve the formatting of this map a bit:
 
 ```{r}
 p_income <- ggplot(state_map_with_stats) +
@@ -450,9 +452,15 @@ the examples on the [_mapview_ webpage](https://r-spatial.github.io/mapview/).
 
 ### Using recent sightings data of Bald Eagles around Columbus
 
-We can use the _rebird_ package to download recent bird sightings that were
-submitted to [Cornell's Ebird citizen science project](http://ebird.org) ---
-for example, around Columbus in the last month:
+For a custom Ohio map,
+let's plot the locations of recent sightings of Bald Eagles around Columbus.
+
+We can use the _rebird_ package to download recent sightings of a specific bird
+species
+(in our case, _Haliaeetus leucocephalus_, i.e. the Bald Eagle)
+that were submitted to
+[Cornell's Ebird citizen science project](http://ebird.org) 
+as follows:
 
 ```{r, eval=FALSE}
 sightings <- ebirdgeo(
@@ -480,9 +488,14 @@ In the code above,
 you'll need to replace `REPLACE_THIS_WITH_API_KEY` with an actual Ebird API key.
 You can get one from Ebird but will need to create an account and fill out a form.
 During this Code Club session, I will provide you with my API key.
+
+We need an API key since the package is directly connecting us to the online
+Ebird database.
+For programmatic access to online databases,
+API keys are commonly used to limit and monitor downloads.
 :::
 
-Let's take a look at the dataset:
+Let's take a look at the dataset we just downloaded:
 
 ```{r}
 head(sightings)
@@ -490,18 +503,18 @@ head(sightings)
 
 To use this data with `mapview()`,
 the best course of action is to transform our "regular" dataframe to a geospatial
-`sf` object type with `st_as_sf()` like so
-(in which we pass the names of the longitude and latitude columns to `coords`):
+`sf` object type with `st_as_sf()` like so:
 
 ```{r}
+# We pass the names of the longitude and latitude columns to `coords`
+# The CRS is 4326, i.e. these are GPS coordinates (see our first map session)
 sightings_sf <- st_as_sf(sightings, coords = c("lng", "lat"), crs = 4326)
 ```
 
 Now, we can make our map,
 and we'll color points by the number of eagles seen in a single observation
 (`howMany` column)
-and label the points (when hovering over them) with the observation date
-(`obsDt` column):
+and add "hover-over labels" that have the observation date (`obsDt` column):
 
 ```{r}
 mapview(
@@ -558,7 +571,7 @@ mapview(
 </details>
 
 **B) (Bonus)** Perhaps for a map like this,
-it would make sense to have satellite imagery as the default/only background,
+it would make sense to have **satellite imagery** as the default/only background,
 since it makes it easier to orient yourself on the landscape to figure out
 how you, too, may be able to see these eagles.
 Can you make such a map?
