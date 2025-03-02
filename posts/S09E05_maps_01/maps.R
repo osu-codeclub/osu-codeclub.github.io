@@ -153,3 +153,20 @@ counties |> filter(grepl("ohio,", ID)) |>
   geom_sf() +
   geom_sf_text(aes(label = ID)) +
   coord_sf()
+
+### Interactive maps with _ggiraph_
+
+if (! require(ggiraph)) install.packages("ggiraph")
+library(ggiraph)
+
+p <- state_map |>
+  filter(state %in% c("Ohio", "Indiana", "Michigan")) |> 
+  ggplot() +
+  geom_polygon_interactive(
+    aes(x = long, y = lat, group = group, fill = state, tooltip = state),
+    color = "grey40"
+  ) +
+  coord_sf()
+
+girafe(ggobj = p)
+

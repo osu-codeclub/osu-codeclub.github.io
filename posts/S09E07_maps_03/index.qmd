@@ -1,0 +1,851 @@
+---
+title: "Making maps in R: part III"
+subtitle: "Making choropleth maps and interactive maps"
+pagetitle: "Maps III"
+author: "Jelmer Poelstra"
+date: "2025-03-04"
+categories: [maps]
+title-block-banner: false
+number-depth: 2
+execute: 
+  eval: true
+  cache: false
+knitr:
+  opts_chunk:
+    out.width: "85%"
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+Today is the third and last of a series of Code Club sessions on
+**making maps with R**.
+
+In the [first session](../S09E05_maps_01/),
+we learned the basics of making and formatting maps with ggplot functions.
+
+In the [second session](../S09E06_maps_02/),
+we learned how to add markers/points and text to maps.
+
+Today, we will learn how to make maps...
+
+1. with different fill colors for different areas ---
+   so-called **choropleth maps**.
+
+2. that are **interactive and zoomable**.
+
+(While exploring this topic,
+I ended up making more material than we can cover so there is also some
+[at-home reading bonus content](#bonus-content-at-home-reading)
+covering detailed map backgrounds with _ggmap_, and county-level choropleth maps.)
+
+<br>
+
+## Setting up
+
+### Installing and loading R packages
+
+We will start by loading (and if necessary, first installing) the packages
+that we also used in the past two weeks.
+
+Recall that we are using _ggplot2_ from the _tidyverse_ to make maps,
+but that we also needs the _maps_ and _sf_ packages for some of the geospatial
+functions in _ggplot2_ to work ---
+and the _maps_ package also contains some base maps data that we've been using.
+
+```{r, message=FALSE}
+if (! require(tidyverse)) install.packages("tidyverse")
+if (! require(maps)) install.packages("maps")
+if (! require(sf)) install.packages("sf")
+```
+
+```{r, message=FALSE}
+library(maps)
+library(sf)
+library(tidyverse)
+```
+
+Today, we will additionally use:
+
+- State-level statistics from the _usdata_ (as in: US data) package
+- The _mapview_ package to make interactive maps
+- The _scico_ package for some new color palettes
+- The _rebird_ package to access recent bird sightings from [Ebird](http://ebird.org)
+
+```{r, message=FALSE}
+if (! require(scico)) install.packages("scico")
+if (! require(usdata)) install.packages("usdata")
+if (! require(mapview)) install.packages("mapview")
+if (! require(rebird)) install.packages("rebird")
+```
+
+```{r, message=FALSE}
+library(scico)
+library(usdata)
+library(mapview)
+library(rebird)
+```
+
+::: {.callout-tip appearance="minimal"}
+Not shown above are start-up messages you'll get when loading several of these
+packages, and installation progress info.
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Setting a plot theme
+
+Like in the past two weeks,
+we'll set a ggplot theme for all our plots:
+
+```{r}
+theme_set(theme_void())
+theme_update(legend.position = "top")
+```
+
+<br>
+
+## A first choropleth map
+
+In choropleth maps,
+the **fill color of a geographic area is based on the value of a variable** ---
+think of, for example, 
+population density, median income, mean temperature, or biodiversity.
+
+For example, the map below shows median annual income across states
+(we will make this one in a few minutes):
+
+```{r, echo=FALSE}
+state_map_with_stats <- map_data(map = "state") |>
+  rename(state = region) |>
+  mutate(state = tools::toTitleCase(state)) |>
+  left_join(state_stats, by = "state")
+ggplot(state_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = med_income),
+    color = "black",
+    linewidth = 0.1,
+  ) +
+  scale_fill_scico(
+    palette = "batlow",
+    name = "Median annual  \nincome",
+    labels = scales::label_currency(),
+    breaks = c(40, 55, 70) * 1000
+    ) +
+  coord_sf(crs = 5070, default_crs = 4326)
+```
+
+In ggplot-speak, to do this,
+we will be mapping the `fill` aesthetic to this variable of interest,
+which should represent a column in our input dataframe.
+
+To get started, we'll get the state-level base map dataframe we've used before,
+and make some slight modifications:
+
+```{r}
+state_map <- map_data(map = "state") |>
+  # Rename the 'region' column to 'state' for clarity:
+  rename(state = region) |>
+  # Capitalize the first letter of state names:
+  mutate(state = tools::toTitleCase(state)) |>
+  # Turn into a tibble for better printing:
+  tibble()
+
+head(state_map)
+```
+
+For our first choropleth map,
+we will only use the above base map dataframe,
+which does not contain additional data about states.
+But we can simply give each state a unique color by mapping the `fill` aesthetic
+to `region`, the column that contains the state names:
+
+```{r}
+# We'll just plot 3 states and pre-filter the dataset:
+three_state_map <- state_map |>
+  filter(state %in% c("Ohio", "Indiana", "Michigan"))
+
+ggplot(three_state_map) +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = state)) +
+  coord_sf()
+```
+
+While this map is not too interesting, for some maps,
+showing the names of regions in this way can be a useful alternative to
+adding text labels in the map itself.
+
+In the next sections,
+we'll pull in some data to make more interesting choropleth maps.
+
+<br>
+
+## State-level choropleth maps
+
+### The `state_stats` dataset
+
+We'll use the `state_stats` dataframe that is available after loading the
+_usdata_ package --- let's take a look at that:
+
+```{r}
+head(state_stats)
+```
+
+That's a lot of columns with data!
+For such wide dataframes,
+the `View()` function is particularly useful to explore the data:
+
+```{r, eval=FALSE}
+# [The output is not shown on the website,
+#  but this will open a spreadsheet-like tab in RStudio with the data]
+View(state_stats)
+```
+
+And if you're wondering what some of these columns mean,
+we can check the help page for this data set as follows:
+
+```{r, eval=FALSE}
+# [The output is not shown on the website,
+#  but this will open a help page in the Help tab.]
+?state_stats
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Merging the data with our base map data
+
+Next, we will merge our base map dataframe (`state_map`) with the `state_stats`
+dataframe.
+
+Specifically, we'll want to add the `state_stats` dataframe's columns
+(which has 1 row per state) to each row of our `state_map` dataframe
+(which has multiple rows per state, all of which we'll need to keep)
+for the appropriate state.
+That is, the Ohio statistics from `state_stats` should be added to each row
+of `state_map`, and so on for each state.
+
+Combining dataframes using a shared column (or "key") can be done with the
+[`_join()` family of functions](https://dplyr.tidyverse.org/reference/mutate-joins.html).
+Let's first make sure that the state names are styled the same way
+in both dataframes:
+
+```{r}
+head(state_stats$state)
+# (Use unique() for this dataframe since state names are repeated:)
+head(unique(state_map$state))
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-tip collapse="true"}
+### Want to check if both data sets contain the exact same set of states? _(Click to expand)_
+
+You may want to more carefully check that your datasets match ---
+the `setequal()` function will test whether two vectors contain the exact
+same unique set of values
+(regardless of the order of appearance, or of repeated values):
+
+```{r}
+setequal(state_map$state, state_stats$state)
+```
+
+Hmmm ... so these two data frames somehow do not contain the same set of states
+(or perhaps there's a spelling difference somewhere).
+
+We can use the `setdiff()` function to let us know which values (in our case,
+state names) are present in a first vector but not in a second ---
+this is one-directional/asymmetric, so we'll want to check both directions like so:
+
+```{r}
+# Are any states only present in `state_map`? 
+setdiff(state_map$state, state_stats$state)
+
+# Are any states only present in `state_stats`?
+setdiff(state_stats$state, state_map$state)
+```
+
+It turns out that the `state_stats` dataframe contains Alaska and Hawaii while
+our `state_map`, as we've seen before, only contain the Lower 48 set of states.
+
+:::
+
+That looks good --- you'll notice that one is a factor and the other of type
+character, but this will not pose a problem.
+We'll therefore proceed to combine the dataframes,
+using the `left_join()` function with `state_map` as the _focal_
+(left-hand side) dataframe, so that all its rows will be kept:
+
+```{r}
+state_map_with_stats <- state_map |>
+  left_join(state_stats, by = "state")
+
+head(state_map_with_stats)
+```
+
+Great! We can see that the data from `state_stats` has been added to our base
+map dataframe.
+Now, we can use this dataframe to plot the states along with this data.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### A choropleth map showing median income across states
+
+There are a number of variables (statistics) in our dataframe that we may want
+to visualize.
+Let's start with the `med_income` column, which is median annual income:
+
+```{r}
+ggplot(state_map_with_stats) +
+  geom_polygon(aes(x = long, y = lat, group = group, fill = med_income)) +
+  coord_sf(crs = 5070, default_crs = 4326)
+```
+
+We can make some improvements in the formatting of this map:
+
+```{r}
+p_income <- ggplot(state_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = med_income),
+    # We'll use black state outlines with thine lines:
+    color = "black",
+    linewidth = 0.1,
+  ) +
+  # The 'viridis' continuous ('_c') color schemes often look good:
+  scale_fill_viridis_c(
+    # You can include a line break in the legend title with '\n':
+    name = "Median annual  \nincome",
+    # You can use include $ signs in the legend labels like so: 
+    labels = scales::label_currency(),
+    # We'll use fewer breaks to avoid label overlap:
+    breaks = c(40, 55, 70) * 1000
+    ) +
+  coord_sf(crs = 5070, default_crs = 4326)
+
+p_income
+```
+
+Or how about this color palette from the
+[_scico_ package](https://github.com/thomasp85/scico)?
+
+```{r}
+p_income +
+  scale_fill_scico(
+    palette = "batlow",
+    name = "Median annual  \nincome",
+    labels = scales::label_currency(),
+    breaks = c(40, 55, 70) * 1000
+    )
+```
+
+::: exercise
+
+### {{< fa user-edit >}} Exercise 1
+
+Create one or more maps similar to the map above showing median income,
+showing a different variable from the `state_stats` data.
+Pick one or more variables that look worth plotting to you,
+and let us know if you've found an surprising or otherwise interesting pattern!
+
+You can also play around with data transformations, color schemes, etc.,
+to make your map look better.
+
+<details><summary>Click here for some hints</summary>
+
+- Relative to the code for the previous map,
+  you'll want to change what's being mapped to the `fill` aesthetic.
+  
+- You'll also want to change the name of the legend.
+
+</details>
+
+<details><summary>Click here for an example</summary>
+
+An example with the unemployment rate, which is in the column `unempl`.
+
+```{r}
+ggplot(state_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = unempl),
+    color = "black",
+    linewidth = 0.1,
+  ) +
+  scale_fill_scico(
+    palette = "davos",
+    name = "Unemployment\nrate",
+    # We can use `scales::label_percent()` to show % signs in the legend,
+    # but we need to set its `scale` to 1 or values will be multiplied by 100:
+    labels = scales::label_percent(scale = 1),
+    # This is how we can draw a box around the legend color bar,
+    # which is useful here because the scale goes into white: 
+    guide = guide_colorbar(frame.colour = "grey50")
+    ) +
+  coord_sf(crs = 5070, default_crs = 4326)
+```
+
+</details>
+:::
+
+<br>
+
+## Interactive, zoomable maps with _mapview_
+
+The [_mapview_ package](https://r-spatial.github.io/mapview/)
+allows you to easily make interactive maps where you can zoom in and out,
+turn layers on and off, and change the background map for the rendered map!
+
+It is a more user-friendly but also more limited alternative to the
+[_leaflet_ package](https://cran.r-project.org/web/packages/leaflet/index.html).
+
+### Using the example data from the package
+
+For our first maps,
+let's make use of `breweries`, an example dataset included with the package.
+This has the locations and some data about 224 breweries in the Bavaria region
+in Germany:
+
+```{r}
+head(breweries)
+```
+
+Note that the format is different than what we're used to.
+This is a so-called **`sf` (short for Simple Features) geospatial object** that
+is more advanced than the regular dataframes we've been working with
+(though note that ggplot can also plot these with several specialized geoms!).
+
+To make our first map,
+we can simply run the `mapview()` function with the `breweries` object as input:
+
+```{r}
+mapview(breweries)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+In the map above, let's try to:
+
+- Zoom in and out (+ and - buttons in the top left)
+- Change the background map layer (layer button below the zoom buttons)
+- Hover over one or more brewery points
+
+The default information that is shown upon hovering over a point seems to be
+the row number, but we can change that using the `label` argument.
+Additionally, we can make point color differ by some variable,
+such as the founding year of the brewery (`founded`):
+
+```{r}
+mapview(breweries, zcol = "founded", label = "brewery")
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+Note that this is not _ggplot_ at all, or even based on _ggplot_,
+so the syntax is completely different.
+To explore your options,
+take a look at the help page (`?mapview`) or perhaps more usefully,
+the examples on the [_mapview_ webpage](https://r-spatial.github.io/mapview/).
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Using recent sightings data of Bald Eagles around Columbus
+
+We can use the _rebird_ package to download recent bird sightings that were
+submitted to [Cornell's Ebird citizen science project](http://ebird.org) ---
+for example, around Columbus in the last month:
+
+```{r, eval=FALSE}
+sightings <- ebirdgeo(
+  species = species_code("haliaeetus leucocephalus"),
+  lat = 39.99,    # Get sightings centered around the latitude
+  lng = -82.99,   # Get sightings centered around the longitude
+  back = 30,      # Get sightings from now to 30 days back
+  dist = 50,      # Get sightings in a ration of 50 km around the coords
+  key = REPLACE_THIS_WITH_API_KEY
+)
+```
+
+```{r, echo=FALSE}
+sightings <- ebirdgeo(
+  species = species_code("haliaeetus leucocephalus"),
+  lat = 39.99,
+  lng = -82.99,
+  back = 30,
+  dist = 50
+)
+```
+
+::: {.callout-warning appearance="minimal"}
+In the code above,
+you'll need to replace `REPLACE_THIS_WITH_API_KEY` with an actual Ebird API key.
+You can get one from Ebird but will need to create an account and fill out a form.
+During this Code Club session, I will provide you with my API key.
+:::
+
+Let's take a look at the dataset:
+
+```{r}
+head(sightings)
+```
+
+To use this data with `mapview()`,
+the best course of action is to transform our "regular" dataframe to a geospatial
+`sf` object type with `st_as_sf()` like so
+(in which we pass the names of the longitude and latitude columns to `coords`):
+
+```{r}
+sightings_sf <- st_as_sf(sightings, coords = c("lng", "lat"), crs = 4326)
+```
+
+Now, we can make our map,
+and we'll color points by the number of eagles seen in a single observation
+(`howMany` column)
+and label the points (when hovering over them) with the observation date
+(`obsDt` column):
+
+```{r}
+mapview(
+  sightings_sf,
+  zcol = "howMany",
+  label = "obsDt"
+)
+```
+
+<br>
+
+::: exercise
+### {{< fa user-edit >}} Exercise 2
+
+**A)** Can you figure out how to create a map like the one shown below,
+where the point size is also based on the number of birds seen?
+
+As mentioned above,
+you can take a look at the help page (`?mapview`) and/or
+the examples on the [_mapview_ webpage](https://r-spatial.github.io/mapview/).
+
+```{r, echo=FALSE}
+mapview(
+  sightings_sf,
+  zcol = "howMany",
+  cex = "howMany",
+  label = "obsDt"
+)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+<details><summary>Click here for some hints</summary>
+[This section on the _mapview_ website](https://r-spatial.github.io/mapview/articles/mapview_02-advanced.html#setting-point-size-cex)
+shows an example of varying point size by a variable.
+<hr style="height:1pt; visibility:hidden;" />
+</details>
+
+<details><summary>Click here for the solution</summary>
+
+To make points vary in size by a certain variable (column in your dataframe),
+you can use the `cex` argument in the same way as we've used the `zcol` and
+`label` arguments:
+
+```{r}
+mapview(
+  sightings_sf,
+  zcol = "howMany",
+  cex = "howMany",
+  label = "obsDt"
+)
+```
+
+</details>
+
+**B) (Bonus)** Perhaps for a map like this,
+it would make sense to have satellite imagery as the default/only background,
+since it makes it easier to orient yourself on the landscape to figure out
+how you, too, may be able to see these eagles.
+Can you make such a map?
+You'll also need to adjust the point colors or dark points will become nearly
+invisible.
+
+<details><summary>Click here for an example solution</summary>
+
+```{r}
+mapview(
+  sightings_sf,
+  cex = "howMany",
+  label = "obsDt",
+  map.types = "Esri.WorldImagery",
+  # I'm chosing to use a single color for all points:
+  col.regions = "cyan2"
+)
+```
+
+</details>
+
+:::
+
+<br>
+
+## Bonus content (at-home reading)
+
+### Detailed map backgrounds on static maps with _ggmap_
+
+The _ggmap_ package allows you to use base/background maps from sources like
+Google Maps and Stadia Maps in static (non-interactive) maps.
+Let's install and load it first:
+
+```{r}
+if (! require(ggmap)) install.packages("ggmap")
+library(ggmap)
+```
+
+Unfortunately, API keys are needed nowadays for any of the map sources.
+Google Maps would probably be the most interesting to use,
+but to obtain an API key from them, you need to provide credit card details
+(even if low-level usage is free).
+
+Instead, we'll use Stadia Maps --- you'll still need to create an account and then
+generate your own API key, but you won't need to provide credit card details.
+For information on generating the API key, see
+[this Stadia Maps page](https://docs.stadiamaps.com/authentication/#api-keys)
+and this info from _ggmap_:
+
+```{r}
+?ggmap::register_stadiamaps
+```
+
+Once you have your API key, "register" it as follows:
+
+```{r, eval=FALSE}
+api_key <- "REPLACE_THIS_WITH_YOUR_API_KEY"
+register_stadiamaps(api_key, write = TRUE)
+```
+
+Now, we can obtain Stadia Maps base maps using the `get_stadiamap()` function.
+We first have to define a "bounding box" (`bbox =`) with the coordinates
+that make up the corners of the rectangle containing the area you want to plot: 
+
+```{r}
+us_coords <- c(left = -125, bottom = 25.75, right = -67, top = 49)
+```
+
+Then, we can obtain the map, and plot it:
+
+```{r}
+base_states <- get_stadiamap(bbox = us_coords, zoom = 5, maptype = "outdoors")
+
+ggmap(base_states) 
+```
+
+It makes sense to have plotting panel borders around these kinds of maps,
+so let's update our theme:
+
+```{r}
+theme_update(panel.border = element_rect(color = "grey20", fill = NA))
+```
+
+#### Ohio map and `maptype`
+
+As another example, let's create a base map for Ohio ---
+note that I am increasing the `zoom` level,
+which means we get a more detailed map and this is appropriate because we are
+now plotting a smaller area:
+
+```{r}
+bbox_ohio <- c(left = -85, bottom = 38.3, right = -80.5, top = 42.2)
+
+base_ohio <- get_stadiamap(bbox = bbox_ohio, zoom = 8, maptype = "outdoors")
+
+ggmap(base_ohio)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+You can also play around with the `maptype` argument:
+
+```{r}
+base_ohio <- get_stadiamap(bbox = bbox_ohio, zoom = 8, maptype = "stamen_toner_lite")
+
+ggmap(base_ohio)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Adding points
+
+To practice with adding points to such a map,
+let's try to plot the Bald Eagle sightings data.
+
+First, we'll get a base map for the just area around Columbus
+(note the again increased `zoom` level):
+
+```{r}
+bbox_columbus <- c(left = -83.6, bottom = 39.5, right = -82.1, top = 40.5)
+base_columbus <- get_stadiamap(bbox = bbox_columbus, zoom = 9, maptype = "outdoors")
+```
+
+Then, we can add the points like we have before:
+
+```{r, echo=FALSE}
+#ggmap(base_columbus) +
+#  geom_sf(
+#    data = sightings_sf,
+#    aes(color = howMany),
+#    inherit.aes = FALSE
+#    ) +
+#  scale_color_viridis_c(name = "Number of birds")
+```
+
+```{r}
+ggmap(base_columbus) +
+  geom_point(
+    data = sightings,
+    aes(x = lng, y = lat, fill = howMany, size = howMany),
+    shape = 21,
+    ) +
+  scale_fill_viridis_c(name = "Number of Bald\nEagles observed") +
+  guides(size = "none")
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### County-level choropleth maps
+
+```{r, echo=FALSE}
+theme_set(theme_void())
+theme_update(legend.position = "top")
+```
+
+#### Base map
+
+To plot some county-level maps for Ohio,
+we'll grab the same county-level base map as last week using the `map_data()`
+function.
+We'll also do some pre-processing so the column names are more intuitive,
+the county names are capitalized, and we only keep data for Ohio:
+
+```{r}
+# County-level base map, filtered to just keep Ohio counties:
+ohio_map <- map_data(map = "county") |>
+  rename(state = region, county = subregion) |>
+  mutate(county = tools::toTitleCase(county)) |>
+  filter(state == "ohio") |>
+  tibble()
+
+head(ohio_map)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Add county-level statistics
+
+We'll also use another dataset from the _usdata_ package,
+this one is countywise and simply called `county`:
+
+```{r}
+head(county)
+```
+
+```{r, eval=FALSE}
+View(county)
+```
+
+```{r, eval=FALSE}
+?county
+```
+
+We can filter this dataset to only keep Ohio data,
+and get rid of the ` County` suffices to the county names:
+
+```{r}
+ohio_data <- county |>
+  filter(state == "Ohio") |>
+  rename(county = name) |> 
+  mutate(county = sub(" County", "", county))
+```
+
+Let's test whether the exact same set of counties is present in both dataframes
+using the `setequal()` function:
+
+```{r}
+setequal(ohio_map$county, ohio_data$county)
+```
+
+Good! Then we're ready to merge the dataframes,
+and we'll do so in the same way as for the statewise data:
+
+```{r}
+ohio_map_with_stats <- left_join(ohio_map, ohio_data, by = "county")
+
+head(ohio_map_with_stats)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+#### Example maps
+
+Population change from 2010 to 2017:
+
+::: callout-tip
+### Diverging color scales
+
+With a statistic like population change, which can take on both positive and
+negative values (and indeed does so in this particular case!),
+a "diverging" color scale can be useful.
+These have a "neutral" midpoint color and different colors for negative versus
+positive values.
+
+See the example below, where I also set the `midpoint` to 0,
+because otherwise the scale centers around the midpoint in the data,
+which in this case was well above 0.
+:::
+
+```{r}
+ggplot(ohio_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = pop_change),
+    color = "black",
+    linewidth = 0.2,
+  ) +
+  scale_fill_scico(
+    palette = "bam",
+    name = "Population\nchange",
+    labels = scales::label_percent(scale = 1),
+    breaks = c(-3, 0, 3, 6),
+    midpoint = 0,
+    guide = guide_colorbar(frame.colour = "grey50")
+    ) +
+  coord_sf()
+```
+
+Median household income:
+
+```{r}
+ggplot(ohio_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = median_hh_income),
+    color = "black",
+    linewidth = 0.2,
+  ) +
+  scale_fill_scico(
+    palette = "imola",
+    name = "Median house-  \nhold income",
+    labels = scales::label_currency(),
+    breaks = c(40, 70, 100) * 1000
+    ) +
+  coord_sf()
+```
+
+Whether the county contains a metropolitan area:
+
+```{r}
+ggplot(ohio_map_with_stats) +
+  geom_polygon(
+    aes(x = long, y = lat, group = group, fill = metro),
+    color = "black",
+    linewidth = 0.2,
+  ) +
+  scale_fill_manual(
+    values = c("olivedrab4", "violetred"),
+    name = "County contains a\nmetro area"
+    ) +
+  coord_sf()
+```
