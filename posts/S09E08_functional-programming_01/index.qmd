@@ -1,0 +1,491 @@
+---
+title: "Functional programming I: `for` loops and functions"
+subtitle: "Developing tools for doing things over and over"
+author:
+  - "Jessica Cooperstone and Jelmer Poelstra"
+date: "2025-03-17"
+categories: [for loops, base R, functions, functional programming]
+title-block-banner: false
+image: img/for-loop-monsters.png
+alttext: "Illustrated for loop example. Input vector is a parade of monsters, including monsters that are circles, triangles, and squares. The for loop they enter has an if-else statement: if the monster is a triangle, it gets sunglasses. Otherwise, it gets a hat. The output is the parade of monsters where the same input parade of monsters shows up, now wearing either sunglasses (if triangular) or a hat (if any other shape). Cartoon by ALlison Horst"
+---
+
+# Introduction
+
+```{r, fig.alt = "Illustrated for loop example. Input vector is a parade of monsters, including monsters that are circles, triangles, and squares. The for loop they enter has an if-else statement: if the monster is a triangle, it gets sunglasses. Otherwise, it gets a hat. The output is the parade of monsters where the same input parade of monsters shows up, now wearing either sunglasses (if triangular) or a hat (if any other shape).", fig.cap= "Cartoon from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)", out.width = "100%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/for-loop-monsters.png")
+```
+
+You might find yourself in a situation where you are copying and pasting your code multiple times, changing a single variable. This could be situation where you want to run a series of statistical tests, each with a different response variable. Or, you want to make a series of plots, adjusting which variables are on the x-axis. This is generally not a good idea, as it is error prone and inefficient. 
+
+We are going to spend the next few sections of Code Club talking about things you can do to avoid copy and pasting your code. Today, we are going to talk about:
+
+* `for` loops
+* writing your own functions
+
+We will start, like we typically do, by loading the packages we will use today.
+
+```{r, message = FALSE, warning = FALSE}
+library(tidyverse) # for wrangling and everything
+library(palmerpenguins) # for penguins data
+library(glue) # for easy pasting of names
+```
+
+
+# `for` loops
+## `for` loops, the basics
+For loops iterate over some kind of sequence, performing an action, one element at a time. The basic syntax is like this:
+
+```{r, eval = FALSE}
+for (item in list_of_items) { # items to iterate over
+  # code that does something
+  do_something(item)
+}
+```
+
+Let's go through a simple example:
+```{r}
+for (some_value in 1:5) {
+  print(some_value * 2)
+}
+```
+
+What is happening under the hood, is that your `for` loop is assigning each item in your vector (here, the integer values 1 through 5) to the object `some_value`, multiplying it by 2, and then printing it. If we want to be very explicit, this is exactly what is happening:
+
+```{r}
+# iteration 1
+some_value <- 1
+print(some_value * 2)
+
+# iteration 2
+some_value <- 2
+print(some_value * 2)
+
+# iteration 3
+some_value <- 3
+print(some_value * 2)
+
+# iteration 4
+some_value <- 4
+print(some_value * 2)
+
+# iteration 5
+some_value <- 5
+print(some_value * 2)
+```
+
+If we do this again in the loop: 
+
+```{r}
+for (some_value in 1:5) {
+  print(some_value * 2)
+}
+```
+
+And check what `some_value` is at the end:
+```{r}
+some_value
+```
+
+We can see that the value 5 (last of `some_value`) is currently assigned. This is not totally intuitive - you mgiht think that `some_value` would hold all of the values that we set to that object in our loop but *this is not true*. This is good to remember since this is now lingering in our environment.
+
+I have shown this use-case of a `for` loop because I think it helps you to see how it works - not because you would actually use it to do this task. Because R is a vectorized language, you don't actually need a `for` loop to multiply every value by a number, we can do this task more simply below. 
+```{r}
+# multiply each element of the vector 1:5 by 2
+1:5 * 2
+```
+
+Let's do another example. I could create a `for` loop that simply prints something out for me. Here's an example:
+
+```{r}
+# create a vector of the names of my special flowers
+my_special_flowers <- c("dahlias", "roses", "ranunculus")
+
+# use a for loop to print this message for each flower
+for (flower in my_special_flowers) {
+  print(glue("I really like {flower}"))
+}
+```
+
+You can also make this conditional, meaning your `for` loop does some things under certain conditions, and something else in another condition.
+
+```{r}
+# a vector of solanaceous vegetables
+my_vegetables <- c("Tomato", "Potato", "Pepper", "Eggplant")
+
+for (vegetable in my_vegetables) {
+# if the vegetable is tomato, print this message  
+  if (vegetable == "Tomato") {
+    print(glue("{vegetable} is my favorite Solanaceae vegetable"))
+  }
+# if the vegetable is anything else, print this message  
+  else {
+    print(glue("{vegetable} is a perfectly fine Solanaceae vegetable"))
+  }
+}
+```
+
+### `for` loops basics practice
+
+Write a `for` loop that takes the vector of numbers -5, -3, 2, 4, 7 and prints their absolute value.
+
+<details>
+
+<summary>Need a hint?</summary>
+<br>
+The function for absolute value is `abs()`.
+
+</details>
+
+<details>
+
+<summary>Need another hint?</summary>
+<br>
+First create a vector of your numbers, then iterate over it.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+# create your vector of numbers to iterate over
+my_vector <- c(-5, -3, 2, 4, 7)
+
+# use a for loop to do the iterating
+for (number in my_vector) {
+  print(abs(number))
+}
+```
+
+</details>
+
+## `for` loops, for plotting
+
+```{r}
+# create a vector that has all the penguin species names
+penguin_species <- unique(penguins$species)
+
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na() 
+  
+# plot
+  plot <- one_penguin_species |> 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    labs(title = focal_species) + # put the species name as the title
+    theme_classic() 
+
+# print the plot
+  print(plot)
+}
+
+```
+
+Create a new directory (in your working directory) called `figs` which is where we will store our figures.
+
+```{r, eval = FALSE}
+# write code to create a directory called "figs" in our working directory
+dir.create(path = "figs")
+```
+
+Create a series of plots, one for each penguin species, to examine the relationship between bill depth and bill length.
+```{r}
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na() 
+  
+# plot
+  plot <- one_penguin_species |> 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = focal_species, # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex", 
+         caption = "Data collected from LTER, Antarctica") + 
+    theme_classic() 
+
+# print the plot
+  print(plot)
+  
+}
+
+```
+
+
+```{r}
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na() 
+  
+# plot
+  plot <- one_penguin_species |> 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = focal_species, # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex", 
+         caption = "Data collected from LTER, Antarctica") + 
+    theme_classic() 
+
+# save the plots
+  filename <- glue("figs/{focal_species}_bill-dimensions.png") # create filename
+  ggsave(filename, plot) # save the plot to file
+}
+```
+
+### `for` loops, for plotting practice
+
+Question
+
+<details>
+
+<summary>Need a hint?</summary>
+<br>
+Hint 1
+
+</details>
+
+<details>
+
+<summary>Need another hint?</summary>
+<br>
+Hint 2
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+
+```
+
+</details>
+
+# Writing functions
+
+There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about [functions](https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction) before in Code Club, and you may be using them without explicitly realizing they are functions. For example, `mean()` is a function that calculates the mean of an object (usually a vector).
+
+There are some functions which are by default available when you load R (like `mean()`), and others that exist within packages that require you to load those packages (e.g., `tidyverse`) before they can be used (e.g., `ggplot()`).
+
+But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.
+
+
+## General syntax
+The general syntax of a function is like this:
+
+```{r, eval = FALSE}
+name_of_function <- function(arguments) {
+  insert_code_here()
+}
+```
+
+You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument. 
+
+## Functions with one argument
+Here, I am writing a little function to do something simple, like calculate from millimeters to inches.
+
+```{r}
+mm_to_inch <- function(value_in_mm) {
+  value_in_mm * 0.0393701 # code to convert from mm to inch
+}
+```
+
+Here, we would call `value_in_mm` our argument or parameter. Remember that this is a user-defined term, you could call this `x`, `i`, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names. 
+
+Now that we've made a function, we can see it in our environment under the "Functions" header.
+
+![](img/function-in-environment.png)
+If we click on this item, we can see the details of the function.
+
+![](img/function-details.png)
+
+If we start typing our function, and put our cursor between the parentheses and press tab, we can also see some information about our function.
+
+![](img/function-hover-details.png)
+
+We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.
+
+```{r}
+mm_to_inch(value_in_mm = 100)
+```
+
+Because our function only takes one argument, we can be less explicit and remove `value_in_mm` and get the same result.
+
+```{r}
+mm_to_inch(100)
+```
+
+We also might want to pass a whole column or vector to our function, which we can also do.
+
+```{r}
+mm_to_inch(penguins$bill_length_mm)
+```
+
+Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a `mutate()` function. Remember that `mutate()` works with the syntax `new_column = function(existing_variables)`. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with `select()`).
+
+```{r}
+penguins |> 
+  mutate(bill_length_inch = mm_to_inch(bill_length_mm))
+```
+
+### Embedding built in functions
+
+We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it's fine.
+
+```{r}
+# calculate the coefficient of variation by 
+# dividing the standard deviation by the mean
+cv <- function(x) {
+        (sd(x)/mean(x))
+}
+```
+
+## Functions with two arguments
+
+We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.
+
+```{r}
+calculate_bmi <- function(weight_kg, height_cm) {
+  weight_kg/(height_cm/100)^2
+}
+```
+
+```{r}
+calculate_bmi(weight_kg = 80, height_cm = 180)
+```
+
+If you provide your arguments in the order they are expected (here, `weight_kg` and then `height_cm`), then you don't need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.
+
+```{r}
+# this is wrong
+calculate_bmi(180, 80)
+```
+
+```{r}
+# this is better
+calculate_bmi(height_cm = 180, weight_kg = 80)
+```
+
+### Functions with one argument practice
+
+Write two functions that convert between degrees Fahrenheit and degrees Celsius and test to see if they work.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+°C = (°F - 32) × 5/9 or °F = (°C * 9/5) + 32
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+degF_to_degC <- function(deg_F) {
+  (deg_F - 32) * (5/9)
+}
+
+degC_to_degF <- function(deg_C) {
+  (deg_C * (9/5)) + 32
+}
+```
+
+```{r}
+degF_to_degC(deg_F = 32)
+
+degF_to_degC(deg_F = 100)
+
+degC_to_degF(deg_C = 0)
+
+degC_to_degF(deg_C = -40)
+```
+
+
+</details>
+
+
+## Plotting functions
+Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.
+
+We can also write a function to make our plot.
+```{r}
+species_bill_plotting <- function(focal_species) {
+    penguins |> 
+    filter(species == focal_species) |> 
+    drop_na() |> 
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = focal_species, # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex", 
+         caption = "Data collected from LTER, Antarctica") + 
+    theme_classic() 
+}
+```
+
+Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.
+```{r}
+species_bill_plotting("Adelie")
+```
+
+We can then pass this function in a `for` loop with some simpler looking code (because the bulk of it is elsewhere).
+```{r}
+for (focal_species in penguin_species) {
+  # pass each focal species to the species_bill_plotting function
+  species_bill_plotting(focal_species)
+
+# save the plots
+  filename <- glue("figs/{focal_species}_bill-dimensions.png") # create filename
+  ggsave(filename, plot) # save the plot to file
+}
+```
+
+
+### Functions with more arguments practice
+
+Question
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Here is my hint
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+
+```
+
+</details>
