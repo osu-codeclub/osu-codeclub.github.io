@@ -74,7 +74,9 @@ background-color: null;
 font-style: inherit;"># code that does something</span></span>
 <span id="cb2-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">do_something</span>(item)</span>
+font-style: inherit;">do_something</span>(item) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this is a made up function</span></span>
 <span id="cb2-4">}</span></code></pre></div>
 </div>
 <p>Let’s go through a simple example:</p>
@@ -235,7 +237,7 @@ font-style: inherit;">2</span>)</span>
 <pre><code>[1] 5</code></pre>
 </div>
 </div>
-<p>We can see that the value 5 (last of <code>some_value</code>) is currently assigned. This is not totally intuitive - you mgiht think that <code>some_value</code> would hold all of the values that we set to that object in our loop but <em>this is not true</em>. This is good to remember since this is now lingering in our environment.</p>
+<p>We can see that the value 5 (last of <code>some_value</code>) is currently assigned. This is not totally intuitive - you might think that <code>some_value</code> would hold all of the values that we set to that object in our loop but <em>this is not true</em>. This is good to remember since this is now an object lingering in our environment.</p>
 <p>I have shown this use-case of a <code>for</code> loop because I think it helps you to see how it works - not because you would actually use it to do this task. Because R is a vectorized language, you don’t actually need a <code>for</code> loop to multiply every value by a number, we can do this task more simply below.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="co" style="color: #5E5E5E;
@@ -295,12 +297,28 @@ I really like roses
 I really like ranunculus</code></pre>
 </div>
 </div>
-<p>You can also make this conditional, meaning your <code>for</code> loop does some things under certain conditions, and something else in another condition.</p>
+<p>You can also make this conditional, meaning your <code>for</code> loop does one thing under certain conditions, and something else in another condition. We can accomplish this by nesting an <code>if else</code> statement within our <code>for</code> loop.</p>
+<p>We are also making use of the function <a href="https://glue.tidyverse.org/"><code>glue()</code></a> (which we’ve gone over before) which allows easy pasting, like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1">my_location <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Code Club"</span></span>
+<span id="cb23-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Welcome to {my_location}"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Welcome to Code Club</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># a vector of solanaceous vegetables</span></span>
-<span id="cb23-2">my_vegetables <span class="ot" style="color: #003B4F;
+<span id="cb25-2">my_vegetables <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -313,45 +331,45 @@ background-color: null;
 font-style: inherit;">"Pepper"</span>, <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Eggplant"</span>)</span>
-<span id="cb23-3"></span>
-<span id="cb23-4"><span class="cf" style="color: #003B4F;
+<span id="cb25-3"></span>
+<span id="cb25-4"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (vegetable <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> my_vegetables) {</span>
-<span id="cb23-5"><span class="co" style="color: #5E5E5E;
+<span id="cb25-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># if the vegetable is tomato, print this message  </span></span>
-<span id="cb23-6">  <span class="cf" style="color: #003B4F;
+<span id="cb25-6">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">if</span> (vegetable <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Tomato"</span>) {</span>
-<span id="cb23-7">    <span class="fu" style="color: #4758AB;
+<span id="cb25-7">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"{vegetable} is my favorite Solanaceae vegetable"</span>))</span>
-<span id="cb23-8">  }</span>
-<span id="cb23-9"><span class="co" style="color: #5E5E5E;
+<span id="cb25-8">  }</span>
+<span id="cb25-9"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># if the vegetable is anything else, print this message  </span></span>
-<span id="cb23-10">  <span class="cf" style="color: #003B4F;
+<span id="cb25-10">  <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">else</span> {</span>
-<span id="cb23-11">    <span class="fu" style="color: #4758AB;
+<span id="cb25-11">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"{vegetable} is a perfectly fine Solanaceae vegetable"</span>))</span>
-<span id="cb23-12">  }</span>
-<span id="cb23-13">}</span></code></pre></div>
+<span id="cb25-12">  }</span>
+<span id="cb25-13">}</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Tomato is my favorite Solanaceae vegetable
 Potato is a perfectly fine Solanaceae vegetable
@@ -379,10 +397,10 @@ Need another hint?
 Click for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># create your vector of numbers to iterate over</span></span>
-<span id="cb25-2">my_vector <span class="ot" style="color: #003B4F;
+<span id="cb27-2">my_vector <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -401,21 +419,21 @@ background-color: null;
 font-style: inherit;">4</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">7</span>)</span>
-<span id="cb25-3"></span>
-<span id="cb25-4"><span class="co" style="color: #5E5E5E;
+<span id="cb27-3"></span>
+<span id="cb27-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># use a for loop to do the iterating</span></span>
-<span id="cb25-5"><span class="cf" style="color: #003B4F;
+<span id="cb27-5"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (number <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> my_vector) {</span>
-<span id="cb25-6">  <span class="fu" style="color: #4758AB;
+<span id="cb27-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">abs</span>(number))</span>
-<span id="cb25-7">}</span></code></pre></div>
+<span id="cb27-7">}</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 5
 [1] 3
@@ -425,55 +443,145 @@ font-style: inherit;">abs</span>(number))</span>
 </div>
 </div>
 </details>
+<p>Write a <code>for</code> loop that, when given a number, will tell you whether an positive integer is odd or even. Don’t worry about negatives or zero here.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p><br> A function that would be useful here is the modulo, <code>%%</code>, where from the remainder, you can determine odd or even.</p>
+</details>
+<details>
+<summary>
+Need another hint?
+</summary>
+<p><br> Create a vector of numbers you want to see if they are odd or even. Then write a <code>for</code> loop to print whether they are odd or even.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">some_integers <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">12</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">401</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1000</span>)</span>
+<span id="cb29-2"></span>
+<span id="cb29-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (number <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> some_integers) {</span>
+<span id="cb29-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># if the number is divisible by 2, print that its even </span></span>
+<span id="cb29-5">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">if</span> (number <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">%%</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>) {</span>
+<span id="cb29-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"{number} is an even number"</span>))</span>
+<span id="cb29-7">  }</span>
+<span id="cb29-8"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># if the number is anything else, print that its odd </span></span>
+<span id="cb29-9">  <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">else</span> {</span>
+<span id="cb29-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"{number} is an odd number"</span>))</span>
+<span id="cb29-11">  }</span>
+<span id="cb29-12">}</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>1 is an odd number
+5 is an odd number
+12 is an even number
+401 is an odd number
+1000 is an even number</code></pre>
+</div>
+</div>
+</details>
 </section>
 </section>
 <section id="for-loops-for-plotting" class="level2" data-number="2.2">
 <h2 data-number="2.2" class="anchored" data-anchor-id="for-loops-for-plotting"><span class="header-section-number">2.2</span> <code>for</code> loops, for plotting</h2>
+<p>So far, we have done things in a <code>for</code> loop do not really require a <code>for</code> loop to accomplish, though I want you to see how they work first with simpler examples. Making a bunch of plots at once is something that is really easier and less error prone with a <code>for</code> loop.</p>
+<p>First let’s revisit our <code>penguins</code> data to create a base plot, and then iterate it over a variable to make multiples.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;"># create a vector that has all the penguin species names</span></span>
-<span id="cb27-2">penguin_species <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">unique</span>(penguins<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>species)</span>
-<span id="cb27-3"></span>
-<span id="cb27-4"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> penguin_species) {</span>
-<span id="cb27-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># filter your df for each focal_species  </span></span>
-<span id="cb27-6">  one_penguin_species <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">glimpse</span>(penguins)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 344
+Columns: 8
+$ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
+$ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
+$ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
+$ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
+$ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
+$ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
+$ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
+$ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+</div>
+</div>
+<p>What if we want to create a plot comparing the <code>bill_length_mm</code> vs.&nbsp;<code>bill_depth_mm</code> for each species? We can:</p>
+<ul>
+<li>take our <code>penguins</code> data</li>
+<li><code>filter()</code> for a single <code>species</code></li>
+<li>make our plot</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb27-7">    <span class="fu" style="color: #4758AB;
+<span id="cb33-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># select only the Adelie penguins  </span></span>
+<span id="cb33-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb27-8">    <span class="fu" style="color: #4758AB;
+<span id="cb33-4"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">drop_na</span>() </span>
-<span id="cb27-9">  </span>
-<span id="cb27-10"><span class="co" style="color: #5E5E5E;
+font-style: inherit;"># remove missing values for our variables of interest  </span></span>
+<span id="cb33-5">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;"># plot</span></span>
-<span id="cb27-11">  plot <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> one_penguin_species <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">drop_na</span>(bill_length_mm, bill_depth_mm, sex) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb27-12">    <span class="fu" style="color: #4758AB;
+<span id="cb33-6">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -486,12 +594,12 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb27-13">    <span class="fu" style="color: #4758AB;
+<span id="cb33-7">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb27-14">    <span class="fu" style="color: #4758AB;
+<span id="cb33-8">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -500,7 +608,7 @@ background-color: null;
 font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># use a linear model</span></span>
-<span id="cb27-15">                <span class="at" style="color: #657422;
+<span id="cb33-9">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -509,51 +617,195 @@ background-color: null;
 font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># turn off confidence interval</span></span>
-<span id="cb27-16">    <span class="fu" style="color: #4758AB;
+<span id="cb33-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-11">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">title =</span> focal_species) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># put the species name as the title</span></span>
+<span id="cb33-12">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill length (mm)"</span>,</span>
+<span id="cb33-13">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill depth (mm)"</span>,</span>
+<span id="cb33-14">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb33-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_classic</span>() </span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Now we have a plot, if we want to create one per <code>species</code> (in this case there are 3), we can use a <code>for</code> loop to do this.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a vector that has all the penguin species names</span></span>
+<span id="cb35-2">penguin_species <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unique</span>(penguins<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>species)</span>
+<span id="cb35-3"></span>
+<span id="cb35-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use a for loop to iterate over the penguin species</span></span>
+<span id="cb35-5"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> penguin_species) {</span>
+<span id="cb35-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># filter your df for each focal_species  </span></span>
+<span id="cb35-7">  one_penguin_species <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb35-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb35-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>(bill_length_mm, bill_depth_mm, sex) </span>
+<span id="cb35-10">  </span>
+<span id="cb35-11"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># plot</span></span>
+<span id="cb35-12">  plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> one_penguin_species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span>   </span>
+<span id="cb35-13">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-14">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb35-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use a linear model</span></span>
+<span id="cb35-16">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
+font-style: inherit;"># turn off confidence interval</span></span>
+<span id="cb35-17">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-18">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
 font-style: inherit;"># put the species name as the title</span></span>
-<span id="cb27-17">    <span class="fu" style="color: #4758AB;
+<span id="cb35-19">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill length (mm)"</span>,</span>
+<span id="cb35-20">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill depth (mm)"</span>,</span>
+<span id="cb35-21">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb35-22">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_classic</span>() </span>
-<span id="cb27-18"></span>
-<span id="cb27-19"><span class="co" style="color: #5E5E5E;
+<span id="cb35-23"></span>
+<span id="cb35-24"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># print the plot</span></span>
-<span id="cb27-20">  <span class="fu" style="color: #4758AB;
+<span id="cb35-25">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(plot)</span>
-<span id="cb27-21">}</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+<span id="cb35-26">}</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-16-2.png" class="img-fluid" width="672"></p>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-12-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-12-3.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-16-3.png" class="img-fluid" width="672"></p>
 </div>
 </div>
-<p>Create a new directory (in your working directory) called <code>figs</code> which is where we will store our figures.</p>
+<p>We can also add to our <code>for</code> loop to save the plots in a location of our choosing. We can start by creating a new directory (in your working directory) called <code>figs</code> which is where we will store our figures.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb31" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># write code to create a directory called "figs" in our working directory</span></span>
-<span id="cb31-2"><span class="fu" style="color: #4758AB;
+<span id="cb36-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">dir.create</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -561,41 +813,41 @@ font-style: inherit;">path =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"figs"</span>)</span></code></pre></div>
 </div>
-<p>Create a series of plots, one for each penguin species, to examine the relationship between bill depth and bill length.</p>
+<p>Instead of printing the plot, we are going to save it.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><span class="cf" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb37" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> penguin_species) {</span>
-<span id="cb32-2"><span class="co" style="color: #5E5E5E;
+<span id="cb37-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># filter your df for each focal_species  </span></span>
-<span id="cb32-3">  one_penguin_species <span class="ot" style="color: #003B4F;
+<span id="cb37-3">  one_penguin_species <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-4">    <span class="fu" style="color: #4758AB;
+<span id="cb37-4">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-5">    <span class="fu" style="color: #4758AB;
+<span id="cb37-5">    <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">drop_na</span>() </span>
-<span id="cb32-6">  </span>
-<span id="cb32-7"><span class="co" style="color: #5E5E5E;
+font-style: inherit;">drop_na</span>(bill_length_mm, bill_depth_mm, sex) </span>
+<span id="cb37-6">  </span>
+<span id="cb37-7"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># plot</span></span>
-<span id="cb32-8">  plot <span class="ot" style="color: #003B4F;
+<span id="cb37-8">  plot <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> one_penguin_species <span class="sc" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb32-9">    <span class="fu" style="color: #4758AB;
+font-style: inherit;">|&gt;</span>   </span>
+<span id="cb37-9">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -608,12 +860,12 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb32-10">    <span class="fu" style="color: #4758AB;
+<span id="cb37-10">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb32-11">    <span class="fu" style="color: #4758AB;
+<span id="cb37-11">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -622,7 +874,7 @@ background-color: null;
 font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># use a linear model</span></span>
-<span id="cb32-12">                <span class="at" style="color: #657422;
+<span id="cb37-12">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -631,7 +883,7 @@ background-color: null;
 font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># turn off confidence interval</span></span>
-<span id="cb32-13">    <span class="fu" style="color: #4758AB;
+<span id="cb37-13">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -640,181 +892,38 @@ background-color: null;
 font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb32-14">    <span class="fu" style="color: #4758AB;
+<span id="cb37-14">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># put the species name as the title</span></span>
-<span id="cb32-15">         <span class="at" style="color: #657422;
+<span id="cb37-15">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bill length (mm)"</span>,</span>
-<span id="cb32-16">         <span class="at" style="color: #657422;
+<span id="cb37-16">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bill depth (mm)"</span>,</span>
-<span id="cb32-17">         <span class="at" style="color: #657422;
+<span id="cb37-17">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"Sex"</span>, </span>
-<span id="cb32-18">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb32-19">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>() </span>
-<span id="cb32-20"></span>
-<span id="cb32-21"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># print the plot</span></span>
-<span id="cb32-22">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">print</span>(plot)</span>
-<span id="cb32-23">  </span>
-<span id="cb32-24">}</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid" width="672"></p>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> penguin_species) {</span>
-<span id="cb36-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># filter your df for each focal_species  </span></span>
-<span id="cb36-3">  one_penguin_species <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb36-4">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb36-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">drop_na</span>() </span>
-<span id="cb36-6">  </span>
-<span id="cb36-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># plot</span></span>
-<span id="cb36-8">  plot <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> one_penguin_species <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb36-9">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+font-style: inherit;">"Sex"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb36-10">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb36-11">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># use a linear model</span></span>
-<span id="cb36-12">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># turn off confidence interval</span></span>
-<span id="cb36-13">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb36-14">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># put the species name as the title</span></span>
-<span id="cb36-15">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Bill length (mm)"</span>,</span>
-<span id="cb36-16">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Bill depth (mm)"</span>,</span>
-<span id="cb36-17">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Sex"</span>, </span>
-<span id="cb36-18">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb36-19">    <span class="fu" style="color: #4758AB;
+<span id="cb37-18">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_classic</span>() </span>
-<span id="cb36-20"></span>
-<span id="cb36-21"><span class="co" style="color: #5E5E5E;
+<span id="cb37-19"></span>
+<span id="cb37-20"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># save the plots</span></span>
-<span id="cb36-22">  filename <span class="ot" style="color: #003B4F;
+<span id="cb37-21">  filename <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -823,12 +932,17 @@ background-color: null;
 font-style: inherit;">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># create filename</span></span>
-<span id="cb36-23">  <span class="fu" style="color: #4758AB;
+<span id="cb37-22">  <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">ggsave</span>(filename, plot) <span class="co" style="color: #5E5E5E;
+font-style: inherit;">ggsave</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">filename =</span> filename, </span>
+<span id="cb37-23">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot =</span> plot) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># save the plot to file</span></span>
-<span id="cb36-24">}</span></code></pre></div>
+<span id="cb37-24">}</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image
 `geom_smooth()` using formula = 'y ~ x'
@@ -838,25 +952,242 @@ Saving 7 x 5 in image
 `geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 </div>
+<p>Now time to practice.</p>
 <section id="for-loops-for-plotting-practice" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="for-loops-for-plotting-practice"><span class="header-section-number">2.2.1</span> <code>for</code> loops, for plotting practice</h3>
-<p>Question</p>
+<p>Write a <code>for</code> loop to make a series of boxplots that show the difference in <code>body_mass_g</code> between male and female penguins by species. Try both printing and saving the plots.</p>
 <details>
 <summary>
 Need a hint?
 </summary>
-<p><br> Hint 1</p>
+<p><br> You are going to iterate over species.</p>
 </details>
 <details>
 <summary>
 Need another hint?
 </summary>
-<p><br> Hint 2</p>
+<p><br> Here is a sample little base plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb39-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb39-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>(body_mass_g, sex) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb39-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb39-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb39-6">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb39-7">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb39-8">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>,</span>
+<span id="cb39-9">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Body mass (grams)"</span>,</span>
+<span id="cb39-10">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </details>
 <details>
 <summary>
 Click for the solution
 </summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> penguin_species) {</span>
+<span id="cb40-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># filter your df for each focal_species  </span></span>
+<span id="cb40-3">  one_penguin_species <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb40-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb40-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>(bill_length_mm, bill_depth_mm, sex) </span>
+<span id="cb40-6">  </span>
+<span id="cb40-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># plot</span></span>
+<span id="cb40-8">  plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> one_penguin_species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span>   </span>
+<span id="cb40-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-10">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-12">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb40-13">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb40-14">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>,</span>
+<span id="cb40-15">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Body mass (grams)"</span>,</span>
+<span id="cb40-16">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>)</span>
+<span id="cb40-17"></span>
+<span id="cb40-18"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print the plots  </span></span>
+<span id="cb40-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot)</span>
+<span id="cb40-20"></span>
+<span id="cb40-21"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plots</span></span>
+<span id="cb40-22">  filename <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"figs/{focal_species}_body-mass-by-sex.png"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create filename</span></span>
+<span id="cb40-23">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">filename =</span> filename, </span>
+<span id="cb40-24">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">plot =</span> plot) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plot to file</span></span>
+<span id="cb40-25">}</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-20-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+</div>
 </details>
 </section>
 </section>
@@ -870,15 +1201,15 @@ Click for the solution
 <h2 data-number="3.1" class="anchored" data-anchor-id="general-syntax"><span class="header-section-number">3.1</span> General syntax</h2>
 <p>The general syntax of a function is like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1">name_of_function <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">name_of_function <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(arguments) {</span>
-<span id="cb38-2">  <span class="fu" style="color: #4758AB;
+<span id="cb44-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">insert_code_here</span>()</span>
-<span id="cb38-3">}</span></code></pre></div>
+<span id="cb44-3">}</span></code></pre></div>
 </div>
 <p>You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument.</p>
 </section>
@@ -886,19 +1217,19 @@ font-style: inherit;">insert_code_here</span>()</span>
 <h2 data-number="3.2" class="anchored" data-anchor-id="functions-with-one-argument"><span class="header-section-number">3.2</span> Functions with one argument</h2>
 <p>Here, I am writing a little function to do something simple, like calculate from millimeters to inches.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1">mm_to_inch <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">mm_to_inch <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(value_in_mm) {</span>
-<span id="cb39-2">  value_in_mm <span class="sc" style="color: #5E5E5E;
+<span id="cb45-2">  value_in_mm <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">0.0393701</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># code to convert from mm to inch</span></span>
-<span id="cb39-3">}</span></code></pre></div>
+<span id="cb45-3">}</span></code></pre></div>
 </div>
 <p>Here, we would call <code>value_in_mm</code> our argument or parameter. Remember that this is a user-defined term, you could call this <code>x</code>, <code>i</code>, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names.</p>
 <p>Now that we’ve made a function, we can see it in our environment under the “Functions” header.</p>
@@ -908,7 +1239,7 @@ font-style: inherit;"># code to convert from mm to inch</span></span>
 <p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/img/function-hover-details.png" class="img-fluid"></p>
 <p>We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mm_to_inch</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -921,7 +1252,7 @@ font-style: inherit;">100</span>)</span></code></pre></div>
 </div>
 <p>Because our function only takes one argument, we can be less explicit and remove <code>value_in_mm</code> and get the same result.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mm_to_inch</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -932,7 +1263,7 @@ font-style: inherit;">100</span>)</span></code></pre></div>
 </div>
 <p>We also might want to pass a whole column or vector to our function, which we can also do.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mm_to_inch</span>(penguins<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -985,10 +1316,10 @@ font-style: inherit;">$</span>bill_length_mm)</span></code></pre></div>
 </div>
 <p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">penguins <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb46-2">  <span class="fu" style="color: #4758AB;
+<span id="cb52-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1017,25 +1348,25 @@ font-style: inherit;">mm_to_inch</span>(bill_length_mm))</span></code></pre></di
 <h3 data-number="3.2.1" class="anchored" data-anchor-id="embedding-built-in-functions"><span class="header-section-number">3.2.1</span> Embedding built in functions</h3>
 <p>We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it’s fine.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># calculate the coefficient of variation by </span></span>
-<span id="cb48-2"><span class="co" style="color: #5E5E5E;
+<span id="cb54-2"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># dividing the standard deviation by the mean</span></span>
-<span id="cb48-3">cv <span class="ot" style="color: #003B4F;
+<span id="cb54-3">cv <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(x) {</span>
-<span id="cb48-4">        (<span class="fu" style="color: #4758AB;
+<span id="cb54-4">        (<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sd</span>(x)<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">mean</span>(x))</span>
-<span id="cb48-5">}</span></code></pre></div>
+<span id="cb54-5">}</span></code></pre></div>
 </div>
 </section>
 </section>
@@ -1043,12 +1374,12 @@ font-style: inherit;">mean</span>(x))</span>
 <h2 data-number="3.3" class="anchored" data-anchor-id="functions-with-two-arguments"><span class="header-section-number">3.3</span> Functions with two arguments</h2>
 <p>We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1">calculate_bmi <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1">calculate_bmi <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(weight_kg, height_cm) {</span>
-<span id="cb49-2">  weight_kg<span class="sc" style="color: #5E5E5E;
+<span id="cb55-2">  weight_kg<span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">/</span>(height_cm<span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -1059,10 +1390,10 @@ background-color: null;
 font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span></span>
-<span id="cb49-3">}</span></code></pre></div>
+<span id="cb55-3">}</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1079,10 +1410,10 @@ font-style: inherit;">180</span>)</span></code></pre></div>
 </div>
 <p>If you provide your arguments in the order they are expected (here, <code>weight_kg</code> and then <code>height_cm</code>), then you don’t need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># this is wrong</span></span>
-<span id="cb52-2"><span class="fu" style="color: #4758AB;
+<span id="cb58-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">calculate_bmi</span>(<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -1094,10 +1425,10 @@ font-style: inherit;">80</span>)</span></code></pre></div>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="co" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># this is better</span></span>
-<span id="cb54-2"><span class="fu" style="color: #4758AB;
+<span id="cb60-2"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1126,12 +1457,15 @@ Need a hint?
 Click for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1">degF_to_degC <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a function to convert F to C</span></span>
+<span id="cb62-2">degF_to_degC <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(deg_F) {</span>
-<span id="cb56-2">  (deg_F <span class="sc" style="color: #5E5E5E;
+<span id="cb62-3">  (deg_F <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
 background-color: null;
@@ -1144,14 +1478,17 @@ background-color: null;
 font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">9</span>)</span>
-<span id="cb56-3">}</span>
-<span id="cb56-4"></span>
-<span id="cb56-5">degC_to_degF <span class="ot" style="color: #003B4F;
+<span id="cb62-4">}</span>
+<span id="cb62-5"></span>
+<span id="cb62-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a function to convert C to F</span></span>
+<span id="cb62-7">degC_to_degF <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(deg_C) {</span>
-<span id="cb56-6">  (deg_C <span class="sc" style="color: #5E5E5E;
+<span id="cb62-8">  (deg_C <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
 background-color: null;
@@ -1164,10 +1501,10 @@ background-color: null;
 font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">32</span></span>
-<span id="cb56-7">}</span></code></pre></div>
+<span id="cb62-9">}</span></code></pre></div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1177,7 +1514,7 @@ font-style: inherit;">32</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb59" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1187,7 +1524,7 @@ font-style: inherit;">100</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 37.77778</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb61" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1197,7 +1534,7 @@ font-style: inherit;">0</span>)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 32</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1218,27 +1555,27 @@ font-style: inherit;">40</span>)</span></code></pre></div>
 <p>Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.</p>
 <p>We can also write a function to make our plot.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1">species_bill_plotting <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1">species_bill_plotting <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">function</span>(focal_species) {</span>
-<span id="cb65-2">    penguins <span class="sc" style="color: #5E5E5E;
+<span id="cb71-2">    penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb65-3">    <span class="fu" style="color: #4758AB;
+<span id="cb71-3">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb65-4">    <span class="fu" style="color: #4758AB;
+<span id="cb71-4">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> </span>
-<span id="cb65-5">    <span class="fu" style="color: #4758AB;
+<span id="cb71-5">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1251,12 +1588,12 @@ background-color: null;
 font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-6">    <span class="fu" style="color: #4758AB;
+<span id="cb71-6">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb65-7">    <span class="fu" style="color: #4758AB;
+<span id="cb71-7">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1265,7 +1602,7 @@ background-color: null;
 font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># use a linear model</span></span>
-<span id="cb65-8">                <span class="at" style="color: #657422;
+<span id="cb71-8">                <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -1274,7 +1611,7 @@ background-color: null;
 font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># turn off confidence interval</span></span>
-<span id="cb65-9">    <span class="fu" style="color: #4758AB;
+<span id="cb71-9">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
 background-color: null;
@@ -1283,43 +1620,43 @@ background-color: null;
 font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span></span>
-<span id="cb65-10">    <span class="fu" style="color: #4758AB;
+<span id="cb71-10">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># put the species name as the title</span></span>
-<span id="cb65-11">         <span class="at" style="color: #657422;
+<span id="cb71-11">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bill length (mm)"</span>,</span>
-<span id="cb65-12">         <span class="at" style="color: #657422;
+<span id="cb71-12">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Bill depth (mm)"</span>,</span>
-<span id="cb65-13">         <span class="at" style="color: #657422;
+<span id="cb71-13">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Sex"</span>, </span>
-<span id="cb65-14">         <span class="at" style="color: #657422;
+<span id="cb71-14">         <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
 background-color: null;
 font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">+</span> </span>
-<span id="cb65-15">    <span class="fu" style="color: #4758AB;
+<span id="cb71-15">    <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">theme_classic</span>() </span>
-<span id="cb65-16">}</span></code></pre></div>
+<span id="cb71-16">}</span></code></pre></div>
 </div>
 <p>Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb66" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><span class="fu" style="color: #4758AB;
+<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">species_bill_plotting</span>(<span class="st" style="color: #20794D;
 background-color: null;
@@ -1328,27 +1665,27 @@ font-style: inherit;">"Adelie"</span>)</span></code></pre></div>
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid" width="672"></p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We can then pass this function in a <code>for</code> loop with some simpler looking code (because the bulk of it is elsewhere).</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb68" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><span class="cf" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">in</span> penguin_species) {</span>
-<span id="cb68-2">  <span class="co" style="color: #5E5E5E;
+<span id="cb74-2">  <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># pass each focal species to the species_bill_plotting function</span></span>
-<span id="cb68-3">  <span class="fu" style="color: #4758AB;
+<span id="cb74-3">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">species_bill_plotting</span>(focal_species)</span>
-<span id="cb68-4"></span>
-<span id="cb68-5"><span class="co" style="color: #5E5E5E;
+<span id="cb74-4"></span>
+<span id="cb74-5"><span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># save the plots</span></span>
-<span id="cb68-6">  filename <span class="ot" style="color: #003B4F;
+<span id="cb74-6">  filename <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -1357,19 +1694,98 @@ background-color: null;
 font-style: inherit;">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># create filename</span></span>
-<span id="cb68-7">  <span class="fu" style="color: #4758AB;
+<span id="cb74-7">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">ggsave</span>(filename, plot) <span class="co" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;"># save the plot to file</span></span>
-<span id="cb68-8">}</span></code></pre></div>
+<span id="cb74-8">}</span></code></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image
-`geom_smooth()` using formula = 'y ~ x'
 Saving 7 x 5 in image
-`geom_smooth()` using formula = 'y ~ x'
-Saving 7 x 5 in image
-`geom_smooth()` using formula = 'y ~ x'</code></pre>
+Saving 7 x 5 in image</code></pre>
+</div>
+</div>
+<p>Or, even more simply, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
+<p>The simplest of these functions is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
+<p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
+<p>Let’s go over a simple example of something you may have seen before. We will run an ANOVA to see if there are differences in body mass among the penguin species, and we will save this output so we can look at it.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1">anova <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aov</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">data =</span> penguins,</span>
+<span id="cb76-2">             body_mass_g <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">~</span> species)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb77" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(anova)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>List of 14
+ $ coefficients : Named num [1:3] 3700.7 32.4 1375.4
+  ..- attr(*, "names")= chr [1:3] "(Intercept)" "speciesChinstrap" "speciesGentoo"
+ $ residuals    : Named num [1:342] 49.3 99.3 -450.7 -250.7 -50.7 ...
+  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
+ $ effects      : Named num [1:342] -77704.1 -4317.7 11323.5 -233.7 -33.7 ...
+  ..- attr(*, "names")= chr [1:342] "(Intercept)" "speciesChinstrap" "speciesGentoo" "" ...
+ $ rank         : int 3
+ $ fitted.values: Named num [1:342] 3701 3701 3701 3701 3701 ...
+  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
+ $ assign       : int [1:3] 0 1 1
+ $ qr           :List of 5
+  ..$ qr   : num [1:342, 1:3] -18.4932 0.0541 0.0541 0.0541 0.0541 ...
+  .. ..- attr(*, "dimnames")=List of 2
+  .. ..- attr(*, "assign")= int [1:3] 0 1 1
+  .. ..- attr(*, "contrasts")=List of 1
+  ..$ qraux: num [1:3] 1.05 1.03 1.05
+  ..$ pivot: int [1:3] 1 2 3
+  ..$ tol  : num 1e-07
+  ..$ rank : int 3
+  ..- attr(*, "class")= chr "qr"
+ $ df.residual  : int 339
+ $ na.action    : 'omit' Named int [1:2] 4 272
+  ..- attr(*, "names")= chr [1:2] "4" "272"
+ $ contrasts    :List of 1
+  ..$ species: chr "contr.treatment"
+ $ xlevels      :List of 1
+  ..$ species: chr [1:3] "Adelie" "Chinstrap" "Gentoo"
+ $ call         : language aov(formula = body_mass_g ~ species, data = penguins)
+ $ terms        :Classes 'terms', 'formula'  language body_mass_g ~ species
+  .. ..- attr(*, "variables")= language list(body_mass_g, species)
+  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
+  .. .. ..- attr(*, "dimnames")=List of 2
+  .. ..- attr(*, "term.labels")= chr "species"
+  .. ..- attr(*, "order")= int 1
+  .. ..- attr(*, "intercept")= int 1
+  .. ..- attr(*, "response")= int 1
+  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  .. ..- attr(*, "predvars")= language list(body_mass_g, species)
+  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
+  .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
+ $ model        :'data.frame':  342 obs. of  2 variables:
+  ..$ body_mass_g: int [1:342] 3750 3800 3250 3450 3650 3625 4675 3475 4250 3300 ...
+  ..$ species    : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "terms")=Classes 'terms', 'formula'  language body_mass_g ~ species
+  .. .. ..- attr(*, "variables")= language list(body_mass_g, species)
+  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
+  .. .. .. ..- attr(*, "dimnames")=List of 2
+  .. .. ..- attr(*, "term.labels")= chr "species"
+  .. .. ..- attr(*, "order")= int 1
+  .. .. ..- attr(*, "intercept")= int 1
+  .. .. ..- attr(*, "response")= int 1
+  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
+  .. .. ..- attr(*, "predvars")= language list(body_mass_g, species)
+  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
+  .. .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
+  ..- attr(*, "na.action")= 'omit' Named int [1:2] 4 272
+  .. ..- attr(*, "names")= chr [1:2] "4" "272"
+ - attr(*, "class")= chr [1:2] "aov" "lm"</code></pre>
 </div>
 </div>
 <section id="functions-with-more-arguments-practice" class="level3" data-number="3.4.1">
