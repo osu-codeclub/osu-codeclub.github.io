@@ -39,7 +39,7 @@ For loops iterate over some kind of sequence, performing an action, one element 
 ```{r, eval = FALSE}
 for (item in list_of_items) { # items to iterate over
   # code that does something
-  do_something(item)
+  do_something(item) # this is a made up function
 }
 ```
 
@@ -87,7 +87,7 @@ And check what `some_value` is at the end:
 some_value
 ```
 
-We can see that the value 5 (last of `some_value`) is currently assigned. This is not totally intuitive - you mgiht think that `some_value` would hold all of the values that we set to that object in our loop but *this is not true*. This is good to remember since this is now lingering in our environment.
+We can see that the value 5 (last of `some_value`) is currently assigned. This is not totally intuitive - you might think that `some_value` would hold all of the values that we set to that object in our loop but *this is not true*. This is good to remember since this is now an object lingering in our environment.
 
 I have shown this use-case of a `for` loop because I think it helps you to see how it works - not because you would actually use it to do this task. Because R is a vectorized language, you don't actually need a `for` loop to multiply every value by a number, we can do this task more simply below. 
 ```{r}
@@ -107,7 +107,13 @@ for (flower in my_special_flowers) {
 }
 ```
 
-You can also make this conditional, meaning your `for` loop does some things under certain conditions, and something else in another condition.
+You can also make this conditional, meaning your `for` loop does one thing under certain conditions, and something else in another condition. We can accomplish this by nesting an `if else` statement within our `for` loop. 
+
+We are also making use of the function [`glue()`](https://glue.tidyverse.org/) (which we've gone over before) which allows easy pasting, like this:
+```{r}
+my_location <- "Code Club"
+glue("Welcome to {my_location}")
+```
 
 ```{r}
 # a vector of solanaceous vegetables
@@ -161,106 +167,13 @@ for (number in my_vector) {
 
 </details>
 
-## `for` loops, for plotting
-
-```{r}
-# create a vector that has all the penguin species names
-penguin_species <- unique(penguins$species)
-
-for (focal_species in penguin_species) {
-# filter your df for each focal_species  
-  one_penguin_species <- penguins |> 
-    filter(species == focal_species) |> 
-    drop_na() 
-  
-# plot
-  plot <- one_penguin_species |> 
-    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
-    geom_point() + 
-    geom_smooth(method = "lm", # use a linear model
-                se = FALSE) + # turn off confidence interval
-    labs(title = focal_species) + # put the species name as the title
-    theme_classic() 
-
-# print the plot
-  print(plot)
-}
-
-```
-
-Create a new directory (in your working directory) called `figs` which is where we will store our figures.
-
-```{r, eval = FALSE}
-# write code to create a directory called "figs" in our working directory
-dir.create(path = "figs")
-```
-
-Create a series of plots, one for each penguin species, to examine the relationship between bill depth and bill length.
-```{r}
-for (focal_species in penguin_species) {
-# filter your df for each focal_species  
-  one_penguin_species <- penguins |> 
-    filter(species == focal_species) |> 
-    drop_na() 
-  
-# plot
-  plot <- one_penguin_species |> 
-    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
-    geom_point() + 
-    geom_smooth(method = "lm", # use a linear model
-                se = FALSE) + # turn off confidence interval
-    scale_color_brewer(palette = "Dark2") +
-    labs(title = focal_species, # put the species name as the title
-         x = "Bill length (mm)",
-         y = "Bill depth (mm)",
-         color = "Sex", 
-         caption = "Data collected from LTER, Antarctica") + 
-    theme_classic() 
-
-# print the plot
-  print(plot)
-  
-}
-
-```
-
-
-```{r}
-for (focal_species in penguin_species) {
-# filter your df for each focal_species  
-  one_penguin_species <- penguins |> 
-    filter(species == focal_species) |> 
-    drop_na() 
-  
-# plot
-  plot <- one_penguin_species |> 
-    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
-    geom_point() + 
-    geom_smooth(method = "lm", # use a linear model
-                se = FALSE) + # turn off confidence interval
-    scale_color_brewer(palette = "Dark2") +
-    labs(title = focal_species, # put the species name as the title
-         x = "Bill length (mm)",
-         y = "Bill depth (mm)",
-         color = "Sex", 
-         caption = "Data collected from LTER, Antarctica") + 
-    theme_classic() 
-
-# save the plots
-  filename <- glue("figs/{focal_species}_bill-dimensions.png") # create filename
-  ggsave(filename, plot) # save the plot to file
-}
-```
-
-### `for` loops, for plotting practice
-
-Question
+Write a `for` loop that, when given a number, will tell you whether an positive integer is odd or even. Don't worry about negatives or zero here.
 
 <details>
 
 <summary>Need a hint?</summary>
 <br>
-Hint 1
+A function that would be useful here is the modulo, `%%`, where from the remainder, you can determine odd or even. 
 
 </details>
 
@@ -268,7 +181,7 @@ Hint 1
 
 <summary>Need another hint?</summary>
 <br>
-Hint 2
+Create a vector of numbers you want to see if they are odd or even. Then write a `for` loop to print whether they are odd or even.
 
 </details>
 
@@ -277,7 +190,189 @@ Hint 2
 <summary>Click for the solution</summary>
 
 ```{r}
+some_integers <- c(1, 5, 12, 401, 1000)
 
+for (number in some_integers) {
+# if the number is divisible by 2, print that its even 
+  if (number %% 2 == 0) {
+    print(glue("{number} is an even number"))
+  }
+# if the number is anything else, print that its odd 
+  else {
+    print(glue("{number} is an odd number"))
+  }
+}
+```
+
+</details>
+
+## `for` loops, for plotting
+
+So far, we have done things in a `for` loop do not really require a `for` loop to accomplish, though I want you to see how they work first with simpler examples. Making a bunch of plots at once is something that is really easier and less error prone with a `for` loop.
+
+First let's revisit our `penguins` data to create a base plot, and then iterate it over a variable to make multiples.
+
+```{r}
+glimpse(penguins)
+```
+
+What if we want to create a plot comparing the `bill_length_mm` vs. `bill_depth_mm` for each species? We can:
+
+* take our `penguins` data
+* `filter()` for a single `species`
+* make our plot
+
+```{r}
+penguins |> 
+# select only the Adelie penguins  
+  filter(species == "Adelie") |> 
+# remove missing values for our variables of interest  
+  drop_na(bill_length_mm, bill_depth_mm, sex) |> 
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = "Adelie", # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex") +
+    theme_classic() 
+```
+
+
+Now we have a plot, if we want to create one per `species` (in this case there are 3), we can use a `for` loop to do this.
+
+```{r, message = FALSE, warning = FALSE}
+# create a vector that has all the penguin species names
+penguin_species <- unique(penguins$species)
+
+# use a for loop to iterate over the penguin species
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na(bill_length_mm, bill_depth_mm, sex) 
+  
+# plot
+  plot <- one_penguin_species |>   
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = focal_species, # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex") +
+    theme_classic() 
+
+# print the plot
+  print(plot)
+}
+```
+
+We can also add to our `for` loop to save the plots in a location of our choosing. We can start by creating a new directory (in your working directory) called `figs` which is where we will store our figures.
+
+```{r, eval = FALSE}
+# write code to create a directory called "figs" in our working directory
+dir.create(path = "figs")
+```
+
+Instead of printing the plot, we are going to save it.
+```{r}
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na(bill_length_mm, bill_depth_mm, sex) 
+  
+# plot
+  plot <- one_penguin_species |>   
+    ggplot(aes(x = bill_length_mm, y = bill_depth_mm, color = sex)) +
+    geom_point() + 
+    geom_smooth(method = "lm", # use a linear model
+                se = FALSE) + # turn off confidence interval
+    scale_color_brewer(palette = "Dark2") +
+    labs(title = focal_species, # put the species name as the title
+         x = "Bill length (mm)",
+         y = "Bill depth (mm)",
+         color = "Sex") +
+    theme_classic() 
+
+# save the plots
+  filename <- glue("figs/{focal_species}_bill-dimensions.png") # create filename
+  ggsave(filename = filename, 
+         plot = plot) # save the plot to file
+}
+```
+
+Now time to practice. 
+
+### `for` loops, for plotting practice
+
+Write a `for` loop to make a series of boxplots that show the difference in `body_mass_g` between male and female penguins by species. Try both printing and saving the plots.
+
+<details>
+
+<summary>Need a hint?</summary>
+<br>
+You are going to iterate over species.
+
+</details>
+
+<details>
+
+<summary>Need another hint?</summary>
+<br>
+Here is a sample little base plot:
+```{r}
+penguins |> 
+  filter(species == "Adelie") |> 
+  drop_na(body_mass_g, sex) |> 
+  ggplot(aes(x = sex, y = body_mass_g, color = sex)) +
+  geom_boxplot() +
+  theme_minimal() +
+  theme(legend.position = "none") + # don't need one bc duplicative with x-axis
+  labs(x = "Sex",
+        y = "Body mass (grams)",
+        title = "Adelie")
+  
+```
+
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+for (focal_species in penguin_species) {
+# filter your df for each focal_species  
+  one_penguin_species <- penguins |> 
+    filter(species == focal_species) |> 
+    drop_na(bill_length_mm, bill_depth_mm, sex) 
+  
+# plot
+  plot <- one_penguin_species |>   
+    ggplot(aes(x = sex, y = body_mass_g, color = sex)) +
+      geom_boxplot() +
+      theme_minimal() +
+      scale_color_brewer(palette = "Dark2") +
+      theme(legend.position = "none") + # don't need one bc duplicative with x-axis
+      labs(x = "Sex",
+        y = "Body mass (grams)",
+        title = "Adelie")
+
+# print the plots  
+  print(plot)
+
+# save the plots
+  filename <- glue("figs/{focal_species}_body-mass-by-sex.png") # create filename
+  ggsave(filename = filename, 
+         plot = plot) # save the plot to file
+}
 ```
 
 </details>
@@ -404,10 +499,12 @@ Write two functions that convert between degrees Fahrenheit and degrees Celsius 
 <summary>Click for the solution</summary>
 
 ```{r}
+# create a function to convert F to C
 degF_to_degC <- function(deg_F) {
   (deg_F - 32) * (5/9)
 }
 
+# create a function to convert C to F
 degC_to_degF <- function(deg_C) {
   (deg_C * (9/5)) + 32
 }
@@ -465,6 +562,23 @@ for (focal_species in penguin_species) {
   filename <- glue("figs/{focal_species}_bill-dimensions.png") # create filename
   ggsave(filename, plot) # save the plot to file
 }
+```
+
+Or, even more simply, we could replace our `for` loop with one of the `tidyverse:purrr` functions intended for functional program that being with `map*()`.
+
+The simplest of these functions is [`map()`](https://purrr.tidyverse.org/reference/map.html), which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.
+
+A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.
+
+Let's go over a simple example of something you may have seen before. We will run an ANOVA to see if there are differences in body mass among the penguin species, and we will save this output so we can look at it.
+
+```{r}
+anova <- aov(data = penguins,
+             body_mass_g ~ species)
+```
+
+```{r}
+glimpse(anova)
 ```
 
 
