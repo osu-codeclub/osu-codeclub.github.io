@@ -220,7 +220,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></li>
   <li><a href="#plotting-functions" id="toc-plotting-functions" class="nav-link" data-scroll-target="#plotting-functions"><span class="header-section-number">3.4</span> Plotting functions</a>
   <ul class="collapse">
-  <li><a href="#functions-with-more-arguments-practice" id="toc-functions-with-more-arguments-practice" class="nav-link" data-scroll-target="#functions-with-more-arguments-practice"><span class="header-section-number">3.4.1</span> Functions with more arguments practice</a></li>
+  <li><a href="#writing-plotting-functions-practice" id="toc-writing-plotting-functions-practice" class="nav-link" data-scroll-target="#writing-plotting-functions-practice"><span class="header-section-number">3.4.1</span> Writing plotting functions practice</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#iteration-with-purrrmap" id="toc-iteration-with-purrrmap" class="nav-link" data-scroll-target="#iteration-with-purrrmap"><span class="header-section-number">4</span> Iteration with <code>purrr:map</code></a>
+  <ul class="collapse">
+  <li><a href="#about-lists" id="toc-about-lists" class="nav-link" data-scroll-target="#about-lists"><span class="header-section-number">4.1</span> About lists</a></li>
+  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map"><span class="header-section-number">4.2</span> <code>map()</code></a>
+  <ul class="collapse">
+  <li><a href="#functions-with-more-arguments-practice" id="toc-functions-with-more-arguments-practice" class="nav-link" data-scroll-target="#functions-with-more-arguments-practice"><span class="header-section-number">4.2.1</span> Functions with more arguments practice</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -944,7 +952,7 @@ Click for the solution
 <div class="cell">
 <div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (focal_species <span class="cf">in</span> penguin_species) {</span>
 <span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pass each focal species to the species_bill_plotting function</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">species_bill_plotting</span>(focal_species)</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">&lt;-</span> <span class="fu">species_bill_plotting</span>(focal_species)</span>
 <span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plots</span></span>
 <span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co"># create filename</span></span>
@@ -952,85 +960,246 @@ Click for the solution
 <span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
 Saving 7 x 5 in image
-Saving 7 x 5 in image</code></pre>
+`geom_smooth()` using formula = 'y ~ x'
+Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 </div>
-<p>Or, even more simply, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
-<p>The simplest of these functions is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
+<section id="writing-plotting-functions-practice" class="level3" data-number="3.4.1">
+<h3 data-number="3.4.1" class="anchored" data-anchor-id="writing-plotting-functions-practice"><span class="header-section-number">3.4.1</span> Writing plotting functions practice</h3>
+<p>Write a function to make a series of boxplots that show the difference in <code>body_mass_g</code> between male and female penguins by species. Feed one species to your function to check if it works (you don’t need to iterate with it yet).</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Check back to our example where we used a <code>for</code> loop to see how to make this plot.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the function</span></span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>body_mass_by_sex_plotting <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a>    penguins <span class="sc">|&gt;</span> </span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(sex, body_mass_g) <span class="sc">|&gt;</span> </span>
+<span id="cb76-6"><a href="#cb76-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> body_mass_g, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb76-7"><a href="#cb76-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb76-8"><a href="#cb76-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb76-9"><a href="#cb76-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb76-10"><a href="#cb76-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span> <span class="co"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb76-11"><a href="#cb76-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb76-12"><a href="#cb76-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Body mass (grams)"</span>,</span>
+<span id="cb76-13"><a href="#cb76-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> focal_species)</span>
+<span id="cb76-14"><a href="#cb76-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb76-15"><a href="#cb76-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb76-16"><a href="#cb76-16" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the function to Adelie penguins</span></span>
+<span id="cb76-17"><a href="#cb76-17" aria-hidden="true" tabindex="-1"></a><span class="fu">body_mass_by_sex_plotting</span>(<span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</details>
+</section>
+</section>
+</section>
+<section id="iteration-with-purrrmap" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Iteration with <code>purrr:map</code></h1>
+<p>To simplify our code, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
+<p>But before we do this, we need to learn a little bit about lists.</p>
+<section id="about-lists" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="about-lists"><span class="header-section-number">4.1</span> About lists</h2>
 <p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
-<p>Let’s go over a simple example of something you may have seen before. We will run an ANOVA to see if there are differences in body mass among the penguin species, and we will save this output so we can look at it.</p>
+<p>To see what a list looks like, we will look under the hood at the object that comprises a ggplot plot. We have one in our environment called <code>plot</code> so let’s look at that.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="at">data =</span> penguins,</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>             body_mass_g <span class="sc">~</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p><img src="img/view-plot.png" class="img-fluid"></p>
+<p>We can see that in this case, <code>plot</code> is a list which contains 11 objects, many of which also contain sub-objects. For example, <code>data</code> is a dataframe that. contains the data underlying our plot. It is a tibble type of dataframe with 68 rows and 8 columns.</p>
+<p>If I want to access that first item in the list, I can do that in a few different ways.</p>
+<p>I can use the dollar sign operator <code>$</code> to extract parts of the list</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>plot<span class="sc">$</span>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>List of 14
- $ coefficients : Named num [1:3] 3700.7 32.4 1375.4
-  ..- attr(*, "names")= chr [1:3] "(Intercept)" "speciesChinstrap" "speciesGentoo"
- $ residuals    : Named num [1:342] 49.3 99.3 -450.7 -250.7 -50.7 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ effects      : Named num [1:342] -77704.1 -4317.7 11323.5 -233.7 -33.7 ...
-  ..- attr(*, "names")= chr [1:342] "(Intercept)" "speciesChinstrap" "speciesGentoo" "" ...
- $ rank         : int 3
- $ fitted.values: Named num [1:342] 3701 3701 3701 3701 3701 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ assign       : int [1:3] 0 1 1
- $ qr           :List of 5
-  ..$ qr   : num [1:342, 1:3] -18.4932 0.0541 0.0541 0.0541 0.0541 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "assign")= int [1:3] 0 1 1
-  .. ..- attr(*, "contrasts")=List of 1
-  ..$ qraux: num [1:3] 1.05 1.03 1.05
-  ..$ pivot: int [1:3] 1 2 3
-  ..$ tol  : num 1e-07
-  ..$ rank : int 3
-  ..- attr(*, "class")= chr "qr"
- $ df.residual  : int 339
- $ na.action    : 'omit' Named int [1:2] 4 272
-  ..- attr(*, "names")= chr [1:2] "4" "272"
- $ contrasts    :List of 1
-  ..$ species: chr "contr.treatment"
- $ xlevels      :List of 1
-  ..$ species: chr [1:3] "Adelie" "Chinstrap" "Gentoo"
- $ call         : language aov(formula = body_mass_g ~ species, data = penguins)
- $ terms        :Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "term.labels")= chr "species"
-  .. ..- attr(*, "order")= int 1
-  .. ..- attr(*, "intercept")= int 1
-  .. ..- attr(*, "response")= int 1
-  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
- $ model        :'data.frame':  342 obs. of  2 variables:
-  ..$ body_mass_g: int [1:342] 3750 3800 3250 3450 3650 3625 4675 3475 4250 3300 ...
-  ..$ species    : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
-  ..- attr(*, "terms")=Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..- attr(*, "term.labels")= chr "species"
-  .. .. ..- attr(*, "order")= int 1
-  .. .. ..- attr(*, "intercept")= int 1
-  .. .. ..- attr(*, "response")= int 1
-  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
-  ..- attr(*, "na.action")= 'omit' Named int [1:2] 4 272
-  .. ..- attr(*, "names")= chr [1:2] "4" "272"
- - attr(*, "class")= chr [1:2] "aov" "lm"</code></pre>
+<pre><code># A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<section id="functions-with-more-arguments-practice" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">3.4.1</span> Functions with more arguments practice</h3>
-<p>Question</p>
+<p>Or, I can use indexing to extract out the first item in our list.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>plot[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$data
+# A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="map" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="map"><span class="header-section-number">4.2</span> <code>map()</code></h2>
+<p>The simplest of the functions in <code>purrr</code> is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
+<p>The <code>map()</code>, we provide a vector/list to iterate over, and a function, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="co"># our vector to apply our function over</span></span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) x <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># what the function is</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 2
+
+[[2]]
+[1] 3
+
+[[3]]
+[1] 4
+
+[[4]]
+[1] 5
+
+[[5]]
+[1] 6</code></pre>
+</div>
+</div>
+<p>Now let’s get back to the function we wrote to make our plots - instead of incorporating this into a <code>for</code> loop, we can apply it within <code>map()</code> like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># vector to iterate over</span></span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>    species_bill_plotting) <span class="co"># function to use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-42-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[3]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-42-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Wow that was simple!</p>
+<p>We could also incorporate both the printing and saving of the plot into one function like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>species_bill_plotting_saving <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create plot and assign it to something </span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>  plot_via_function <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="co"># use a linear model</span></span>
+<span id="cb91-10"><a href="#cb91-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="co"># turn off confidence interval</span></span>
+<span id="cb91-11"><a href="#cb91-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb91-12"><a href="#cb91-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> focal_species, <span class="co"># put the species name as the title</span></span>
+<span id="cb91-13"><a href="#cb91-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Bill length (mm)"</span>,</span>
+<span id="cb91-14"><a href="#cb91-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>,</span>
+<span id="cb91-15"><a href="#cb91-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="st">"Sex"</span>, </span>
+<span id="cb91-16"><a href="#cb91-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">"Data collected from LTER, Antarctica"</span>) <span class="sc">+</span> </span>
+<span id="cb91-17"><a href="#cb91-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() </span>
+<span id="cb91-18"><a href="#cb91-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb91-19"><a href="#cb91-19" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb91-20"><a href="#cb91-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_via_function)</span>
+<span id="cb91-21"><a href="#cb91-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb91-22"><a href="#cb91-22" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb91-23"><a href="#cb91-23" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_bill-dimensions-via-function.png"</span>) <span class="co"># choose filename</span></span>
+<span id="cb91-24"><a href="#cb91-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, plot_via_function) <span class="co"># save the plot to file</span></span>
+<span id="cb91-25"><a href="#cb91-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, this code will:</p>
+<ol type="1">
+<li>Generate your plots</li>
+<li>Print those plots for you to view in RStudio</li>
+<li>Save those plots in a directory called <code>figs</code> in your working directory</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb92"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># vector to iterate over</span></span>
+<span id="cb92-2"><a href="#cb92-2" aria-hidden="true" tabindex="-1"></a>    species_bill_plotting_saving) <span class="co"># function to apply</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-44-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-44-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_bill-dimensions-via-function.png
+
+[[2]]
+figs/Gentoo_bill-dimensions-via-function.png
+
+[[3]]
+figs/Chinstrap_bill-dimensions-via-function.png</code></pre>
+</div>
+</div>
+<section id="functions-with-more-arguments-practice" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">4.2.1</span> Functions with more arguments practice</h3>
+<p>Try applying your function you made to create a series of boxplots for body mass by sex over each of the penguin species, though edit it so it both prints and saves your plots.</p>
 <details>
 <summary>
 Need a hint?
@@ -1041,6 +1210,62 @@ Need a hint?
 <summary>
 Click for the solution
 </summary>
+<p>Edit the function to include printing and saving.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>species_body_mass_sex_plotting_saving <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a>  my_plot <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb98-4"><a href="#cb98-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(sex, body_mass_g) <span class="sc">|&gt;</span> </span>
+<span id="cb98-5"><a href="#cb98-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> body_mass_g, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb98-6"><a href="#cb98-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb98-7"><a href="#cb98-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb98-8"><a href="#cb98-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb98-9"><a href="#cb98-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span> <span class="co"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb98-10"><a href="#cb98-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb98-11"><a href="#cb98-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Body mass (grams)"</span>,</span>
+<span id="cb98-12"><a href="#cb98-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> focal_species)</span>
+<span id="cb98-13"><a href="#cb98-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-14"><a href="#cb98-14" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb98-15"><a href="#cb98-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(my_plot)</span>
+<span id="cb98-16"><a href="#cb98-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb98-17"><a href="#cb98-17" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb98-18"><a href="#cb98-18" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_body-mass-by-sex.png"</span>) <span class="co"># choose filename</span></span>
+<span id="cb98-19"><a href="#cb98-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, my_plot) <span class="co"># save the plot to file</span></span>
+<span id="cb98-20"><a href="#cb98-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Apply the function across the species</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb99"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb99-1"><a href="#cb99-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># what to iterate over</span></span>
+<span id="cb99-2"><a href="#cb99-2" aria-hidden="true" tabindex="-1"></a>    species_body_mass_sex_plotting_saving) <span class="co"># the function to iterate with</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-46-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-46-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_body-mass-by-sex.png
+
+[[2]]
+figs/Gentoo_body-mass-by-sex.png
+
+[[3]]
+figs/Chinstrap_body-mass-by-sex.png</code></pre>
+</div>
+</div>
 </details>
 
 
