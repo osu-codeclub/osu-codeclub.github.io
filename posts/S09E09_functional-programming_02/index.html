@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.450">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Cooperstone">
+<meta name="dcterms.date" content="2025-03-25">
+
+<title>OSU Code Club - Iterating and writing functions, part II: writing functions and applying them with map()</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html" rel="" target="">
+ <span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html" rel="" target="">
+ <span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more-resources" role="button" data-bs-toggle="dropdown" aria-expanded="false" rel="" target="">
+ <span class="menu-text">More resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more-resources">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html" rel="" target="">
+ <span class="dropdown-text">Computer setup (installations) for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/other.html" rel="" target="">
+ <span class="dropdown-text">Other coding-related OSU activities</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-feb-2025/" rel="" target="">
+ <span class="dropdown-text">Material of an R for beginners workshop (Feb ’25)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5" rel="" target="">
+ <span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html" rel="" target="">
+ <span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml" rel="" target=""><i class="bi bi-rss" role="img">
+</i> 
+ <span class="menu-text"></span></a>
+  </li>  
+</ul>
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#writing-functions" id="toc-writing-functions" class="nav-link" data-scroll-target="#writing-functions"><span class="header-section-number">2</span> Writing functions</a>
+  <ul class="collapse">
+  <li><a href="#general-syntax" id="toc-general-syntax" class="nav-link" data-scroll-target="#general-syntax"><span class="header-section-number">2.1</span> General syntax</a></li>
+  <li><a href="#functions-with-one-argument" id="toc-functions-with-one-argument" class="nav-link" data-scroll-target="#functions-with-one-argument"><span class="header-section-number">2.2</span> Functions with one argument</a>
+  <ul class="collapse">
+  <li><a href="#embedding-built-in-functions" id="toc-embedding-built-in-functions" class="nav-link" data-scroll-target="#embedding-built-in-functions"><span class="header-section-number">2.2.1</span> Embedding built in functions</a></li>
+  </ul></li>
+  <li><a href="#functions-with-two-arguments" id="toc-functions-with-two-arguments" class="nav-link" data-scroll-target="#functions-with-two-arguments"><span class="header-section-number">2.3</span> Functions with two arguments</a>
+  <ul class="collapse">
+  <li><a href="#functions-with-one-argument-practice" id="toc-functions-with-one-argument-practice" class="nav-link" data-scroll-target="#functions-with-one-argument-practice"><span class="header-section-number">2.3.1</span> Functions with one argument practice</a></li>
+  </ul></li>
+  <li><a href="#plotting-functions" id="toc-plotting-functions" class="nav-link" data-scroll-target="#plotting-functions"><span class="header-section-number">2.4</span> Plotting functions</a>
+  <ul class="collapse">
+  <li><a href="#writing-plotting-functions-practice" id="toc-writing-plotting-functions-practice" class="nav-link" data-scroll-target="#writing-plotting-functions-practice"><span class="header-section-number">2.4.1</span> Writing plotting functions practice</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#iteration-with-purrrmap" id="toc-iteration-with-purrrmap" class="nav-link" data-scroll-target="#iteration-with-purrrmap"><span class="header-section-number">3</span> Iteration with <code>purrr:map</code></a>
+  <ul class="collapse">
+  <li><a href="#about-lists" id="toc-about-lists" class="nav-link" data-scroll-target="#about-lists"><span class="header-section-number">3.1</span> About lists</a></li>
+  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map"><span class="header-section-number">3.2</span> <code>map()</code></a>
+  <ul class="collapse">
+  <li><a href="#functions-with-more-arguments-practice" id="toc-functions-with-more-arguments-practice" class="nav-link" data-scroll-target="#functions-with-more-arguments-practice"><span class="header-section-number">3.2.1</span> Functions with more arguments practice</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E09_functional-programming_02/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Iterating and writing functions, part II: writing functions and applying them with <code>map()</code></h1>
+<p class="subtitle lead">Developing tools for doing things over and over</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">functions</div>
+    <div class="quarto-category">functional programming</div>
+    <div class="quarto-category">purrr</div>
+    <div class="quarto-category">map</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jessica Cooperstone </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 25, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>You might find yourself in a situation where you are copying and pasting your code multiple times, changing a single variable. This could be situation where you want to run a series of statistical tests, each with a different response variable. Or, you want to make a series of plots, adjusting which variables are on the x-axis. This is generally not a good idea, as it is error prone and inefficient.</p>
+<p>We are going to spend the next few sections of Code Club talking about things you can do to avoid copy and pasting your code. Today, we are going to talk about:</p>
+<ul>
+<li>writing your own functions</li>
+<li>applying those function with <code>purrr:map()</code></li>
+</ul>
+<p>We will start, like we typically do, by loading the packages we will use today.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># for wrangling and everything</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins) <span class="co"># for penguins data</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(glue) <span class="co"># for easy pasting of names</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="writing-functions" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Writing functions</h1>
+<p>There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about <a href="https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction">functions</a> before in Code Club, and you may be using them without explicitly realizing they are functions. For example, <code>mean()</code> is a function that calculates the mean of an object (usually a vector).</p>
+<p>There are some functions which are by default available when you load R (like <code>mean()</code>), and others that exist within packages that require you to load those packages (e.g., <code>tidyverse</code>) before they can be used (e.g., <code>ggplot()</code>).</p>
+<p>But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.</p>
+<section id="general-syntax" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="general-syntax"><span class="header-section-number">2.1</span> General syntax</h2>
+<p>The general syntax of a function is like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>name_of_function <span class="ot">&lt;-</span> <span class="cf">function</span>(arguments) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">insert_code_here</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument.</p>
+</section>
+<section id="functions-with-one-argument" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="functions-with-one-argument"><span class="header-section-number">2.2</span> Functions with one argument</h2>
+<p>Here, I am writing a little function to do something simple, like calculate from millimeters to inches.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mm_to_inch <span class="ot">&lt;-</span> <span class="cf">function</span>(value_in_mm) {</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  value_in_mm <span class="sc">*</span> <span class="fl">0.0393701</span> <span class="co"># code to convert from mm to inch</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here, we would call <code>value_in_mm</code> our argument or parameter. Remember that this is a user-defined term, you could call this <code>x</code>, <code>i</code>, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names.</p>
+<p>Now that we’ve made a function, we can see it in our environment under the “Functions” header.</p>
+<p><img src="img/function-in-environment.png" class="img-fluid"></p>
+<p>If we click on this item, we can see the details of the function.</p>
+<p><img src="img/function-details.png" class="img-fluid"></p>
+<p>If we start typing our function, and put our cursor between the parentheses and press tab, we can also see some information about our function.</p>
+<p><img src="img/function-hover-details.png" class="img-fluid"></p>
+<p>We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(<span class="at">value_in_mm =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.93701</code></pre>
+</div>
+</div>
+<p>Because our function only takes one argument, we can be less explicit and remove <code>value_in_mm</code> and get the same result.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.93701</code></pre>
+</div>
+</div>
+<p>We also might want to pass a whole column or vector to our function, which we can also do.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(penguins<span class="sc">$</span>bill_length_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] 1.539371 1.555119 1.586615       NA 1.444883 1.547245 1.531497 1.543308
+  [9] 1.342520 1.653544 1.488190 1.488190 1.618111 1.519686 1.362205 1.440946
+ [17] 1.523623 1.673229 1.354331 1.811025 1.488190 1.484253 1.413387 1.503938
+ [25] 1.527560 1.389765 1.598426 1.594489 1.492127 1.594489 1.555119 1.464568
+ [33] 1.555119 1.610237 1.433072 1.543308 1.527560 1.661418 1.480316 1.566930
+ [41] 1.437009 1.606300 1.417324 1.736221 1.456694 1.559056 1.618111 1.476379
+ [49] 1.417324 1.665355 1.559056 1.578741 1.377953 1.653544 1.358268 1.629922
+ [57] 1.535434 1.598426 1.437009 1.480316 1.405513 1.625985 1.480316 1.618111
+ [65] 1.433072 1.637796 1.397639 1.618111 1.413387 1.645670 1.318898 1.562993
+ [73] 1.559056 1.803151 1.397639 1.685040 1.610237 1.464568 1.425198 1.657481
+ [81] 1.362205 1.688977 1.444883 1.381891 1.468505 1.625985 1.429135 1.452757
+ [89] 1.507875 1.531497 1.405513 1.618111 1.338583 1.559056 1.425198 1.606300
+ [97] 1.500001 1.586615 1.303150 1.700788 1.377953 1.614174 1.484253 1.488190
+[105] 1.492127 1.562993 1.519686 1.503938 1.500001 1.700788 1.500001 1.795277
+[113] 1.562993 1.661418 1.559056 1.681103 1.519686 1.468505 1.405513 1.618111
+[121] 1.425198 1.484253 1.582678 1.629922 1.385828 1.598426 1.527560 1.633859
+[129] 1.535434 1.736221 1.515749 1.696851 1.448820 1.476379 1.500001 1.618111
+[137] 1.401576 1.582678 1.456694 1.562993 1.582678 1.598426 1.263780 1.602363
+[145] 1.468505 1.535434 1.543308 1.440946 1.417324 1.488190 1.417324 1.633859
+[153] 1.814962 1.968505 1.917324 1.968505 1.874017 1.830710 1.787403 1.838584
+[161] 1.704725 1.842521 1.610237 1.929135 1.791340 1.905513 1.803151 1.940946
+[169] 1.653544 1.937009 1.818899 1.917324 1.976379 1.775592 1.830710 1.822836
+[177] 1.688977 1.814962 1.751969 1.881891 1.897639 1.968505 1.862206 1.685040
+[185] 1.775592 2.346458 1.933072 1.905513 1.677166 1.748032 1.732284 1.917324
+[193] 1.681103 1.952757 1.783466 1.952757 1.988190 1.716536 1.791340 1.988190
+[201] 1.767717 1.779529 1.834647 1.909450 1.775592 1.972442 1.830710 1.771654
+[209] 1.724410 1.791340 1.700788 1.984253 1.783466 1.818899 1.799214 2.137796
+[217] 1.803151 1.960631 1.818899 1.948820 1.712599 1.996064 1.877954 1.826773
+[225] 1.897639 1.830710 1.826773 1.913387 1.870080 2.011812 1.779529 1.779529
+[233] 1.933072 2.066930 1.866143 1.968505 1.767717 2.000001 1.708662 2.019686
+[241] 1.870080 2.051182 1.870080 2.055119 1.791340 1.948820 1.751969 2.000001
+[249] 1.944883 1.846458 1.905513 2.011812 1.909450 2.200789 1.858269 1.933072
+[257] 1.862206 1.842521 1.641733 2.102363 1.704725 1.893702 1.988190 1.960631
+[265] 1.712599 2.027560 1.818899 2.169293 1.751969 1.921261 1.858269       NA
+[273] 1.842521 1.984253 1.779529 1.964568 1.830710 1.968505 2.019686 1.787403
+[281] 2.074804 1.779529 1.814962 2.019686 1.811025 2.019686 1.834647 2.035434
+[289] 1.850395 2.047245 1.807088 1.988190 1.980316 2.283466 1.826773 1.937009
+[297] 1.669292 1.909450 1.700788 1.992127 1.838584 2.047245 1.988190 1.948820
+[305] 1.826773 2.078741 1.610237 2.133859 1.673229 2.007875 1.956694 1.870080
+[313] 1.874017 2.047245 1.846458 2.106300 1.929135 1.818899 2.003938 1.791340
+[321] 2.003938 2.000001 1.972442 1.929135 2.027560 1.960631 1.893702 2.023623
+[329] 1.799214 1.996064 1.673229 2.055119 1.779529 1.940946 1.976379 1.795277
+[337] 2.043308 1.842521 1.799214 2.196852 1.712599 1.952757 2.000001 1.976379</code></pre>
+</div>
+</div>
+<p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_inch =</span> <span class="fu">mm_to_inch</span>(bill_length_mm)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, island, bill_length_mm, bill_length_inch, <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 344 × 9
+   species island    bill_length_mm bill_length_inch bill_depth_mm
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;            &lt;dbl&gt;         &lt;dbl&gt;
+ 1 Adelie  Torgersen           39.1             1.54          18.7
+ 2 Adelie  Torgersen           39.5             1.56          17.4
+ 3 Adelie  Torgersen           40.3             1.59          18  
+ 4 Adelie  Torgersen           NA              NA             NA  
+ 5 Adelie  Torgersen           36.7             1.44          19.3
+ 6 Adelie  Torgersen           39.3             1.55          20.6
+ 7 Adelie  Torgersen           38.9             1.53          17.8
+ 8 Adelie  Torgersen           39.2             1.54          19.6
+ 9 Adelie  Torgersen           34.1             1.34          18.1
+10 Adelie  Torgersen           42               1.65          20.2
+# ℹ 334 more rows
+# ℹ 4 more variables: flipper_length_mm &lt;int&gt;, body_mass_g &lt;int&gt;, sex &lt;fct&gt;,
+#   year &lt;int&gt;</code></pre>
+</div>
+</div>
+<section id="embedding-built-in-functions" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="embedding-built-in-functions"><span class="header-section-number">2.2.1</span> Embedding built in functions</h3>
+<p>We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it’s fine.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the coefficient of variation by </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing the standard deviation by the mean</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">sd</span>(x)<span class="sc">/</span><span class="fu">mean</span>(x))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="functions-with-two-arguments" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="functions-with-two-arguments"><span class="header-section-number">2.3</span> Functions with two arguments</h2>
+<p>We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>calculate_bmi <span class="ot">&lt;-</span> <span class="cf">function</span>(weight_kg, height_cm) {</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  weight_kg<span class="sc">/</span>(height_cm<span class="sc">/</span><span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="at">weight_kg =</span> <span class="dv">80</span>, <span class="at">height_cm =</span> <span class="dv">180</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.69136</code></pre>
+</div>
+</div>
+<p>If you provide your arguments in the order they are expected (here, <code>weight_kg</code> and then <code>height_cm</code>), then you don’t need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is wrong</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="dv">180</span>, <span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 281.25</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is better</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="at">height_cm =</span> <span class="dv">180</span>, <span class="at">weight_kg =</span> <span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.69136</code></pre>
+</div>
+</div>
+<section id="functions-with-one-argument-practice" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="functions-with-one-argument-practice"><span class="header-section-number">2.3.1</span> Functions with one argument practice</h3>
+<p>Write two functions that convert between degrees Fahrenheit and degrees Celsius and test to see if they work.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>°C = (°F - 32) × 5/9 or °F = (°C * 9/5) + 32</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to convert F to C</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>degF_to_degC <span class="ot">&lt;-</span> <span class="cf">function</span>(deg_F) {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  (deg_F <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to convert C to F</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>degC_to_degF <span class="ot">&lt;-</span> <span class="cf">function</span>(deg_C) {</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  (deg_C <span class="sc">*</span> (<span class="dv">9</span><span class="sc">/</span><span class="dv">5</span>)) <span class="sc">+</span> <span class="dv">32</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degF_to_degC</span>(<span class="at">deg_F =</span> <span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degF_to_degC</span>(<span class="at">deg_F =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 37.77778</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degC_to_degF</span>(<span class="at">deg_C =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degC_to_degF</span>(<span class="at">deg_C =</span> <span class="sc">-</span><span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -40</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<section id="plotting-functions" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="plotting-functions"><span class="header-section-number">2.4</span> Plotting functions</h2>
+<p>Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.</p>
+<p>We can also write a function to make our plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>species_bill_plotting <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    penguins <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="co"># use a linear model</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="co"># turn off confidence interval</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> focal_species, <span class="co"># put the species name as the title</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Bill length (mm)"</span>,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="st">"Sex"</span>, </span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">"Data collected from LTER, Antarctica"</span>) <span class="sc">+</span> </span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() </span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">species_bill_plotting</span>(<span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can then pass this function in a <code>for</code> loop with some simpler looking code (because the bulk of it is elsewhere).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>penguin_species <span class="ot">&lt;-</span> <span class="fu">unique</span>(penguins<span class="sc">$</span>species)</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (focal_species <span class="cf">in</span> penguin_species) {</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pass each focal species to the species_bill_plotting function</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  plot <span class="ot">&lt;-</span> <span class="fu">species_bill_plotting</span>(focal_species)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plots</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co"># create filename</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, plot) <span class="co"># save the plot to file</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+</div>
+<section id="writing-plotting-functions-practice" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="writing-plotting-functions-practice"><span class="header-section-number">2.4.1</span> Writing plotting functions practice</h3>
+<p>Write a function to make a series of boxplots that show the difference in <code>body_mass_g</code> between male and female penguins by species. Feed one species to your function to check if it works (you don’t need to iterate with it yet).</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Check back to our example where we used a <code>for</code> loop to see how to make this plot.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the function</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>body_mass_by_sex_plotting <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    penguins <span class="sc">|&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(sex, body_mass_g) <span class="sc">|&gt;</span> </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> body_mass_g, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span> <span class="co"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Body mass (grams)"</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> focal_species)</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a><span class="co"># apply the function to Adelie penguins</span></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a><span class="fu">body_mass_by_sex_plotting</span>(<span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</details>
+</section>
+</section>
+</section>
+<section id="iteration-with-purrrmap" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Iteration with <code>purrr:map</code></h1>
+<p>To simplify our code, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
+<p>But before we do this, we need to learn a little bit about lists.</p>
+<section id="about-lists" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="about-lists"><span class="header-section-number">3.1</span> About lists</h2>
+<p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
+<p>To see what a list looks like, we will look under the hood at the object that comprises a ggplot plot. We have one in our environment called <code>plot</code> so let’s look at that.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">View</span>(plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><img src="img/view-plot.png" class="img-fluid"></p>
+<p>We can see that in this case, <code>plot</code> is a list which contains 11 objects, many of which also contain sub-objects. For example, <code>data</code> is a dataframe that. contains the data underlying our plot. It is a tibble type of dataframe with 68 rows and 8 columns.</p>
+<p>If I want to access that first item in the list, I can do that in a few different ways.</p>
+<p>I can use the dollar sign operator <code>$</code> to extract parts of the list</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>plot<span class="sc">$</span>data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Or, I can use indexing to extract out the first item in our list.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>plot[<span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$data
+# A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="map" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="map"><span class="header-section-number">3.2</span> <code>map()</code></h2>
+<p>The simplest of the functions in <code>purrr</code> is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
+<p>The <code>map()</code>, we provide a vector/list to iterate over, and a function, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="co"># our vector to apply our function over</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">function</span>(x) x <span class="sc">+</span> <span class="dv">1</span>) <span class="co"># what the function is</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 2
+
+[[2]]
+[1] 3
+
+[[3]]
+[1] 4
+
+[[4]]
+[1] 5
+
+[[5]]
+[1] 6</code></pre>
+</div>
+</div>
+<p>Now let’s get back to the function we wrote to make our plots - instead of incorporating this into a <code>for</code> loop, we can apply it within <code>map()</code> like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># vector to iterate over</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    species_bill_plotting) <span class="co"># function to use</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[3]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-24-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Wow that was simple!</p>
+<p>We could also incorporate both the printing and saving of the plot into one function like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>species_bill_plotting_saving <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="co"># create plot and assign it to something </span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  plot_via_function <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="co"># use a linear model</span></span>
+<span id="cb49-10"><a href="#cb49-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="co"># turn off confidence interval</span></span>
+<span id="cb49-11"><a href="#cb49-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> focal_species, <span class="co"># put the species name as the title</span></span>
+<span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Bill length (mm)"</span>,</span>
+<span id="cb49-14"><a href="#cb49-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>,</span>
+<span id="cb49-15"><a href="#cb49-15" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="st">"Sex"</span>, </span>
+<span id="cb49-16"><a href="#cb49-16" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">"Data collected from LTER, Antarctica"</span>) <span class="sc">+</span> </span>
+<span id="cb49-17"><a href="#cb49-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() </span>
+<span id="cb49-18"><a href="#cb49-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-19"><a href="#cb49-19" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb49-20"><a href="#cb49-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(plot_via_function)</span>
+<span id="cb49-21"><a href="#cb49-21" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb49-22"><a href="#cb49-22" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb49-23"><a href="#cb49-23" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_bill-dimensions-via-function.png"</span>) <span class="co"># choose filename</span></span>
+<span id="cb49-24"><a href="#cb49-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, plot_via_function) <span class="co"># save the plot to file</span></span>
+<span id="cb49-25"><a href="#cb49-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then, this code will:</p>
+<ol type="1">
+<li>Generate your plots</li>
+<li>Print those plots for you to view in RStudio</li>
+<li>Save those plots in a directory called <code>figs</code> in your working directory</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># vector to iterate over</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    species_bill_plotting_saving) <span class="co"># function to apply</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-26-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_bill-dimensions-via-function.png
+
+[[2]]
+figs/Gentoo_bill-dimensions-via-function.png
+
+[[3]]
+figs/Chinstrap_bill-dimensions-via-function.png</code></pre>
+</div>
+</div>
+<section id="functions-with-more-arguments-practice" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">3.2.1</span> Functions with more arguments practice</h3>
+<p>Try applying your function you made to create a series of boxplots for body mass by sex over each of the penguin species, though edit it so it both prints and saves your plots.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Here is my hint</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>Edit the function to include printing and saving.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>species_body_mass_sex_plotting_saving <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  my_plot <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(sex, body_mass_g) <span class="sc">|&gt;</span> </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> body_mass_g, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>) <span class="sc">+</span> <span class="co"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Sex"</span>,</span>
+<span id="cb56-11"><a href="#cb56-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Body mass (grams)"</span>,</span>
+<span id="cb56-12"><a href="#cb56-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> focal_species)</span>
+<span id="cb56-13"><a href="#cb56-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-14"><a href="#cb56-14" aria-hidden="true" tabindex="-1"></a><span class="co"># print</span></span>
+<span id="cb56-15"><a href="#cb56-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(my_plot)</span>
+<span id="cb56-16"><a href="#cb56-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb56-17"><a href="#cb56-17" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb56-18"><a href="#cb56-18" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_body-mass-by-sex.png"</span>) <span class="co"># choose filename</span></span>
+<span id="cb56-19"><a href="#cb56-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, my_plot) <span class="co"># save the plot to file</span></span>
+<span id="cb56-20"><a href="#cb56-20" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Apply the function across the species</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(penguin_species, <span class="co"># what to iterate over</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    species_body_mass_sex_plotting_saving) <span class="co"># the function to iterate with</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/unnamed-chunk-28-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_body-mass-by-sex.png
+
+[[2]]
+figs/Gentoo_body-mass-by-sex.png
+
+[[3]]
+figs/Chinstrap_body-mass-by-sex.png</code></pre>
+</div>
+</div>
+</details>
+
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
