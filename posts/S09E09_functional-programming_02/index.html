@@ -9,7 +9,7 @@
 <meta name="author" content="Jessica Cooperstone">
 <meta name="dcterms.date" content="2025-03-25">
 
-<title>OSU Code Club - Iterating and writing functions, part II: writing functions and applying them with map()</title>
+<title>OSU Code Club - Iterating part II: writing custom functions and purrr:map()</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -228,13 +228,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Iterating and writing functions, part II: writing functions and applying them with <code>map()</code></h1>
+<h1 class="title">Iterating part II: writing custom functions and <code>purrr:map()</code></h1>
 <p class="subtitle lead">Developing tools for doing things over and over</p>
   <div class="quarto-categories">
     <div class="quarto-category">functions</div>
     <div class="quarto-category">functional programming</div>
-    <div class="quarto-category">purrr</div>
     <div class="quarto-category">map</div>
+    <div class="quarto-category">purrr</div>
   </div>
   </div>
 
@@ -264,11 +264,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="introduction" class="level1" data-number="1">
 <h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/custom-function.png" class="img-fluid figure-img" style="width:100.0%" alt="Generalized code for creating a new function."></p>
+<figcaption class="figure-caption">Generalized code for creating a new function</figcaption>
+</figure>
+</div>
+</div>
+</div>
 <p>You might find yourself in a situation where you are copying and pasting your code multiple times, changing a single variable. This could be situation where you want to run a series of statistical tests, each with a different response variable. Or, you want to make a series of plots, adjusting which variables are on the x-axis. This is generally not a good idea, as it is error prone and inefficient.</p>
-<p>We are going to spend the next few sections of Code Club talking about things you can do to avoid copy and pasting your code. Today, we are going to talk about:</p>
+<p>We are spending this module going through things you can do to avoid copy and pasting your code. Last week we went over <a href="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/">writing and using <code>for</code> loops</a>. Today we are going to talk about:</p>
 <ul>
 <li>writing your own functions</li>
-<li>applying those function with <code>purrr:map()</code></li>
+<li>iterating with those functions using <a href="https://purrr.tidyverse.org/reference/map.html"><code>purrr:map()</code></a></li>
 </ul>
 <p>We will start, like we typically do, by loading the packages we will use today.</p>
 <div class="cell">
@@ -373,25 +383,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_inch =</span> <span class="fu">mm_to_inch</span>(bill_length_mm)) <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(species, island, bill_length_mm, bill_length_inch, <span class="fu">everything</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_inch =</span> <span class="fu">mm_to_inch</span>(bill_length_mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 344 × 9
-   species island    bill_length_mm bill_length_inch bill_depth_mm
-   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;            &lt;dbl&gt;         &lt;dbl&gt;
- 1 Adelie  Torgersen           39.1             1.54          18.7
- 2 Adelie  Torgersen           39.5             1.56          17.4
- 3 Adelie  Torgersen           40.3             1.59          18  
- 4 Adelie  Torgersen           NA              NA             NA  
- 5 Adelie  Torgersen           36.7             1.44          19.3
- 6 Adelie  Torgersen           39.3             1.55          20.6
- 7 Adelie  Torgersen           38.9             1.53          17.8
- 8 Adelie  Torgersen           39.2             1.54          19.6
- 9 Adelie  Torgersen           34.1             1.34          18.1
-10 Adelie  Torgersen           42               1.65          20.2
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
 # ℹ 334 more rows
-# ℹ 4 more variables: flipper_length_mm &lt;int&gt;, body_mass_g &lt;int&gt;, sex &lt;fct&gt;,
-#   year &lt;int&gt;</code></pre>
+# ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, bill_length_inch &lt;dbl&gt;</code></pre>
 </div>
 </div>
 <section id="embedding-built-in-functions" class="level3" data-number="2.2.1">

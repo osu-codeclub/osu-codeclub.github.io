@@ -7,9 +7,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Jessica Cooperstone and Jelmer Poelstra">
-<meta name="dcterms.date" content="2025-03-17">
+<meta name="dcterms.date" content="2025-03-18">
 
-<title>OSU Code Club - Iterating and writing functions, part I: for loops and functions</title>
+<title>OSU Code Club - Iterating part I: for loops</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -207,22 +207,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#for-loops-for-plotting-practice" id="toc-for-loops-for-plotting-practice" class="nav-link" data-scroll-target="#for-loops-for-plotting-practice"><span class="header-section-number">2.2.1</span> <code>for</code> loops, for plotting practice</a></li>
   </ul></li>
   </ul></li>
-  <li><a href="#writing-functions" id="toc-writing-functions" class="nav-link" data-scroll-target="#writing-functions"><span class="header-section-number">3</span> Writing functions</a>
-  <ul class="collapse">
-  <li><a href="#general-syntax" id="toc-general-syntax" class="nav-link" data-scroll-target="#general-syntax"><span class="header-section-number">3.1</span> General syntax</a></li>
-  <li><a href="#functions-with-one-argument" id="toc-functions-with-one-argument" class="nav-link" data-scroll-target="#functions-with-one-argument"><span class="header-section-number">3.2</span> Functions with one argument</a>
-  <ul class="collapse">
-  <li><a href="#embedding-built-in-functions" id="toc-embedding-built-in-functions" class="nav-link" data-scroll-target="#embedding-built-in-functions"><span class="header-section-number">3.2.1</span> Embedding built in functions</a></li>
-  </ul></li>
-  <li><a href="#functions-with-two-arguments" id="toc-functions-with-two-arguments" class="nav-link" data-scroll-target="#functions-with-two-arguments"><span class="header-section-number">3.3</span> Functions with two arguments</a>
-  <ul class="collapse">
-  <li><a href="#functions-with-one-argument-practice" id="toc-functions-with-one-argument-practice" class="nav-link" data-scroll-target="#functions-with-one-argument-practice"><span class="header-section-number">3.3.1</span> Functions with one argument practice</a></li>
-  </ul></li>
-  <li><a href="#plotting-functions" id="toc-plotting-functions" class="nav-link" data-scroll-target="#plotting-functions"><span class="header-section-number">3.4</span> Plotting functions</a>
-  <ul class="collapse">
-  <li><a href="#functions-with-more-arguments-practice" id="toc-functions-with-more-arguments-practice" class="nav-link" data-scroll-target="#functions-with-more-arguments-practice"><span class="header-section-number">3.4.1</span> Functions with more arguments practice</a></li>
-  </ul></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><div><i class="bi bi-github"></i></div><div class="action-links"><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S09E08_functional-programming_01/index.qmd" class="toc-action">Edit this page</a></p><p><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action">Report an issue</a></p></div></div></nav>
     </div>
@@ -231,12 +215,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Iterating and writing functions, part I: <code>for</code> loops and functions</h1>
+<h1 class="title">Iterating part I: <code>for</code> loops</h1>
 <p class="subtitle lead">Developing tools for doing things over and over</p>
   <div class="quarto-categories">
     <div class="quarto-category">for loops</div>
     <div class="quarto-category">base R</div>
-    <div class="quarto-category">functions</div>
     <div class="quarto-category">functional programming</div>
   </div>
   </div>
@@ -255,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 17, 2025</p>
+      <p class="date">March 18, 2025</p>
     </div>
   </div>
   
@@ -704,343 +687,6 @@ Click for the solution
 <pre><code>Saving 7 x 5 in image</code></pre>
 </div>
 </div>
-</details>
-</section>
-</section>
-</section>
-<section id="writing-functions" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Writing functions</h1>
-<p>There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about <a href="https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction">functions</a> before in Code Club, and you may be using them without explicitly realizing they are functions. For example, <code>mean()</code> is a function that calculates the mean of an object (usually a vector).</p>
-<p>There are some functions which are by default available when you load R (like <code>mean()</code>), and others that exist within packages that require you to load those packages (e.g., <code>tidyverse</code>) before they can be used (e.g., <code>ggplot()</code>).</p>
-<p>But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.</p>
-<section id="general-syntax" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="general-syntax"><span class="header-section-number">3.1</span> General syntax</h2>
-<p>The general syntax of a function is like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>name_of_function <span class="ot">&lt;-</span> <span class="cf">function</span>(arguments) {</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">insert_code_here</span>()</span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument.</p>
-</section>
-<section id="functions-with-one-argument" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="functions-with-one-argument"><span class="header-section-number">3.2</span> Functions with one argument</h2>
-<p>Here, I am writing a little function to do something simple, like calculate from millimeters to inches.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>mm_to_inch <span class="ot">&lt;-</span> <span class="cf">function</span>(value_in_mm) {</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  value_in_mm <span class="sc">*</span> <span class="fl">0.0393701</span> <span class="co"># code to convert from mm to inch</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Here, we would call <code>value_in_mm</code> our argument or parameter. Remember that this is a user-defined term, you could call this <code>x</code>, <code>i</code>, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names.</p>
-<p>Now that we’ve made a function, we can see it in our environment under the “Functions” header.</p>
-<p><img src="img/function-in-environment.png" class="img-fluid"> If we click on this item, we can see the details of the function.</p>
-<p><img src="img/function-details.png" class="img-fluid"></p>
-<p>If we start typing our function, and put our cursor between the parentheses and press tab, we can also see some information about our function.</p>
-<p><img src="img/function-hover-details.png" class="img-fluid"></p>
-<p>We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(<span class="at">value_in_mm =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.93701</code></pre>
-</div>
-</div>
-<p>Because our function only takes one argument, we can be less explicit and remove <code>value_in_mm</code> and get the same result.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(<span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.93701</code></pre>
-</div>
-</div>
-<p>We also might want to pass a whole column or vector to our function, which we can also do.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mm_to_inch</span>(penguins<span class="sc">$</span>bill_length_mm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  [1] 1.539371 1.555119 1.586615       NA 1.444883 1.547245 1.531497 1.543308
-  [9] 1.342520 1.653544 1.488190 1.488190 1.618111 1.519686 1.362205 1.440946
- [17] 1.523623 1.673229 1.354331 1.811025 1.488190 1.484253 1.413387 1.503938
- [25] 1.527560 1.389765 1.598426 1.594489 1.492127 1.594489 1.555119 1.464568
- [33] 1.555119 1.610237 1.433072 1.543308 1.527560 1.661418 1.480316 1.566930
- [41] 1.437009 1.606300 1.417324 1.736221 1.456694 1.559056 1.618111 1.476379
- [49] 1.417324 1.665355 1.559056 1.578741 1.377953 1.653544 1.358268 1.629922
- [57] 1.535434 1.598426 1.437009 1.480316 1.405513 1.625985 1.480316 1.618111
- [65] 1.433072 1.637796 1.397639 1.618111 1.413387 1.645670 1.318898 1.562993
- [73] 1.559056 1.803151 1.397639 1.685040 1.610237 1.464568 1.425198 1.657481
- [81] 1.362205 1.688977 1.444883 1.381891 1.468505 1.625985 1.429135 1.452757
- [89] 1.507875 1.531497 1.405513 1.618111 1.338583 1.559056 1.425198 1.606300
- [97] 1.500001 1.586615 1.303150 1.700788 1.377953 1.614174 1.484253 1.488190
-[105] 1.492127 1.562993 1.519686 1.503938 1.500001 1.700788 1.500001 1.795277
-[113] 1.562993 1.661418 1.559056 1.681103 1.519686 1.468505 1.405513 1.618111
-[121] 1.425198 1.484253 1.582678 1.629922 1.385828 1.598426 1.527560 1.633859
-[129] 1.535434 1.736221 1.515749 1.696851 1.448820 1.476379 1.500001 1.618111
-[137] 1.401576 1.582678 1.456694 1.562993 1.582678 1.598426 1.263780 1.602363
-[145] 1.468505 1.535434 1.543308 1.440946 1.417324 1.488190 1.417324 1.633859
-[153] 1.814962 1.968505 1.917324 1.968505 1.874017 1.830710 1.787403 1.838584
-[161] 1.704725 1.842521 1.610237 1.929135 1.791340 1.905513 1.803151 1.940946
-[169] 1.653544 1.937009 1.818899 1.917324 1.976379 1.775592 1.830710 1.822836
-[177] 1.688977 1.814962 1.751969 1.881891 1.897639 1.968505 1.862206 1.685040
-[185] 1.775592 2.346458 1.933072 1.905513 1.677166 1.748032 1.732284 1.917324
-[193] 1.681103 1.952757 1.783466 1.952757 1.988190 1.716536 1.791340 1.988190
-[201] 1.767717 1.779529 1.834647 1.909450 1.775592 1.972442 1.830710 1.771654
-[209] 1.724410 1.791340 1.700788 1.984253 1.783466 1.818899 1.799214 2.137796
-[217] 1.803151 1.960631 1.818899 1.948820 1.712599 1.996064 1.877954 1.826773
-[225] 1.897639 1.830710 1.826773 1.913387 1.870080 2.011812 1.779529 1.779529
-[233] 1.933072 2.066930 1.866143 1.968505 1.767717 2.000001 1.708662 2.019686
-[241] 1.870080 2.051182 1.870080 2.055119 1.791340 1.948820 1.751969 2.000001
-[249] 1.944883 1.846458 1.905513 2.011812 1.909450 2.200789 1.858269 1.933072
-[257] 1.862206 1.842521 1.641733 2.102363 1.704725 1.893702 1.988190 1.960631
-[265] 1.712599 2.027560 1.818899 2.169293 1.751969 1.921261 1.858269       NA
-[273] 1.842521 1.984253 1.779529 1.964568 1.830710 1.968505 2.019686 1.787403
-[281] 2.074804 1.779529 1.814962 2.019686 1.811025 2.019686 1.834647 2.035434
-[289] 1.850395 2.047245 1.807088 1.988190 1.980316 2.283466 1.826773 1.937009
-[297] 1.669292 1.909450 1.700788 1.992127 1.838584 2.047245 1.988190 1.948820
-[305] 1.826773 2.078741 1.610237 2.133859 1.673229 2.007875 1.956694 1.870080
-[313] 1.874017 2.047245 1.846458 2.106300 1.929135 1.818899 2.003938 1.791340
-[321] 2.003938 2.000001 1.972442 1.929135 2.027560 1.960631 1.893702 2.023623
-[329] 1.799214 1.996064 1.673229 2.055119 1.779529 1.940946 1.976379 1.795277
-[337] 2.043308 1.842521 1.799214 2.196852 1.712599 1.952757 2.000001 1.976379</code></pre>
-</div>
-</div>
-<p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">bill_length_inch =</span> <span class="fu">mm_to_inch</span>(bill_length_mm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 344 × 9
-   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
-   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
- 1 Adelie  Torgersen           39.1          18.7               181        3750
- 2 Adelie  Torgersen           39.5          17.4               186        3800
- 3 Adelie  Torgersen           40.3          18                 195        3250
- 4 Adelie  Torgersen           NA            NA                  NA          NA
- 5 Adelie  Torgersen           36.7          19.3               193        3450
- 6 Adelie  Torgersen           39.3          20.6               190        3650
- 7 Adelie  Torgersen           38.9          17.8               181        3625
- 8 Adelie  Torgersen           39.2          19.6               195        4675
- 9 Adelie  Torgersen           34.1          18.1               193        3475
-10 Adelie  Torgersen           42            20.2               190        4250
-# ℹ 334 more rows
-# ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, bill_length_inch &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<section id="embedding-built-in-functions" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="embedding-built-in-functions"><span class="header-section-number">3.2.1</span> Embedding built in functions</h3>
-<p>We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it’s fine.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the coefficient of variation by </span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># dividing the standard deviation by the mean</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>cv <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>        (<span class="fu">sd</span>(x)<span class="sc">/</span><span class="fu">mean</span>(x))</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section>
-</section>
-<section id="functions-with-two-arguments" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="functions-with-two-arguments"><span class="header-section-number">3.3</span> Functions with two arguments</h2>
-<p>We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>calculate_bmi <span class="ot">&lt;-</span> <span class="cf">function</span>(weight_kg, height_cm) {</span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  weight_kg<span class="sc">/</span>(height_cm<span class="sc">/</span><span class="dv">100</span>)<span class="sc">^</span><span class="dv">2</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="at">weight_kg =</span> <span class="dv">80</span>, <span class="at">height_cm =</span> <span class="dv">180</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 24.69136</code></pre>
-</div>
-</div>
-<p>If you provide your arguments in the order they are expected (here, <code>weight_kg</code> and then <code>height_cm</code>), then you don’t need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is wrong</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="dv">180</span>, <span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 281.25</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># this is better</span></span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">calculate_bmi</span>(<span class="at">height_cm =</span> <span class="dv">180</span>, <span class="at">weight_kg =</span> <span class="dv">80</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 24.69136</code></pre>
-</div>
-</div>
-<section id="functions-with-one-argument-practice" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="functions-with-one-argument-practice"><span class="header-section-number">3.3.1</span> Functions with one argument practice</h3>
-<p>Write two functions that convert between degrees Fahrenheit and degrees Celsius and test to see if they work.</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-<p>°C = (°F - 32) × 5/9 or °F = (°C * 9/5) + 32</p>
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to convert F to C</span></span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>degF_to_degC <span class="ot">&lt;-</span> <span class="cf">function</span>(deg_F) {</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  (deg_F <span class="sc">-</span> <span class="dv">32</span>) <span class="sc">*</span> (<span class="dv">5</span><span class="sc">/</span><span class="dv">9</span>)</span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a><span class="co"># create a function to convert C to F</span></span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>degC_to_degF <span class="ot">&lt;-</span> <span class="cf">function</span>(deg_C) {</span>
-<span id="cb62-8"><a href="#cb62-8" aria-hidden="true" tabindex="-1"></a>  (deg_C <span class="sc">*</span> (<span class="dv">9</span><span class="sc">/</span><span class="dv">5</span>)) <span class="sc">+</span> <span class="dv">32</span></span>
-<span id="cb62-9"><a href="#cb62-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degF_to_degC</span>(<span class="at">deg_F =</span> <span class="dv">32</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degF_to_degC</span>(<span class="at">deg_F =</span> <span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 37.77778</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degC_to_degF</span>(<span class="at">deg_C =</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 32</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">degC_to_degF</span>(<span class="at">deg_C =</span> <span class="sc">-</span><span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -40</code></pre>
-</div>
-</div>
-</details>
-</section>
-</section>
-<section id="plotting-functions" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="plotting-functions"><span class="header-section-number">3.4</span> Plotting functions</h2>
-<p>Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.</p>
-<p>We can also write a function to make our plot.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>species_bill_plotting <span class="ot">&lt;-</span> <span class="cf">function</span>(focal_species) {</span>
-<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    penguins <span class="sc">|&gt;</span> </span>
-<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> focal_species) <span class="sc">|&gt;</span> </span>
-<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm, <span class="at">color =</span> sex)) <span class="sc">+</span></span>
-<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb71-7"><a href="#cb71-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="co"># use a linear model</span></span>
-<span id="cb71-8"><a href="#cb71-8" aria-hidden="true" tabindex="-1"></a>                <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span> <span class="co"># turn off confidence interval</span></span>
-<span id="cb71-9"><a href="#cb71-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
-<span id="cb71-10"><a href="#cb71-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> focal_species, <span class="co"># put the species name as the title</span></span>
-<span id="cb71-11"><a href="#cb71-11" aria-hidden="true" tabindex="-1"></a>         <span class="at">x =</span> <span class="st">"Bill length (mm)"</span>,</span>
-<span id="cb71-12"><a href="#cb71-12" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Bill depth (mm)"</span>,</span>
-<span id="cb71-13"><a href="#cb71-13" aria-hidden="true" tabindex="-1"></a>         <span class="at">color =</span> <span class="st">"Sex"</span>, </span>
-<span id="cb71-14"><a href="#cb71-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">caption =</span> <span class="st">"Data collected from LTER, Antarctica"</span>) <span class="sc">+</span> </span>
-<span id="cb71-15"><a href="#cb71-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_classic</span>() </span>
-<span id="cb71-16"><a href="#cb71-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">species_bill_plotting</span>(<span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>We can then pass this function in a <code>for</code> loop with some simpler looking code (because the bulk of it is elsewhere).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (focal_species <span class="cf">in</span> penguin_species) {</span>
-<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># pass each focal species to the species_bill_plotting function</span></span>
-<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">species_bill_plotting</span>(focal_species)</span>
-<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a><span class="co"># save the plots</span></span>
-<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>  filename <span class="ot">&lt;-</span> <span class="fu">glue</span>(<span class="st">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co"># create filename</span></span>
-<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggsave</span>(filename, plot) <span class="co"># save the plot to file</span></span>
-<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 7 x 5 in image
-Saving 7 x 5 in image
-Saving 7 x 5 in image</code></pre>
-</div>
-</div>
-<p>Or, even more simply, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
-<p>The simplest of these functions is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
-<p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
-<p>Let’s go over a simple example of something you may have seen before. We will run an ANOVA to see if there are differences in body mass among the penguin species, and we will save this output so we can look at it.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>anova <span class="ot">&lt;-</span> <span class="fu">aov</span>(<span class="at">data =</span> penguins,</span>
-<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>             body_mass_g <span class="sc">~</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(anova)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 14
- $ coefficients : Named num [1:3] 3700.7 32.4 1375.4
-  ..- attr(*, "names")= chr [1:3] "(Intercept)" "speciesChinstrap" "speciesGentoo"
- $ residuals    : Named num [1:342] 49.3 99.3 -450.7 -250.7 -50.7 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ effects      : Named num [1:342] -77704.1 -4317.7 11323.5 -233.7 -33.7 ...
-  ..- attr(*, "names")= chr [1:342] "(Intercept)" "speciesChinstrap" "speciesGentoo" "" ...
- $ rank         : int 3
- $ fitted.values: Named num [1:342] 3701 3701 3701 3701 3701 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ assign       : int [1:3] 0 1 1
- $ qr           :List of 5
-  ..$ qr   : num [1:342, 1:3] -18.4932 0.0541 0.0541 0.0541 0.0541 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "assign")= int [1:3] 0 1 1
-  .. ..- attr(*, "contrasts")=List of 1
-  ..$ qraux: num [1:3] 1.05 1.03 1.05
-  ..$ pivot: int [1:3] 1 2 3
-  ..$ tol  : num 1e-07
-  ..$ rank : int 3
-  ..- attr(*, "class")= chr "qr"
- $ df.residual  : int 339
- $ na.action    : 'omit' Named int [1:2] 4 272
-  ..- attr(*, "names")= chr [1:2] "4" "272"
- $ contrasts    :List of 1
-  ..$ species: chr "contr.treatment"
- $ xlevels      :List of 1
-  ..$ species: chr [1:3] "Adelie" "Chinstrap" "Gentoo"
- $ call         : language aov(formula = body_mass_g ~ species, data = penguins)
- $ terms        :Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "term.labels")= chr "species"
-  .. ..- attr(*, "order")= int 1
-  .. ..- attr(*, "intercept")= int 1
-  .. ..- attr(*, "response")= int 1
-  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
- $ model        :'data.frame':  342 obs. of  2 variables:
-  ..$ body_mass_g: int [1:342] 3750 3800 3250 3450 3650 3625 4675 3475 4250 3300 ...
-  ..$ species    : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
-  ..- attr(*, "terms")=Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..- attr(*, "term.labels")= chr "species"
-  .. .. ..- attr(*, "order")= int 1
-  .. .. ..- attr(*, "intercept")= int 1
-  .. .. ..- attr(*, "response")= int 1
-  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
-  ..- attr(*, "na.action")= 'omit' Named int [1:2] 4 272
-  .. ..- attr(*, "names")= chr [1:2] "4" "272"
- - attr(*, "class")= chr [1:2] "aov" "lm"</code></pre>
-</div>
-</div>
-<section id="functions-with-more-arguments-practice" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">3.4.1</span> Functions with more arguments practice</h3>
-<p>Question</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-<p>Here is my hint</p>
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
 </details>
 
 

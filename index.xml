@@ -10,9 +10,1205 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.3.450</generator>
-<lastBuildDate>Mon, 17 Mar 2025 04:00:00 GMT</lastBuildDate>
+<lastBuildDate>Tue, 25 Mar 2025 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>Iterating and writing functions, part I: for loops and functions</title>
+  <title>Iterating part II: writing custom functions and purrr:map()</title>
+  <dc:creator>Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index.html</link>
+  <description><![CDATA[ 
+
+
+
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/custom-function.png" class="img-fluid figure-img" style="width:100.0%" alt="Generalized code for creating a new function."></p>
+<figcaption class="figure-caption">Generalized code for creating a new function</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>You might find yourself in a situation where you are copying and pasting your code multiple times, changing a single variable. This could be situation where you want to run a series of statistical tests, each with a different response variable. Or, you want to make a series of plots, adjusting which variables are on the x-axis. This is generally not a good idea, as it is error prone and inefficient.</p>
+<p>We are spending this module going through things you can do to avoid copy and pasting your code. Last week we went over <a href="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/">writing and using <code>for</code> loops</a>. Today we are going to talk about:</p>
+<ul>
+<li>writing your own functions</li>
+<li>iterating with those functions using <a href="https://purrr.tidyverse.org/reference/map.html"><code>purrr:map()</code></a></li>
+</ul>
+<p>We will start, like we typically do, by loading the packages we will use today.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for wrangling and everything</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(palmerpenguins) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for penguins data</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(glue) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># for easy pasting of names</span></span></code></pre></div>
+</div>
+</section>
+<section id="writing-functions" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Writing functions</h1>
+<p>There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about <a href="https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction">functions</a> before in Code Club, and you may be using them without explicitly realizing they are functions. For example, <code>mean()</code> is a function that calculates the mean of an object (usually a vector).</p>
+<p>There are some functions which are by default available when you load R (like <code>mean()</code>), and others that exist within packages that require you to load those packages (e.g., <code>tidyverse</code>) before they can be used (e.g., <code>ggplot()</code>).</p>
+<p>But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.</p>
+<section id="general-syntax" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="general-syntax"><span class="header-section-number">2.1</span> General syntax</h2>
+<p>The general syntax of a function is like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1">name_of_function <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(arguments) {</span>
+<span id="cb2-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">insert_code_here</span>()</span>
+<span id="cb2-3">}</span></code></pre></div>
+</div>
+<p>You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument.</p>
+</section>
+<section id="functions-with-one-argument" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="functions-with-one-argument"><span class="header-section-number">2.2</span> Functions with one argument</h2>
+<p>Here, I am writing a little function to do something simple, like calculate from millimeters to inches.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">mm_to_inch <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(value_in_mm) {</span>
+<span id="cb3-2">  value_in_mm <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.0393701</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># code to convert from mm to inch</span></span>
+<span id="cb3-3">}</span></code></pre></div>
+</div>
+<p>Here, we would call <code>value_in_mm</code> our argument or parameter. Remember that this is a user-defined term, you could call this <code>x</code>, <code>i</code>, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names.</p>
+<p>Now that we’ve made a function, we can see it in our environment under the “Functions” header.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/function-in-environment.png" class="img-fluid"></p>
+<p>If we click on this item, we can see the details of the function.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/function-details.png" class="img-fluid"></p>
+<p>If we start typing our function, and put our cursor between the parentheses and press tab, we can also see some information about our function.</p>
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/function-hover-details.png" class="img-fluid"></p>
+<p>We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mm_to_inch</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">value_in_mm =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.93701</code></pre>
+</div>
+</div>
+<p>Because our function only takes one argument, we can be less explicit and remove <code>value_in_mm</code> and get the same result.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mm_to_inch</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 3.93701</code></pre>
+</div>
+</div>
+<p>We also might want to pass a whole column or vector to our function, which we can also do.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mm_to_inch</span>(penguins<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>bill_length_mm)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] 1.539371 1.555119 1.586615       NA 1.444883 1.547245 1.531497 1.543308
+  [9] 1.342520 1.653544 1.488190 1.488190 1.618111 1.519686 1.362205 1.440946
+ [17] 1.523623 1.673229 1.354331 1.811025 1.488190 1.484253 1.413387 1.503938
+ [25] 1.527560 1.389765 1.598426 1.594489 1.492127 1.594489 1.555119 1.464568
+ [33] 1.555119 1.610237 1.433072 1.543308 1.527560 1.661418 1.480316 1.566930
+ [41] 1.437009 1.606300 1.417324 1.736221 1.456694 1.559056 1.618111 1.476379
+ [49] 1.417324 1.665355 1.559056 1.578741 1.377953 1.653544 1.358268 1.629922
+ [57] 1.535434 1.598426 1.437009 1.480316 1.405513 1.625985 1.480316 1.618111
+ [65] 1.433072 1.637796 1.397639 1.618111 1.413387 1.645670 1.318898 1.562993
+ [73] 1.559056 1.803151 1.397639 1.685040 1.610237 1.464568 1.425198 1.657481
+ [81] 1.362205 1.688977 1.444883 1.381891 1.468505 1.625985 1.429135 1.452757
+ [89] 1.507875 1.531497 1.405513 1.618111 1.338583 1.559056 1.425198 1.606300
+ [97] 1.500001 1.586615 1.303150 1.700788 1.377953 1.614174 1.484253 1.488190
+[105] 1.492127 1.562993 1.519686 1.503938 1.500001 1.700788 1.500001 1.795277
+[113] 1.562993 1.661418 1.559056 1.681103 1.519686 1.468505 1.405513 1.618111
+[121] 1.425198 1.484253 1.582678 1.629922 1.385828 1.598426 1.527560 1.633859
+[129] 1.535434 1.736221 1.515749 1.696851 1.448820 1.476379 1.500001 1.618111
+[137] 1.401576 1.582678 1.456694 1.562993 1.582678 1.598426 1.263780 1.602363
+[145] 1.468505 1.535434 1.543308 1.440946 1.417324 1.488190 1.417324 1.633859
+[153] 1.814962 1.968505 1.917324 1.968505 1.874017 1.830710 1.787403 1.838584
+[161] 1.704725 1.842521 1.610237 1.929135 1.791340 1.905513 1.803151 1.940946
+[169] 1.653544 1.937009 1.818899 1.917324 1.976379 1.775592 1.830710 1.822836
+[177] 1.688977 1.814962 1.751969 1.881891 1.897639 1.968505 1.862206 1.685040
+[185] 1.775592 2.346458 1.933072 1.905513 1.677166 1.748032 1.732284 1.917324
+[193] 1.681103 1.952757 1.783466 1.952757 1.988190 1.716536 1.791340 1.988190
+[201] 1.767717 1.779529 1.834647 1.909450 1.775592 1.972442 1.830710 1.771654
+[209] 1.724410 1.791340 1.700788 1.984253 1.783466 1.818899 1.799214 2.137796
+[217] 1.803151 1.960631 1.818899 1.948820 1.712599 1.996064 1.877954 1.826773
+[225] 1.897639 1.830710 1.826773 1.913387 1.870080 2.011812 1.779529 1.779529
+[233] 1.933072 2.066930 1.866143 1.968505 1.767717 2.000001 1.708662 2.019686
+[241] 1.870080 2.051182 1.870080 2.055119 1.791340 1.948820 1.751969 2.000001
+[249] 1.944883 1.846458 1.905513 2.011812 1.909450 2.200789 1.858269 1.933072
+[257] 1.862206 1.842521 1.641733 2.102363 1.704725 1.893702 1.988190 1.960631
+[265] 1.712599 2.027560 1.818899 2.169293 1.751969 1.921261 1.858269       NA
+[273] 1.842521 1.984253 1.779529 1.964568 1.830710 1.968505 2.019686 1.787403
+[281] 2.074804 1.779529 1.814962 2.019686 1.811025 2.019686 1.834647 2.035434
+[289] 1.850395 2.047245 1.807088 1.988190 1.980316 2.283466 1.826773 1.937009
+[297] 1.669292 1.909450 1.700788 1.992127 1.838584 2.047245 1.988190 1.948820
+[305] 1.826773 2.078741 1.610237 2.133859 1.673229 2.007875 1.956694 1.870080
+[313] 1.874017 2.047245 1.846458 2.106300 1.929135 1.818899 2.003938 1.791340
+[321] 2.003938 2.000001 1.972442 1.929135 2.027560 1.960631 1.893702 2.023623
+[329] 1.799214 1.996064 1.673229 2.055119 1.779529 1.940946 1.976379 1.795277
+[337] 2.043308 1.842521 1.799214 2.196852 1.712599 1.952757 2.000001 1.976379</code></pre>
+</div>
+</div>
+<p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb10-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bill_length_inch =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mm_to_inch</span>(bill_length_mm))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 344 × 9
+   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Adelie  Torgersen           39.1          18.7               181        3750
+ 2 Adelie  Torgersen           39.5          17.4               186        3800
+ 3 Adelie  Torgersen           40.3          18                 195        3250
+ 4 Adelie  Torgersen           NA            NA                  NA          NA
+ 5 Adelie  Torgersen           36.7          19.3               193        3450
+ 6 Adelie  Torgersen           39.3          20.6               190        3650
+ 7 Adelie  Torgersen           38.9          17.8               181        3625
+ 8 Adelie  Torgersen           39.2          19.6               195        4675
+ 9 Adelie  Torgersen           34.1          18.1               193        3475
+10 Adelie  Torgersen           42            20.2               190        4250
+# ℹ 334 more rows
+# ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, bill_length_inch &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<section id="embedding-built-in-functions" class="level3" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="embedding-built-in-functions"><span class="header-section-number">2.2.1</span> Embedding built in functions</h3>
+<p>We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it’s fine.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># calculate the coefficient of variation by </span></span>
+<span id="cb12-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># dividing the standard deviation by the mean</span></span>
+<span id="cb12-3">cv <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(x) {</span>
+<span id="cb12-4">        (<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sd</span>(x)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">mean</span>(x))</span>
+<span id="cb12-5">}</span></code></pre></div>
+</div>
+</section>
+</section>
+<section id="functions-with-two-arguments" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="functions-with-two-arguments"><span class="header-section-number">2.3</span> Functions with two arguments</h2>
+<p>We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1">calculate_bmi <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(weight_kg, height_cm) {</span>
+<span id="cb13-2">  weight_kg<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span>(height_cm<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span></span>
+<span id="cb13-3">}</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">weight_kg =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">80</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height_cm =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.69136</code></pre>
+</div>
+</div>
+<p>If you provide your arguments in the order they are expected (here, <code>weight_kg</code> and then <code>height_cm</code>), then you don’t need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this is wrong</span></span>
+<span id="cb16-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">calculate_bmi</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">80</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 281.25</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># this is better</span></span>
+<span id="cb18-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">height_cm =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">180</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">weight_kg =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">80</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 24.69136</code></pre>
+</div>
+</div>
+<section id="functions-with-one-argument-practice" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="functions-with-one-argument-practice"><span class="header-section-number">2.3.1</span> Functions with one argument practice</h3>
+<p>Write two functions that convert between degrees Fahrenheit and degrees Celsius and test to see if they work.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>°C = (°F - 32) × 5/9 or °F = (°C * 9/5) + 32</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a function to convert F to C</span></span>
+<span id="cb20-2">degF_to_degC <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(deg_F) {</span>
+<span id="cb20-3">  (deg_F <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span>)</span>
+<span id="cb20-4">}</span>
+<span id="cb20-5"></span>
+<span id="cb20-6"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create a function to convert C to F</span></span>
+<span id="cb20-7">degC_to_degF <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(deg_C) {</span>
+<span id="cb20-8">  (deg_C <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">9</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span></span>
+<span id="cb20-9">}</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">deg_F =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">32</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">deg_F =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 37.77778</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb25" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">deg_C =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 32</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">deg_C =</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">40</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -40</code></pre>
+</div>
+</div>
+</details>
+</section>
+</section>
+<section id="plotting-functions" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="plotting-functions"><span class="header-section-number">2.4</span> Plotting functions</h2>
+<p>Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.</p>
+<p>We can also write a function to make our plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1">species_bill_plotting <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(focal_species) {</span>
+<span id="cb29-2">    penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb29-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb29-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb29-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb29-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use a linear model</span></span>
+<span id="cb29-8">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># turn off confidence interval</span></span>
+<span id="cb29-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb29-10">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># put the species name as the title</span></span>
+<span id="cb29-11">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill length (mm)"</span>,</span>
+<span id="cb29-12">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill depth (mm)"</span>,</span>
+<span id="cb29-13">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>, </span>
+<span id="cb29-14">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb29-15">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_classic</span>() </span>
+<span id="cb29-16">}</span></code></pre></div>
+</div>
+<p>Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">species_bill_plotting</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>We can then pass this function in a <code>for</code> loop with some simpler looking code (because the bulk of it is elsewhere).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1">penguin_species <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">unique</span>(penguins<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>species)</span>
+<span id="cb32-2"></span>
+<span id="cb32-3"><span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">in</span> penguin_species) {</span>
+<span id="cb32-4">  <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># pass each focal species to the species_bill_plotting function</span></span>
+<span id="cb32-5">  plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">species_bill_plotting</span>(focal_species)</span>
+<span id="cb32-6"></span>
+<span id="cb32-7"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plots</span></span>
+<span id="cb32-8">  filename <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create filename</span></span>
+<span id="cb32-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(filename, plot) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plot to file</span></span>
+<span id="cb32-10">}</span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+</div>
+<section id="writing-plotting-functions-practice" class="level3" data-number="2.4.1">
+<h3 data-number="2.4.1" class="anchored" data-anchor-id="writing-plotting-functions-practice"><span class="header-section-number">2.4.1</span> Writing plotting functions practice</h3>
+<p>Write a function to make a series of boxplots that show the difference in <code>body_mass_g</code> between male and female penguins by species. Feed one species to your function to check if it works (you don’t need to iterate with it yet).</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Check back to our example where we used a <code>for</code> loop to see how to make this plot.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create the function</span></span>
+<span id="cb34-2">body_mass_by_sex_plotting <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(focal_species) {</span>
+<span id="cb34-3">    penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb34-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb34-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>(sex, body_mass_g) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb34-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-7">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-8">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-9">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb34-10">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb34-11">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>,</span>
+<span id="cb34-12">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Body mass (grams)"</span>,</span>
+<span id="cb34-13">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> focal_species)</span>
+<span id="cb34-14">}</span>
+<span id="cb34-15"></span>
+<span id="cb34-16"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># apply the function to Adelie penguins</span></span>
+<span id="cb34-17"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">body_mass_by_sex_plotting</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Adelie"</span>)</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+</details>
+</section>
+</section>
+</section>
+<section id="iteration-with-purrrmap" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Iteration with <code>purrr:map</code></h1>
+<p>To simplify our code, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
+<p>But before we do this, we need to learn a little bit about lists.</p>
+<section id="about-lists" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="about-lists"><span class="header-section-number">3.1</span> About lists</h2>
+<p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
+<p>To see what a list looks like, we will look under the hood at the object that comprises a ggplot plot. We have one in our environment called <code>plot</code> so let’s look at that.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">View</span>(plot)</span></code></pre></div>
+</div>
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/view-plot.png" class="img-fluid"></p>
+<p>We can see that in this case, <code>plot</code> is a list which contains 11 objects, many of which also contain sub-objects. For example, <code>data</code> is a dataframe that. contains the data underlying our plot. It is a tibble type of dataframe with 68 rows and 8 columns.</p>
+<p>If I want to access that first item in the list, I can do that in a few different ways.</p>
+<p>I can use the dollar sign operator <code>$</code> to extract parts of the list</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1">plot<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">$</span>data</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>Or, I can use indexing to extract out the first item in our list.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1">plot[<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$data
+# A tibble: 68 × 8
+   species   island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+   &lt;fct&gt;     &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+ 1 Chinstrap Dream            46.5          17.9               192        3500
+ 2 Chinstrap Dream            50            19.5               196        3900
+ 3 Chinstrap Dream            51.3          19.2               193        3650
+ 4 Chinstrap Dream            45.4          18.7               188        3525
+ 5 Chinstrap Dream            52.7          19.8               197        3725
+ 6 Chinstrap Dream            45.2          17.8               198        3950
+ 7 Chinstrap Dream            46.1          18.2               178        3250
+ 8 Chinstrap Dream            51.3          18.2               197        3750
+ 9 Chinstrap Dream            46            18.9               195        4150
+10 Chinstrap Dream            51.3          19.9               198        3700
+# ℹ 58 more rows
+# ℹ 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="map" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="map"><span class="header-section-number">3.2</span> <code>map()</code></h2>
+<p>The simplest of the functions in <code>purrr</code> is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
+<p>The <code>map()</code>, we provide a vector/list to iterate over, and a function, like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.x =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">5</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># our vector to apply our function over</span></span>
+<span id="cb40-2">    <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(x) x <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># what the function is</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+[1] 2
+
+[[2]]
+[1] 3
+
+[[3]]
+[1] 4
+
+[[4]]
+[1] 5
+
+[[5]]
+[1] 6</code></pre>
+</div>
+</div>
+<p>Now let’s get back to the function we wrote to make our plots - instead of incorporating this into a <code>for</code> loop, we can apply it within <code>map()</code> like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(penguin_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># vector to iterate over</span></span>
+<span id="cb42-2">    species_bill_plotting) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># function to use</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[2]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-24-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+[[3]]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-24-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Wow that was simple!</p>
+<p>We could also incorporate both the printing and saving of the plot into one function like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1">species_bill_plotting_saving <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(focal_species) {</span>
+<span id="cb49-2">  </span>
+<span id="cb49-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># create plot and assign it to something </span></span>
+<span id="cb49-4">  plot_via_function <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb49-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb49-6">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb49-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb49-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb49-9">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># use a linear model</span></span>
+<span id="cb49-10">                <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># turn off confidence interval</span></span>
+<span id="cb49-11">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb49-12">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># put the species name as the title</span></span>
+<span id="cb49-13">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill length (mm)"</span>,</span>
+<span id="cb49-14">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Bill depth (mm)"</span>,</span>
+<span id="cb49-15">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>, </span>
+<span id="cb49-16">         <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> </span>
+<span id="cb49-17">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_classic</span>() </span>
+<span id="cb49-18">  </span>
+<span id="cb49-19"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print</span></span>
+<span id="cb49-20">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(plot_via_function)</span>
+<span id="cb49-21">  </span>
+<span id="cb49-22"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save</span></span>
+<span id="cb49-23">  filename <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"figs/{focal_species}_bill-dimensions-via-function.png"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># choose filename</span></span>
+<span id="cb49-24">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(filename, plot_via_function) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plot to file</span></span>
+<span id="cb49-25">}</span></code></pre></div>
+</div>
+<p>Then, this code will:</p>
+<ol type="1">
+<li>Generate your plots</li>
+<li>Print those plots for you to view in RStudio</li>
+<li>Save those plots in a directory called <code>figs</code> in your working directory</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(penguin_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># vector to iterate over</span></span>
+<span id="cb50-2">    species_bill_plotting_saving) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># function to apply</span></span></code></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-26-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-26-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_bill-dimensions-via-function.png
+
+[[2]]
+figs/Gentoo_bill-dimensions-via-function.png
+
+[[3]]
+figs/Chinstrap_bill-dimensions-via-function.png</code></pre>
+</div>
+</div>
+<section id="functions-with-more-arguments-practice" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">3.2.1</span> Functions with more arguments practice</h3>
+<p>Try applying your function you made to create a series of boxplots for body mass by sex over each of the penguin species, though edit it so it both prints and saves your plots.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Here is my hint</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>Edit the function to include printing and saving.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1">species_body_mass_sex_plotting_saving <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">function</span>(focal_species) {</span>
+<span id="cb56-2">  my_plot <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> penguins <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb56-3">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb56-4">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">drop_na</span>(sex, body_mass_g) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">|&gt;</span> </span>
+<span id="cb56-5">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> body_mass_g, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb56-6">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_boxplot</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb56-7">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_minimal</span>() <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb56-8">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb56-9">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"none"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># don't need one bc duplicative with x-axis</span></span>
+<span id="cb56-10">      <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Sex"</span>,</span>
+<span id="cb56-11">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Body mass (grams)"</span>,</span>
+<span id="cb56-12">        <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">title =</span> focal_species)</span>
+<span id="cb56-13"></span>
+<span id="cb56-14"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># print</span></span>
+<span id="cb56-15">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">print</span>(my_plot)</span>
+<span id="cb56-16">  </span>
+<span id="cb56-17"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save</span></span>
+<span id="cb56-18">  filename <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"figs/{focal_species}_body-mass-by-sex.png"</span>) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># choose filename</span></span>
+<span id="cb56-19">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggsave</span>(filename, my_plot) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># save the plot to file</span></span>
+<span id="cb56-20">}</span></code></pre></div>
+</div>
+<p>Apply the function across the species</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb57" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map</span>(penguin_species, <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># what to iterate over</span></span>
+<span id="cb57-2">    species_body_mass_sex_plotting_saving) <span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># the function to iterate with</span></span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-28-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index_files/figure-html/unnamed-chunk-28-3.png" class="img-fluid" width="672"></p>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[1]]
+figs/Adelie_body-mass-by-sex.png
+
+[[2]]
+figs/Gentoo_body-mass-by-sex.png
+
+[[3]]
+figs/Chinstrap_body-mass-by-sex.png</code></pre>
+</div>
+</div>
+</details>
+
+
+</section>
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>functions</category>
+  <category>functional programming</category>
+  <category>map</category>
+  <category>purrr</category>
+  <guid>https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/index.html</guid>
+  <pubDate>Tue, 25 Mar 2025 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S09E09_functional-programming_02/img/custom-function.png" medium="image" type="image/png" height="27" width="144"/>
+</item>
+<item>
+  <title>Iterating part I: for loops</title>
   <dc:creator>Jessica Cooperstone and Jelmer Poelstra</dc:creator>
   <link>https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index.html</link>
   <description><![CDATA[ 
@@ -1189,619 +2385,6 @@ font-style: inherit;"># save the plot to file</span></span>
 </div>
 </div>
 </details>
-</section>
-</section>
-</section>
-<section id="writing-functions" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Writing functions</h1>
-<p>There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about <a href="https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction">functions</a> before in Code Club, and you may be using them without explicitly realizing they are functions. For example, <code>mean()</code> is a function that calculates the mean of an object (usually a vector).</p>
-<p>There are some functions which are by default available when you load R (like <code>mean()</code>), and others that exist within packages that require you to load those packages (e.g., <code>tidyverse</code>) before they can be used (e.g., <code>ggplot()</code>).</p>
-<p>But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.</p>
-<section id="general-syntax" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="general-syntax"><span class="header-section-number">3.1</span> General syntax</h2>
-<p>The general syntax of a function is like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb44" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1">name_of_function <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(arguments) {</span>
-<span id="cb44-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">insert_code_here</span>()</span>
-<span id="cb44-3">}</span></code></pre></div>
-</div>
-<p>You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument.</p>
-</section>
-<section id="functions-with-one-argument" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="functions-with-one-argument"><span class="header-section-number">3.2</span> Functions with one argument</h2>
-<p>Here, I am writing a little function to do something simple, like calculate from millimeters to inches.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb45" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1">mm_to_inch <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(value_in_mm) {</span>
-<span id="cb45-2">  value_in_mm <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.0393701</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># code to convert from mm to inch</span></span>
-<span id="cb45-3">}</span></code></pre></div>
-</div>
-<p>Here, we would call <code>value_in_mm</code> our argument or parameter. Remember that this is a user-defined term, you could call this <code>x</code>, <code>i</code>, or really whatever you want. I like giving the arguments easy-to-read and easy-to-remember names.</p>
-<p>Now that we’ve made a function, we can see it in our environment under the “Functions” header.</p>
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/img/function-in-environment.png" class="img-fluid"> If we click on this item, we can see the details of the function.</p>
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/img/function-details.png" class="img-fluid"></p>
-<p>If we start typing our function, and put our cursor between the parentheses and press tab, we can also see some information about our function.</p>
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/img/function-hover-details.png" class="img-fluid"></p>
-<p>We can now pass arguments to our new function, here we will try passing 100 mm and see what that would be in inches.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mm_to_inch</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">value_in_mm =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.93701</code></pre>
-</div>
-</div>
-<p>Because our function only takes one argument, we can be less explicit and remove <code>value_in_mm</code> and get the same result.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb48" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mm_to_inch</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 3.93701</code></pre>
-</div>
-</div>
-<p>We also might want to pass a whole column or vector to our function, which we can also do.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mm_to_inch</span>(penguins<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">$</span>bill_length_mm)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>  [1] 1.539371 1.555119 1.586615       NA 1.444883 1.547245 1.531497 1.543308
-  [9] 1.342520 1.653544 1.488190 1.488190 1.618111 1.519686 1.362205 1.440946
- [17] 1.523623 1.673229 1.354331 1.811025 1.488190 1.484253 1.413387 1.503938
- [25] 1.527560 1.389765 1.598426 1.594489 1.492127 1.594489 1.555119 1.464568
- [33] 1.555119 1.610237 1.433072 1.543308 1.527560 1.661418 1.480316 1.566930
- [41] 1.437009 1.606300 1.417324 1.736221 1.456694 1.559056 1.618111 1.476379
- [49] 1.417324 1.665355 1.559056 1.578741 1.377953 1.653544 1.358268 1.629922
- [57] 1.535434 1.598426 1.437009 1.480316 1.405513 1.625985 1.480316 1.618111
- [65] 1.433072 1.637796 1.397639 1.618111 1.413387 1.645670 1.318898 1.562993
- [73] 1.559056 1.803151 1.397639 1.685040 1.610237 1.464568 1.425198 1.657481
- [81] 1.362205 1.688977 1.444883 1.381891 1.468505 1.625985 1.429135 1.452757
- [89] 1.507875 1.531497 1.405513 1.618111 1.338583 1.559056 1.425198 1.606300
- [97] 1.500001 1.586615 1.303150 1.700788 1.377953 1.614174 1.484253 1.488190
-[105] 1.492127 1.562993 1.519686 1.503938 1.500001 1.700788 1.500001 1.795277
-[113] 1.562993 1.661418 1.559056 1.681103 1.519686 1.468505 1.405513 1.618111
-[121] 1.425198 1.484253 1.582678 1.629922 1.385828 1.598426 1.527560 1.633859
-[129] 1.535434 1.736221 1.515749 1.696851 1.448820 1.476379 1.500001 1.618111
-[137] 1.401576 1.582678 1.456694 1.562993 1.582678 1.598426 1.263780 1.602363
-[145] 1.468505 1.535434 1.543308 1.440946 1.417324 1.488190 1.417324 1.633859
-[153] 1.814962 1.968505 1.917324 1.968505 1.874017 1.830710 1.787403 1.838584
-[161] 1.704725 1.842521 1.610237 1.929135 1.791340 1.905513 1.803151 1.940946
-[169] 1.653544 1.937009 1.818899 1.917324 1.976379 1.775592 1.830710 1.822836
-[177] 1.688977 1.814962 1.751969 1.881891 1.897639 1.968505 1.862206 1.685040
-[185] 1.775592 2.346458 1.933072 1.905513 1.677166 1.748032 1.732284 1.917324
-[193] 1.681103 1.952757 1.783466 1.952757 1.988190 1.716536 1.791340 1.988190
-[201] 1.767717 1.779529 1.834647 1.909450 1.775592 1.972442 1.830710 1.771654
-[209] 1.724410 1.791340 1.700788 1.984253 1.783466 1.818899 1.799214 2.137796
-[217] 1.803151 1.960631 1.818899 1.948820 1.712599 1.996064 1.877954 1.826773
-[225] 1.897639 1.830710 1.826773 1.913387 1.870080 2.011812 1.779529 1.779529
-[233] 1.933072 2.066930 1.866143 1.968505 1.767717 2.000001 1.708662 2.019686
-[241] 1.870080 2.051182 1.870080 2.055119 1.791340 1.948820 1.751969 2.000001
-[249] 1.944883 1.846458 1.905513 2.011812 1.909450 2.200789 1.858269 1.933072
-[257] 1.862206 1.842521 1.641733 2.102363 1.704725 1.893702 1.988190 1.960631
-[265] 1.712599 2.027560 1.818899 2.169293 1.751969 1.921261 1.858269       NA
-[273] 1.842521 1.984253 1.779529 1.964568 1.830710 1.968505 2.019686 1.787403
-[281] 2.074804 1.779529 1.814962 2.019686 1.811025 2.019686 1.834647 2.035434
-[289] 1.850395 2.047245 1.807088 1.988190 1.980316 2.283466 1.826773 1.937009
-[297] 1.669292 1.909450 1.700788 1.992127 1.838584 2.047245 1.988190 1.948820
-[305] 1.826773 2.078741 1.610237 2.133859 1.673229 2.007875 1.956694 1.870080
-[313] 1.874017 2.047245 1.846458 2.106300 1.929135 1.818899 2.003938 1.791340
-[321] 2.003938 2.000001 1.972442 1.929135 2.027560 1.960631 1.893702 2.023623
-[329] 1.799214 1.996064 1.673229 2.055119 1.779529 1.940946 1.976379 1.795277
-[337] 2.043308 1.842521 1.799214 2.196852 1.712599 1.952757 2.000001 1.976379</code></pre>
-</div>
-</div>
-<p>Instead of just printing this information, we might want to save it in our dataframe, which we can do by nesting our function within a <code>mutate()</code> function. Remember that <code>mutate()</code> works with the syntax <code>new_column = function(existing_variables)</code>. Also remember that by default, new columns are added after the last column (and if you want to also reorder, you can do that with <code>select()</code>).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1">penguins <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb52-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mutate</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bill_length_inch =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mm_to_inch</span>(bill_length_mm))</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 344 × 9
-   species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
-   &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
- 1 Adelie  Torgersen           39.1          18.7               181        3750
- 2 Adelie  Torgersen           39.5          17.4               186        3800
- 3 Adelie  Torgersen           40.3          18                 195        3250
- 4 Adelie  Torgersen           NA            NA                  NA          NA
- 5 Adelie  Torgersen           36.7          19.3               193        3450
- 6 Adelie  Torgersen           39.3          20.6               190        3650
- 7 Adelie  Torgersen           38.9          17.8               181        3625
- 8 Adelie  Torgersen           39.2          19.6               195        4675
- 9 Adelie  Torgersen           34.1          18.1               193        3475
-10 Adelie  Torgersen           42            20.2               190        4250
-# ℹ 334 more rows
-# ℹ 3 more variables: sex &lt;fct&gt;, year &lt;int&gt;, bill_length_inch &lt;dbl&gt;</code></pre>
-</div>
-</div>
-<section id="embedding-built-in-functions" class="level3" data-number="3.2.1">
-<h3 data-number="3.2.1" class="anchored" data-anchor-id="embedding-built-in-functions"><span class="header-section-number">3.2.1</span> Embedding built in functions</h3>
-<p>We can also use other functions inside our function. For example, R does not by default have a function that calculates the coefficient of variation for a variable. We can write that ourselves though so it’s fine.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb54" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># calculate the coefficient of variation by </span></span>
-<span id="cb54-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># dividing the standard deviation by the mean</span></span>
-<span id="cb54-3">cv <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(x) {</span>
-<span id="cb54-4">        (<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">sd</span>(x)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(x))</span>
-<span id="cb54-5">}</span></code></pre></div>
-</div>
-</section>
-</section>
-<section id="functions-with-two-arguments" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="functions-with-two-arguments"><span class="header-section-number">3.3</span> Functions with two arguments</h2>
-<p>We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb55" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1">calculate_bmi <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(weight_kg, height_cm) {</span>
-<span id="cb55-2">  weight_kg<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span>(height_cm<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">^</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span></span>
-<span id="cb55-3">}</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb56" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight_kg =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">height_cm =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">180</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 24.69136</code></pre>
-</div>
-</div>
-<p>If you provide your arguments in the order they are expected (here, <code>weight_kg</code> and then <code>height_cm</code>), then you don’t need to specify which is which. But, iif you want to give the arguments in a different order you need to be explicit.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb58" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># this is wrong</span></span>
-<span id="cb58-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">calculate_bmi</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">180</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 281.25</code></pre>
-</div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># this is better</span></span>
-<span id="cb60-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">calculate_bmi</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">height_cm =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">180</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">weight_kg =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">80</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 24.69136</code></pre>
-</div>
-</div>
-<section id="functions-with-one-argument-practice" class="level3" data-number="3.3.1">
-<h3 data-number="3.3.1" class="anchored" data-anchor-id="functions-with-one-argument-practice"><span class="header-section-number">3.3.1</span> Functions with one argument practice</h3>
-<p>Write two functions that convert between degrees Fahrenheit and degrees Celsius and test to see if they work.</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-<p>°C = (°F - 32) × 5/9 or °F = (°C * 9/5) + 32</p>
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create a function to convert F to C</span></span>
-<span id="cb62-2">degF_to_degC <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(deg_F) {</span>
-<span id="cb62-3">  (deg_F <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span>)</span>
-<span id="cb62-4">}</span>
-<span id="cb62-5"></span>
-<span id="cb62-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create a function to convert C to F</span></span>
-<span id="cb62-7">degC_to_degF <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(deg_C) {</span>
-<span id="cb62-8">  (deg_C <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">*</span> (<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">9</span><span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">/</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">5</span>)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span></span>
-<span id="cb62-9">}</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb63" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">deg_F =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">32</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 0</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb65" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">degF_to_degC</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">deg_F =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 37.77778</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb67" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">deg_C =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] 32</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb69" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">degC_to_degF</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">deg_C =</span> <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">40</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] -40</code></pre>
-</div>
-</div>
-</details>
-</section>
-</section>
-<section id="plotting-functions" class="level2" data-number="3.4">
-<h2 data-number="3.4" class="anchored" data-anchor-id="plotting-functions"><span class="header-section-number">3.4</span> Plotting functions</h2>
-<p>Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.</p>
-<p>We can also write a function to make our plot.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1">species_bill_plotting <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">function</span>(focal_species) {</span>
-<span id="cb71-2">    penguins <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb71-3">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> focal_species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb71-4">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">drop_na</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb71-5">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> bill_length_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> bill_depth_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> sex)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb71-6">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb71-7">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_smooth</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">method =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lm"</span>, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># use a linear model</span></span>
-<span id="cb71-8">                <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">se =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># turn off confidence interval</span></span>
-<span id="cb71-9">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_color_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Dark2"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb71-10">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> focal_species, <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># put the species name as the title</span></span>
-<span id="cb71-11">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Bill length (mm)"</span>,</span>
-<span id="cb71-12">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Bill depth (mm)"</span>,</span>
-<span id="cb71-13">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Sex"</span>, </span>
-<span id="cb71-14">         <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Data collected from LTER, Antarctica"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb71-15">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>() </span>
-<span id="cb71-16">}</span></code></pre></div>
-</div>
-<p>Then, we can pass our argument to the plot, here, the name of the species we want to plot. This is a useful tool for making many plots with the same structure.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb72" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">species_bill_plotting</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Adelie"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
-</div>
-<div class="cell-output-display">
-<p><img src="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid" width="672"></p>
-</div>
-</div>
-<p>We can then pass this function in a <code>for</code> loop with some simpler looking code (because the bulk of it is elsewhere).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb74" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">for</span> (focal_species <span class="cf" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">in</span> penguin_species) {</span>
-<span id="cb74-2">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># pass each focal species to the species_bill_plotting function</span></span>
-<span id="cb74-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">species_bill_plotting</span>(focal_species)</span>
-<span id="cb74-4"></span>
-<span id="cb74-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># save the plots</span></span>
-<span id="cb74-6">  filename <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glue</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"figs/{focal_species}_bill-dimensions.png"</span>) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># create filename</span></span>
-<span id="cb74-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggsave</span>(filename, plot) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># save the plot to file</span></span>
-<span id="cb74-8">}</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 7 x 5 in image
-Saving 7 x 5 in image
-Saving 7 x 5 in image</code></pre>
-</div>
-</div>
-<p>Or, even more simply, we could replace our <code>for</code> loop with one of the <code>tidyverse:purrr</code> functions intended for functional program that being with <code>map*()</code>.</p>
-<p>The simplest of these functions is <a href="https://purrr.tidyverse.org/reference/map.html"><code>map()</code></a>, which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.</p>
-<p>A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.</p>
-<p>Let’s go over a simple example of something you may have seen before. We will run an ANOVA to see if there are differences in body mass among the penguin species, and we will save this output so we can look at it.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb76" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1">anova <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aov</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">data =</span> penguins,</span>
-<span id="cb76-2">             body_mass_g <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">~</span> species)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb77" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(anova)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 14
- $ coefficients : Named num [1:3] 3700.7 32.4 1375.4
-  ..- attr(*, "names")= chr [1:3] "(Intercept)" "speciesChinstrap" "speciesGentoo"
- $ residuals    : Named num [1:342] 49.3 99.3 -450.7 -250.7 -50.7 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ effects      : Named num [1:342] -77704.1 -4317.7 11323.5 -233.7 -33.7 ...
-  ..- attr(*, "names")= chr [1:342] "(Intercept)" "speciesChinstrap" "speciesGentoo" "" ...
- $ rank         : int 3
- $ fitted.values: Named num [1:342] 3701 3701 3701 3701 3701 ...
-  ..- attr(*, "names")= chr [1:342] "1" "2" "3" "5" ...
- $ assign       : int [1:3] 0 1 1
- $ qr           :List of 5
-  ..$ qr   : num [1:342, 1:3] -18.4932 0.0541 0.0541 0.0541 0.0541 ...
-  .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "assign")= int [1:3] 0 1 1
-  .. ..- attr(*, "contrasts")=List of 1
-  ..$ qraux: num [1:3] 1.05 1.03 1.05
-  ..$ pivot: int [1:3] 1 2 3
-  ..$ tol  : num 1e-07
-  ..$ rank : int 3
-  ..- attr(*, "class")= chr "qr"
- $ df.residual  : int 339
- $ na.action    : 'omit' Named int [1:2] 4 272
-  ..- attr(*, "names")= chr [1:2] "4" "272"
- $ contrasts    :List of 1
-  ..$ species: chr "contr.treatment"
- $ xlevels      :List of 1
-  ..$ species: chr [1:3] "Adelie" "Chinstrap" "Gentoo"
- $ call         : language aov(formula = body_mass_g ~ species, data = penguins)
- $ terms        :Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. ..- attr(*, "dimnames")=List of 2
-  .. ..- attr(*, "term.labels")= chr "species"
-  .. ..- attr(*, "order")= int 1
-  .. ..- attr(*, "intercept")= int 1
-  .. ..- attr(*, "response")= int 1
-  .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
- $ model        :'data.frame':  342 obs. of  2 variables:
-  ..$ body_mass_g: int [1:342] 3750 3800 3250 3450 3650 3625 4675 3475 4250 3300 ...
-  ..$ species    : Factor w/ 3 levels "Adelie","Chinstrap",..: 1 1 1 1 1 1 1 1 1 1 ...
-  ..- attr(*, "terms")=Classes 'terms', 'formula'  language body_mass_g ~ species
-  .. .. ..- attr(*, "variables")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "factors")= int [1:2, 1] 0 1
-  .. .. .. ..- attr(*, "dimnames")=List of 2
-  .. .. ..- attr(*, "term.labels")= chr "species"
-  .. .. ..- attr(*, "order")= int 1
-  .. .. ..- attr(*, "intercept")= int 1
-  .. .. ..- attr(*, "response")= int 1
-  .. .. ..- attr(*, ".Environment")=&lt;environment: R_GlobalEnv&gt; 
-  .. .. ..- attr(*, "predvars")= language list(body_mass_g, species)
-  .. .. ..- attr(*, "dataClasses")= Named chr [1:2] "numeric" "factor"
-  .. .. .. ..- attr(*, "names")= chr [1:2] "body_mass_g" "species"
-  ..- attr(*, "na.action")= 'omit' Named int [1:2] 4 272
-  .. ..- attr(*, "names")= chr [1:2] "4" "272"
- - attr(*, "class")= chr [1:2] "aov" "lm"</code></pre>
-</div>
-</div>
-<section id="functions-with-more-arguments-practice" class="level3" data-number="3.4.1">
-<h3 data-number="3.4.1" class="anchored" data-anchor-id="functions-with-more-arguments-practice"><span class="header-section-number">3.4.1</span> Functions with more arguments practice</h3>
-<p>Question</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-<p>Here is my hint</p>
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
-</details>
 
 
 </section>
@@ -1811,10 +2394,9 @@ Click for the solution
 <a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
   <category>for loops</category>
   <category>base R</category>
-  <category>functions</category>
   <category>functional programming</category>
   <guid>https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/index.html</guid>
-  <pubDate>Mon, 17 Mar 2025 04:00:00 GMT</pubDate>
+  <pubDate>Tue, 18 Mar 2025 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S09E08_functional-programming_01/img/for-loop-monsters.png" medium="image" type="image/png" height="88" width="144"/>
 </item>
 <item>
@@ -17781,946 +18363,6 @@ font-style: inherit;">"test_plot2.png"</span>, p_bill_flipper)</span></code></pr
   <guid>https://osu-codeclub.github.io/posts/S07E14_ggplot_04/index.html</guid>
   <pubDate>Fri, 19 Apr 2024 04:00:00 GMT</pubDate>
   <media:content url="https://osu-codeclub.github.io/posts/S07E14_ggplot_04/featured_plot.png" medium="image" type="image/png" height="103" width="144"/>
-</item>
-<item>
-  <title>Plotting 3: histogram, density, and bar plots</title>
-  <dc:creator>Horacio Lopez-Nicora</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index.html</link>
-  <description><![CDATA[ 
-
-
-
-<section id="introduction" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
-<section id="recap-of-the-past-session" class="level4">
-<h4 class="anchored" data-anchor-id="recap-of-the-past-session">Recap of the past session</h4>
-<p>In last week’s session, we delved into aesthetics and gained a deeper understanding of the topic. Additionally, we introduced the theme() function. We also acquired knowledge on the fundamentals of geom_boxplot(), geom_violin(), and stat_summary.</p>
-</section>
-<section id="session-goals" class="level4">
-<h4 class="anchored" data-anchor-id="session-goals">Session Goals</h4>
-<ul>
-<li>Let’s explore our <strong>palmerpinguins</strong> dataset using histogram and density plots. We will learn about <strong>geom_histogram()</strong> and <strong>geom_density()</strong>.</li>
-<li>Learn the basic of <strong>bar graph</strong> in <code>ggplot2</code>.</li>
-</ul>
-<p><br></p>
-</section>
-</section>
-<section id="our-data-set" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="our-data-set"><span class="header-section-number">2</span> Our data set</h2>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/img/dashboard.jpeg" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption class="figure-caption">Artwork by <a href="https://twitter.com/allison_horst">Allison Horst</a>.</figcaption>
-</figure>
-</div>
-<p><br></p>
-<p>We are going to continue using our 🐧 data set from the package <a href="https://allisonhorst.github.io/palmerpenguins/"><code>palmerpenguins</code></a>. If you haven’t done so, please install that package first:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"palmerpenguins"</span>)</span></code></pre></div>
-</div>
-<p><a href="https://allisonhorst.github.io/palmerpenguins/index.html"><code>palmerpenguins</code></a> is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr.&nbsp;Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.</p>
-<p>We’ll now load the package, along with the tidyverse (which includes ggplot2):</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(palmerpenguins)</span>
-<span id="cb2-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.3     ✔ readr     2.1.4
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-✔ lubridate 1.9.2     ✔ tidyr     1.3.0
-✔ purrr     1.0.2     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-</div>
-<p>Once you’ve loaded that package you will have a data frame called <code>penguins</code> at your disposal — let’s take a look:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Or glimpse() for a sort of transposed view, so we can see all columns:</span></span>
-<span id="cb4-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">glimpse</span>(penguins)</span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre class="styled-output"><code>Rows: 344
-Columns: 8
-$ species           &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adel…
-$ island            &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgerse…
-$ bill_length_mm    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, …
-$ bill_depth_mm     &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, …
-$ flipper_length_mm &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186…
-$ body_mass_g       &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, …
-$ sex               &lt;fct&gt; male, female, female, NA, female, male, female, male…
-$ year              &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
-</div>
-</div>
-<p><br></p>
-</section>
-<section id="histograms-geom_histogram" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="histograms-geom_histogram"><span class="header-section-number">3</span> Histograms: <code>geom_histogram()</code></h2>
-<p>A histogram provides a precise graphical portrayal of the distribution of numerical data. It only needs one aesthetic, which is the <code>x</code> variable.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb6-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_histogram</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb6-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-It is crucial to have good <a href="https://ggplot2.tidyverse.org/reference/labs.html">labels</a> to ensure the accessibility of your plots to a broader audience. Always make sure that the axis (within <code>labs()</code>, use <code>x="x-title"</code>, <code>y="y-title"</code>) and legend (within <code>labs()</code>, use <code>fill/color="legend-title"</code>) labels display the complete variable name.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-<p>The default computation of <code>geom_histogram</code> through <code>stat_bin</code> uses 30 bins, which is not always an optimal choice.</p>
-<p>There are possible options to address this issue. One option is to set the number of bins using the <code>bins</code> argument. Another option is to adjust the width of each bin using the <code>binwidth</code> argument.</p>
-<p>The number of bins or bars in the histogram can be customized using the <code>bins</code> argument in the <code>geom_histogram</code> function.</p>
-<p>An alternative option involves utilizing the <code>binwidth</code> argument in the <code>geom_histogram</code> function, which dictates the width of each bin on the X-axis. <em>It is important to note that this argument takes priority over the bin argument</em>.</p>
-<p><br></p>
-<section id="fa-user-edit-exercise-1" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h4>
-<ul>
-<li>Using the example from above, within <code>geom_histogram()</code> use the <code>bins</code> and <code>binwidth</code> arguments to change the size of each bar/bin.</li>
-</ul>
-<details>
-<summary>
-Hints (click here)
-</summary>
-<p>You can use the following argument <code>geom_histogram(bins = TRY DIFFERENT VALUES)</code> or <code>geom_histogram(binwidth = TRY DIFFERENT VALUES)</code>.</p>
-</details>
-<details>
-<summary>
-Solutions (click here)
-</summary>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb8-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">binwidth =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb8-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb9-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">13</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb9-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Histogram of penguin flipper length"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-<p><br></p>
-<section id="is-the-distribution-bimodal" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="is-the-distribution-bimodal"><span class="header-section-number">3.1</span> Is the distribution bimodal?</h3>
-<p>Histograms are effective in displaying the distributional characteristics of variables within a dataset. They provide visual cues regarding the location of distribution peaks, whether the distribution is skewed or symmetric, and the presence of any outliers. <strong>However, given that our dataset consists of three distinct species, can we utilize histograms to analyze all of them simultaneously?</strong></p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb10-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb10-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb10-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb10-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb10-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Histogram of penguin flipper length"</span>, </span>
-<span id="cb10-7">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"By species"</span>, </span>
-<span id="cb10-8">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin species"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<a href="https://ggplot2.tidyverse.org/reference/theme.html">Themes</a> are a powerful way for customizing the non-data elements of your plots, such as titles, labels, fonts, background, gridlines, and legends. They can be employed to provide plots with a consistently customized appearance.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-<p><br></p>
-<section id="fa-user-edit-exercise-2" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h4>
-<ul>
-<li>Instead of coloring only the outline of the <code>bins</code>, let’s color the <code>bins</code> themselves.</li>
-</ul>
-<details>
-<summary>
-Hints (click here)
-</summary>
-<p>You will have to use the argument <code>fill</code>. Please be sure that your legend title, adjusted using <code>labs()</code>, has been properly set.</p>
-</details>
-<details>
-<summary>
-Solutions (click here)
-</summary>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb11-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb11-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">30</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb11-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb11-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb11-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Histogram of penguin flipper length"</span>, </span>
-<span id="cb11-7">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"By species"</span>,</span>
-<span id="cb11-8">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin species"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-<p><br></p>
-</section>
-</section>
-<section id="density-plot-geom_density" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="density-plot-geom_density"><span class="header-section-number">4</span> Density plot: <code>geom_density()</code></h2>
-<p>A density plot provides an alternative way to visualize the distributions of numerical variables. It is essentially a smoothed version of a histogram and serves as a practical option, especially when dealing with continuous data originating from a smooth underlying distribution.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb12-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> flipper_length_mm, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb12-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_density</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb12-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb12-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb12-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Density plot of penguin flipper length"</span>, </span>
-<span id="cb12-7">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"By species"</span>,</span>
-<span id="cb12-8">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin species"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p><br></p>
-<section id="fa-user-edit-exercise-3" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-3"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3</h4>
-<p>Let’s analyze the distribution of penguins’ body mass according to their species utilizing density plots. - Incorporate distinct colors for each species in the density plots, not just the lines. Employ a level of transparency to provide a clearer view. Please ensure that the density plot is accompanied by a title, subtitle, and <strong>caption</strong>.</p>
-<details>
-<summary>
-Hints (click here)
-</summary>
-<p>You will have to use the argument <code>fill</code> to incorporate color, <code>alpha</code> for transparency, and <code>caption</code> within the <code>labs</code> argument.</p>
-</details>
-<details>
-<summary>
-Solutions (click here)
-</summary>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb13-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb13-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.2</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb13-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb13-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb13-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Density plot of penguin body mass"</span>, </span>
-<span id="cb13-7">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"By species"</span>,</span>
-<span id="cb13-8">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"PalmerPinguins Dataset"</span>,</span>
-<span id="cb13-9">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin species"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-<p><br></p>
-</section>
-<section id="geoms-from-ggplot-extension-packages" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="geoms-from-ggplot-extension-packages"><span class="header-section-number">5</span> Geoms from ggplot “extension” packages</h2>
-<p>Transparency can help when density plots ovelap, but can I do better?</p>
-<p>There are various <a href="https://exts.ggplot2.tidyverse.org/gallery/"><strong>ggplot extension packages</strong></a> available. Some of these packages provide extra geoms, such as the trendy “ridgeline” plots offered by the ggridges package.</p>
-<p>Transparency can help when density plots ovelap, but can I do better?</p>
-<p>There are various <a href="https://exts.ggplot2.tidyverse.org/gallery/"><strong>ggplot extension packages</strong></a> available. Some of these packages provide extra geoms, such as the trendy “ridgeline” plots offered by the ggridges package.</p>
-<p>We’ll have to install the package:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ggridges"</span>)</span></code></pre></div>
-</div>
-<p>After loading it, we can utilize the ridgeplot geom <code>geom_density_ridges()</code> in the same manner as any other geom.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(ggridges)</span>
-<span id="cb15-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb15-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> body_mass_g, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> species, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb15-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_density_ridges</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.2</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb15-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb15-6">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bottom"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb15-7">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Density plot of penguin body mass"</span>, </span>
-<span id="cb15-8">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"By species"</span>,</span>
-<span id="cb15-9">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">caption =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"PalmerPinguins Dataset"</span>,</span>
-<span id="cb15-10">       <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin species"</span>) </span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Picking joint bandwidth of 153</code></pre>
-</div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Please note that when using <code>geom_density_ridges()</code>, we need to specify the <code>y</code>.
-</div>
-</div>
-<div class="callout-body-container callout-body">
-
-</div>
-</div>
-</section>
-<section id="bar-graphs-geom_bar" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="bar-graphs-geom_bar"><span class="header-section-number">6</span> Bar graphs: <code>geom_bar()</code></h2>
-<p>In order to analyze the distribution of a categorical variable, a bar chart can be employed. The bar heights indicate the frequency of observations associated with each <code>x</code> value.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> species)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb17-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>()</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="stacked-bar-plots." class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="stacked-bar-plots."><span class="header-section-number">6.1</span> Stacked bar plots.</h3>
-<p>Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.</p>
-<p>Stacked bar plots can be utilized to visualize the association between two categorical variables. For instance, these two stacked bar plots demonstrate the relation between island and species, showcasing the distribution of species within each island.</p>
-<p>The first plot displays the frequencies of penguin species on different islands. It reveals that there is an equal number of Adelies on each island. Nonetheless, we lack a clear understanding of the percentage distribution within each specific island.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb18-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>()</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>The second plot, which is a relative frequency plot created by setting <code>position = "fill"</code> in the <strong>geom</strong>, is more useful for comparing species distributions across islands because it is not influenced by the unequal numbers of penguins on the islands.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> island, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_bar</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"fill"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>By using this plot, we can see that Gentoo penguins exclusively live on Biscoe Island and represent approximately 75% of the penguins on that island. Chinstrap penguins exclusively inhabit Dream Island and make up approximately 50% of the penguins on that island. Whereas Adelie penguins inhabit all three islands and account for the entire penguin population on Torgersen Island.</p>
-</section>
-</section>
-<section id="bar-chart-of-means-stat_summary" class="level2" data-number="7">
-<h2 data-number="7" class="anchored" data-anchor-id="bar-chart-of-means-stat_summary"><span class="header-section-number">7</span> Bar chart of means: <code>stat_summary()</code></h2>
-<p>To summarize the data using averages, we can use the <code>stat_summary()</code> function. Instead of invoking a geom_* function, we can employ <code>stat_summary()</code> to define the desired method for summarizing the data and presenting it in our visual representation.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(penguins, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> species, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> body_mass_g)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb20-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb20-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mean"</span>,</span>
-<span id="cb20-4">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bar"</span>,</span>
-<span id="cb20-5">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>,</span>
-<span id="cb20-6">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"black"</span>,</span>
-<span id="cb20-7">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>,</span>
-<span id="cb20-8">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> species)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb20-9">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun.data =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mean_se"</span>,</span>
-<span id="cb20-10">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"errorbar"</span>,</span>
-<span id="cb20-11">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="fa-user-edit-exercise-4" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="fa-user-edit-exercise-4"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 4</h4>
-<ol type="1">
-<li>To keep only the Gentoo data, pipe your dataset into the <code>filter()</code> function.</li>
-<li>Create a bar graph examining the mean bill_length_mm by sex by piping the filtered data into <code>ggplot()</code>.</li>
-<li>Ensure that the points with unknown sex (NA) are removed.</li>
-<li>Include error bars in the bar plots and add transparency.</li>
-<li>Display all data points on top of the boxplot.</li>
-<li>Finally, use color to fill every bar by using the “DarSet2” palette from the “RColorBrewer” package, which was installed last week.</li>
-</ol>
-<details>
-<summary>
-Hints (click here)
-</summary>
-<p>You will have to load <code>RColorBrewer</code> and use the argument <code>scale_fill_brewer(palette = "Dark2")</code>.</p>
-</details>
-<details>
-<summary>
-Solutions (click here)
-</summary>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">penguins <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb21-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">filter</span>(species <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">==</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Gentoo"</span>, <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">!</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">is.na</span>(sex)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span> </span>
-<span id="cb21-3">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(<span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> sex, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> bill_length_mm)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span> </span>
-<span id="cb21-4">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_bw</span>() <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb21-5">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"bar"</span>,</span>
-<span id="cb21-6">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mean"</span>,</span>
-<span id="cb21-7">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>,</span>
-<span id="cb21-8">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"black"</span>,</span>
-<span id="cb21-9">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>,</span>
-<span id="cb21-10">               <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mapping =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill=</span>sex)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb21-11">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">stat_summary</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fun.data =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"mean_se"</span>, </span>
-<span id="cb21-12">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">geom =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"errorbar"</span>, </span>
-<span id="cb21-13">                 <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">width =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.5</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb21-14">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">scale_fill_brewer</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">palette =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Dark2"</span>)</span></code></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:85.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-<p><br></p>
-
-
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>plotting</category>
-  <category>ggplot2</category>
-  <guid>https://osu-codeclub.github.io/posts/S07E13_ggplot_03/index.html</guid>
-  <pubDate>Fri, 12 Apr 2024 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S07E13_ggplot_03/img/ggplot2_exploratory.png" medium="image" type="image/png" height="133" width="144"/>
 </item>
 </channel>
 </rss>
