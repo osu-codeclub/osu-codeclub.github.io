@@ -1,16 +1,20 @@
 ---
 title: "Iterating part II: writing custom functions and `purrr:map()`"
-subtitle: "Developing tools for doing things over and over"
+subtitle: "Instead of using loops, we can iterate with functions!"
 author:
   - "Jessica Cooperstone"
 date: "2025-03-25"
-categories: [functions, functional programming, map, purrr]
+categories: [functions, functional programming, purrr]
 title-block-banner: false
 image: img/custom-function.png
 alttext: "Generalized code for creating a new function."
 ---
 
-# Introduction
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
 
 ```{r, fig.alt = "Generalized code for creating a new function.", fig.cap= "Generalized code for creating a new function", out.width = "100%", fig.align = "center", echo = FALSE}
 knitr::include_graphics("img/custom-function.png")
@@ -31,7 +35,7 @@ library(palmerpenguins) # for penguins data
 library(glue) # for easy pasting of names
 ```
 
-# Writing functions
+## Writing functions
 
 There are many functions that exist in R, both built into the base functionality, and addition ones we can access by loading different packages. We have talked about [functions](https://osu-codeclub.github.io/posts/S07E03_basics_03/index.html#introduction) before in Code Club, and you may be using them without explicitly realizing they are functions. For example, `mean()` is a function that calculates the mean of an object (usually a vector).
 
@@ -40,7 +44,8 @@ There are some functions which are by default available when you load R (like `m
 But, there may be situations where we want to do something in R, and a function does not exist to do this task. This could be because the operation you want to do is so specific to you that no other person could have possibly wanted to do that, or simply that no one has gotten around to writing a built in function yet. This is where writing your own functions can be very useful.
 
 
-## General syntax
+### General syntax
+
 The general syntax of a function is like this:
 
 ```{r, eval = FALSE}
@@ -51,7 +56,8 @@ name_of_function <- function(arguments) {
 
 You can pass multiple arguments to a function, but we are going to start simply with a function that takes one argument. 
 
-## Functions with one argument
+### Functions with one argument
+
 Here, I am writing a little function to do something simple, like calculate from millimeters to inches.
 
 ```{r}
@@ -111,7 +117,7 @@ cv <- function(x) {
 }
 ```
 
-## Functions with two arguments
+### Functions with two arguments
 
 We can also write functions that take more than one argument. Here is a simple example for calculating BMI, which is weight in kg divided by height in meters squared.
 
@@ -175,12 +181,12 @@ degC_to_degF(deg_C = 0)
 degC_to_degF(deg_C = -40)
 ```
 
-
 </details>
 
+### Plotting functions
 
-## Plotting functions
-Now that we are a little comfortable with writing functions, we can make ones that are a little more complicated.
+Now that we are a little comfortable with writing functions,
+we can make ones that are a little more complicated.
 
 We can also write a function to make our plot.
 ```{r}
@@ -259,13 +265,13 @@ body_mass_by_sex_plotting("Adelie")
 
 </details>
 
-# Iteration with `purrr:map`
+## Iteration with `purrr:map`
 
 To simplify our code, we could replace our `for` loop with one of the `tidyverse:purrr` functions intended for functional program that being with `map*()`.
 
 But before we do this, we need to learn a little bit about lists.
 
-## About lists 
+### About lists 
 A list is a new data structure for Code Club. A list can contain other data structures, like data frames, vectors or others, within it.
 
 To see what a list looks like, we will look under the hood at the object that comprises a ggplot plot. We have one in our environment called `plot` so let's look at that.
@@ -290,7 +296,7 @@ Or, I can use indexing to extract out the first item in our list.
 plot[1]
 ```
 
-## `map()`
+### `map()`
 
 The simplest of the functions in `purrr` is [`map()`](https://purrr.tidyverse.org/reference/map.html), which applies a function over each element of a vector, and returns a list. There are some basics we will have to go over for this to make sense.
 
@@ -349,7 +355,6 @@ map(penguin_species, # vector to iterate over
     species_bill_plotting_saving) # function to apply
 ```
 
-
 ### Functions with more arguments practice
 
 Try applying your function you made to create a series of boxplots for body mass by sex over each of the penguin species, though edit it so it both prints and saves your plots.
@@ -367,6 +372,7 @@ Here is my hint
 <summary>Click for the solution</summary>
 
 Edit the function to include printing and saving.
+
 ```{r}
 species_body_mass_sex_plotting_saving <- function(focal_species) {
   my_plot <- penguins |> 
@@ -395,6 +401,5 @@ Apply the function across the species
 map(penguin_species, # what to iterate over
     species_body_mass_sex_plotting_saving) # the function to iterate with
 ```
-
 
 </details>

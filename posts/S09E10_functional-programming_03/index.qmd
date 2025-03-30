@@ -1,0 +1,490 @@
+---
+title: "Iterating part III: `purrr:map()`"
+subtitle: "A deeper dive into iterating with _purrr's_ `map()` function."
+pagetitle: "Iteration III"
+author: "Jelmer Poelstra"
+date: "2025-04-01"
+categories: [functional programming, purrr]
+title-block-banner: false
+number-depth: 2
+execute: 
+  eval: true
+  cache: false
+knitr:
+  opts_chunk:
+    out.width: "85%"
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Intro and getting started
+
+In the last two weeks,
+you've learned about a couple of effective coding strategies for situations where
+you need to repeat an operation across e.g. different subsets of data.
+**Instead of copy-pasting your code and making small edits for every copy,**
+you can use `for` loops and functions like `map()`.
+
+Today, we will start with a recap of these approaches and then dive deeper into
+the `map()` function (and the very similar `map_vec()`).
+
+The `map()` function is in the _purrr_ package,
+one of the core tidyverse packages that can be loaded with `library(tidyverse)`.
+We will also load the familiar _palmerpenguins_ dataset for a couple of examples.
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+<br>
+
+## Iteration recap
+
+When we iterate,
+we repeat a procedure for each value/element in a certain collection.
+
+Let's say we have three sets of measurements (each stored in a vector):
+
+```{r}
+set1 <- c(3, 74, 18)
+set2 <- c(33, 14, 25)
+set3 <- c(10, 88, 47)
+```
+
+We want to compute the mean value for each of these.
+The simplest approach would be to just repeat the code to do so three times,
+changing only the identity of the vector: 
+
+```{r}
+mean(set1)
+mean(set2)
+mean(set3)
+```
+
+But we'd like to be able to avoid such repetition.
+First, we may run into situations where we have many more than three collections.
+Second, the code that we need repeat may be much longer than just a call to `mean()`. 
+
+In the previous two sessions, Jess has shown us two different ways of avoiding
+code repetition.
+The first is the `for` loop,
+which is a very widely used technique in programming,
+though is not nearly as common in R as in many other languages.
+We can iterate over these sets with a `for` loop as follows ---
+note that I am putting them together in a `list` to do so:
+
+```{r}
+for (set in list(set1, set2, set3)) {
+  print(mean(set))
+}
+```
+
+A more compact and elegant way of iterating is using _functional programming_,
+where a **function does the iteration** --- here, the `map()` function:
+  
+```{r}
+map(.x = list(set1, set2, set3), .f = mean)
+```
+
+Some notes on the syntax of the `map()` function:
+
+- The first argument (`.x`) is the collection you want to iterate over,
+  which can be a vector, list, or dataframe
+- The second argument (`.f`) is the function that you want to apply to each
+  element of the collection.
+- The name of that function is written without parentheses:
+  `mean` and not `mean()`!
+
+Under the hood, the function `mean()` will be run three times,
+each time with one of the sets as its argument.
+
+<br>
+
+## More on `map()`
+
+### Returning vectors
+
+By default, `map()` will return a list.
+But in some cases, like here, we may prefer to get a vector instead.
+We can do this with a slight variant, on `map()`, `map_vec()`:
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = mean)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### How to handle additional arguments?
+
+What if we needed to pass additional arguments to the function that `map()`
+calls for us?
+
+For example, let's say we had an `NA` in our data,
+which means that by default, `mean()` will return `NA`:
+
+```{r}
+# Change the second element of set1 to 2
+set1[2] <- NA
+set1
+```
+
+```{r}
+mean(set1)
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = mean)
+```
+
+We can avoid this by using `na.rm = TRUE` in a stand-alone call to `mean()`...
+
+```{r}
+mean(set1, na.rm = TRUE)
+```
+
+...but how can we do that with the `map()` function?
+The below doesn't work:
+
+```{r, error=TRUE}
+map_vec(.x = list(set1, set2, set3), .f = mean(na.rm = TRUE))
+```
+
+Instead,
+we need to pass additional arguments separately,
+__*basically as if they were arguments of `map()`:*__
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = mean, na.rm = TRUE)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-note collapse="true"}
+
+### Defining a function on the fly within `map()` _(Click to expand)_
+
+It _is_ possible to call the function with parentheses,
+but this would entail essentially defining a function on the fly,
+which you can do as follows:
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = function(x) mean(x, na.rm = TRUE))
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+In practice,
+the above syntax is most commonly used with a
+"truly" **custom function that you define yourself**,
+but one that may seem so short and context-specific that you don't
+want to define the function separately and keep it in your environment.
+
+For example, last week,
+we defined our own function to compute the Coefficient of Variation (CV),
+which we then used in `map()` similar to the example below:
+
+```{r}
+cv <- function(x) {
+  sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+}
+
+map_vec(.x = list(set1, set2, set3), .f = cv)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+But we could instead define this function on the fly and immediately use it
+like so:
+
+```{r}
+map_vec(
+  .x = list(set1, set2, set3),
+  .f = function(x) sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
+)
+```
+:::
+
+<br>
+
+::: exercise
+
+### {{< fa user-edit >}} Exercise 1
+
+**A)** Once again compute the mean of the three sets of measurements with `map()`,
+but now also pass the argument `trim = 0.1` to the `mean()` function.
+
+<details><summary>Click here for the solution</summary>
+
+Arguments are added as if they were arguments of `map()` / `map_vec()`,
+so you simply add `trim = 0.1` after a comma and don't use additional
+parentheses:
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = mean, na.rm = TRUE, trim = 0.1)
+```
+
+Which runs the following under the hood:
+
+```{r, eval=FALSE}
+mean(set1, na.rm = TRUE, trim = 0.1)
+mean(set2, na.rm = TRUE, trim = 0.1)
+mean(set3, na.rm = TRUE, trim = 0.1)
+```
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**B)** Now use `map_vec()` with the `length()` function to compute the length of
+each of our vectors.
+
+<details><summary>Click here for the solution</summary>
+
+```{r}
+map_vec(.x = list(set1, set2, set3), .f = length)
+```
+
+</details>
+
+<hr style="height:1pt; visibility:hidden;" />
+
+**C)** R does not have a built-in function to compute the standard error.
+Here is how we can do so --- by taking the standard deviation using the `sd()`
+function and dividing it by the square root (`sqrt()`) of the number of
+observations (`length()`):
+
+```{r}
+sd(set1, na.rm = TRUE) / sqrt(length(set1))
+```
+
+- Based on the above code, define your own function that computes the standard error.
+  For a refresher on defining your own functions,
+  see [this section from last week's material](/posts/S09E09_functional-programming_02/#general-syntax).
+
+- Then, use your custom function inside `map_vec()` to compute the standard error
+  for our data.
+
+<details><summary>Click here for the solution for the custom function</summary>
+
+```{r}
+se <- function(x) {
+  sd(x, na.rm = TRUE) / sqrt(length((x)))
+}
+```
+
+</details>
+
+<details><summary>Click here for the full solution</summary>
+
+```{r}
+se <- function(x) {
+  sd(x, na.rm = TRUE) / sqrt(length((x)))
+}
+
+map_vec(.x = list(set1, set2, set3), .f = se)
+```
+</details>
+
+:::
+
+<br>
+
+## Automatic/implicit iteration in R
+
+The example we used above with the three sets of vectors is rather contrived.
+This speaks to the fact that in R,
+we don't have to use explicit iteration like with `for` loops or `map()` except
+in more complex situations ---
+most commonly situations where we've written a function ourself.
+
+This is because first,
+iteration is in many cases "automagic" due to vectorization,
+so we don't have to iterate over the values in vectors:
+
+```{r}
+measurements_inch <- c(3, 74, 18)
+
+# Multiply each value in the vector with 2.54 :
+2.54 * measurements_inch
+```
+
+Also, we usually have (or can put) our data in data frames,
+where vectorization across rows applies as well
+--- for example:
+
+```{r}
+data.frame(measurements_inch) |>
+  # Multiply each value in the vector with 2.54 :
+  mutate(measurements_cm = 2.54 * measurements_inch)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-tip collapse="false"}
+### Iterate across groups with `summarize()` and `.by`
+
+And speaking of dataframes,
+_dplyr_ has functionality to repeat operations across subsets of the data
+without having to explicitly iterate over these subsets.
+For example,
+once the data from the above three-set example is in a data frame...
+
+```{r}
+sets_df <- data.frame(
+  measurement = c(set1, set2, set3),
+  set = rep(c("set1", "set2",  "set3"), each = 3) 
+)
+
+sets_df
+```
+
+...then we can use `summarize()` with `.by` to repeat computations across our
+sets:
+
+```{r}
+sets_df |> summarize(mean = mean(measurement, na.rm = TRUE), .by = set)
+```
+
+:::
+
+However,
+**operating across multiple _columns_ of a dataframe is a bit more challenging,**
+and in the final section below,
+we'll see how to do this with `map()`.
+
+<br>
+
+## Using `map()` to iterate across columns of a data frame
+
+A data frame is really a special case of a list,
+one in which each vector is of the same length and constitutes a column.
+Therefore, iterating over a dataframe with a function like `map()` means that
+you'll repeat the operation for each column.
+
+For example, it's easy to check what type of data each column contains by
+using `map_vec()` with the `class()` function:
+
+```{r}
+map_vec(.x = penguins, .f = class)
+```
+
+Similarly, the `n_distinct()` function computes the number of distinct (unique)
+values, and we can run that on each column like so:
+
+```{r}
+map_vec(.x = penguins, .f = n_distinct)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.callout-note collapse="true"}
+### Bonus: An alternative is the `across()` function _(Click to expand)_
+
+You can also operate on multiple columns using _dplyr_'s `across()` function,
+which should be used inside another _dplyr_ function,
+most commonly `summarise()` or `mutate()`.
+
+For usage in the simplest cases, like for our `map()` examples above,
+using `across()` is more verbose than `map()`:
+
+```{r}
+penguins |> summarise(across(.cols = everything(), .fns = n_distinct))
+```
+
+Notes on `across()` syntax as shown above: 
+
+- Its main arguments are:
+  - `.cols` -- corresponding to `.x` in `map()` (the things to operate on)
+  - `.fns` -- corresponding to `.f` in `map()` (the function to repeat)
+- You should always make an explicit column selection,
+  so for the simplest case of operating across all columns,
+  it's best to use `everything()`^[
+  The `across()` function does (still) work without `.cols()`,
+  and will then select all columns,
+  but this behavior is "deprecated" (outdated) and should not be used.].
+  
+However, with `summaris(across())` you can much more easily make group-wise
+computations than with `map()`:
+
+```{r}
+penguins |>
+  summarise(across(.cols = everything(), .fns = n_distinct), .by = species)
+```
+
+Finally,
+if you need to use additional arguments for the function that `across()` calls,
+you should use the on-the-fly function notation that was explained in the first
+box on this page:
+
+```{r}
+penguins |>
+  summarise(across(
+    .cols = where(is.numeric),
+    .fns = function(x) mean(x, na.rm = TRUE)
+    ))
+```
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+### {{< fa user-edit >}} Exercise 2
+
+**A)** Use `map_vec()` to compute the mean value for _each_ column in the penguins
+dataframe. Why are you getting warning messages and `NA`s?
+
+<details><summary>Click here for the solution</summary>
+
+```{r}
+map_vec(.x = penguins, .f = mean, na.rm = TRUE)
+```
+
+The warning messages and `NA`s (despite using `na.rm = TRUE`) appear because 
+not some of the columns, like `species` and `island`,
+don't contain numbers at all.
+
+</details>
+
+**B)** Can you modify the penguins dataframe before passing it to `map_vec()`
+so it only contains columns with numbers?
+
+<details><summary>Click here for a hint on the general workflow</summary>
+
+You could save the modified dataframe and then use `map_vec()`,
+but we'd prefer to use pipes as follows:
+
+```{r}
+penguins |>
+  select(bill_length_mm) |>
+  map_vec(.f = mean, na.rm = TRUE)
+```
+
+_(The above only selects one column though,_
+_you'll still have to work on the `select()` function call!)_
+
+</details>
+
+<details><summary>Click here for a hint on column selection</summary>
+
+The naive way to select all numeric columns would be to first figure out
+out which are numeric, and then simply list all of those inside `select()`.
+
+However, there is a handy helper function to select columns by type: `where()`:
+see [this Help page](https://tidyselect.r-lib.org/reference/where.html).
+Can you figure out how to use it to select numeric columns?
+
+</details>
+
+<details><summary>Click here for the solution</summary>
+
+```{r}
+penguins |>
+  select(where(is.numeric)) |>
+  map_vec(.f = mean, na.rm = TRUE)
+```
+
+</details>
+:::
