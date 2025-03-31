@@ -25,7 +25,8 @@ editor_options:
 
 In the last two weeks,
 you've learned about a couple of effective coding strategies for situations where
-you need to repeat an operation across e.g. different subsets of data.
+you need to **repeat an operation**,
+for example across different subsets of your data.
 **Instead of copy-pasting your code and making small edits for every copy,**
 you can use `for` loops and functions like `map()`.
 
@@ -66,16 +67,18 @@ mean(set2)
 mean(set3)
 ```
 
-But we'd like to be able to avoid such repetition.
+But we'd like to be able to avoid such code repetition.
 First, we may run into situations where we have many more than three collections.
 Second, the code that we need repeat may be much longer than just a call to `mean()`. 
+All in all, the copy-and-paste routine can get very tedious, is error-prone,
+and would render making changes to the repeated code problematic as well.
 
 In the previous two sessions, Jess has shown us two different ways of avoiding
 code repetition.
 The first is the `for` loop,
 which is a very widely used technique in programming,
 though is not nearly as common in R as in many other languages.
-We can iterate over these sets with a `for` loop as follows ---
+We can iterate over our sets with a `for` loop as follows ---
 note that I am putting them together in a `list` to do so:
 
 ```{r}
@@ -94,7 +97,7 @@ map(.x = list(set1, set2, set3), .f = mean)
 Some notes on the syntax of the `map()` function:
 
 - The first argument (`.x`) is the collection you want to iterate over,
-  which can be a vector, list, or dataframe
+  which can be a vector, list, or dataframe.
 - The second argument (`.f`) is the function that you want to apply to each
   element of the collection.
 - The name of that function is written without parentheses:
@@ -111,7 +114,7 @@ each time with one of the sets as its argument.
 
 By default, `map()` will return a list.
 But in some cases, like here, we may prefer to get a vector instead.
-We can do this with a slight variant, on `map()`, `map_vec()`:
+We can do this with a slight variant on `map()`, `map_vec()`:
 
 ```{r}
 map_vec(.x = list(set1, set2, set3), .f = mean)
@@ -121,7 +124,7 @@ map_vec(.x = list(set1, set2, set3), .f = mean)
 
 ### How to handle additional arguments?
 
-What if we needed to pass additional arguments to the function that `map()`
+What if we need to pass additional arguments to the function that `map()`
 calls for us?
 
 For example, let's say we had an `NA` in our data,
@@ -154,8 +157,8 @@ map_vec(.x = list(set1, set2, set3), .f = mean(na.rm = TRUE))
 ```
 
 Instead,
-we need to pass additional arguments separately,
-__*basically as if they were arguments of `map()`:*__
+we need to **pass any additional arguments separately**,
+basically as if they were arguments of `map()`:
 
 ```{r}
 map_vec(.x = list(set1, set2, set3), .f = mean, na.rm = TRUE)
@@ -163,50 +166,31 @@ map_vec(.x = list(set1, set2, set3), .f = mean, na.rm = TRUE)
 
 <hr style="height:1pt; visibility:hidden;" />
 
-::: {.callout-note collapse="true"}
-
-### Defining a function on the fly within `map()` _(Click to expand)_
+### Defining an anonymous function within `map()`
 
 It _is_ possible to call the function with parentheses,
-but this would entail essentially defining a function on the fly,
+but this would essentially entail defining a function on the fly,
 which you can do as follows:
 
 ```{r}
 map_vec(.x = list(set1, set2, set3), .f = function(x) mean(x, na.rm = TRUE))
 ```
 
-<hr style="height:1pt; visibility:hidden;" />
-
 In practice,
-the above syntax is most commonly used with a
-"truly" **custom function that you define yourself**,
-but one that may seem so short and context-specific that you don't
-want to define the function separately and keep it in your environment.
-
-For example, last week,
-we defined our own function to compute the Coefficient of Variation (CV),
-which we then used in `map()` similar to the example below:
+the above syntax is most commonly used in slighly more complex situations.
+For example, you may want to count the number of `NA`s in the following way,
+where the `is.na()` function is nested within the `sum()` function:
 
 ```{r}
-cv <- function(x) {
-  sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
-}
-
-map_vec(.x = list(set1, set2, set3), .f = cv)
+sum(is.na(set1))
 ```
 
-<hr style="height:1pt; visibility:hidden;" />
-
-But we could instead define this function on the fly and immediately use it
-like so:
+This poses a challenge to the standard `map()` syntax,
+but can be easily achieved with the anonymous function syntax shown above:
 
 ```{r}
-map_vec(
-  .x = list(set1, set2, set3),
-  .f = function(x) sd(x, na.rm = TRUE) / mean(x, na.rm = TRUE)
-)
+map_vec(.x = list(set1, set2, set3), .f = function(x) sum(is.na(x)))
 ```
-:::
 
 <br>
 
@@ -249,9 +233,15 @@ map_vec(.x = list(set1, set2, set3), .f = length)
 
 </details>
 
+:::
+
 <hr style="height:1pt; visibility:hidden;" />
 
-**C)** R does not have a built-in function to compute the standard error.
+::: exercise
+
+### {{< fa user-edit >}} Exercise 2
+
+**A)** R does not have a built-in function to compute the standard error.
 Here is how we can do so --- by taking the standard deviation using the `sd()`
 function and dividing it by the square root (`sqrt()`) of the number of
 observations (`length()`):
@@ -261,8 +251,8 @@ sd(set1, na.rm = TRUE) / sqrt(length(set1))
 ```
 
 - Based on the above code, define your own function that computes the standard error.
-  For a refresher on defining your own functions,
-  see [this section from last week's material](/posts/S09E09_functional-programming_02/#general-syntax).
+  For a refresher on defining your own functions, see
+  [this section from last week's material](/posts/S09E09_functional-programming_02/#general-syntax).
 
 - Then, use your custom function inside `map_vec()` to compute the standard error
   for our data.
@@ -288,6 +278,20 @@ map_vec(.x = list(set1, set2, set3), .f = se)
 ```
 </details>
 
+**B)** Now, restructure your code to compute the standard error with an anonymous
+function within `map_vec()`.
+
+<details><summary>Click here for the solution</summary>
+
+```{r}
+map_vec(
+  .x = list(set1, set2, set3),
+  .f = function(x) sd(x, na.rm = TRUE) / sqrt(length((x)))
+)
+```
+
+</details>
+
 :::
 
 <br>
@@ -296,12 +300,11 @@ map_vec(.x = list(set1, set2, set3), .f = se)
 
 The example we used above with the three sets of vectors is rather contrived.
 This speaks to the fact that in R,
-we don't have to use explicit iteration like with `for` loops or `map()` except
-in more complex situations ---
-most commonly situations where we've written a function ourself.
+we don't have to explicitly iterate with `for` loops or `map()` except in more
+complex situations --- most commonly when we've written our own function.
 
 This is because first,
-iteration is in many cases "automagic" due to vectorization,
+iteration is in many cases "automagic" in R due to vectorization,
 so we don't have to iterate over the values in vectors:
 
 ```{r}
@@ -312,8 +315,7 @@ measurements_inch <- c(3, 74, 18)
 ```
 
 Also, we usually have (or can put) our data in data frames,
-where vectorization across rows applies as well
---- for example:
+where vectorization across rows applies as well:
 
 ```{r}
 data.frame(measurements_inch) |>
@@ -323,10 +325,10 @@ data.frame(measurements_inch) |>
 
 <hr style="height:1pt; visibility:hidden;" />
 
-::: {.callout-tip collapse="false"}
-### Iterate across groups with `summarize()` and `.by`
+::: {.callout-tip collapse="true"}
+### Iterate across groups with `summarize()` and `.by` _(Click to expand)_
 
-And speaking of dataframes,
+Speaking of implicit iteration in data frames,
 _dplyr_ has functionality to repeat operations across subsets of the data
 without having to explicitly iterate over these subsets.
 For example,
@@ -341,8 +343,9 @@ sets_df <- data.frame(
 sets_df
 ```
 
-...then we can use `summarize()` with `.by` to repeat computations across our
-sets:
+<hr style="height:1pt; visibility:hidden;" />
+
+...we can use `summarize()` with `.by` to repeat computations across our sets:
 
 ```{r}
 sets_df |> summarize(mean = mean(measurement, na.rm = TRUE), .by = set)
@@ -380,8 +383,8 @@ map_vec(.x = penguins, .f = n_distinct)
 
 <hr style="height:1pt; visibility:hidden;" />
 
-::: {.callout-note collapse="true"}
-### Bonus: An alternative is the `across()` function _(Click to expand)_
+::: {.callout-tip collapse="true"}
+### An alternative approach: the `across()` function _(Click to expand)_
 
 You can also operate on multiple columns using _dplyr_'s `across()` function,
 which should be used inside another _dplyr_ function,
