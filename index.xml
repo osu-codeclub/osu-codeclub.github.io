@@ -12,7 +12,7 @@
 <generator>quarto-1.6.40</generator>
 <lastBuildDate>Tue, 01 Apr 2025 04:00:00 GMT</lastBuildDate>
 <item>
-  <title>Iterating part III: purrr:map()</title>
+  <title>Iterating part III: purrr’s map() function</title>
   <dc:creator>Jelmer Poelstra</dc:creator>
   <link>https://osu-codeclub.github.io/posts/S09E10_functional-programming_03/</link>
   <description><![CDATA[ 
@@ -26,7 +26,7 @@
 <h2 data-number="1" class="anchored" data-anchor-id="intro-and-getting-started"><span class="header-section-number">1</span> Intro and getting started</h2>
 <p>In the last two weeks, you’ve learned about a couple of effective coding strategies for situations where you need to <strong>repeat an operation</strong>, for example across different subsets of your data. <strong>Instead of copy-pasting your code and making small edits for every copy,</strong> you can use <code>for</code> loops and functions like <code>map()</code>.</p>
 <p>Today, we will start with a recap of these approaches and then dive deeper into the <code>map()</code> function (and the very similar <code>map_vec()</code>).</p>
-<p>The <code>map()</code> function is in the <em>purrr</em> package, one of the core tidyverse packages that can be loaded with <code>library(tidyverse)</code>. We will also load the familiar <em>palmerpenguins</em> dataset for a couple of examples.</p>
+<p>The <code>map()</code> function is part of the <em>purrr</em> package, one of the core tidyverse packages that can be loaded with <code>library(tidyverse)</code>. We will also load the familiar <em>palmerpenguins</em> dataset for a couple of examples.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -54,7 +54,7 @@ font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
 <p>When we iterate, we repeat a procedure for each value/element in a certain collection.</p>
 <p>Let’s say we have three sets of measurements (each stored in a vector):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">set1 <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1">vec1 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -65,7 +65,7 @@ background-color: null;
 font-style: inherit;">74</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">18</span>)</span>
-<span id="cb3-2">set2 <span class="ot" style="color: #003B4F;
+<span id="cb3-2">vec2 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -76,7 +76,7 @@ background-color: null;
 font-style: inherit;">14</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">25</span>)</span>
-<span id="cb3-3">set3 <span class="ot" style="color: #003B4F;
+<span id="cb3-3">vec3 <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -88,44 +88,44 @@ font-style: inherit;">88</span>, <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">47</span>)</span></code></pre></div>
 </div>
-<p>We want to compute the mean value for each of these. The simplest approach would be to just repeat the code to do so three times, changing only the identity of the vector:</p>
+<p>We want to compute the mean value for each of these. The simplest approach would be to just repeat the code to do so three times, changing only the identity of the vector that we operate on:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set1)</span></code></pre></div>
+font-style: inherit;">mean</span>(vec1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.66667</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set2)</span></code></pre></div>
+font-style: inherit;">mean</span>(vec2)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set3)</span></code></pre></div>
+font-style: inherit;">mean</span>(vec3)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 48.33333</code></pre>
 </div>
 </div>
-<p>But we’d like to be able to avoid such code repetition. First, we may run into situations where we have many more than three collections. Second, the code that we need repeat may be much longer than just a call to <code>mean()</code>. All in all, the copy-and-paste routine can get very tedious, is error-prone, and would render making changes to the repeated code problematic as well.</p>
-<p>In the previous two sessions, Jess has shown us two different ways of avoiding code repetition. The first is the <code>for</code> loop, which is a very widely used technique in programming, though is not nearly as common in R as in many other languages. We can iterate over our sets with a <code>for</code> loop as follows — note that I am putting them together in a <code>list</code> to do so:</p>
+<p>But we’d like to be able to avoid such code repetition. First, we may run into situations where we have many more than three collections. Second, the code that we need repeat may be much longer than just a call to <code>mean()</code>. All in all, the copy-and-paste routine can get very tedious, is error-prone, and would also make it more difficult to edit the repeated code.</p>
+<p>In the previous two sessions, Jess has shown us two different ways of avoiding code repetition. The first is the <code>for</code> loop, which is a very widely used technique in programming, though is not nearly as common in R as in many other languages. We can iterate over our vectors with a <code>for</code> loop as follows — note that I am putting them together in a <code>list</code> to do so:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
-font-style: inherit;">for</span> (set <span class="cf" style="color: #003B4F;
+font-style: inherit;">for</span> (vec <span class="cf" style="color: #003B4F;
 background-color: null;
 font-weight: bold;
 font-style: inherit;">in</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3)) {</span>
+font-style: inherit;">list</span>(vec1, vec2, vec3)) {</span>
 <span id="cb10-2">  <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">print</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set))</span>
+font-style: inherit;">mean</span>(vec))</span>
 <span id="cb10-3">}</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.66667
@@ -141,7 +141,7 @@ font-style: inherit;">map</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> mean)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -161,11 +161,11 @@ font-style: inherit;">.f =</span> mean)</span></code></pre></div>
 <li>The second argument (<code>.f</code>) is the function that you want to apply to each element of the collection.</li>
 <li>The name of that function is written without parentheses: <code>mean</code> and not <code>mean()</code>!</li>
 </ul>
-<p>Under the hood, the function <code>mean()</code> will be run three times, each time with one of the sets as its argument.</p>
+<p>Under the hood, the function <code>mean()</code> will be run three times, each time with one of the vectors as its argument.</p>
 <p><br></p>
 </section>
-<section id="more-on-map" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="more-on-map"><span class="header-section-number">3</span> More on <code>map()</code></h2>
+<section id="beyond-the-basics-of-map" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="beyond-the-basics-of-map"><span class="header-section-number">3</span> Beyond the basics of <code>map()</code></h2>
 <section id="returning-vectors" class="level3">
 <h3 class="anchored" data-anchor-id="returning-vectors">Returning vectors</h3>
 <p>By default, <code>map()</code> will return a list. But in some cases, like here, we may prefer to get a vector instead. We can do this with a slight variant on <code>map()</code>, <code>map_vec()</code>:</p>
@@ -176,7 +176,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> mean)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -192,15 +192,15 @@ font-style: inherit;">.f =</span> mean)</span></code></pre></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
 background-color: null;
-font-style: inherit;"># Change the second element of set1 to 2</span></span>
-<span id="cb16-2">set1[<span class="dv" style="color: #AD0000;
+font-style: inherit;"># Change the second element of vec1 to 2</span></span>
+<span id="cb16-2">vec1[<span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">2</span>] <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">NA</span></span>
-<span id="cb16-3">set1</span></code></pre></div>
+<span id="cb16-3">vec1</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  3 NA 18</code></pre>
 </div>
@@ -208,7 +208,7 @@ font-style: inherit;">NA</span></span>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set1)</span></code></pre></div>
+font-style: inherit;">mean</span>(vec1)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
@@ -220,18 +220,19 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> mean)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]       NA 24.00000 48.33333</code></pre>
 </div>
 </div>
+<hr style="height:1pt; visibility:hidden;">
 <p>We can avoid this by using <code>na.rm = TRUE</code> in a stand-alone call to <code>mean()</code>…</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set1, <span class="at" style="color: #657422;
+font-style: inherit;">mean</span>(vec1, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -248,7 +249,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -261,7 +262,8 @@ font-style: inherit;">TRUE</span>))</span></code></pre></div>
 <pre><code>Error in mean.default(na.rm = TRUE): argument "x" is missing, with no default</code></pre>
 </div>
 </div>
-<p>Instead, we need to <strong>pass any additional arguments separately</strong>, basically as if they were arguments of <code>map()</code>:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Instead, we need to pass any additional arguments <strong>separately</strong>, basically as if they were arguments of <code>map()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -269,7 +271,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> mean, <span class="at" style="color: #657422;
 background-color: null;
@@ -284,7 +286,7 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
 </section>
 <section id="defining-an-anonymous-function-within-map" class="level3">
 <h3 class="anchored" data-anchor-id="defining-an-anonymous-function-within-map">Defining an anonymous function within <code>map()</code></h3>
-<p>It <em>is</em> possible to call the function with parentheses, but this would essentially entail defining a function on the fly, which you can do as follows:</p>
+<p>It <em>is</em> possible to write the function call within <code>map()</code> using parentheses — but this would essentially entail defining a function on the fly, which you can do as follows:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb28" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><span class="fu" style="color: #4758AB;
 background-color: null;
@@ -292,7 +294,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -308,13 +310,13 @@ font-style: inherit;">TRUE</span>))</span></code></pre></div>
 <pre><code>[1] 10.50000 24.00000 48.33333</code></pre>
 </div>
 </div>
-<p>In practice, the above syntax is most commonly used in slighly more complex situations. For example, you may want to count the number of <code>NA</code>s in the following way, where the <code>is.na()</code> function is nested within the <code>sum()</code> function:</p>
+<p>In practice, the above syntax is most commonly used in slighly more complex situations. For example, you may want to <strong>count the number of <code>NA</code>s</strong> in the following way, where the <code>is.na()</code> function is nested within the <code>sum()</code> function:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">is.na</span>(set1))</span></code></pre></div>
+font-style: inherit;">is.na</span>(vec1))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
@@ -327,7 +329,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> <span class="cf" style="color: #003B4F;
 background-color: null;
@@ -345,11 +347,12 @@ font-style: inherit;">is.na</span>(x)))</span></code></pre></div>
 </section>
 <section id="exercise-1" class="level3 exercise">
 <h3 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h3>
-<p><strong>A)</strong> Once again compute the mean of the three sets of measurements with <code>map()</code>, but now also pass the argument <code>trim = 0.1</code> to the <code>mean()</code> function.</p>
+<p><strong>A)</strong> Once again compute the mean of the three sets of measurements with <code>map()</code>, but now also pass the argument <code>trim = 0.1</code> to the <code>mean()</code> function (If you’re interested, type <code>?mean</code> for some information about what this argument does.)</p>
 <details>
 <summary>
 Click here for the solution
 </summary>
+<hr style="height:1pt; visibility:hidden;">
 <p>Arguments are added as if they were arguments of <code>map()</code> / <code>map_vec()</code>, so you simply add <code>trim = 0.1</code> after a comma and don’t use additional parentheses:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><span class="fu" style="color: #4758AB;
@@ -358,7 +361,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> mean, <span class="at" style="color: #657422;
 background-color: null;
@@ -377,7 +380,7 @@ font-style: inherit;">0.1</span>)</span></code></pre></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set1, <span class="at" style="color: #657422;
+font-style: inherit;">mean</span>(vec1, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -388,7 +391,7 @@ background-color: null;
 font-style: inherit;">0.1</span>)</span>
 <span id="cb36-2"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set2, <span class="at" style="color: #657422;
+font-style: inherit;">mean</span>(vec2, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -399,7 +402,7 @@ background-color: null;
 font-style: inherit;">0.1</span>)</span>
 <span id="cb36-3"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(set3, <span class="at" style="color: #657422;
+font-style: inherit;">mean</span>(vec3, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -423,7 +426,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> length)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -439,7 +442,7 @@ font-style: inherit;">.f =</span> length)</span></code></pre></div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb39" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">sd</span>(set1, <span class="at" style="color: #657422;
+font-style: inherit;">sd</span>(vec1, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
@@ -449,7 +452,7 @@ font-style: inherit;">/</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">sqrt</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">length</span>(set1))</span></code></pre></div>
+font-style: inherit;">length</span>(vec1))</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.123724</code></pre>
 </div>
@@ -517,7 +520,7 @@ font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3), <span class="at" style="color: #657422;
+font-style: inherit;">list</span>(vec1, vec2, vec3), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> se)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -525,7 +528,8 @@ font-style: inherit;">.f =</span> se)</span></code></pre></div>
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Now, restructure your code to compute the standard error with an anonymous function within <code>map_vec()</code>.</p>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Now, restructure your code to compute the standard error with an anonymous function inside <code>map_vec()</code>.</p>
 <details>
 <summary>
 Click here for the solution
@@ -538,7 +542,7 @@ font-style: inherit;">map_vec</span>(</span>
 background-color: null;
 font-style: inherit;">.x =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">list</span>(set1, set2, set3),</span>
+font-style: inherit;">list</span>(vec1, vec2, vec3),</span>
 <span id="cb44-3">  <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">.f =</span> <span class="cf" style="color: #003B4F;
@@ -568,7 +572,7 @@ font-style: inherit;">length</span>((x)))</span>
 </section>
 <section id="automaticimplicit-iteration-in-r" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="automaticimplicit-iteration-in-r"><span class="header-section-number">4</span> Automatic/implicit iteration in R</h2>
-<p>The example we used above with the three sets of vectors is rather contrived. This speaks to the fact that in R, we don’t have to explicitly iterate with <code>for</code> loops or <code>map()</code> except in more complex situations — most commonly when we’ve written our own function.</p>
+<p>The example we used above with the three sets of vectors is rather contrived. This speaks to the fact that in R, we don’t have to explicitly iterate with <code>for</code> loops or <code>map()</code> except in more complex situations.</p>
 <p>This is because first, iteration is in many cases “automagic” in R due to vectorization, so we don’t have to iterate over the values in vectors:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1">measurements_inch <span class="ot" style="color: #003B4F;
@@ -634,55 +638,55 @@ Iterate across groups with <code>summarize()</code> and <code>.by</code> <em>(Cl
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Speaking of implicit iteration in data frames, <em>dplyr</em> has functionality to repeat operations across subsets of the data without having to explicitly iterate over these subsets. For example, once the data from the above three-set example is in a data frame…</p>
+<p>Speaking of implicit iteration in data frames, <em>dplyr</em> has functionality to repeat operations across subsets of the data without having to explicitly iterate over these subsets. For example, once the data from the above three-vector example is in a data frame…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1">sets_df <span class="ot" style="color: #003B4F;
+<div class="sourceCode cell-code" id="cb50" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1">all <span class="ot" style="color: #003B4F;
 background-color: null;
 font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">data.frame</span>(</span>
 <span id="cb50-2">  <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">measurement =</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">value =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">c</span>(set1, set2, set3),</span>
+font-style: inherit;">c</span>(vec1, vec2, vec3),</span>
 <span id="cb50-3">  <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">set =</span> <span class="fu" style="color: #4758AB;
+font-style: inherit;">group =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">rep</span>(<span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"set1"</span>, <span class="st" style="color: #20794D;
+font-style: inherit;">"vec1"</span>, <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"set2"</span>,  <span class="st" style="color: #20794D;
+font-style: inherit;">"vec2"</span>,  <span class="st" style="color: #20794D;
 background-color: null;
-font-style: inherit;">"set3"</span>), <span class="at" style="color: #657422;
+font-style: inherit;">"vec3"</span>), <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">each =</span> <span class="dv" style="color: #AD0000;
 background-color: null;
 font-style: inherit;">3</span>) </span>
 <span id="cb50-4">)</span>
 <span id="cb50-5"></span>
-<span id="cb50-6">sets_df</span></code></pre></div>
+<span id="cb50-6">all</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  measurement  set
-1           3 set1
-2          NA set1
-3          18 set1
-4          33 set2
-5          14 set2
-6          25 set2
-7          10 set3
-8          88 set3
-9          47 set3</code></pre>
+<pre><code>  value group
+1     3  vec1
+2    NA  vec1
+3    18  vec1
+4    33  vec2
+5    14  vec2
+6    25  vec2
+7    10  vec3
+8    88  vec3
+9    47  vec3</code></pre>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
 <p>…we can use <code>summarize()</code> with <code>.by</code> to repeat computations across our sets:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1">sets_df <span class="sc" style="color: #5E5E5E;
+<div class="sourceCode cell-code" id="cb52" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1">all <span class="sc" style="color: #5E5E5E;
 background-color: null;
 font-style: inherit;">|&gt;</span> <span class="fu" style="color: #4758AB;
 background-color: null;
@@ -690,18 +694,18 @@ font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">mean =</span> <span class="fu" style="color: #4758AB;
 background-color: null;
-font-style: inherit;">mean</span>(measurement, <span class="at" style="color: #657422;
+font-style: inherit;">mean</span>(value, <span class="at" style="color: #657422;
 background-color: null;
 font-style: inherit;">na.rm =</span> <span class="cn" style="color: #8f5902;
 background-color: null;
 font-style: inherit;">TRUE</span>), <span class="at" style="color: #657422;
 background-color: null;
-font-style: inherit;">.by =</span> set)</span></code></pre></div>
+font-style: inherit;">.by =</span> group)</span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   set     mean
-1 set1 10.50000
-2 set2 24.00000
-3 set3 48.33333</code></pre>
+<pre><code>  group     mean
+1  vec1 10.50000
+2  vec2 24.00000
+3  vec3 48.33333</code></pre>
 </div>
 </div>
 </div>
@@ -782,7 +786,8 @@ font-style: inherit;">.fns =</span> n_distinct))</span></code></pre></div>
 # ℹ 2 more variables: sex &lt;int&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Notes on <code>across()</code> syntax as shown above:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Notes on the <code>across()</code> syntax as shown above:</p>
 <ul>
 <li>Its main arguments are:
 <ul>
@@ -791,7 +796,7 @@ font-style: inherit;">.fns =</span> n_distinct))</span></code></pre></div>
 </ul></li>
 <li>You should always make an explicit column selection, so for the simplest case of operating across all columns, it’s best to use <code>everything()</code><sup>1</sup>.</li>
 </ul>
-<p>However, with <code>summaris(across())</code> you can much more easily make group-wise computations than with <code>map()</code>:</p>
+<p>On the other hand, it is much eaier to perform group-wise computations with <code>summarise(across())</code> than with <code>map()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -819,7 +824,8 @@ font-style: inherit;">.by =</span> species)</span></code></pre></div>
 # ℹ 2 more variables: sex &lt;int&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Finally, if you need to use additional arguments for the function that <code>across()</code> calls, you should use the on-the-fly function notation that was explained in the first box on this page:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Finally, if you need to use additional arguments for the function that <code>across()</code> calls, you should use the anonymous function notation that was explained in the first box on this page:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1">penguins <span class="sc" style="color: #5E5E5E;
 background-color: null;
@@ -860,7 +866,7 @@ font-style: inherit;">TRUE</span>)</span>
 <hr style="height:1pt; visibility:hidden;">
 <section id="exercise-2-1" class="level3 exercise">
 <h3 class="anchored" data-anchor-id="exercise-2-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h3>
-<p><strong>A)</strong> Use <code>map_vec()</code> to compute the mean value for <em>each</em> column in the penguins dataframe. Why are you getting warning messages and <code>NA</code>s?</p>
+<p><strong>A)</strong> Use <code>map_vec()</code> to compute the mean value for <em>each</em> column in the <code>penguins</code> dataframe. Why are you getting warning messages and <code>NA</code>s?</p>
 <details>
 <summary>
 Click here for the solution
@@ -894,7 +900,7 @@ flipper_length_mm       body_mass_g               sex              year
 </div>
 <p>The warning messages and <code>NA</code>s (despite using <code>na.rm = TRUE</code>) appear because not some of the columns, like <code>species</code> and <code>island</code>, don’t contain numbers at all.</p>
 </details>
-<p><strong>B)</strong> Can you modify the penguins dataframe before passing it to <code>map_vec()</code> so it only contains columns with numbers?</p>
+<p><strong>B)</strong> Can you modify the <code>penguins</code> dataframe before passing it to <code>map_vec()</code> so it only contains columns with numbers?</p>
 <details>
 <summary>
 Click here for a hint on the general workflow
@@ -961,6 +967,34 @@ font-style: inherit;">TRUE</span>)</span></code></pre></div>
          43.92193          17.15117         200.91520        4201.75439 
              year 
        2008.02907 </code></pre>
+</div>
+</div>
+</details>
+<p><strong>C)</strong> Count the number of <code>NA</code>s in each column of the <code>penguins</code> dataframe within <code>map_vec()</code>.</p>
+<details>
+<summary>
+Click here for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">map_vec</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.x =</span> penguins, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">.f =</span> <span class="cf" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">function</span>(x) <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">sum</span>(<span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">is.na</span>(x)))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          species            island    bill_length_mm     bill_depth_mm 
+                0                 0                 2                 2 
+flipper_length_mm       body_mass_g               sex              year 
+                2                 2                11                 0 </code></pre>
 </div>
 </div>
 </details>

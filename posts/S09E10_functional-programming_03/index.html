@@ -206,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#intro-and-getting-started" id="toc-intro-and-getting-started" class="nav-link active" data-scroll-target="#intro-and-getting-started"><span class="header-section-number">1</span> Intro and getting started</a></li>
   <li><a href="#iteration-recap" id="toc-iteration-recap" class="nav-link" data-scroll-target="#iteration-recap"><span class="header-section-number">2</span> Iteration recap</a></li>
-  <li><a href="#more-on-map" id="toc-more-on-map" class="nav-link" data-scroll-target="#more-on-map"><span class="header-section-number">3</span> More on <code>map()</code></a>
+  <li><a href="#beyond-the-basics-of-map" id="toc-beyond-the-basics-of-map" class="nav-link" data-scroll-target="#beyond-the-basics-of-map"><span class="header-section-number">3</span> Beyond the basics of <code>map()</code></a>
   <ul class="collapse">
   <li><a href="#returning-vectors" id="toc-returning-vectors" class="nav-link" data-scroll-target="#returning-vectors">Returning vectors</a></li>
   <li><a href="#how-to-handle-additional-arguments" id="toc-how-to-handle-additional-arguments" class="nav-link" data-scroll-target="#how-to-handle-additional-arguments">How to handle additional arguments?</a></li>
@@ -227,7 +227,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Iterating part III: <code>purrr:map()</code></h1>
+<h1 class="title">Iterating part III: <em>purrr</em>’s <code>map()</code> function</h1>
 <p class="subtitle lead">A deeper dive into iterating with <em>purrr’s</em> <code>map()</code> function.</p>
   <div class="quarto-categories">
     <div class="quarto-category">functional programming</div>
@@ -267,7 +267,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="1" class="anchored" data-anchor-id="intro-and-getting-started"><span class="header-section-number">1</span> Intro and getting started</h2>
 <p>In the last two weeks, you’ve learned about a couple of effective coding strategies for situations where you need to <strong>repeat an operation</strong>, for example across different subsets of your data. <strong>Instead of copy-pasting your code and making small edits for every copy,</strong> you can use <code>for</code> loops and functions like <code>map()</code>.</p>
 <p>Today, we will start with a recap of these approaches and then dive deeper into the <code>map()</code> function (and the very similar <code>map_vec()</code>).</p>
-<p>The <code>map()</code> function is in the <em>purrr</em> package, one of the core tidyverse packages that can be loaded with <code>library(tidyverse)</code>. We will also load the familiar <em>palmerpenguins</em> dataset for a couple of examples.</p>
+<p>The <code>map()</code> function is part of the <em>purrr</em> package, one of the core tidyverse packages that can be loaded with <code>library(tidyverse)</code>. We will also load the familiar <em>palmerpenguins</em> dataset for a couple of examples.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -291,30 +291,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>When we iterate, we repeat a procedure for each value/element in a certain collection.</p>
 <p>Let’s say we have three sets of measurements (each stored in a vector):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>set1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">74</span>, <span class="dv">18</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>set2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">33</span>, <span class="dv">14</span>, <span class="dv">25</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>set3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">88</span>, <span class="dv">47</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>vec1 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">74</span>, <span class="dv">18</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>vec2 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">33</span>, <span class="dv">14</span>, <span class="dv">25</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>vec3 <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">88</span>, <span class="dv">47</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We want to compute the mean value for each of these. The simplest approach would be to just repeat the code to do so three times, changing only the identity of the vector:</p>
+<p>We want to compute the mean value for each of these. The simplest approach would be to just repeat the code to do so three times, changing only the identity of the vector that we operate on:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.66667</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 48.33333</code></pre>
 </div>
 </div>
-<p>But we’d like to be able to avoid such code repetition. First, we may run into situations where we have many more than three collections. Second, the code that we need repeat may be much longer than just a call to <code>mean()</code>. All in all, the copy-and-paste routine can get very tedious, is error-prone, and would render making changes to the repeated code problematic as well.</p>
-<p>In the previous two sessions, Jess has shown us two different ways of avoiding code repetition. The first is the <code>for</code> loop, which is a very widely used technique in programming, though is not nearly as common in R as in many other languages. We can iterate over our sets with a <code>for</code> loop as follows — note that I am putting them together in a <code>list</code> to do so:</p>
+<p>But we’d like to be able to avoid such code repetition. First, we may run into situations where we have many more than three collections. Second, the code that we need repeat may be much longer than just a call to <code>mean()</code>. All in all, the copy-and-paste routine can get very tedious, is error-prone, and would also make it more difficult to edit the repeated code.</p>
+<p>In the previous two sessions, Jess has shown us two different ways of avoiding code repetition. The first is the <code>for</code> loop, which is a very widely used technique in programming, though is not nearly as common in R as in many other languages. We can iterate over our vectors with a <code>for</code> loop as follows — note that I am putting them together in a <code>list</code> to do so:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (set <span class="cf">in</span> <span class="fu">list</span>(set1, set2, set3)) {</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">mean</span>(set))</span>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (vec <span class="cf">in</span> <span class="fu">list</span>(vec1, vec2, vec3)) {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="fu">mean</span>(vec))</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.66667
@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>A more compact and elegant way of iterating is using <em>functional programming</em>, where a <strong>function does the iteration</strong> — here, the <code>map()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[[1]]
 [1] 31.66667
@@ -342,16 +342,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>The second argument (<code>.f</code>) is the function that you want to apply to each element of the collection.</li>
 <li>The name of that function is written without parentheses: <code>mean</code> and not <code>mean()</code>!</li>
 </ul>
-<p>Under the hood, the function <code>mean()</code> will be run three times, each time with one of the sets as its argument.</p>
+<p>Under the hood, the function <code>mean()</code> will be run three times, each time with one of the vectors as its argument.</p>
 <p><br></p>
 </section>
-<section id="more-on-map" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="more-on-map"><span class="header-section-number">3</span> More on <code>map()</code></h2>
+<section id="beyond-the-basics-of-map" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="beyond-the-basics-of-map"><span class="header-section-number">3</span> Beyond the basics of <code>map()</code></h2>
 <section id="returning-vectors" class="level3">
 <h3 class="anchored" data-anchor-id="returning-vectors">Returning vectors</h3>
 <p>By default, <code>map()</code> will return a list. But in some cases, like here, we may prefer to get a vector instead. We can do this with a slight variant on <code>map()</code>, <code>map_vec()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 31.66667 24.00000 48.33333</code></pre>
 </div>
@@ -363,42 +363,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>What if we need to pass additional arguments to the function that <code>map()</code> calls for us?</p>
 <p>For example, let’s say we had an <code>NA</code> in our data, which means that by default, <code>mean()</code> will return <code>NA</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the second element of set1 to 2</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>set1[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>set1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the second element of vec1 to 2</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>vec1[<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>vec1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  3 NA 18</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] NA</code></pre>
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]       NA 24.00000 48.33333</code></pre>
 </div>
 </div>
+<hr style="height:1pt; visibility:hidden;">
 <p>We can avoid this by using <code>na.rm = TRUE</code> in a stand-alone call to <code>mean()</code>…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.5</code></pre>
 </div>
 </div>
 <p>…but how can we do that with the <code>map()</code> function? The below doesn’t work:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> <span class="fu">mean</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> <span class="fu">mean</span>(<span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-error">
 <pre><code>Error in mean.default(na.rm = TRUE): argument "x" is missing, with no default</code></pre>
 </div>
 </div>
-<p>Instead, we need to <strong>pass any additional arguments separately</strong>, basically as if they were arguments of <code>map()</code>:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Instead, we need to pass any additional arguments <strong>separately</strong>, basically as if they were arguments of <code>map()</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.50000 24.00000 48.33333</code></pre>
 </div>
@@ -407,23 +409,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="defining-an-anonymous-function-within-map" class="level3">
 <h3 class="anchored" data-anchor-id="defining-an-anonymous-function-within-map">Defining an anonymous function within <code>map()</code></h3>
-<p>It <em>is</em> possible to call the function with parentheses, but this would essentially entail defining a function on the fly, which you can do as follows:</p>
+<p>It <em>is</em> possible to write the function call within <code>map()</code> using parentheses — but this would essentially entail defining a function on the fly, which you can do as follows:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.50000 24.00000 48.33333</code></pre>
 </div>
 </div>
-<p>In practice, the above syntax is most commonly used in slighly more complex situations. For example, you may want to count the number of <code>NA</code>s in the following way, where the <code>is.na()</code> function is nested within the <code>sum()</code> function:</p>
+<p>In practice, the above syntax is most commonly used in slighly more complex situations. For example, you may want to <strong>count the number of <code>NA</code>s</strong> in the following way, where the <code>is.na()</code> function is nested within the <code>sum()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(set1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">is.na</span>(vec1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1</code></pre>
 </div>
 </div>
 <p>This poses a challenge to the standard <code>map()</code> syntax, but can be easily achieved with the anonymous function syntax shown above:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1 0 0</code></pre>
 </div>
@@ -432,23 +434,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="exercise-1" class="level3 exercise">
 <h3 class="anchored" data-anchor-id="exercise-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1</h3>
-<p><strong>A)</strong> Once again compute the mean of the three sets of measurements with <code>map()</code>, but now also pass the argument <code>trim = 0.1</code> to the <code>mean()</code> function.</p>
+<p><strong>A)</strong> Once again compute the mean of the three sets of measurements with <code>map()</code>, but now also pass the argument <code>trim = 0.1</code> to the <code>mean()</code> function (If you’re interested, type <code>?mean</code> for some information about what this argument does.)</p>
 <details>
 <summary>
 Click here for the solution
 </summary>
+<hr style="height:1pt; visibility:hidden;">
 <p>Arguments are added as if they were arguments of <code>map()</code> / <code>map_vec()</code>, so you simply add <code>trim = 0.1</code> after a comma and don’t use additional parentheses:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> mean, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.50000 24.00000 48.33333</code></pre>
 </div>
 </div>
 <p>Which runs the following under the hood:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(set3, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec2, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(vec3, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">trim =</span> <span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </details>
 <hr style="height:1pt; visibility:hidden;">
@@ -458,7 +461,7 @@ Click here for the solution
 Click here for the solution
 </summary>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> length)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3 3 3</code></pre>
 </div>
@@ -470,7 +473,7 @@ Click here for the solution
 <h3 class="anchored" data-anchor-id="exercise-2"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h3>
 <p><strong>A)</strong> R does not have a built-in function to compute the standard error. Here is how we can do so — by taking the standard deviation using the <code>sd()</code> function and dividing it by the square root (<code>sqrt()</code>) of the number of observations (<code>length()</code>):</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(set1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(set1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sd</span>(vec1, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>(vec1))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.123724</code></pre>
 </div>
@@ -498,20 +501,21 @@ Click here for the full solution
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>((x)))</span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3), <span class="at">.f =</span> se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3), <span class="at">.f =</span> se)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1]  6.123724  5.507571 22.526528</code></pre>
 </div>
 </div>
 </details>
-<p><strong>B)</strong> Now, restructure your code to compute the standard error with an anonymous function within <code>map_vec()</code>.</p>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>B)</strong> Now, restructure your code to compute the standard error with an anonymous function inside <code>map_vec()</code>.</p>
 <details>
 <summary>
 Click here for the solution
 </summary>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> <span class="fu">list</span>(set1, set2, set3),</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">.x =</span> <span class="fu">list</span>(vec1, vec2, vec3),</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">length</span>((x)))</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -524,7 +528,7 @@ Click here for the solution
 </section>
 <section id="automaticimplicit-iteration-in-r" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="automaticimplicit-iteration-in-r"><span class="header-section-number">4</span> Automatic/implicit iteration in R</h2>
-<p>The example we used above with the three sets of vectors is rather contrived. This speaks to the fact that in R, we don’t have to explicitly iterate with <code>for</code> loops or <code>map()</code> except in more complex situations — most commonly when we’ve written our own function.</p>
+<p>The example we used above with the three sets of vectors is rather contrived. This speaks to the fact that in R, we don’t have to explicitly iterate with <code>for</code> loops or <code>map()</code> except in more complex situations.</p>
 <p>This is because first, iteration is in many cases “automagic” in R due to vectorization, so we don’t have to iterate over the values in vectors:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>measurements_inch <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">74</span>, <span class="dv">18</span>)</span>
@@ -560,36 +564,36 @@ Iterate across groups with <code>summarize()</code> and <code>.by</code> <em>(Cl
 </div>
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Speaking of implicit iteration in data frames, <em>dplyr</em> has functionality to repeat operations across subsets of the data without having to explicitly iterate over these subsets. For example, once the data from the above three-set example is in a data frame…</p>
+<p>Speaking of implicit iteration in data frames, <em>dplyr</em> has functionality to repeat operations across subsets of the data without having to explicitly iterate over these subsets. For example, once the data from the above three-vector example is in a data frame…</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>sets_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">measurement =</span> <span class="fu">c</span>(set1, set2, set3),</span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">set =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"set1"</span>, <span class="st">"set2"</span>,  <span class="st">"set3"</span>), <span class="at">each =</span> <span class="dv">3</span>) </span>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>all <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">value =</span> <span class="fu">c</span>(vec1, vec2, vec3),</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">group =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"vec1"</span>, <span class="st">"vec2"</span>,  <span class="st">"vec3"</span>), <span class="at">each =</span> <span class="dv">3</span>) </span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>sets_df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>all</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>  measurement  set
-1           3 set1
-2          NA set1
-3          18 set1
-4          33 set2
-5          14 set2
-6          25 set2
-7          10 set3
-8          88 set3
-9          47 set3</code></pre>
+<pre><code>  value group
+1     3  vec1
+2    NA  vec1
+3    18  vec1
+4    33  vec2
+5    14  vec2
+6    25  vec2
+7    10  vec3
+8    88  vec3
+9    47  vec3</code></pre>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
 <p>…we can use <code>summarize()</code> with <code>.by</code> to repeat computations across our sets:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>sets_df <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(measurement, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> set)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>all <span class="sc">|&gt;</span> <span class="fu">summarize</span>(<span class="at">mean =</span> <span class="fu">mean</span>(value, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="at">.by =</span> group)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   set     mean
-1 set1 10.50000
-2 set2 24.00000
-3 set3 48.33333</code></pre>
+<pre><code>  group     mean
+1  vec1 10.50000
+2  vec2 24.00000
+3  vec3 48.33333</code></pre>
 </div>
 </div>
 </div>
@@ -646,7 +650,8 @@ An alternative approach: the <code>across()</code> function <em>(Click to expand
 # ℹ 2 more variables: sex &lt;int&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Notes on <code>across()</code> syntax as shown above:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Notes on the <code>across()</code> syntax as shown above:</p>
 <ul>
 <li>Its main arguments are:
 <ul>
@@ -655,7 +660,7 @@ An alternative approach: the <code>across()</code> function <em>(Click to expand
 </ul></li>
 <li>You should always make an explicit column selection, so for the simplest case of operating across all columns, it’s best to use <code>everything()</code><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</li>
 </ul>
-<p>However, with <code>summaris(across())</code> you can much more easily make group-wise computations than with <code>map()</code>:</p>
+<p>On the other hand, it is much eaier to perform group-wise computations with <code>summarise(across())</code> than with <code>map()</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">everything</span>(), <span class="at">.fns =</span> n_distinct), <span class="at">.by =</span> species)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -669,7 +674,8 @@ An alternative approach: the <code>across()</code> function <em>(Click to expand
 # ℹ 2 more variables: sex &lt;int&gt;, year &lt;int&gt;</code></pre>
 </div>
 </div>
-<p>Finally, if you need to use additional arguments for the function that <code>across()</code> calls, you should use the on-the-fly function notation that was explained in the first box on this page:</p>
+<hr style="height:1pt; visibility:hidden;">
+<p>Finally, if you need to use additional arguments for the function that <code>across()</code> calls, you should use the anonymous function notation that was explained in the first box on this page:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(</span>
@@ -689,7 +695,7 @@ An alternative approach: the <code>across()</code> function <em>(Click to expand
 <hr style="height:1pt; visibility:hidden;">
 <section id="exercise-2-1" class="level3 exercise">
 <h3 class="anchored" data-anchor-id="exercise-2-1"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2</h3>
-<p><strong>A)</strong> Use <code>map_vec()</code> to compute the mean value for <em>each</em> column in the penguins dataframe. Why are you getting warning messages and <code>NA</code>s?</p>
+<p><strong>A)</strong> Use <code>map_vec()</code> to compute the mean value for <em>each</em> column in the <code>penguins</code> dataframe. Why are you getting warning messages and <code>NA</code>s?</p>
 <details>
 <summary>
 Click here for the solution
@@ -713,7 +719,7 @@ flipper_length_mm       body_mass_g               sex              year
 </div>
 <p>The warning messages and <code>NA</code>s (despite using <code>na.rm = TRUE</code>) appear because not some of the columns, like <code>species</code> and <code>island</code>, don’t contain numbers at all.</p>
 </details>
-<p><strong>B)</strong> Can you modify the penguins dataframe before passing it to <code>map_vec()</code> so it only contains columns with numbers?</p>
+<p><strong>B)</strong> Can you modify the <code>penguins</code> dataframe before passing it to <code>map_vec()</code> so it only contains columns with numbers?</p>
 <details>
 <summary>
 Click here for a hint on the general workflow
@@ -750,6 +756,21 @@ Click here for the solution
          43.92193          17.15117         200.91520        4201.75439 
              year 
        2008.02907 </code></pre>
+</div>
+</div>
+</details>
+<p><strong>C)</strong> Count the number of <code>NA</code>s in each column of the <code>penguins</code> dataframe within <code>map_vec()</code>.</p>
+<details>
+<summary>
+Click here for the solution
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">map_vec</span>(<span class="at">.x =</span> penguins, <span class="at">.f =</span> <span class="cf">function</span>(x) <span class="fu">sum</span>(<span class="fu">is.na</span>(x)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          species            island    bill_length_mm     bill_depth_mm 
+                0                 0                 2                 2 
+flipper_length_mm       body_mass_g               sex              year 
+                2                 2                11                 0 </code></pre>
 </div>
 </div>
 </details>
