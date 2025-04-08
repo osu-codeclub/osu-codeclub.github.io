@@ -1,0 +1,401 @@
+---
+title: "Introduction to `gt` Tables - 01"
+subtitle: "Making *Beautiful* Tables in R."
+author:
+  - "Horacio Lopez-Nicora"
+date: "2025-04-08"
+categories: [gt, tables, tidyverse]
+title-block-banner: false
+image: img/gt_logo.png
+alttext: "The logo of the `gt` package features a cube constructed from tables, and is designed by Iannone and colleagues."
+---
+
+<br>
+
+[![](img/gt_logo.png)](https://gt.rstudio.com/index.html)
+
+<br>
+
+## Introduction
+
+#### Overview
+
+Welcome to this session on the `gt` package in R! The `gt` package is a powerful tool designed to help you create and customize tables with ease. Whether you're preparing data for a report, presentation, or publication, `gt` offers a range of features to make your tables both informative and visually appealing. In this session, we'll explore the capabilities of the `gt` package, guiding you through its basic and advanced functionalities.
+
+The purpose of this session is to provide you with a comprehensive understanding of how to use the `gt` package effectively. We'll start with the basics, such as installing the package and creating simple tables, and gradually move on to more advanced features like conditional formatting and grouping rows and columns. By the end of this session, you'll be equipped with the skills to create professional-quality tables that can improve your data presentations.
+
+#### Session key topics
+
+1.  Installation and Setup: Install the `gt` package and set up your environment.
+2.  Creating Your First Table: Get hands-on experience with creating a basic table from a data frame.
+3.  Customizing Tables: Discover how to add titles, subtitles, footnotes, and format columns.
+4.  Advanced Table Features: Explore grouping, conditional formatting, and applying themes.
+5.  Practical Example: Build a comprehensive table using multiple features.
+6.  Q&A and Wrap-Up: Address any questions and recap the key points.
+
+Let's get started and unlock the potential of the `gt` package for your data visualization needs!
+
+#### The `gt` Tables Workflow
+
+[![](img/gt_workflow.png)](https://gt.rstudio.com/index.html)
+
+<br>
+
+Please let's go ahead and install the `gt` package first:
+
+```{r, eval = FALSE}
+install.packages("gt")
+```
+
+## Our data set
+
+#### Creating our Data.Frame
+
+We are going to create a simple data frame using information from the `gapminder` package.
+
+```{r}
+simple_table <- data.frame(
+  Country = c("Brazil", "Italy", "Paraguay", "USA"),
+  Capital = c("Brasília", "Roma", "Asunción", "Washington D.C."),
+  Continent = c("Americas", "Europe", "Americas", "Americas"),
+  LifeExp = c(72.4, 80.5, 71.8, 78.2)
+)
+```
+
+::: callout-tip
+## Recall that \`as_tibble()\` turns an existing object, such as a data frame or matrix, into a so-called tibble.
+:::
+
+#### We will also use the `palmerpenguins` data set
+
+![Illustration by [Allison Horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html)](img/palmerpenguins_hex.png){width="50%"}
+
+We are going to continue using our 🐧 data set from the package [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/). If you haven't done so, please install that package first:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr. Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.
+
+We'll now load the package, along with the `gt` and `tidyverse`:
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+library(gt)
+```
+
+Once you've loaded that package you will have a data frame called `penguins` at your disposal --- let's take a look:
+
+```{r}
+penguins
+```
+
+```{r}
+# Or glimpse() for a sort of transposed view, so we can see all columns:
+glimpse(penguins)
+```
+
+<br>
+
+## Creating a Simple Table from a Data Frame
+
+Creating a table with the `gt` package is remarkably simple. You begin by selecting a data frame that you want to display. For this session, we'll use a data.frame we created and the Palmer Penguins dataset.
+
+After loading the dataset, you can create a basic table by passing the data frame to the `gt()` function. This function generates a table object that you can print and view.
+
+```{r}
+# Create a simple table
+simple_table %>% gt()
+```
+
+The simplicity of this process allows you to quickly transform raw data into a structured table format, making it easier to analyze and present.
+
+### Basic Formatting Options
+
+Once you have created your table, `gt` offers several basic formatting options to enhance its appearance and readability. Let's first take a look at the anatomy of a `gt` table.
+
+[![](img/parts_of_a_gt_table.png)](https://gt.rstudio.com/index.html)
+
+You can add titles and subtitles to provide context and make the table more informative. The `tab_header()` function allows you to specify these elements. Additionally, you can format the columns to display numbers, dates, or currencies appropriately using functions like `fmt_number()`, `fmt_date()`, and `fmt_currency()`. These formatting options help ensure that the data is presented clearly and professionally. By applying these basic formatting techniques, you can significantly improve the visual appeal and utility of your tables.
+
+Let's go ahead and add a title and subtitle to our basic simple table.
+
+```{r}
+# Add titles and subtitles
+simple_table %>% gt() %>% 
+  tab_header(
+    title = "Life Expectation in 2007",
+    subtitle = "Data retrieved from the `gapminder` package"
+  )
+```
+
+Let's say we want, for some reason to express LifeExp with two decimal. We can do this using the function `fmt_number`.
+
+```{r}
+# Format columns with numbers
+simple_table %>% gt() %>%
+  fmt_number(decimals = 2)
+```
+
+::: callout-tip
+## If there are several columns we would like to apply `fmt_number`, then we can use the following statement: `fmt_number(columns = vars(column_1, column_2, column_3, column_4), decimals = 2)`
+:::
+
+Footnotes are also an essential part of data presentation, providing additional context, explanations, or references that enhance the understanding of the data. Using footnotes can help clarify complex information, cite sources, or highlight important details that might not be immediately apparent from the table itself.
+
+In the `gt`package, the `tab_footnote` function allows you to add these valuable annotations directly to your tables, making them more informative and professional.
+
+Using our previous example, let's add a footnote to our simple table.
+
+```{r}
+# Add titles and subtitles and footnote
+simple_table %>% gt() %>% 
+  tab_header(
+    title = "Life Expectation in 2007",
+    subtitle = "Data retrieved from the `gapminder` package"
+  ) %>% 
+  tab_footnote(
+    footnote = "Data retreived from `gapminder`",
+    locations = cells_title(groups = "title")
+  )
+
+```
+
+Now let's put in practice what we learn with the Palmer Penguin data set.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+-   Create a simple table using `gt` and the Palmer Penguins data set.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+penguins %>% gt()
+```
+
+</details>
+:::
+
+<br>
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+-   Create a simple table and add titles and subtitles using `gt` and the Palmer Penguins data set.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Create a table with titles and subtitles
+penguins %>% gt() %>%
+  tab_header(
+    title = "Palmer Penguins Data",
+    subtitle = "Species, Island, and Measurements"
+  )
+
+```
+
+</details>
+
+-   Create a simple table and add titles, subtitles, and a footnote using `gt` and the Palmer Penguins data set. The location of the footnote should be in the subtitle.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Create a table with titles, subtitles, and footnote
+penguins %>% gt() %>%
+  tab_header(
+    title = "Palmer Penguins Data",
+    subtitle = "Species, Island, and Measurements"
+  ) %>% 
+  tab_footnote(
+    footnote = "Data collected by Dr. Kristen Gorman",
+    locations = cells_title(groups = "subtitle")
+  )
+
+```
+
+</details>
+:::
+
+<br>
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+-   Create a simple table and add titles, subtitles, and a footnote using `gt` and the Palmer Penguins data set. The location of the footnote should be in the subtitle.
+-   Additionally, make sure that all numerical variables are presented with two decimal places.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Create a table with titles, subtitles, and footnote
+penguins %>% gt() %>%
+  tab_header(
+    title = "Palmer Penguins Data",
+    subtitle = "Species, Island, and Measurements"
+  ) %>% 
+  tab_footnote(
+    footnote = "Data collected by Dr. Kristen Gorman",
+    locations = cells_title(groups = "subtitle")
+  ) %>% 
+  fmt_number(
+    columns = vars(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g),
+    decimals = 2
+  )
+
+```
+
+</details>
+:::
+
+<br>
+
+### How can we customize our tables to include more advanced features?
+
+#### Apply Conditional Formatting
+
+In this section, we'll explore advanced features of the `gt` package to enhance your tables' functionality and visual appeal. We'll focus on conditional formatting and labeling columns, essential for creating informative and organized tables. 
+
+Conditional formatting highlights specific values based on criteria, drawing attention to crucial data points and enhancing readability. The `tab_style` function in the gt package allows you to apply styles to cells that meet certain conditions.
+
+For example, you might want to highlight cells in the *LifeExp* column with a light blue background to emphasize these values:
+
+```{r, warning = FALSE}
+# Apply conditional formatting to highlight specific values
+simple_table %>% gt() %>%
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(columns = vars(LifeExp))
+  )
+```
+
+In this example, the `tab_style` function is used to apply a *light blue* fill to the cells in the *LifeExp* column. This visual cue helps to make the *LifeExp* stand out, making it easier for viewers to identify and compare these values.
+
+#### Customize the column labels in your table
+
+The `cols_label` function in the `gt` package allows you to customize the column labels in your table. This is particularly useful when you want to make your table more readable and user-friendly by providing descriptive names for your columns. Instead of using the default column names from your data frame, you can specify more meaningful labels that better convey the content of each column.
+
+For example, you can rename columns in our *simple_table* data set to provide clearer descriptions:
+
+```{r}
+# Group rows by species
+simple_table %>%  gt() %>%
+  cols_label(
+    LifeExp = "Life Expectation"
+  )
+```
+
+In this example, the `cols_label` function is used to change the column names to more descriptive labels. This helps viewers understand the measurements more easily, enhancing the overall clarity and effectiveness of the table.
+
+**Let's put into practice these new skills!**
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 4
+
+-   In this exercise, use the Palmer Penguins data set and use the the `tab_style` function to apply a color fill to the cells in the `bill_length_mm` column.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Apply conditional formatting to highlight specific values
+penguins %>% gt() %>%
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(columns = vars(bill_length_mm))
+  )
+
+```
+
+</details>
+
+-   Additionally, re-label all columns with numeric values.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Apply conditional formatting to highlight specific values
+penguins %>% gt() %>%
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(columns = vars(bill_length_mm))
+  ) %>% 
+  cols_label(
+    bill_length_mm = "Bill Length (mm)",
+    bill_depth_mm = "Bill Depth (mm)",
+    flipper_length_mm = "Flipper Length (mm)",
+    body_mass_g = "Body Mass (g)"
+  )
+```
+
+</details>
+:::
+
+<br>
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 5
+
+- Combine everything we learn today and create a complete and customized table using the Palmer Penguins data set. 
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Create a table with titles, subtitles, and footnote
+penguins %>% gt() %>%
+  tab_header(
+    title = "Palmer Penguins Data",
+    subtitle = "Species, Island, and Measurements"
+  ) %>% 
+  tab_footnote(
+    footnote = "Data collected by Dr. Kristen Gorman",
+    locations = cells_title(groups = "title")
+  ) %>% 
+  fmt_number(
+    columns = vars(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g),
+    decimals = 2
+  ) %>% 
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(columns = vars(bill_length_mm))
+  ) %>% 
+  cols_label(
+    bill_length_mm = "Bill Length (mm)",
+    bill_depth_mm = "Bill Depth (mm)",
+    flipper_length_mm = "Flipper Length (mm)",
+    body_mass_g = "Body Mass (g)"
+  )
+
+```
+
+</details>
+:::
+
+<br>
