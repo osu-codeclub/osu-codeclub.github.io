@@ -1,0 +1,345 @@
+---
+title: "Introduction to `gt` Tables - 02"
+subtitle: "Making *Beautiful* Tables in R."
+author:
+  - "Horacio Lopez-Nicora"
+date: "2025-04-15"
+categories: [gt, tables, tidyverse]
+title-block-banner: false
+image: img/gt_logo.png
+alttext: "The logo of the `gt` package features a cube constructed from tables, and is designed by Iannone and colleagues."
+---
+
+<br>
+
+[![](img/gt_logo.png)](https://gt.rstudio.com/index.html)
+
+<br>
+
+## Introduction
+
+#### Overview
+
+Welcome back to the second week of our `gt` table tutorial! Today, we'll dive deeper into the advanced features of the `gt` package. We'll start by exploring conditional formatting to highlight specific values in your tables, making important data points stand out. Next, we'll learn how to group rows and columns to create more organized and intuitive tables. Finally, we'll cover how to customize column labels to enhance the readability and user-friendliness of your tables. By the end of this session, you'll have a solid understanding of these advanced techniques, enabling you to create sophisticated and professional tables for your data presentations. Let's get started!
+
+#### Recall the `gt` Tables Workflow
+
+[![](img/gt_workflow.png)](https://gt.rstudio.com/index.html)
+
+<br>
+
+Please let's go ahead and install the `gt` package first:
+
+```{r, eval = FALSE}
+install.packages("gt")
+```
+
+## Our data set
+
+#### We will use the `palmerpenguins` data set
+
+![Illustration by [Allison Horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html)](img/palmerpenguins_hex.png){width="50%"}
+
+We are going to continue using our 🐧 data set from the package [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/). If you haven't done so, please install that package first:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr. Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.
+
+We'll now load the package, along with the `gt` and `tidyverse`:
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+library(gt)
+```
+
+Once you've loaded that package you will have a data frame called `penguins` at your disposal --- let's take a look:
+
+```{r}
+penguins
+```
+
+```{r}
+# Or glimpse() for a sort of transposed view, so we can see all columns:
+glimpse(penguins)
+```
+
+<br>
+
+## Create table and label column names
+
+For this session, we'll be working with the Palmer Penguins data set. After loading the data set, you can create a basic table by passing the data frame to the `gt()` function. This function generates a table object that you can print and view.
+
+Let's apply what we learned last week and relabel the columns of the Palmer Penguins data set.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+-   Create a simple table using `gt` and the Palmer Penguins data set and relabel the columns. Please make the column names in **bold**.
+
+<details>
+
+<summary>Hint (click here)</summary>
+
+For the label argument, you can either provide a character vector directly or wrap it in `md()` to enable *Markdown* syntax (such as **bold text**). Save and call this table: `penguins_relabeled`
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+penguins_relabeled <-  penguins %>%  
+  gt() %>% 
+  cols_label(
+    species = md('**Species**'),
+    island = md('**Island**'),
+    bill_length_mm = md('**Bill Length (mm)**'),
+    bill_depth_mm = md('**Bill Depth (mm)**'),
+    flipper_length_mm = md('**Flipper Length (mm)**'),
+    body_mass_g = md('**Body Mass (g)**'),
+    sex = md('**Sex**'),
+    year = md('**Year**'),
+  )
+
+penguins_relabeled
+```
+
+</details>
+:::
+
+<br>
+
+## Highlight Based on Multiple Conditions
+
+Last week, we introduced conditional highlighting in `gt`. Today, we'll further explore how to highlight cells based on multiple conditions.
+
+```{r, warning = FALSE}
+# Apply conditional formatting to highlight bill lengths above 45 mm and body mass above 4000 grams
+penguins_relabeled %>%
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(
+      columns = c(bill_length_mm),
+      rows = bill_length_mm > 45
+    )
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "lightyellow"),
+    locations = cells_body(
+      columns = c(body_mass_g),
+      rows = body_mass_g > 4000
+    )
+  )
+```
+
+The simplicity of this process allows you to quickly identify patterns in the raw data that may be worth further investigation.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+- Highlight rows for Adelie Penguins and Biscoe Island.
+- What can you learn from this highlighted table?
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+penguins_relabeled %>%
+  tab_style(
+    style = list(cell_fill(color = "lightcoral")),
+    locations = cells_body(
+      rows = species == "Adelie" & island == "Biscoe"
+    )
+  ) %>% 
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(
+      columns = c(bill_length_mm),
+      rows = bill_length_mm > 45
+    )
+  ) %>%
+  tab_style(
+    style = cell_fill(color = "lightyellow"),
+    locations = cells_body(
+      columns = c(body_mass_g),
+      rows = body_mass_g > 4000
+    )
+  )
+```
+
+</details>
+:::
+
+<br>
+
+
+## Group by Rows and Columns
+
+Once you have created your table, `gt` offers several basic formatting options to enhance its appearance and readability. Let's recall the anatomy of a `gt` table.
+
+[![](img/parts_of_a_gt_table.png)](https://gt.rstudio.com/index.html)
+
+Last week we learned that you can add titles and subtitles to provide context and make the table more informative. The `tab_header()` function allows you to specify these elements. Additionally, you can format the columns to display numbers, dates, or currencies appropriately using functions like `fmt_number()`, `fmt_date()`, and `fmt_currency()`. These formatting options help ensure that the data is presented clearly and professionally. By applying these basic formatting techniques, you can significantly improve the visual appeal and utility of your tables.
+
+Now let's group rows and column by a specific classification, using the `tab_row_group` and `tab_spanner` functions to group the data by these categories.
+
+#### Grouping Rows by Species
+
+In this example, the `tab_row_group` function is used to group rows by the species column. Each species is given a label, making it easier to distinguish between the different groups of penguins.
+
+```{r, warning=FALSE}
+# Group rows by species and island
+penguins_relabeled %>%
+  tab_row_group(
+    label = md("***Adelie Penguins***"),
+    rows = species == "Adelie"
+  ) %>%
+  tab_row_group(
+    label = md("***Chinstrap Penguins***"),
+    rows = species == "Chinstrap"
+  ) %>%
+  tab_row_group(
+    label = md("***Gentoo Penguins***"),
+    rows = species == "Gentoo"
+  )
+```
+
+#### Grouping Columns by Measurements
+
+In this example, the `tab_spanner` function is used to group columns related to measurements under a common label **"Measurements"**. This helps to categorize the columns and make the table more organized.
+
+```{r, warning=FALSE}
+# Group columns by measurements
+penguins_relabeled %>%
+  tab_spanner(
+    label = md("**Measurements**"),
+    columns = c(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+  )
+```
+
+In the following exercise, both tab_row_group and tab_spanner functions can be used to group rows by island and columns by measurements. This will create a well-organized table that is easy to read and interpret.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 3
+
+- Grouping Rows by Island and Columns by Measurements
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+# Group rows by species and columns by measurements
+penguins_relabeled %>% 
+  tab_row_group(
+    label = md("***Adelie Penguins***"),
+    rows = species == "Adelie"
+  ) %>%
+  tab_row_group(
+    label = md("***Chinstrap Penguins***"),
+    rows = species == "Chinstrap"
+  ) %>%
+  tab_row_group(
+    label = md("***Gentoo Penguins***"),
+    rows = species == "Gentoo"
+  ) %>%
+  tab_spanner(
+    label = md("**Measurements**"),
+    columns = c(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+  )
+```
+
+</details>
+:::
+
+<br>
+
+## Combining data wrangling with the `gt` package
+
+Let's combine skills we learned in previous sessions with `gt`.
+
+#### Long to wide format
+
+First, let's use `pivot_wider` to format our original data set.
+
+```{r, warning = FALSE}
+penguins <- palmerpenguins::penguins %>%  
+  filter(!is.na(sex))
+
+penguin_counts <- penguins %>%  
+  mutate(year = as.character(year)) %>%  
+  group_by(species, island, sex, year) %>%  
+  summarise(n = n(), .groups = 'drop')
+
+penguin_counts_wider <- penguin_counts %>%  
+  pivot_wider(
+    names_from = c(species, sex),
+    values_from = n
+  ) %>%  
+  # Make missing numbers (NAs) into zero
+  mutate(across(.cols = -(1:2), .fns = ~replace_na(., replace = 0))) %>%  
+  arrange(island, year)
+```
+
+Now let's format this table and make it look nice.
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 4
+
+- Add labels such as a title, a subtitle and group the columns.
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+penguin_counts_wider %>%  
+  gt() %>%  
+  cols_label(
+    island = 'Island',
+    year = 'Year',
+    Adelie_female = 'Adelie (female)',
+    Adelie_male = 'Adelie (male)',
+    Chinstrap_female = 'Chinstrap (female)',
+    Chinstrap_male = 'Chinstrap (male)',
+    Gentoo_female = 'Gentoo (female)',
+    Gentoo_male = 'Gentoo (male)',
+  ) %>%  
+  tab_spanner(
+    label = md('**Adelie**'),
+    columns = 3:4
+  ) %>%  
+  tab_spanner(
+    label = md('**Chinstrap**'),
+    columns = c('Chinstrap_female', 'Chinstrap_male')
+  ) %>%  
+  tab_spanner(
+    label =  md('**Gentoo**'),
+    columns = contains('Gentoo')
+  ) %>%  
+  tab_header(
+    title = 'Penguins in the Palmer Archipelago',
+    subtitle = 'Data is courtesy of the {palmerpenguins} R package'
+  ) 
+```
+
+</details>
+:::
+
+<br>
+
+
