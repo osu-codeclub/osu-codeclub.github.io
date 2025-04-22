@@ -1,9 +1,9 @@
 ---
-title: "Introduction to `gt` Tables - 02"
+title: "Introduction to `gt` Tables - 03"
 subtitle: "Making *Beautiful* Tables in R."
 author:
   - "Horacio Lopez-Nicora"
-date: "2025-04-15"
+date: "2025-04-22"
 categories: [gt, tables, tidyverse]
 title-block-banner: false
 image: img/gt_logo.png
@@ -20,7 +20,7 @@ alttext: "The logo of the `gt` package features a cube constructed from tables, 
 
 #### Overview
 
-Welcome back to the second week of our `gt` table tutorial! Today, we'll dive deeper into the advanced features of the `gt` package. We'll start by exploring conditional formatting to highlight specific values in your tables, making important data points stand out. Next, we'll learn how to group rows and columns to create more organized and intuitive tables. Finally, we'll cover how to customize column labels to enhance the readability and user-friendliness of your tables. By the end of this session, you'll have a solid understanding of these advanced techniques, enabling you to create sophisticated and professional tables for your data presentations. Let's get started!
+In the final session of our `gt` tutorial series, we’ll explore how to take your tables to the next level using the `gtExtras` package. You'll learn how to add sparklines, color scales, bar and density plots, and visual summaries. Additionally, you will learn how to save your polished tables as PNG, PDF, or HTML for use in reports and presentations. Let's get started!
 
 #### Recall the `gt` Tables Workflow
 
@@ -28,10 +28,17 @@ Welcome back to the second week of our `gt` table tutorial! Today, we'll dive de
 
 <br>
 
-Please let's go ahead and install the `gt` package first:
+Please let's go ahead and install the `gt`, `gtExtras`, and `svglite` package first:
 
 ```{r, eval = FALSE}
 install.packages("gt")
+library(gt)
+
+install.packages("gtExtras")
+library(gtExtras)
+
+install.packages("svglite")
+library(svglite)
 ```
 
 ## Our data set
@@ -51,9 +58,12 @@ install.packages("palmerpenguins")
 We'll now load the package, along with the `gt` and `tidyverse`:
 
 ```{r}
-library(palmerpenguins)
+# Load necessary packages
 library(tidyverse)
 library(gt)
+library(gtExtras)
+library(svglite)
+library(palmerpenguins)
 ```
 
 Once you've loaded that package you will have a data frame called `penguins` at your disposal --- let's take a look:
@@ -69,24 +79,54 @@ glimpse(penguins)
 
 <br>
 
-## Create table and label column names
+## Color-Coding with `gt_color_rows()`
 
-For this session, we'll be working with the Palmer Penguins data set. After loading the data set, you can create a basic table by passing the data frame to the `gt()` function. This function generates a table object that you can print and view.
+The gt_color_rows() function transforms your tables from plain data displays into intuitive visual insights by applying gradient color scales to numerical columns. This powerful feature enables readers to instantly identify patterns, outliers, and value distributions without requiring careful examination of each number, making complex data relationships immediately apparent through color intensity.
 
-Let's apply what we learned last week and relabel the columns of the Palmer Penguins data set.
+In addition to using color-coding with `gt_color_rows()`, we'll also implement `gt_theme()` to create a consistent and professional visual style for our tables, ensuring they align with our overall design aesthetic.
+
+```{r, warning = FALSE}
+# Summarize data
+penguins_summary <- penguins %>%
+  filter(!is.na(bill_length_mm), !is.na(flipper_length_mm), !is.na(body_mass_g)) %>%
+  group_by(species) %>%
+  summarize(
+    Mean_Bill_Length = mean(bill_length_mm),
+    Mean_Flipper_Length = mean(flipper_length_mm),
+    Mean_Body_Mass = mean(body_mass_g),
+    .groups = "drop"
+  )
+
+# Create styled table
+penguins_summary %>%
+  gt() %>%
+  fmt_number(everything(), decimals = 1) %>%
+  tab_header(
+    title = "Penguin Species Summary",
+    subtitle = "Mean values for bill length, flipper length, and body mass"
+  ) %>%
+  gt_theme_538() %>% 
+  gt_color_rows(
+    columns = Mean_Bill_Length,
+    palette = "ggsci::orange_material"
+  )
+
+```
 
 <br>
 
 ::: exercise
 #### {{< fa user-edit >}} Exercise 1
 
--   Create a simple table using `gt` and the Palmer Penguins data set and relabel the columns. Please make the column names in **bold**.
+-   Using `penguins_summary`, create a similar table using a different `gt_theme()`, try for instance `gt_theme_nytimes()` or `gt_theme_dot_matrix()`. Additionally, try changing the palette to "ggsci::blue_material" or "viridis".
+
+- Finally, apply the `gt_color_rows()` to the three columns: Mean_Bill_Length, Mean_Flipper_Length, and Mean_Body_Mass. 
 
 <details>
 
 <summary>Hint (click here)</summary>
 
-For the label argument, you can either provide a character vector directly or wrap it in `md()` to enable *Markdown* syntax (such as **bold text**). Save and call this table: `penguins_relabeled`
+Use the `c()` function after `columns =`. 
 
 </details>
 
@@ -95,20 +135,18 @@ For the label argument, you can either provide a character vector directly or wr
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-penguins_relabeled <-  penguins %>%  
-  gt() %>% 
-  cols_label(
-    species = md('**Species**'),
-    island = md('**Island**'),
-    bill_length_mm = md('**Bill Length (mm)**'),
-    bill_depth_mm = md('**Bill Depth (mm)**'),
-    flipper_length_mm = md('**Flipper Length (mm)**'),
-    body_mass_g = md('**Body Mass (g)**'),
-    sex = md('**Sex**'),
-    year = md('**Year**'),
+penguins_summary %>%
+  gt() %>%
+  fmt_number(everything(), decimals = 1) %>%
+  tab_header(
+    title = "Penguin Species Summary",
+    subtitle = "Mean values for bill length, flipper length, and body mass"
+  ) %>%
+  gt_theme_538() %>% 
+  gt_color_rows(
+    columns = c(Mean_Bill_Length, Mean_Flipper_Length, Mean_Body_Mass),
+    palette = "ggsci::blue_material"
   )
-
-penguins_relabeled
 ```
 
 </details>
@@ -116,65 +154,80 @@ penguins_relabeled
 
 <br>
 
-## Highlight Based on Multiple Conditions
+## Merging and Labeling Columns
 
-Last week, we introduced conditional highlighting in `gt`. Today, we'll further explore how to highlight cells based on multiple conditions.
+The `cols_merge()` and `cols_label()` functions provide essential tools for transforming cluttered tables into more digestible and professional displays. By strategically combining related columns and implementing clear, descriptive labels, you'll create tables that communicate your data's story more effectively while reducing visual complexity.
 
 ```{r, warning = FALSE}
-# Apply conditional formatting to highlight bill lengths above 45 mm and body mass above 4000 grams
-penguins_relabeled %>%
-  tab_style(
-    style = cell_fill(color = "lightblue"),
-    locations = cells_body(
-      columns = c(bill_length_mm),
-      rows = bill_length_mm > 45
-    )
-  ) %>%
-  tab_style(
-    style = cell_fill(color = "lightyellow"),
-    locations = cells_body(
-      columns = c(body_mass_g),
-      rows = body_mass_g > 4000
-    )
+# generating the data set
+penguins_stats <- penguins %>%
+  filter(!is.na(sex), !is.na(bill_length_mm)) %>%
+  group_by(species, sex) %>%
+  summarize(
+    Mean_Bill = mean(bill_length_mm),
+    SD_Bill = sd(bill_length_mm),
+    .groups = "drop"
   )
+
+# Merging and labeling columns
+penguins_stats %>%
+  gt() %>%
+  cols_merge(
+    columns = c(Mean_Bill, SD_Bill),
+    pattern = "{1} ± {2}"
+  ) %>%
+  fmt_number(columns = "Mean_Bill", decimals = 1) %>%
+  fmt_number(columns = "SD_Bill", decimals = 2) %>%
+  cols_label(
+    species = "Species",
+    sex = "Sex",
+    Mean_Bill = "Mean ± SD"
+  ) %>%
+  tab_header(
+    title = "Bill Length (mm) by Species and Sex"
+  ) %>% 
+  tab_options(
+    table.width = pct(70)
+    ) %>% 
+  gt_theme_538()
+
 ```
 
-The simplicity of this process allows you to quickly identify patterns in the raw data that may be worth further investigation.
 
 <br>
 
 ::: exercise
 #### {{< fa user-edit >}} Exercise 2
 
-- Highlight rows for Adelie Penguins and Biscoe Island.
-- What can you learn from this highlighted table?
+- Create the same table we produced earlier with the `penguins_stats` data set. This time, format all column labels and the heading in **BOLD** to enhance readability.
+
+- Format both the mean and standard deviation values to display with 1 decimal place (using `decimals = 1`). Instead of specifying each column individually, use the `ends_with()` function to select and format all relevant columns at once.    
 
 <details>
 
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-penguins_relabeled %>%
-  tab_style(
-    style = list(cell_fill(color = "lightcoral")),
-    locations = cells_body(
-      rows = species == "Adelie" & island == "Biscoe"
-    )
-  ) %>% 
-  tab_style(
-    style = cell_fill(color = "lightblue"),
-    locations = cells_body(
-      columns = c(bill_length_mm),
-      rows = bill_length_mm > 45
-    )
+penguins_stats %>%
+  gt() %>%
+  cols_merge(
+    columns = c(Mean_Bill, SD_Bill),
+    pattern = "{1} ± {2}"
   ) %>%
-  tab_style(
-    style = cell_fill(color = "lightyellow"),
-    locations = cells_body(
-      columns = c(body_mass_g),
-      rows = body_mass_g > 4000
-    )
-  )
+  fmt_number(columns = ends_with("Bill"), decimals = 1) %>%
+  cols_label(
+    species = md("**Species**"),
+    sex = md("**Sex**"),
+    Mean_Bill = md("**Mean ± SD**")
+  ) %>%
+  tab_header(
+    title = md("**Bill Length (mm) by Species and Sex**")
+  ) %>% 
+  tab_options(
+    table.width = pct(70)
+    ) %>% 
+  gt_theme_nytimes()
+
 ```
 
 </details>
@@ -182,164 +235,125 @@ penguins_relabeled %>%
 
 <br>
 
+## Add Inline Bar Plots with `gt_plt_bar_pct()`
 
-## Group by Rows and Columns
-
-Once you have created your table, `gt` offers several basic formatting options to enhance its appearance and readability. Let's recall the anatomy of a `gt` table.
-
-[![](img/parts_of_a_gt_table.png)](https://gt.rstudio.com/index.html)
-
-Last week we learned that you can add titles and subtitles to provide context and make the table more informative. The `tab_header()` function allows you to specify these elements. Additionally, you can format the columns to display numbers, dates, or currencies appropriately using functions like `fmt_number()`, `fmt_date()`, and `fmt_currency()`. These formatting options help ensure that the data is presented clearly and professionally. By applying these basic formatting techniques, you can significantly improve the visual appeal and utility of your tables.
-
-Now let's group rows and column by a specific classification, using the `tab_row_group` and `tab_spanner` functions to group the data by these categories.
-
-#### Grouping Rows by Species
-
-In this example, the `tab_row_group` function is used to group rows by the species column. Each species is given a label, making it easier to distinguish between the different groups of penguins.
+The `gt_plt_bar_pct()` function transforms ordinary numeric data into compelling visual elements by embedding miniature bar charts directly alongside your values. These inline visualizations instantly communicate proportional relationships within your data, allowing readers to grasp relative magnitudes at a glance without the need for mental calculations or separate charts.
 
 ```{r, warning=FALSE}
-# Group rows by species and island
-penguins_relabeled %>%
-  tab_row_group(
-    label = md("***Adelie Penguins***"),
-    rows = species == "Adelie"
-  ) %>%
-  tab_row_group(
-    label = md("***Chinstrap Penguins***"),
-    rows = species == "Chinstrap"
-  ) %>%
-  tab_row_group(
-    label = md("***Gentoo Penguins***"),
-    rows = species == "Gentoo"
+penguins %>%
+  count(species, island) %>%
+  group_by(island) %>%
+  mutate(prop = n / sum(n)) %>%
+  gt() %>%
+  gt_plt_bar_pct(column = prop, labels = TRUE) %>%
+  tab_header(
+    title = "Species Proportions by Island",
+    subtitle = "Inline bar chart with percentage labels"
   )
 ```
 
-#### Grouping Columns by Measurements
 
-In this example, the `tab_spanner` function is used to group columns related to measurements under a common label **"Measurements"**. This helps to categorize the columns and make the table more organized.
+## Add Sparklines with `gt_plt_sparkline()`
+
+The `gt_plt_sparkline()` function elevates your tables by embedding miniature data visualizations directly within cells, allowing readers to grasp trends and distributions at a glance without separate charts. These compact graphical elements provide powerful contextual information alongside your numeric data, transforming static tables into dynamic, information-rich displays that reveal patterns that might otherwise remain hidden in rows of numbers.
 
 ```{r, warning=FALSE}
-# Group columns by measurements
-penguins_relabeled %>%
-  tab_spanner(
-    label = md("**Measurements**"),
-    columns = c(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
+penguins %>%
+  filter(!is.na(flipper_length_mm)) %>%
+  group_by(species, island) %>%
+  summarise(flipper_mean = mean(flipper_length_mm), 
+            flipper_dist = list(flipper_length_mm), .groups = "drop") %>%
+  gt() %>%
+  fmt_number(flipper_mean, decimals = 1) %>% 
+  gt_plt_sparkline(flipper_dist) %>%
+  tab_header(
+    title = "Flipper Length Distribution",
+    subtitle = "Sparklines show data spread by species and island"
   )
 ```
 
-In the following exercise, both tab_row_group and tab_spanner functions can be used to group rows by island and columns by measurements. This will create a well-organized table that is easy to read and interpret.
+
+## Add density plots with `gt_plt_dist()`
+
+The `gt_plt_dist()` function elevates your tables by embedding compact density plots directly alongside your numeric data, providing immediate visual context for distributions. These inline visualizations allow readers to quickly grasp the shape and spread of your data without needing to reference separate charts, creating a more comprehensive and insightful table that combines both precise values and their distributional patterns.
+
+```{r, warning=FALSE}
+
+penguins %>% filter(!is.na(flipper_length_mm), !is.na(body_mass_g), !is.na(species)) %>% 
+  group_by(species) %>%
+  summarise(
+    dist = list(body_mass_g)
+  ) %>%
+  gt() %>%
+  gt_plt_dist(dist, type = "density", fill = "lightblue") %>%
+  cols_label(
+    dist = "Density Plot"
+  ) %>%
+  tab_header(title = "Average Body Mass and Distribution")
+  
+```
+
 
 <br>
 
 ::: exercise
 #### {{< fa user-edit >}} Exercise 3
 
-- Grouping Rows by Island and Columns by Measurements
+- Create a table displaying the average body mass (in grams and one decimal place) for each of the three penguin species, accompanied by density plots that visualize the distribution of mass values. This combination will allow for both precise numeric comparison and visual analysis of how the masses are distributed within each species.
 
 <details>
 
 <summary>Solutions (click here)</summary>
 
 ```{r, warning = FALSE}
-# Group rows by species and columns by measurements
-penguins_relabeled %>% 
-  tab_row_group(
-    label = md("***Adelie Penguins***"),
-    rows = species == "Adelie"
+table_density <-  penguins %>% filter(!is.na(flipper_length_mm), !is.na(body_mass_g), !is.na(species)) %>% 
+  group_by(species) %>%
+  summarise(
+    avg_mass = mean(body_mass_g),
+    dist = list(body_mass_g)
   ) %>%
-  tab_row_group(
-    label = md("***Chinstrap Penguins***"),
-    rows = species == "Chinstrap"
-  ) %>%
-  tab_row_group(
-    label = md("***Gentoo Penguins***"),
-    rows = species == "Gentoo"
-  ) %>%
-  tab_spanner(
-    label = md("**Measurements**"),
-    columns = c(bill_length_mm, bill_depth_mm, flipper_length_mm, body_mass_g)
-  )
-```
-
-</details>
-:::
-
-<br>
-
-## Combining data wrangling with the `gt` package
-
-Let's combine skills we learned in previous sessions with `gt`.
-
-#### Long to wide format
-
-First, let's use `pivot_wider` to format our original data set.
-
-```{r, warning = FALSE}
-penguins <- palmerpenguins::penguins %>%  
-  filter(!is.na(sex))
-
-penguin_counts <- penguins %>%  
-  mutate(year = as.character(year)) %>%  
-  group_by(species, island, sex, year) %>%  
-  summarise(n = n(), .groups = 'drop')
-
-penguin_counts_wider <- penguin_counts %>%  
-  pivot_wider(
-    names_from = c(species, sex),
-    values_from = n
-  ) %>%  
-  # Make missing numbers (NAs) into zero
-  mutate(across(.cols = -(1:2), .fns = ~replace_na(., replace = 0))) %>%  
-  arrange(island, year)
-```
-
-Now let's format this table and make it look nice.
-
-<br>
-
-::: exercise
-#### {{< fa user-edit >}} Exercise 4
-
-- Add labels such as a title, a subtitle and group the columns.
-
-<details>
-
-<summary>Solutions (click here)</summary>
-
-```{r, warning = FALSE}
-penguin_counts_wider %>%  
-  gt() %>%  
+  gt() %>%
+  fmt_number(columns = avg_mass, decimals = 1) %>% 
+  gt_plt_dist(dist, type = "density", fill = "lightblue") %>%
   cols_label(
-    island = 'Island',
-    year = 'Year',
-    Adelie_female = 'Adelie (female)',
-    Adelie_male = 'Adelie (male)',
-    Chinstrap_female = 'Chinstrap (female)',
-    Chinstrap_male = 'Chinstrap (male)',
-    Gentoo_female = 'Gentoo (female)',
-    Gentoo_male = 'Gentoo (male)',
-  ) %>%  
-  tab_spanner(
-    label = md('**Adelie**'),
-    columns = 3:4
-  ) %>%  
-  tab_spanner(
-    label = md('**Chinstrap**'),
-    columns = c('Chinstrap_female', 'Chinstrap_male')
-  ) %>%  
-  tab_spanner(
-    label =  md('**Gentoo**'),
-    columns = contains('Gentoo')
-  ) %>%  
-  tab_header(
-    title = 'Penguins in the Palmer Archipelago',
-    subtitle = 'Data is courtesy of the {palmerpenguins} R package'
-  ) 
+    species = "Species",
+    avg_mass = "Avg Mass (g)",
+    dist = "Density Plot"
+  ) %>%
+  tab_header(title = "Average Body Mass and Distribution")
+
 ```
 
 </details>
 :::
 
 <br>
+
+## SAVE YOUR TABLE
+
+Make sure the following packages are installed:
+
+```{r, eval = FALSE, warning = FALSE}
+install.packages("webshot2")
+library(webshot2)
+```
+
+```{r, eval = FALSE, warning = FALSE}
+# SAVE AS .PNG
+gtsave(table_density, "table_density.png")
+
+# SAVE AS .PDF
+gtsave(table_density, "table_density.pdf")
+
+# SAVE AS .HTML
+gtsave(table_density, "table_density.html")
+
+# BONUS - saving multiple formats in one go:
+walk(
+  c("png", "pdf", "html"),
+  ~gtsave(table_density, filename = paste0("table_density.", .x))
+)
+```
+
 
 
