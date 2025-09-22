@@ -312,8 +312,8 @@ div.csl-indent {
 <p>After covering Quarto in the first two sessions, today is the third of a series of Code Club sessions covering several topics under the umbrella of “reproducibility”.</p>
 <section id="what-is-reproducibility" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="what-is-reproducibility"><span class="header-section-number">1.1</span> What is reproducibility?</h3>
-<p>I would like to start by taking a step back to talk about reproducibility in general. What do we mean by <strong>reproducibility</strong>? Your research is reproducible when third parties are <em>able to perform the same analysis on your data, and produce the same results.</em></p>
-<p>Reproducibility is perhaps a low bar compared to the related concept of <strong>replicability</strong>, which is the ability to produce the same (qualitative) results when applying the <em>same analysis to different data</em>. Here is a helpful table showing these two and two other related concepts:</p>
+<p>I would like to start by taking a step back to talk about reproducibility in general. What do we mean by <strong>reproducibility</strong>? Your research is reproducible when third parties are <strong>able to perform the same analysis on your data, and produce the same results.</strong></p>
+<p>Reproducibility is perhaps a low bar compared to the related concept of <strong>replicability</strong>, which is the ability to produce the same (qualitative) results when applying the same analysis to <em>different data</em>. Here is a helpful table showing these two and two other related concepts:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <div class="quarto-figure quarto-figure-center">
@@ -333,13 +333,13 @@ div.csl-indent {
 </section>
 <section id="using-r-is-already-a-big-step-in-the-right-direction" class="level3" data-number="1.2">
 <h3 data-number="1.2" class="anchored" data-anchor-id="using-r-is-already-a-big-step-in-the-right-direction"><span class="header-section-number">1.2</span> Using R is already a big step in the right direction!</h3>
-<p>It is inherently more reproducible to write code, such as in R, as opposed to clicking around in a program with a Graphical User Interface (GUI). This is because it would generally be necessary but very tedious to record every single click that you make in a GUI, whereas it is easy to save your code.</p>
-<p>In addition, R is open source and freely available. If you use a proprietary program that requires an expensive license, your work may be reproducible in principle, but won’t be in practice for many people.</p>
+<p>It is inherently more reproducible to write code, such as in R, than to do analyses by clicking in a program with a Graphical User Interface (GUI). This is because it it is easy to save your code and thereby to document and communicate what you did, but rather tedious to do this when you worked in a GUI.</p>
+<p>In addition, R is open source and freely available. If you use a proprietary program that requires an expensive license, your work may be reproducible in principle, but for many people. won’t be in practice.</p>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="additional-aspects-of-reproducibility-and-what-well-cover-in-code-club" class="level3" data-number="1.3">
 <h3 data-number="1.3" class="anchored" data-anchor-id="additional-aspects-of-reproducibility-and-what-well-cover-in-code-club"><span class="header-section-number">1.3</span> Additional aspects of reproducibility and what we’ll cover in Code Club</h3>
-<p>Research that is fully reproducible should use a set of tools and best-practice related to:</p>
+<p>Research that is fully reproducible should use a set of tools and best-practices related to:</p>
 <ul>
 <li>File organization <span style="color:darkgrey"><em>(this session)</em></span></li>
 <li>Code style and organization <span style="color:darkgrey"><em>(next two sessions)</em></span></li>
@@ -358,7 +358,7 @@ div.csl-indent {
 <li>Use relative paths in your code</li>
 <li>Use RStudio Projects, not <code>setwd()</code></li>
 </ol>
-<p>And at the bottom of the page, there is some reading material on a fifth recommendation:</p>
+<p>And at the bottom of the page, there is at-home reading material on a fifth recommendation:</p>
 <ol start="5" type="1">
 <li>Use good file names</li>
 </ol>
@@ -384,29 +384,26 @@ div.csl-indent {
 </figure>
 </div>
 <hr style="height:1pt; visibility:hidden;">
-<p>When you have a single self-contained folder for each project, it is:</p>
-<ul>
-<li>Easier to find files and to share your project, harder to accidentally throw away stuff, etc.</li>
-<li>Possible to use <em>relative paths</em> within a project’s scripts, which improves reproducibility (see below).</li>
-</ul>
+<p>Using a self-contained folder for each projects has many downstream benefits and is fundamental to using other reproducibility-related best practices. It also is more convenient in the long run, as it is easier to find files, harder to accidentally throw away stuff, etc.</p>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="separate-files-using-a-consistent-subfolder-structure" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="separate-files-using-a-consistent-subfolder-structure"><span class="header-section-number">3</span> Separate files using a consistent subfolder structure</h2>
-<p>Within your project’s directory hierarchy, you should use a consistent subfolder structure to separate different kinds of files – for example:</p>
+<p>Within your project’s directory hierarchy, you should use a consistent subfolder structure to separate different kinds of files – for example, you should separate:</p>
 <ul>
-<li>Separate code from data</li>
-<li>Separate raw data from results</li>
+<li>Code</li>
+<li>Raw data</li>
+<li>Results (including “processed data”)</li>
 </ul>
 <p>Additionally, you should use plenty of subfolders to separate different kinds of results, and so on. While the specifics can depend a lot on what kind of data you have and how you are analyzing it, here is one good way of organizing a research project folder:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="img/proj-ex_annot.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="An example research project folder structure"><img src="img/proj-ex_annot.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="An example research project folder structure"></a></p>
+<p><a href="img/proj-ex_annot.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="An example research project folder structure. (The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in doc.)"><img src="img/proj-ex_annot.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="An example research project folder structure. (The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in doc.)"></a></p>
 </figure>
 </div>
-<figcaption><em>An example research project folder structure</em></figcaption>
+<figcaption><em>An example research project folder structure.<br>(The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in <code>doc</code>.)</em></figcaption>
 </figure>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -433,8 +430,8 @@ Related recommendations
 <h3 data-number="4.1" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">4.1</span> Key terms</h3>
 <p>To understand the recommendation to use relative paths in your code, let’s start by going over the following terms:</p>
 <ol type="1">
-<li><p><strong>“Directory”</strong> (<strong>“dir”</strong> for short) is just <em>another word for folder</em> commonly used in coding contexts.</p></li>
-<li><p>Your <strong>“working directory”</strong> is the <em>directory where you are currently located</em>. When you start R, it will always have a starting point at a specific location in your computer. You can see what your working directory is with the function <code>getwd()</code> (short for “get working dir”):</p>
+<li><p><strong>“Directory”</strong> (<strong>“dir”</strong> for short) is another word for folder that is commonly used in coding contexts.</p></li>
+<li><p>Your <strong>“working directory”</strong> is the directory where you are currently located. When you start R, it will always have a starting point at a specific location in your computer. You can see what your working directory is with the function <code>getwd()</code> (short for “get working dir”):</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -461,7 +458,7 @@ Native paths on Windows versus Mac and Linux
 <p><strong>If you are on Windows, we recommend you <em>specify</em> paths in R with forward slashes</strong>, because:</p>
 <ol type="1">
 <li>It makes the path specification universal, i.e.&nbsp;independent of the operating system.</li>
-<li>Backslashes have a separate purpose in R. Therefore, you would actually need to use <strong>two</strong> backslashes – for example: <code>setwd("C:\\Users\\John Doe")</code>. This gets confusing and error-prone!</li>
+<li>Because backslashes have a separate purpose in R, if you wanted to use backslashes, you’d actually need <strong>two</strong>. For example: <code>setwd("C:\\Users\\John Doe")</code>. This is confusing and error-prone!</li>
 </ol>
 </div>
 </div>
@@ -472,9 +469,9 @@ Native paths on Windows versus Mac and Linux
 <p>There are two types of paths:</p>
 <ul>
 <li><p><strong>Absolute paths</strong>, also referred to as full paths, start from (one of) the computer’s root (top-level) directory. They correctly point to a file or folder regardless of what your working dir is.</p>
-<p>If you think of a path as a way to point to a geographic location, then absolute paths are like GPS coordinates.</p></li>
-<li><p><strong>Relative paths</strong> start from a specific <em>working dir</em>, and won’t work if you’re located elsewhere.</p>
-<p>Again thinking of a path as a way to point to a geographic location, then relative paths are like directions like “Take the second left”.</p></li>
+<p><em>If you think of a path as a way to point to a geographic location,</em> <em>then absolute paths are like GPS coordinates.</em></p></li>
+<li><p><strong>Relative paths</strong> start from a specific working dir, and won’t work if you’re located elsewhere.</p>
+<p><em>Again thinking of a path as a way to point to a geographic location,</em> <em>then relative paths are like directions like “Take the second left”.</em></p></li>
 </ul>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -521,18 +518,20 @@ Native paths on Windows versus Mac and Linux
 <figure class="figure">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><a href="img/proj-paths2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."><img src="img/proj-paths2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%" alt="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."></a></p>
+<p><a href="img/proj-paths2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."><img src="img/proj-paths2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."></a></p>
 </figure>
 </div>
 <figcaption>Compared to the earlier image, everything was moved into a folder <code>OndeDrive</code>.<br>This resulted in a change in the absolute path, but not to this relative path.</figcaption>
 </figure>
 </div>
 <hr style="height:1pt; visibility:hidden;">
-<p>So, relative paths are preferred, <strong>but only when used in the following specific way:</strong></p>
+<div class="exercise">
+<p>So, relative paths are preferred, <strong>but only when used in the following way:</strong></p>
 <ol type="1">
-<li>Your working directory should always be your project’s root directory (<code>project1</code> in the example above)</li>
-<li>You should use relative paths that start at this directory</li>
+<li>Your working directory is always your project’s root directory (<code>project1</code> in the example above)</li>
+<li>You use relative paths that start at this directory</li>
 </ol>
+</div>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 </section>
@@ -544,16 +543,16 @@ Native paths on Windows versus Mac and Linux
 <p><strong>RStudio Projects are an RStudio-specific concept that create a special file</strong>, <code>.Rproj</code>, whose location designates the R working directory when you open that project.</p>
 <details>
 <summary>
-Given what we talked about so far, in which dir(s) do you think RStudio Projects should be created?
+Given what we talked about so far, in which dir(s) do you think RStudio Projects should generally be created?
 </summary>
-<p>TBA</p>
+In a project’s root directory! For example, in <code>project1</code> in the diagram above.
 </details>
-<p>Create an new RStudio Project:</p>
+<p>Create a new RStudio Project:</p>
 <ol type="1">
-<li><p>Click <code>File</code> &gt; <code>New Project</code> &gt; <code>New Directory</code> &gt; <code>New project</code>.</p></li>
-<li><p>In the next window:</p>
+<li>Click <code>File</code> &gt; <code>New Project</code> &gt; <code>New Directory</code> &gt; <code>New project</code></li>
+<li>In the next window:
 <ul>
-<li>Type “codeclub-project-practice” as the “Directory name”.</li>
+<li>Type <code>codeclub-project-practice</code> as the “Directory name”.</li>
 <li>You may use the default location (parent dir) or change it – up to you.</li>
 <li>Don’t check any of the boxes</li>
 </ul></li>
@@ -563,7 +562,7 @@ Given what we talked about so far, in which dir(s) do you think RStudio Projects
 <p><a href="img/new-rstudio-project.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="img/new-rstudio-project.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></a></p>
 </figure>
 </div>
-<p>After RStudio automatically reloads, <strong>the R working directory will be set to the place where your RStudio Project file is located.</strong> Therefore, you should see the file ending in <code>.Rproj</code> in the RStudio <code>Files</code> tab in the lower right pane. Also, you can check your working dir:</p>
+<p>After RStudio automatically reloads, <strong>the R working directory will be set to the dir in which your RStudio Project file is located.</strong> Therefore, you should see the file ending in <code>.Rproj</code> in the RStudio <code>Files</code> tab in the lower right pane. Also, you can check your working dir:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">getwd</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -580,7 +579,7 @@ Given what we talked about so far, in which dir(s) do you think RStudio Projects
 <p>RStudio Projects are also convenient because:</p>
 <ul>
 <li>Projects record which scripts (and R Markdown files) are open in RStudio, and will reopen all of those when you reopen the project. This becomes quite handy, say, when you work on three different projects, each of which uses a number of different scripts.</li>
-<li>The Files tab will always start in sync with your working dir</li>
+<li>The Files tab will always be (or at least start) in sync with your working dir</li>
 </ul>
 <hr style="height:1pt; visibility:hidden;">
 </section>
@@ -597,7 +596,7 @@ Given what we talked about so far, in which dir(s) do you think RStudio Projects
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">read_tsv</span>(<span class="st">"data/experiment1.tsv"</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"results/figures/barplot.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Two key aspects of this are:</p>
+<p>Two key aspects of specifying paths in R:</p>
 <ul>
 <li>You have to use quotes (either double or single quotes) around the path</li>
 <li>As soon as you open quotes, either in the console or in your script, R will assume that you are trying to specify a path, and you can use <strong>Tab completion</strong> to essentially browse through your files. Practice with that in the exercise below!</li>
