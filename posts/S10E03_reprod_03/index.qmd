@@ -1,5 +1,5 @@
 ---
-title: "Reproducibility 3:<br>File Organization and RStudio Projects"
+title: "Reproducibility recommendations: File organization and RStudio Projects"
 subtitle: "File-related recommendations to improve the reproducibility of your research"
 pagetitle: "Reproducibility 3"
 author: "Jelmer Poelstra"
@@ -11,6 +11,9 @@ execute:
   eval: true
 editor_options: 
   chunk_output_type: console
+bibliography: references.bib
+nocite: |
+  @wilson2017, @turing2025
 ---
 
 ------------------------------------------------------------------------
@@ -25,17 +28,19 @@ After covering Quarto in the first two sessions,
 today is the third of a series of Code Club sessions covering several
 topics under the umbrella of "reproducibility".
 
+### What is reproducibility?
+
 I would like to start by taking a step back to talk about reproducibility in general.
 What do we mean by **reproducibility**?
 Your research is reproducible when third parties are 
-_able to perform the same analysis on your data, and produce the same results._
+**able to perform the same analysis on your data, and produce the same results.**
 
 Reproducibility is perhaps a low bar compared to the related concept of **replicability**,
 which is the ability to produce the same (qualitative) results when applying the
-_same analysis to different data_.
+same analysis to _different data_.
 Here is a helpful table showing these two and two other related concepts:
 
-![From [The Turing Way](https://book.the-turing-way.org/reproducible-research/reproducible-research)](img/reproducible-matrix.jpg){fig-align="center" width="65%"}
+![From [The Turing Way](https://book.the-turing-way.org/reproducible-research/reproducible-research)](img/reproducible-matrix.jpg){fig-align="center" width="65%" .lightbox}
 
 For example:
 
@@ -53,35 +58,27 @@ For example:
 ### Using R is already a big step in the right direction!
 
 It is inherently more reproducible to write code, such as in R,
-as opposed to clicking around in a program with a Graphical User Interface (GUI).
-This is because it would generally be necessary but very tedious to record every
-single click that you make in a GUI,
-whereas it is easy to save your code.^[
-Though this is not without caveats.
-For example, some programs with GUIs may be able to report the exact procedure
-that was used along with the results.<br><br>
-Conversely, if you also save say alternative R code that gives different results,
-and do so without annotation, you may not know what produced the results that you
-ended up writing down in your manuscripts.
-]
+than to do analyses by clicking in a program with a Graphical User Interface (GUI).
+This is because it it is easy to save your code and thereby to document and communicate what you did,
+but rather tedious to do this when you worked in a GUI.
 
 In addition, R is open source and freely available.
 If you use a proprietary program that requires an expensive license,
-your work may be reproducible in principle,
-but won't be in practice for many people.
+your work may be reproducible in principle, but for many people.
+won't be in practice.
 
 <hr style="height:1pt; visibility:hidden;" />
 
-### Additional aspects & the plan for this series
+### Additional aspects of reproducibility and what we'll cover in Code Club
 
-Research that is fully reproducible should use a set of tools and best-practice
+Research that is fully reproducible should use a set of tools and best-practices
 related to:
 
 - File organization [_(this session)_]{style="color:darkgrey"}
 - Code style and organization [_(next two sessions)_]{style="color:darkgrey"}
-- File version management [_(Git at the end of the semester)_]{style="color:darkgrey"}
+- Version management [_(Git at the end of the semester)_]{style="color:darkgrey"}
 - Data and code sharing [_(In part: Git at the end of the semester)_]{style="color:darkgrey"}
-- Software management [_(Within R with renv - may cover this later?)_]{style="color:darkgrey"}
+- Software management [_(Within R with _renv_ - may cover this later?)_]{style="color:darkgrey"}
 - Project documentation
 
 ### Today
@@ -91,10 +88,11 @@ that improve your research projects' reproducibility.
 
 1. Use a self-contained folder for each project
 2. Separate files using a consistent subfolder structure
-3. Use relative paths
-4. Use RStudio Projects
+3. Use relative paths in your code
+4. Use RStudio Projects, not `setwd()`
 
-And at the bottom of the page, there is some reading material for fifth recommendation:
+And at the bottom of the page, there is at-home reading material on a fifth
+recommendation:
 
 5. Use good file names
 
@@ -102,194 +100,201 @@ And at the bottom of the page, there is some reading material for fifth recommen
 
 ## Use a self-contained folder for each project
 
-Using one folder, or really a hierarchy of folders, for one project means that you:
+Using a self-contained folder, or really a hierarchy of folders,
+for one project means that you:
 
 - Don't mix files for multiple distinct projects inside one folder.
 - Don't keep files for one project in multiple places.
 
 For example:
 
-![_Two project folder hierarchies, nicely separated and self-contained.<br>The gray `$HOME` folder is a Home folder which exists for Mac and Linux users.<br>For Windows users, you can think of this e.g. as your Documents or Desktop folder._](img/proj-dirs-1.svg){fig-align="center" width="60%"}
+![_Two research project folder hierarchies. Each box is a folder.<br>The way to read this is that the blue `data` folder is contained within the `project1` folder,<br>which in turn is contained within the Documents folder._](img/proj-dirs.svg){fig-align="center" width="60%" fig-alt="A diagram showing two research project folder hierarchies." .lightbox}
 
 <hr style="height:1pt; visibility:hidden;" />
 
-When you have a single folder hierarchy for each project, it is:
-
-- Easier to find files and to share your project, harder to accidentally throw away stuff, etc.
-- Possible to use *relative paths* within a project's scripts,
-  which improves reproducibility (see below).
+Using a self-contained folder for each projects has many downstream benefits
+and is fundamental to using other reproducibility-related best practices.
+It also is more convenient in the long run,
+as it is easier to find files, harder to accidentally throw away stuff, etc.
 
 <hr style="height:1pt; visibility:hidden;" />
 
 ## Separate files using a consistent subfolder structure
 
-Within your project's directory hierarchy, you should:
+Within your project's directory hierarchy,
+you should use a consistent subfolder structure to separate different kinds of files --
+for example, you should separate:
 
-- Separate code from data.
-- Separate raw data from processed data and from results.
+- Code
+- Raw data
+- Results (including "processed data")
 
-For example,
-here is one good way of organizing a (bioinformatics) research project:
+Additionally, you should use plenty of subfolders to separate different kinds
+of results, and so on.
+While the specifics can depend a lot on what kind of data you have and how you
+are analyzing it,
+here is one good way of organizing a research project folder:
 
-![_An example research project folder structure.<br>Folders are shown in blue and the README Markdown (`.md`) file is shown in black._](img/proj-ex_annot.png){fig-align="center" width="70%"}
+![_An example research project folder structure.<br>(The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in `doc`.)_](img/proj-ex_annot.svg){fig-align="center" width="70%" .lightbox}
 
-Also:
+::: callout-tip
+#### Related recommendations
 
-- Treat raw data as read-only and as highly valuable.
-- Treat generated output as somewhat disposable and as possible to regenerate.
+- Treat raw data as read-only and as highly valuable
+- Avoid manually editing intermediate results
+:::
 
 <hr style="height:1pt; visibility:hidden;" />
 
-## Use relative paths
+## Use relative paths in your code
 
-A next reproducibility-related recommendation is to
-**use relative paths in your R code**.
-To understand this recommendation, we'll go over the following key terms:
+### Key terms
 
-1. **"Directory"** (**"dir"** for short) is just _another word for folder_
+To understand the recommendation to use relative paths in your code,
+let's start by going over the following terms:
+
+1. **"Directory"** (**"dir"** for short) is another word for folder that is
    commonly used in coding contexts.
 
-2. Your **"working directory"** is the _directory where you are currently located_.
-   When you open R (or Python, or a Terminal, etc.),
-   it will always have a starting point at a specific location in your computer^[
-   You can think of this along the lines of opening a file browser (Finder / File Explorer etc.) --
-   it will always have a starting point, and you can move around to go to other locations.].
+2. Your **"working directory"** is the directory where you are currently located.
+   When you start R,
+   it will always have a starting point at a specific location in your computer.
+   You can see what your working directory is with the function `getwd()`
+   (short for "get working dir"):
 
-There are functions to _change your working dir_ as well as ways to refer to
-any location on the computer regardless of whether you are there.
-That brings us to the third term:
+   ```{r}
+   getwd()
+   ```
 
-3. A **path** specifies the location of a file or folder on the computer.
+3. The output of `getwd()` is a **path**,
+   which specifies the location of a file or folder on a computer.
+   In R's output, folders are separated by forward slashes, as shown above.
 
-### Absolute and relative paths
+<hr style="height:1pt; visibility:hidden;" />
 
-In paths, folders are separated by slashes -- 
-forward slashes in Mac and Linux:
+::: callout-warning
+### Native paths on Windows versus Mac and Linux
 
-```{.bash-out-solo}
-/Users/John Doe/Desktop/cats.png
-```
-
-...and backward slashes in Windows:
+Even though R will report paths with forward slashes regardless of the operating
+system, **Windows natively uses backslashes**.
+Additionally, there are multiple root directories on Windows, indicated by letters.
+Here is an example native Windows file path:
 
 ```{.bash-out-solo}
 C:\Users\John Doe\Desktop\cats.png
 ```
 
-There are two types of paths:
+Versus an example Mac (or Linux) file path:
 
-- **Absolute paths** (AKA full paths) start from a root (top-level) directory,
-  and correctly point to a file or folder regardless of what your working dir is.
-  If you think of a path as a way to point to a geographic location,
-  then absolute paths are like GPS coordinates.
-  The two paths above are examples of absolute paths.
+```{.bash-out-solo}
+/Users/John Doe/Desktop/cats.png
+```
 
-- **Relative paths** start from a specific *working dir*,
-  and won't work if you're located elsewhere.
-  Again thinking of a path as a way to point to a geographic location,
-  then relative paths are like directions like "Take the second left".
-  For example:
-  
-  ```{.bash-out-solo}
-  results/summary.tsv
-  my_script.R
-  ```
+**If you are on Windows, we recommend you _specify_ paths in R with forward slashes**,
+because:
+
+1. It makes the path specification universal, i.e. independent of the operating system.
+2. Because backslashes have a separate purpose in R,
+   if you wanted to use backslashes, you'd actually need **two**.
+   For example: `setwd("C:\\Users\\John Doe")`. This is confusing and error-prone!
+:::
 
 <hr style="height:1pt; visibility:hidden;" />
 
-### Why prefer relative paths
+### Absolute and relative paths
 
-<details><summary>Don't absolute paths sound better? What could be a disadvantage of them?</summary>
+There are two types of paths:
+
+- **Absolute paths**, also referred to as full paths,
+  start from (one of) the computer's root (top-level) directory.
+  They correctly point to a file or folder regardless of what your working dir is.
+  
+  _If you think of a path as a way to point to a geographic location,_
+  _then absolute paths are like GPS coordinates._
+
+- **Relative paths** start from a specific working dir,
+  and won't work if you're located elsewhere.
+  
+  _Again thinking of a path as a way to point to a geographic location,_
+  _then relative paths are like directions like "Take the second left"._
+  
+![The absolute versus a relative path to a file. The relative path has the `project1` folder as the starting point.](img/proj-paths1.png){fig-align="center" width="70%" .lightbox}
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+#### {{< fa user-edit >}} Exercise: paths
+
+1. In the image below, what is the absolute path to `todo_list.txt`?
+2. If your working dir is `oneils`, what is the relative path to `todo_list.txt`?
+3. If your working dir is `documents`, what is the relative path to `todo_list.txt`?
+
+![Example dir structure on a Mac computer, from @oneil2019 ([link to chapter](https://open.oregonstate.education/computationalbiology/chapter/the-command-line-and-filesystem/))](img/oneil_filesystem_ex2.png){fig-align="center" width="50%" fig-alt="A diagram of an example dir structure on a Mac computer." .lightbox}
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Why you should prefer relative paths
+
+Don't absolute paths sound better? What could be a disadvantage of them?
 
 Absolute paths:
 
 - Don't generally work across computers
 - Break when your move a project folder hierarchy to a a different place on your computer
 
-On the other hand, relative paths that use the root of the project folder hierarchy
-as the working dir, also work when moving the folder within and between computers.
+On the other hand, this does not apply to relative paths that use the root
+project folder as the working dir.
+Those paths keep working when moving the folder within and between computers:
 
 <hr style="height:1pt; visibility:hidden;" />
 
-![Two project dir hierarchies, and the absolute and relative path to a (FASTQ) file.](img/proj-dirs-2.svg){fig-align="center" width="70%"}
-
-<hr style="height:1pt; visibility:hidden;" />
-
-![Now everything was moved into `Dropbox`.<br>The absolute path has changed, but the relative path remains the same.](img/proj-dirs-3.svg){fig-align="center" width="70%"}
-
-</details>
-
-<hr style="height:1pt; visibility:hidden;" />
-
-## Use RStudio Projects
-
-### Getting and setting the working directory in R
-
-In R, you can see what your working directory is with the function `getwd()`
-(short for "get working dir"):
-
-```{r}
-getwd()
-```
-
-You can see that the output path is **my** working directory --
-yours will be different as the set up of your computer organization structure is different from mine
-(and recall that you will see backslashes if you have Windows).
-
-You can change your working directory using the function `setwd()`...
-
-```{r, eval = FALSE}
-setwd("/this/should/be/your/working-directory/path")
-```
-
-::: callout-tip
-### We recommend always using forward slashes, even on Windows!
-
-This may seem strange given what I explained above ---
-but even though Windows natively uses backslashes,
-you can use backslashes in R as it will take care of the conversion.
-
-Specifically, using forward slashes even on Windows is better for two reasons:
-
-1. It makes the path specification universal (independent of the operating system).
-2. Backslashes have a separate purpose in R.
-   Therefore, you would actually need to use **two** backslashes inside `setwd()`
-   (e.g. `setwd("C:\\Users\\John Doe")`) and in other contexts where you use paths.
-   This gets confusing and error-prone!
-:::
+![Compared to the earlier image, everything was moved into a folder `OndeDrive`.<br>This resulted in a change in the absolute path, but not to this relative path.](img/proj-paths2.png){fig-align="center" width="80%" .lightbox}
 
 <hr style="height:1pt; visibility:hidden;" />
 
 ::: exercise
 
-### Exercise: Change your working dir {-}
+So, relative paths are preferred,
+**but only when used in the following way:**
 
-Find a location on your computer that you would like to move to
-(it doesn't matter where or what that is, this is just for practice).
-Then, move to that directory using `setwd()`.
+1. Your working directory is always your project's root directory
+   (`project1` in the example above)
+2. You use relative paths that start at this directory
 
 :::
 
 <hr style="height:1pt; visibility:hidden;" />
 
+## Use RStudio Projects, not `setwd()`
+
+If your R working directory is not where you want it to be,
+you can change it with the `setwd()` function.
+However, there is a better way -- letting RStudio Projects set your working dir!
+
 ### RStudio Projects
 
-Instead of changing working directories whenever you fire up R,
-you can (and should!) use an RStudio Project instead. 
-**RStudio Projects are an RStudio-specific concept that create a special file (`.Rproj`)**,
-primarily to designate a directory as the working directory for everything within it,
-and to make it easy to switch between projects.
+**RStudio Projects are an RStudio-specific concept that create a special file**,
+`.Rproj`, whose location designates the R working directory when you open
+that project.
 
-Let's create an RStudio Project for Code Club:
+<details><summary>Given what we talked about so far, in which dir(s) do you think RStudio Projects should generally be created?</summary>
 
-1. You may already have a folder on your computer for all things Code Club.
-  **If not, please create one now**.
+In a project's root directory! For example, in `project1` in the diagram above. 
+</details>
 
-2. Click `File` > `New Project`, and then select `Existing Directory`.
-   Select your folder for Code Club.
-  
+Create a new RStudio Project:
+
+1. Click `File` > `New Project` > `New Directory` > `New project`
+2. In the next window:
+   - Type `codeclub-project-practice` as the "Directory name".
+   - You may use the default location (parent dir) or change it -- up to you.
+   - Don't check any of the boxes
+
+![](img/new-rstudio-project.png){fig-align="center" width="60%" .lightbox}
+
 After RStudio automatically reloads,
-**the R working directory will be set to the place where your RStudio Project file is located.**
+**the R working directory will be set to the dir in which your RStudio Project file is located.**
 Therefore, you should see the file ending in `.Rproj`
 in the RStudio `Files` tab in the lower right pane.
 Also, you can check your working dir:
@@ -316,24 +321,26 @@ In brief, RStudio Projects help you to organize your work and make it more repro
   and this is a good thing, since you don't want to randomly carry over objects and
   loaded packages across research projects.
 
-- Convenience in RStudio:
-  - Projects record which scripts (and R Markdown files) are open in RStudio,
-    and will reopen all of those when you reopen the project.
-    This becomes quite handy, say, when you work on three different projects,
-    each of which uses a number of different scripts.
-  - Files pane in sync with your working dir
+RStudio Projects are also convenient because:
+
+- Projects record which scripts (and R Markdown files) are open in RStudio,
+  and will reopen all of those when you reopen the project.
+  This becomes quite handy, say, when you work on three different projects,
+  each of which uses a number of different scripts.
+- The Files tab will always be (or at least start) in sync with your working dir
   
 <hr style="height:1pt; visibility:hidden;" />
 
 ### Using relative paths to refer to files within the project
 
-As mentioned above, a main function of RStudio Projects is that you should not
-have to use `setwd()` at all.
-But of course, not all files will be -nor should they be!- in the very same top-level
-project folder that your RStudio Project will set your working dir to.
+Let's recall the aforementioned way you should use relative paths:
 
-So, to refer to files you will (still) be using paths, and you should prefer
-relative paths -- for example:
+1. Your working directory should always be your project's root directory
+   [_=> this is taken care of by using RStudio projects and avoiding `setwd()`_]{style="color:darkgoldenrod"}
+2. You should use relative paths that start at this directory
+   [_=> we'll practice that now_]{style="color:darkgoldenrod"}
+
+Here are a few examples of using relative paths in R:
 
 ```{r, eval=FALSE}
 # [Don't run - fictional examples]
@@ -341,14 +348,24 @@ read_tsv("data/experiment1.tsv")
 ggsave("results/figures/barplot.png")
 ```
 
+Two key aspects of specifying paths in R:
+
+- You have to use quotes (either double or single quotes) around the path
+- As soon as you open quotes, either in the console or in your script,
+  R will assume that you are trying to specify a path,
+  and you can use **Tab completion** to essentially browse through your files.
+  Practice with that in the exercise below!
+
+![_When you open quotes in the R console, your script, or Quarto code blocks, and press Tab, you can essentially browse your files starting from your working dir._](img/tab-paths3.png){fig-align="center" width="50%" .lightbox}
+
 ::: callout-note
 #### Accessing files that aren't in the project dir
 
 Occasionally, you may need to access a file that is outside of your project dir
-(but the less that happens, the better!).
+(but the less that happens, the better -- and this comes down to proper file organization).
 In that case, you can either use an absolute path,
 or a relative path that starts by going "up" one or more levels.
-You can do the latter with the `..` notation, for example:
+You can navigate up with the `..` notation, for example:
 
 ```{r, eval=FALSE}
 # [Don't run - fictional examples]
@@ -360,12 +377,119 @@ read_tsv("../../Downloads/myfile.tsv")
 ```
 :::
 
-<hr style="height:1pt; visibility:hidden;" />
-
 ::: exercise
-### Exercise: Create an RStudio Project for a research project folder {-}
+#### {{< fa user-edit >}} Exercise: File organization and relative paths
 
-Then, practice with finding files: open quotes (`"`) and press Tab!
+```{r, echo=FALSE}
+setwd(here::here("posts/S10E03_reprod_03/"))
+
+dir.create("data", showWarnings = FALSE)
+dir.create("results/plots", showWarnings = FALSE, recursive = TRUE)
+dir.create("scripts", showWarnings = FALSE)
+```
+
+In this exercise, you are working on a mock research project within
+the folder that you created above (your RStudio Project folder).
+You will practice with file organization and using relative paths.
+   
+1. You will be writing to file some mock data,
+   a computed summary of the data, a plot based on the data,
+   and an R script.
+   Create an appropriate dir structure for those files within your
+   RStudio Project dir.
+   It's up to you how you do this: in the RStudio file panes,
+   in your computer's file explorer, or with R functions (`dir.create)`).
+
+   <details><summary>Click here to see a solution</summary>
+  
+   From the above description,
+   it seems appropriate to create `data`, `results`, and `scripts` dirs.
+   Here, I'm also choosing to create a dir `plots` within results for plots.
+   
+   ```{r, eval=FALSE}
+   dir.create("data")
+   dir.create("results/plots", recursive = TRUE)
+   dir.create("scripts")
+   ```
+   </details>
+
+2. Open a new R script (`File` > `New File` > `R Script`) and save it in an
+   appropriate location within your newly created dir structure.
+   Then, add all the code for the next exercises in that script.
+   
+   <details><summary>Click here to see a solution</summary>
+   It would be appropriate to save the script in a dir specifically for script,
+   which was called `scripts` in the answer above.
+   E.g., you could save it as `scripts/exercise.R`.
+   </details>
+
+3. Load the tidyverse as follows:
+
+   ```{r}
+   library(tidyverse)
+  
+   # If that produces an error, run the following command to install, then try again:
+   # install.packages("tidyverse")
+   # library(tidyverse)
+   ```
+
+4. Now, you will have access to a dataset (data frame) called `diamonds`.
+   Modify the code below to write that data to file in an approriate location.
+   
+   ```{r, eval=FALSE}
+   write_tsv(diamonds, "<FILE-PATH>")
+   ```
+   
+   <details><summary>Click here to see a solution</summary>
+   Assuming that you store the raw data in a dir called `data`:
+   
+   ```{r}
+   write_tsv(diamonds, "data/diamonds.tsv")
+   ```
+   </details>
+
+5. Run the `ggplot()` code below to create a plot of the diamonds data,
+   then modify the `ggsave()` line to save your plot to file in an appropriate
+   location.
+   
+   ```{r, eval=FALSE}
+   ggplot(diamonds, aes(x = carat, y = price)) +
+     geom_point()
+   ggsave("<FILE-PATH>")
+   ```
+
+   <details><summary>Click here to see a solution</summary>
+   Assuming that you store the plot in a dir called `results/plots`:
+  
+   ```{r}
+   ggplot(diamonds, aes(x = carat, y = price)) +
+     geom_point()
+   ggsave("results/plots/plot.png")  
+   ```
+   </details>
+
+6. Run the code below to summarize one aspect of the diamonds data,
+   then modify the `write_tsv()` line to save your resulting data frame to file
+   in an appropriate location.
+
+   ```{r, eval=FALSE}
+   data_summary <- diamonds |>
+     summarize(mean_price = mean(price), .by = cut)
+   write_tsv(data_summary, "<FILE-PATH>")
+   ```
+   
+   <details><summary>Click here to see a solution</summary>
+   Assuming that you store the results in a dir called `results``:
+   
+   ```{r}
+   data_summary <- diamonds |>
+     summarize(mean_price = mean(price), .by = cut)
+   write_tsv(data_summary, "results/data_summary.tsv")
+   ```
+   </details>
+
+7. In the RStudio files tab, take a look at the file (structure) you produced.
+
 :::
 
 <br>
@@ -438,11 +562,3 @@ DE-03_process-significant.R
 ```
 
 <hr style="height:1pt; visibility:hidden;" />
-
-## Further resources
-
-- ["The Turing Way" E-book on Reproducible Research](https://book.the-turing-way.org/reproducible-research)
-- Wilson et al. 2017, PLOS Computational Biology:
-  "[Good enough practices in scientific computing](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510)"
-- Kieran Healy:
-  ["The Plain Person's Guide to Plain Text Social Science"](https://plain-text.co/)

@@ -1,0 +1,385 @@
+---
+title: "Reproducibility recommendations: Code structuring"
+subtitle: "Code structure related recommendations to improve the reproducibility of your research"
+pagetitle: "Reproducibility 4"
+author: "Jelmer Poelstra"
+date: "2025-09-29"
+categories: [reproducibility]
+title-block-banner: false
+number-depth: 3
+execute: 
+  eval: true
+editor_options: 
+  chunk_output_type: console
+---
+
+------------------------------------------------------------------------
+
+<br>
+
+## Introduction
+
+Have you struggled with R scripts that spin out of control,
+situations where you are not sure how some things got in your environment
+but you still need them,
+or suddenly not being able to run the code in your script and getting stuck?
+
+Then, the recommendations that we'll discuss in today's Code Club session should
+come in handy.
+We'll cover a variety of best-practice techniques on how to structure the code
+in your R scripts and R Markdown/Quarto documents.
+The recommendations are:
+
+1. Use comments and divide your script into sections
+2. Write self-contained scripts
+3. Put these things at the top of your script:
+   - A comment describing the function of your script, and code to:
+   - Load packages
+   - Define input and output files
+   - Settings
+4. Don't repeat yourself -- as in, don't copy and paste blocks of code when you
+   e.g. need to repeat an action multiple times. 
+5. Keep your scripts short
+
+As we go through these recommendation,
+let's have a scenario in mind where you are working on code to make the final
+figures for your paper.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Use comments and divide your script into sections
+
+Use comments to explain what code does and why, e.g:
+
+```{r, eval=FALSE}
+# Remove 3 outliers that were identified by XYZ:
+data_filt <- data |> filter(sample_id %in% outliers) 
+```
+
+```{r, eval=FALSE}
+# Turn `strawberry_line` into a factor to ensure proper ordering in the plots:
+data <- data |> mutate(strawberry_line = factor(strawberry_line, levels = line_order))
+```
+
+Use a special kind of comment to divide your code into sections:
+
+```{r, eval=FALSE}
+# A: SETUP ---------------------------------------------------------------------
+# This section will load packages and define input and output files.
+
+# Step 1: load packages
+# ...R code...
+
+# B: DATA WRANGLING ------------------------------------------------------------
+# This section will wrangle the miserably formatted data into a shape
+# that can be used for plotting.
+
+# Step 1: XYZ
+# ...R code...
+```
+
+RStudio will recognize these sections ...
+
+- Outline TBA
+- Collapsing sections TBA
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Write self-contained scripts
+
+### You should be able to run your script in a fresh R environment
+
+You should always be able to run the code in your script from start to finish,
+starting from a completely fresh (empty) R environment.
+This means that your script should never use, for example:
+
+- R objects that were not created by it
+- Packages that were not loaded by it
+- Custom functions that were not created or loaded by it
+
+In other words, your script should never just "continue on" from another script,
+or assume that packages have been loaded beforehand/elsewhere, and so on.
+
+### Only include code that should be run every time you work on the script
+
+Conversely, your script should not include code whose outputs neither serve
+a purpose within that script nor write output files for usage elsewhere.
+
+This also applies to code that had a purpose in earlier runs of the script,
+but does no longer.
+For example, installing packages is a one-time setup
+step that you won't want to rerun every time you work on your script.
+The R functions that do this (most commonly calls to `install.packages()`)
+should therefore not be included in the script.
+
+```{r, eval=FALSE}
+install.packages(tidyverse)
+library(tidyverse)
+```
+
+Ideally, you instead have a separate "setup" script or document with
+one-time setup steps.
+Alternatively, you may add comments in your script with setup information:
+
+```{r, eval=FALSE}
+# Installed with install.packages("tidyverse") on 2025-09-29 (v 2.0.0)
+library(tidyverse)  
+```
+
+### Avoid/minimize commented-out code
+
+In general, though,
+avoid or at least minimize having code that is "commented out".
+While commenting out code can be very useful when you're experimenting,
+don't keep it in your script any longer than necessary.
+An example of commented-out code:
+
+```{r, eval=FALSE}
+data <- data |> filter(strawberry_color != "green")
+
+# data <- data |> select(!dumb_unnecessary_column)
+
+data |>
+  ggplot(...)
+```
+
+Any commented-out code that you _are_ keeping around for longer should be clearly
+annotated -- explain why it is commented out and why are you keeping it around.
+
+```{r, eval=FALSE}
+# TBA - example
+```
+
+::: callout-note
+#### Commenting out to avoid repeating code
+
+You may have a scenario where you need to run a large chunk of code multiple times,
+e.g. for different input files or with different settings/parameters.
+You may be inclined to include this as a "setting" of the top of the script,
+commenting out the other possibilities.
+
+```{r, eval=FALSE}
+# I ran the code below for both of these experiments:
+input_file <- "data/experiment01.tsv"
+output_plot <- "results/exp01_plot.png"
+#input_file <- "data/experiment02.tsv"
+#output_plot <- "results/exp02_plot.png"
+```
+
+Or to just include a comment like this:
+
+```{r, eval=FALSE}
+p_value <- 0.05  # Ran analysis and made plots also with p of 0.01 and 0.20 (YOLO)
+```
+
+Avoid that too! See the "Don't repeat yourself recommendation" further down.
+:::
+
+### Restart R regularly
+
+If at all possible, try to restart R regularly and start over by running your
+code from the beginning of the script.
+This ensures that your script is indeed self-contained.
+
+Restarting R will also alert you to the all-too-common situation of having code
+that no longer works because of changes you made,
+but that you don't notice because you have objects that originate from now-changed code.
+(One typical cause of this is when you rename an object.)
+The more regularly you restart,
+the less risk you run of having a really hard figuring out what changed.
+
+::: callout-tip
+If it seems prohibitive to restart R regularly because there is so
+much code to rerun, and/or that code takes a long time to run,
+you should strongly consider splitting your script into different parts.
+See the section "Keep your scripts short" below.
+:::
+
+_TBA - screenshot and keyboard shortcut_
+
+_TBA - settings not to reload environment_
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Put these things at the top of your script
+
+### A comment describing the function of your script
+
+For example:
+
+```{r}
+# Author: Jane Doe
+# Date: 2025-09-29, with edits on 2025-10-05
+# Project: ~/Documents/thesis/strawberry-experiment
+# Purpose: Create a figure to ... 
+```
+
+If you're using a Quarto document instead, most of this kind of information
+will likely go into the YAML header.
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Loading packages
+
+Don't load packages throughout your script,
+and certainly don't omit the code to load packages as explained above.
+Instead, load all packages at the top of the script -- for example:
+
+```{r, eval=FALSE}
+# Load packages
+library(tidyverse)   # (v 2.0.0)
+library(patchwork)   # Creating multi-panel figures (v 1.3.2)
+library(ggforce)     # For the facet_zoom() function (v 0.5.0)
+library(janitor)     # Variable name cleaning (v 2.2.1)
+library(pheatmap)    # Heatmap (v. 1.0.13)
+library(here)        # Creating file paths
+```
+
+The above example also includes a brief explanation of what each package is used
+for, and which version is (or should be / was) loaded.
+
+::: {.callout-tip collapse="true"}
+### More about recording R package versions  _(Click to expand)_
+
+```{r, include=FALSE}
+library(patchwork)
+library(ggforce)
+library(janitor)
+library(here)
+```
+
+For package versions, you can also run the `sessionInfo()` function:
+
+```{r}
+sessionInfo()
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+This is particularly convenient to include in a Quarto document,
+where you can put this function all the way at the end,
+so its output will be included in the rendered document.
+In an R script, you could do this to save the info to file:
+
+```{r}
+writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
+```
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Defining input and output files
+
+It's a good idea to define all of a script's input and output files using
+variables at the top of the script -- for example:
+
+- Input files:
+
+  ```{r, eval=FALSE}
+  # Define the input files
+  data_file <- "data/strawberries.tsv"
+  sampledata_file <- "data/meta/samples.tsv" 
+  ```
+
+- Output files:
+
+  ```{r, eval=FALSE}
+  # Define and create the output dir
+  outdir <- "results/plots"
+  dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+  
+  # Define the output files
+  boxplot_file <- here(outdir, "boxplot.png")
+  scatterplot_file <- here(outdir, "scatterplot.png")
+  ```
+
+Then, you would use these variables when reading and writing later on:
+
+```{r, eval=FALSE}
+data <- read_tsv(data_file)
+ggsave(boxplot_file)
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Settings
+
+If you have any key settings,
+especially those that you may want to set differently later on or in a different
+context, you should also include these at the top of your script.
+For example:
+
+```{r}
+# Settings
+p_value <- 0.01
+logfold_change <- 1
+some_threshold <- 25
+remove_outliers <- TRUE
+```
+
+This may also include miscellaneous things like setting the random seed for
+an analysis:
+
+```{r}
+# Set the random seed for sampling with function rnorm()
+set.seed(1)
+```
+
+### Putting it together
+
+All in all, the top section of your script may look something like this:
+
+```{r}
+# SETUP ------------------------------------------------------------------------
+#TBA
+```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Don't repeat yourself (DRY)
+
+### Use functions and put them in a separate file
+
+<hr style="height:1pt; visibility:hidden;" />
+
+## Keep your scripts short
+
+Your scripts should not become too long or they will become very hard to understand
+and to manage.
+And if you are working with Quarto instead,
+they will take a long time to render and are much more likely to fail while rendering.
+It is much better to have relatively short, modular scripts,
+each with a clear purpose.
+
+For example,
+it is hopefully common sense to start a new script when you switch to an unrelated
+analysis that uses different data, even if within the same project.
+
+But it is not always this easy.
+As an analysis expands and expands,
+it can be appealing to keep adding things to the same script.
+This can be true especially true if, for example:
+
+- The analyses work with the same data,
+  and the script first does extensive data processing for all subsequent analyses.
+- Some or all analyses are not independent but more like a pipeline,
+  where the outputs of step A are used in step B, the outputs of step B
+  are used in step C, and so on.
+  
+However, even in such scenarios, it is a good idea not to let a single script
+get too long (say, many hundreds of lines),
+and to instead start a new script sooner rather than later.
+
+How can you do this?
+Write files, then read files
+
+This may mean that you need more code in total,
+because you will need script A to write its outputs to files that are then loaded
+by script B, instead of just moving along in the same script.
+But it is still worth it!
+
+::: exercise
+Rework this script into two separate scripts
+:::
+
+- saveRDS, readRDS
