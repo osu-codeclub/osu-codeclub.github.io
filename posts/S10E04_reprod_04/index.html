@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#you-should-be-able-to-run-your-script-in-a-fresh-r-environment" id="toc-you-should-be-able-to-run-your-script-in-a-fresh-r-environment" class="nav-link" data-scroll-target="#you-should-be-able-to-run-your-script-in-a-fresh-r-environment"><span class="header-section-number">3.1</span> You should be able to run your script in a fresh R environment</a></li>
   <li><a href="#dont-include-code-you-dont-actually-want-to-run" id="toc-dont-include-code-you-dont-actually-want-to-run" class="nav-link" data-scroll-target="#dont-include-code-you-dont-actually-want-to-run"><span class="header-section-number">3.2</span> Don’t include code you don’t actually want to run</a></li>
   <li><a href="#avoidminimize-commented-out-code" id="toc-avoidminimize-commented-out-code" class="nav-link" data-scroll-target="#avoidminimize-commented-out-code"><span class="header-section-number">3.3</span> Avoid/minimize commented-out code</a></li>
-  <li><a href="#running-the-code-in-your-script-from-start-to-finish-should-produce-all-needed-outputs" id="toc-running-the-code-in-your-script-from-start-to-finish-should-produce-all-needed-outputs" class="nav-link" data-scroll-target="#running-the-code-in-your-script-from-start-to-finish-should-produce-all-needed-outputs"><span class="header-section-number">3.4</span> Running the code in your script from start to finish should produce all needed outputs</a></li>
+  <li><a href="#running-your-script-from-start-to-finish-should-produce-all-needed-outputs" id="toc-running-your-script-from-start-to-finish-should-produce-all-needed-outputs" class="nav-link" data-scroll-target="#running-your-script-from-start-to-finish-should-produce-all-needed-outputs"><span class="header-section-number">3.4</span> Running your script from start to finish should produce all needed outputs</a></li>
   <li><a href="#restart-r-regularly" id="toc-restart-r-regularly" class="nav-link" data-scroll-target="#restart-r-regularly"><span class="header-section-number">3.5</span> Restart R regularly</a></li>
   </ul></li>
   <li><a href="#put-these-things-at-the-top-of-your-script" id="toc-put-these-things-at-the-top-of-your-script" class="nav-link" data-scroll-target="#put-these-things-at-the-top-of-your-script"><span class="header-section-number">4</span> Put these things at the top of your script</a>
@@ -418,8 +418,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <hr style="height:1pt; visibility:hidden;">
 </section>
-<section id="running-the-code-in-your-script-from-start-to-finish-should-produce-all-needed-outputs" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="running-the-code-in-your-script-from-start-to-finish-should-produce-all-needed-outputs"><span class="header-section-number">3.4</span> Running the code in your script from start to finish should produce all needed outputs</h3>
+<section id="running-your-script-from-start-to-finish-should-produce-all-needed-outputs" class="level3" data-number="3.4">
+<h3 data-number="3.4" class="anchored" data-anchor-id="running-your-script-from-start-to-finish-should-produce-all-needed-outputs"><span class="header-section-number">3.4</span> Running your script from start to finish should produce all needed outputs</h3>
 <p>You may have a scenario where you need to run a large chunk of code, or perhaps the entire script, multiple times. For example, once for each of several input files or each of several different parameter thresholds. You may be inclined to include this as a “setting” of the top of the script, commenting out the other possibilities.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I ran the code below for both of these experiments:</span></span>
@@ -432,7 +432,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p_value <span class="ot">&lt;-</span> <span class="fl">0.05</span>  <span class="co"># Ran analysis below also with p of 0.01 and 0.10</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Avoid these kind of constructs as well, because simply running your script in its entirety should produce all the outputs that are needed. Also see the “Don’t repeat yourself” recommendation further down.</p>
+<p>Avoid these kind of constructs as well, because simply running your script in its entirety should produce all the outputs that are needed. Also see the <a href="#dont-repeat-yourself-dry">“Don’t repeat yourself”</a> recommendation further down.</p>
 <hr style="height:1pt; visibility:hidden;">
 </section>
 <section id="restart-r-regularly" class="level3" data-number="3.5">
@@ -655,9 +655,73 @@ loaded via a namespace (and not attached):
 <span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>boxplot_file <span class="ot">&lt;-</span> <span class="fu">here</span>(outdir, <span class="st">"boxplot.png"</span>)</span>
 <span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>scatterplot_file <span class="ot">&lt;-</span> <span class="fu">here</span>(outdir, <span class="st">"scatterplot.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="exercise-re-organizing-a-script" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="exercise-re-organizing-a-script"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Re-organizing a script</h4>
-<p>TBA</p>
+<section id="exercise-restructuring-a-script" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-restructuring-a-script"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Restructuring a script</h4>
+<p>Restructure this script according to the recommendations above:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>sepal_length[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> sepal_length, <span class="at">y =</span> petal_length)) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="co">#+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="co">#geom_line()</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"results/plots/plot.png"</span>)</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_sepal_length =</span> <span class="fu">mean</span>(sepal_length), <span class="at">.by =</span> species)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(data_summary, <span class="fu">here</span>(<span class="st">"results/data_summary.tsv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<details>
+<summary>
+Click here for some pointers
+</summary>
+<ul>
+<li>Note that there are currently no comments or sections in the script</li>
+<li>Do you think <code>head(data)</code> and a simmilar line should be in your final script?</li>
+<li>The code currently assumes that the dir <code>results/plots</code> exists.</li>
+<li>Could you load <em>ggplot2</em>, <em>dplyr</em>, and <em>readr</em>, with a single <code>library()</code> call?</li>
+</ul>
+</details>
+<details>
+<summary>
+Click here for a possible solution
+</summary>
+<p>Note that in the suggestion below, I removed the <code>head(data)</code> and <code>data$sepal_length[1:10]</code> lines. These are lines that aren’t really a problem to keep in, but unless they come with a clear directive, are a kind of clutter – you are better of just typing these kinds of things directly in the Console.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># SETUP ------------------------------------------------------------------------</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor)    <span class="co"># To fix column names with clean_names() (version X)</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)  <span class="co"># Data summarizing, plotting, and writing (version X)</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure the output dir(s) exist</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>outdir <span class="ot">&lt;-</span> <span class="st">"results/plots"</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(outdir, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the output files</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>plotfile <span class="ot">&lt;-</span> <span class="st">"results/plots/plot.png"</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>data_summary_file <span class="ot">&lt;-</span> <span class="st">"results/data_summary.tsv"</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># LOAD AND PREP THE DATA -------------------------------------------------------</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> iris <span class="sc">|&gt;</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># VISUALIZE THE DATA -----------------------------------------------------------</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(data, <span class="fu">aes</span>(<span class="at">x =</span> sepal_length, <span class="at">y =</span> petal_length)) <span class="sc">+</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(plotfile)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a><span class="co"># SUMMARIZE THE DATA -----------------------------------------------------------</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>data_summary <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">mean_sepal_length =</span> <span class="fu">mean</span>(sepal_length), <span class="at">.by =</span> species)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(data_summary, data_summary_file)<span class="er">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
 </section>
 <hr style="height:1pt; visibility:hidden;">
 </section>
@@ -682,41 +746,41 @@ loaded via a namespace (and not attached):
 </ol>
 <p>In practice, in much abbreviated form, this could look something like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shared data prep</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(...) <span class="sc">|&gt;</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(...) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(...)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(..., data_prepped)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="sc">|&gt;</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Shared data prep</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(...) <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(...) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(...)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Analysis</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(..., data_prepped)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="sc">|&gt;</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Which can be split as follows:</p>
 <ul>
 <li><p>Script 1 – Data prep:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(...) <span class="sc">|&gt;</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(...) <span class="sc">|&gt;</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(...)</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(data_prepped, <span class="st">"&lt;data-prepped-file&gt;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(...) <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(...) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(...)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="fu">write_tsv</span>(data_prepped, <span class="st">"&lt;data-prepped-file&gt;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>Script 2 – Data analysis:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"&lt;data-prepped-file&gt;"</span>)</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(..., data_prepped)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"&lt;data-prepped-file&gt;"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(..., data_prepped)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>Script 3 – Data visualization:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"&lt;data-prepped-file&gt;"</span>)</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="sc">|&gt;</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(<span class="st">"&lt;data-prepped-file&gt;"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>data_prepped <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(...)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 </ul>
 <p>As you can see, this does mean you need more code in total. But in the long run, having smaller scripts is often worth it!</p>
@@ -734,11 +798,11 @@ Have more complicated objects?
 <ul>
 <li><p>Saving the object to file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(some_complicated_object, <span class="st">"object.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(some_complicated_object, <span class="st">"object.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 <li><p>Loading the object from file:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>some_complicated_object <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"object.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>some_complicated_object <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"object.RDS"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 </ul>
 </div>
