@@ -1,6 +1,6 @@
 ---
-title: "Reproducibility recommendations: Code structuring"
-subtitle: "Code structure related recommendations to improve the reproducibility of your research"
+title: "Reproducibility recommendations: Code structure"
+subtitle: "Recommendations on code structure to improve the reproducibility of your research"
 pagetitle: "Reproducibility 4"
 author: "Jelmer Poelstra"
 date: "2025-09-29"
@@ -8,7 +8,7 @@ categories: [reproducibility]
 title-block-banner: false
 number-depth: 3
 execute: 
-  eval: true
+  eval: false
 editor_options: 
   chunk_output_type: console
 ---
@@ -19,51 +19,61 @@ editor_options:
 
 ## Introduction
 
-Have you struggled with R scripts that spin out of control,
-situations where you are not sure how some things got in your environment
-but you still need them,
-or suddenly not being able to run the code in your script and getting stuck?
-
+Have you struggled with R scripts whose size spins out of control,
+not being sure where items in your environment came from,
+or no longer being able to run the code in your script?
 Then, the recommendations that we'll discuss in today's Code Club session should
 come in handy.
-We'll cover a variety of best-practice techniques on how to structure the code
-in your R scripts and R Markdown/Quarto documents.
+
+We'll cover a variety of best-practice techniques on how to structure your
+R scripts and Quarto (/ R Markdown) documents.
+In the text below, I will mostly refer to scripts,
+but these recommendations also apply to Quarto,
+sometimes in slightly modified form.
 The recommendations are:
 
-1. Use comments and divide your script into sections
+1. Use explanatory comments and divide your script into sections
 2. Write self-contained scripts
-3. Put these things at the top of your script:
+3. Put the following at the top of your script:
    - A comment describing the function of your script, and code to:
    - Load packages
    - Define input and output files
-   - Settings
-4. Don't repeat yourself -- as in, don't copy and paste blocks of code when you
-   e.g. need to repeat an action multiple times. 
-5. Keep your scripts short
+   - Settings for your analysis
+4. Don't let your scripts get too long
+5. Don't repeat yourself --
+   as in, don't copy and paste blocks of code when you need to repeat an action
 
 As we go through these recommendation,
-let's have a scenario in mind where you are working on code to make the final
-figures for your paper.
+let's have a scenario in mind where you are working on R code for your paper's
+final figures.
+
+::: {.callout-warning appearance="minimal"}
+Unlike usually in Code Club,
+most of the code on this page is not intended to be run by you --
+they are meant as illustrative examples.
+:::
 
 <hr style="height:1pt; visibility:hidden;" />
 
 ## Use comments and divide your script into sections
 
-Use comments to explain what code does and why, e.g:
+For future you and others who may read your code,
+make extensive use of **comments** to explain what your code does and why, e.g:
 
-```{r, eval=FALSE}
+```{r}
 # Remove 3 outliers that were identified by XYZ:
 data_filt <- data |> filter(sample_id %in% outliers) 
 ```
 
-```{r, eval=FALSE}
+```{r}
 # Turn `strawberry_line` into a factor to ensure proper ordering in the plots:
 data <- data |> mutate(strawberry_line = factor(strawberry_line, levels = line_order))
 ```
 
-Use a special kind of comment to divide your code into sections:
+In RStudio,
+you can use a special kind of comment to divide your code into **sections**:
 
-```{r, eval=FALSE}
+```{r}
 # A: SETUP ---------------------------------------------------------------------
 # This section will load packages and define input and output files.
 
@@ -78,10 +88,20 @@ Use a special kind of comment to divide your code into sections:
 # ...R code...
 ```
 
-RStudio will recognize these sections ...
+Adding 4 or more dashes (<kbd>-</kbd>) at the end of a comment line
+will make RStudio interpret it as a section header and:
 
-- Outline TBA
-- Collapsing sections TBA
+- Show an outline of your document if you click on the icon highlighted
+  with a red arrow in the screenshot below:
+
+![_How to make RStudio show a document outline based on section headers._](img/code-sections.png){fig-align="center" width="75%" .lightbox}
+
+- In the outline,
+  allow you to click on the headers to navigate to that part of your script
+
+- Allow you to collapse sections by clicking on the little arrow icons in the margin:
+
+![_How to collapse sections. To expand the section again, click the blue box with the outward-facing arrows._](img/code-sections-collapse.png){fig-align="center" width="75%" .lightbox}
 
 <hr style="height:1pt; visibility:hidden;" />
 
@@ -100,31 +120,33 @@ This means that your script should never use, for example:
 In other words, your script should never just "continue on" from another script,
 or assume that packages have been loaded beforehand/elsewhere, and so on.
 
-### Only include code that should be run every time you work on the script
+<hr style="height:1pt; visibility:hidden;" />
 
-Conversely, your script should not include code whose outputs neither serve
-a purpose within that script nor write output files for usage elsewhere.
+### Don't include code you don't actually want to run
 
 This also applies to code that had a purpose in earlier runs of the script,
 but does no longer.
 For example, installing packages is a one-time setup
 step that you won't want to rerun every time you work on your script.
-The R functions that do this (most commonly calls to `install.packages()`)
-should therefore not be included in the script.
+The R functions that do this should therefore not be included in the script.
 
-```{r, eval=FALSE}
+```{r}
+# If you include install.packages() in your script, running the script
+# from start to finish means re-installing the package every time
 install.packages(tidyverse)
 library(tidyverse)
 ```
 
-Ideally, you instead have a separate "setup" script or document with
-one-time setup steps.
-Alternatively, you may add comments in your script with setup information:
+Instead, you ideally use a separate "install" script or document with
+installation and perhaps other one-time setup steps.
+Alternatively, you may add comments in your script with such information:
 
-```{r, eval=FALSE}
+```{r}
 # Installed with install.packages("tidyverse") on 2025-09-29 (v 2.0.0)
 library(tidyverse)  
 ```
+
+<hr style="height:1pt; visibility:hidden;" />
 
 ### Avoid/minimize commented-out code
 
@@ -134,31 +156,46 @@ While commenting out code can be very useful when you're experimenting,
 don't keep it in your script any longer than necessary.
 An example of commented-out code:
 
-```{r, eval=FALSE}
+```{r}
+# Only keep ripe strawberries
 data <- data |> filter(strawberry_color != "green")
+# data <- data |> select(!some_column)
 
-# data <- data |> select(!dumb_unnecessary_column)
-
-data |>
-  ggplot(...)
+# Create Fig. 1
+ggplot(data, ...)
 ```
+
+The above code should run without error whether you include or exclude the commented-out
+line. Without an explanation, this may therefore be confusing to future you,
+your collaborators, etc.
 
 Any commented-out code that you _are_ keeping around for longer should be clearly
-annotated -- explain why it is commented out and why are you keeping it around.
+annotated -- explain why it is commented out and why are you keeping it around:
 
-```{r, eval=FALSE}
-# TBA - example
+```{r}
+# Only keep ripe strawberries
+data <- data |> filter(strawberry_color != "green")
+
+# 'some_column' column may need to be removed for final outputs,
+# but I got a warning I didn't understand when removing it - keeping this for now 
+# data <- data |> select(!some_column)
+
+# Create Fig. 1
+ggplot(data, ...)
 ```
 
-::: callout-note
-#### Commenting out to avoid repeating code
+<hr style="height:1pt; visibility:hidden;" />
 
-You may have a scenario where you need to run a large chunk of code multiple times,
-e.g. for different input files or with different settings/parameters.
+### Running your script from start to finish should produce all needed outputs
+
+You may have a scenario where you need to run a large chunk of code,
+or perhaps the entire script, multiple times.
+For example, once for each of several input files or each of several different
+parameter thresholds.
 You may be inclined to include this as a "setting" of the top of the script,
 commenting out the other possibilities.
 
-```{r, eval=FALSE}
+```{r}
 # I ran the code below for both of these experiments:
 input_file <- "data/experiment01.tsv"
 output_plot <- "results/exp01_plot.png"
@@ -168,36 +205,64 @@ output_plot <- "results/exp01_plot.png"
 
 Or to just include a comment like this:
 
-```{r, eval=FALSE}
-p_value <- 0.05  # Ran analysis and made plots also with p of 0.01 and 0.20 (YOLO)
+```{r}
+p_value <- 0.05  # Ran analysis below also with p of 0.01 and 0.10
 ```
 
-Avoid that too! See the "Don't repeat yourself recommendation" further down.
-:::
+Avoid these kind of constructs as well,
+because simply running your script in its entirety should produce all the
+outputs that are needed.
+Also see the
+["Don't repeat yourself"](#dont-repeat-yourself-dry)
+recommendation further down.
+
+<hr style="height:1pt; visibility:hidden;" />
 
 ### Restart R regularly
 
 If at all possible, try to restart R regularly and start over by running your
-code from the beginning of the script.
+code from the beginning of the script in a fresh environment.
 This ensures that your script is indeed self-contained.
 
-Restarting R will also alert you to the all-too-common situation of having code
-that no longer works because of changes you made,
-but that you don't notice because you have objects that originate from now-changed code.
-(One typical cause of this is when you rename an object.)
+Restarting R will also alert you to the all-too-common situation of:
+
+- Having code in your script that no longer works because of changes you made, _but_
+- You fail to notice this because your R environment still reflects the old code.
+  
+One typical cause of this situation is when you rename an object.
 The more regularly you restart,
-the less risk you run of having a really hard figuring out what changed.
+the less risk you run of getting into this situation and then having a really hard
+time figuring out what changed.
 
 ::: callout-tip
 If it seems prohibitive to restart R regularly because there is so
 much code to rerun, and/or that code takes a long time to run,
-you should strongly consider splitting your script into different parts.
-See the section "Keep your scripts short" below.
+you should consider splitting your script into different parts.
+See the section "Don't let your scripts get too long" below.
 :::
 
-_TBA - screenshot and keyboard shortcut_
+To make sure that R starts in a fresh environment upon restarting,
+use the following settings in RStudio (`Tools` > `Global Options`) --
+uncheck the the "Restore ..." box and set the other option to "Never":
 
-_TBA - settings not to reload environment_
+![_These settings will prevent R from reloading you environment upon restarting R._](img/restart-settings.png){fig-align="center" width="45%" .lightbox}
+
+To actually restart R, click `Session` > `Restart R`:
+
+![_The Session menu has an option to restart R._](img/restart-r.png){fig-align="center" width="25%" .lightbox}
+
+Pay attention to the keyboard shortcut that is shown there,
+and try to get used to using that!
+
+::: exercise
+#### Exercise: Restart R
+
+1. Make sure you have a couple of things in your R environment.
+
+2. Restart R -- test the keyboard shortcut.
+
+3. Check that your R environment is now empty.
+:::
 
 <hr style="height:1pt; visibility:hidden;" />
 
@@ -225,14 +290,13 @@ Don't load packages throughout your script,
 and certainly don't omit the code to load packages as explained above.
 Instead, load all packages at the top of the script -- for example:
 
-```{r, eval=FALSE}
+```{r}
 # Load packages
-library(tidyverse)   # (v 2.0.0)
+library(tidyverse)   # Data wrangling and plotting (v 2.0.0)
 library(patchwork)   # Creating multi-panel figures (v 1.3.2)
 library(ggforce)     # For the facet_zoom() function (v 0.5.0)
 library(janitor)     # Variable name cleaning (v 2.2.1)
-library(pheatmap)    # Heatmap (v. 1.0.13)
-library(here)        # Creating file paths
+library(here)        # Creating file paths (v 1.0.1)
 ```
 
 The above example also includes a brief explanation of what each package is used
@@ -248,23 +312,51 @@ library(janitor)
 library(here)
 ```
 
-For package versions, you can also run the `sessionInfo()` function:
+To report package versions, you can also run the `sessionInfo()` function:
 
-```{r}
+```{r, eval=TRUE}
 sessionInfo()
 ```
 
 <hr style="height:1pt; visibility:hidden;" />
 
-This is particularly convenient to include in a Quarto document,
-where you can put this function all the way at the end,
+It is particularly convenient to include that code in a Quarto document --
+there, you can put this function all the way at the end,
 so its output will be included in the rendered document.
-In an R script, you could do this to save the info to file:
+In an R script, you could include the following to save the info to file:
 
 ```{r}
 writeLines(capture.output(sessionInfo()), "sessionInfo.txt")
 ```
 :::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Settings
+
+If your script has any key settings for your analysis,
+especially ones you may want to change later on,
+you should also include these at the top of your script. For example:
+
+```{r}
+# General settings
+p_value <- 0.01
+logfold_change <- 1
+some_threshold <- 25
+remove_outliers <- TRUE
+
+# Plot settings
+theme_set(theme_minimal(base_size = 13))
+treatment_colors <- c(control = "gray50", mock = "gray20", inoculated = "blue")
+```
+
+This may also include miscellaneous things like setting the random seed,
+which makes functions with random sampling reproducible:
+
+```{r}
+# Set the random seed for sampling with function rnorm()
+set.seed(1)
+```
 
 <hr style="height:1pt; visibility:hidden;" />
 
@@ -275,7 +367,7 @@ variables at the top of the script -- for example:
 
 - Input files:
 
-  ```{r, eval=FALSE}
+  ```{r}
   # Define the input files
   data_file <- "data/strawberries.tsv"
   sampledata_file <- "data/meta/samples.tsv" 
@@ -283,7 +375,7 @@ variables at the top of the script -- for example:
 
 - Output files:
 
-  ```{r, eval=FALSE}
+  ```{r}
   # Define and create the output dir
   outdir <- "results/plots"
   dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
@@ -295,34 +387,10 @@ variables at the top of the script -- for example:
 
 Then, you would use these variables when reading and writing later on:
 
-```{r, eval=FALSE}
+```{r}
 data <- read_tsv(data_file)
 ggsave(boxplot_file)
-```
-
-<hr style="height:1pt; visibility:hidden;" />
-
-### Settings
-
-If you have any key settings,
-especially those that you may want to set differently later on or in a different
-context, you should also include these at the top of your script.
-For example:
-
-```{r}
-# Settings
-p_value <- 0.01
-logfold_change <- 1
-some_threshold <- 25
-remove_outliers <- TRUE
-```
-
-This may also include miscellaneous things like setting the random seed for
-an analysis:
-
-```{r}
-# Set the random seed for sampling with function rnorm()
-set.seed(1)
+# Etc.
 ```
 
 ### Putting it together
@@ -330,19 +398,120 @@ set.seed(1)
 All in all, the top section of your script may look something like this:
 
 ```{r}
+# Author: Jane Doe
+# Date: 2025-09-29, with edits on 2025-10-05
+# Project: ~/Documents/thesis/strawberry-experiment
+# Purpose: Create a figure to ... 
+
 # SETUP ------------------------------------------------------------------------
-#TBA
+# Load packages
+library(tidyverse)   # (v 2.0.0)
+library(patchwork)   # Creating multi-panel figures (v 1.3.2)
+library(ggforce)     # For the facet_zoom() function (v 0.5.0)
+library(janitor)     # Variable name cleaning (v 2.2.1)
+library(here)        # Creating file paths (v 1.0.1)
+
+# General settings
+p_value <- 0.01
+logfold_change <- 1
+some_threshold <- 25
+remove_outliers <- TRUE
+
+# Plot settings
+theme_set(theme_minimal(base_size = 13))
+treatment_colors <- c(control = "gray50", mock = "gray20", inoculated = "blue")
+
+# Define the input files
+data_file <- "data/strawberries.tsv"
+sampledata_file <- "data/meta/samples.tsv" 
+
+# Define and create the output dir
+outdir <- "results/plots"
+dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+  
+# Define the output files
+boxplot_file <- here(outdir, "boxplot.png")
+scatterplot_file <- here(outdir, "scatterplot.png")
 ```
 
+::: exercise
+#### {{< fa user-edit >}} Exercise: Restructuring a script
+
+Restructure this script according to the recommendations above:
+
+```{r}
+library(janitor)
+data <- iris |>
+  clean_names()
+head(data)
+
+library(ggplot2)
+data$sepal_length[1:10]
+ggplot(data, aes(x = sepal_length, y = petal_length)) +
+  geom_point() #+
+  #geom_line()
+ggsave("results/plots/plot.png")
+
+library(dplyr)
+data_summary <- data |>
+  summarize(mean_sepal_length = mean(sepal_length), .by = species)
+library(readr)
+write_tsv(data_summary, here("results/data_summary.tsv"))
+```
+
+<details><summary>Click here for some pointers</summary>
+
+- Note that there are currently no comments or sections in the script
+- Do you think `head(data)` and a simmilar line should be in your final script?
+- The code currently assumes that the dir `results/plots` exists.
+- Could you load _ggplot2_, _dplyr_, and _readr_, with a single `library()` call?
+
+</details>
+
+<details><summary>Click here for a possible solution</summary>
+
+Note that in the suggestion below,
+I removed the `head(data)` and `data$sepal_length[1:10]` lines.
+These are lines that aren't really a problem to keep in,
+but unless they come with a clear directive, are a kind of clutter --
+you are better of just typing these kinds of things directly in the Console.
+
+```{r}
+# SETUP ------------------------------------------------------------------------
+# Load packages
+library(janitor)    # To fix column names with clean_names() (version X)
+library(tidyverse)  # Data summarizing, plotting, and writing (version X)
+
+# Make sure the output dir(s) exist
+outdir <- "results/plots"
+dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+
+# Define the output files
+plotfile <- "results/plots/plot.png"
+data_summary_file <- "results/data_summary.tsv"
+
+# LOAD AND PREP THE DATA -------------------------------------------------------
+data <- iris |>
+  clean_names()
+
+# VISUALIZE THE DATA -----------------------------------------------------------
+ggplot(data, aes(x = sepal_length, y = petal_length)) +
+  geom_point()
+ggsave(plotfile)
+
+# SUMMARIZE THE DATA -----------------------------------------------------------
+data_summary <- data |>
+  summarize(mean_sepal_length = mean(sepal_length), .by = species)
+write_tsv(data_summary, data_summary_file))
+```
+
+</details>
+
+:::
+
 <hr style="height:1pt; visibility:hidden;" />
 
-## Don't repeat yourself (DRY)
-
-### Use functions and put them in a separate file
-
-<hr style="height:1pt; visibility:hidden;" />
-
-## Keep your scripts short
+## Don't let your scripts get too long
 
 Your scripts should not become too long or they will become very hard to understand
 and to manage.
@@ -351,35 +520,124 @@ they will take a long time to render and are much more likely to fail while rend
 It is much better to have relatively short, modular scripts,
 each with a clear purpose.
 
-For example,
-it is hopefully common sense to start a new script when you switch to an unrelated
-analysis that uses different data, even if within the same project.
-
+It hopefully seems like common sense to start a new script when you switch to an
+unrelated analysis that uses different data, even if this is within the same project.
 But it is not always this easy.
-As an analysis expands and expands,
-it can be appealing to keep adding things to the same script.
-This can be true especially true if, for example:
 
-- The analyses work with the same data,
-  and the script first does extensive data processing for all subsequent analyses.
+### Splitting "continuous" scripts
+
+As an analysis expands and expands,
+**it is often most convenient to just keep adding things to the same script**.
+Such as when:
+
+- All analyses work with the same data,
+  and the script first does extensive data processing for all analyses; or
 - Some or all analyses are not independent but more like a pipeline,
   where the outputs of step A are used in step B, the outputs of step B
   are used in step C, and so on.
   
-However, even in such scenarios, it is a good idea not to let a single script
-get too long (say, many hundreds of lines),
-and to instead start a new script sooner rather than later.
+However, also in such scenarios,
+it is a good idea to not let a single script get too long,
+and to start a new script sooner rather than later.
+To do this in practice, you will need to write intermediate outputs to file,
+and load them in your next script.
 
-How can you do this?
-Write files, then read files
+Consider an example where we do a whole bunch, perhaps hundreds of lines,
+of data prepping,
+and this data is then used by an big analysis and one or more plots.
+Whenever you work on on the plot, you find yourself rerunning the data prepping
+code, and skipping the analysis code.
+Perhaps this can be split into three scripts:
 
-This may mean that you need more code in total,
-because you will need script A to write its outputs to files that are then loaded
-by script B, instead of just moving along in the same script.
-But it is still worth it!
+1. Data prep
+2. Data analysis
+3. Data visualization
 
-::: exercise
-Rework this script into two separate scripts
+In practice, in much abbreviated form, this could look something like this:
+
+```{r}
+# Shared data prep
+data_prepped <- data |>
+  filter(...) |>
+  mutate(...) |>
+  select(...)
+
+# Analysis
+lm(..., data_prepped)
+
+# Plot
+data_prepped |>
+  ggplot(...)
+```
+
+Which can be split as follows:
+
+- Script 1 -- Data prep:
+
+  ```{r}
+  data_prepped <- data |>
+    filter(...) |>
+    mutate(...) |>
+    select(...)
+  write_tsv(data_prepped, "<data-prepped-file>")
+  ```
+
+- Script 2 -- Data analysis:
+
+  ```{r}
+  data_prepped <- read_tsv("<data-prepped-file>")
+   
+  lm(..., data_prepped)
+  ```
+  
+- Script 3 -- Data visualization:
+
+  ```{r}
+  data_prepped <- read_tsv("<data-prepped-file>")
+   
+  data_prepped |>
+    ggplot(...)
+  ```
+
+As you can see, this does mean you need more code in total.
+But in the long run, having smaller scripts is often worth it!
+
+::: callout-note
+### Have more complicated objects?
+
+If your intermediate output includes more complex R objects that are not easily
+saved to TSV/CSV and similar files,
+you can use a pair of functions to save and load R objects "as is".
+For example:
+
+- Saving the object to file:
+
+  ```{r}
+  saveRDS(some_complicated_object, "object.RDS")
+  ```
+
+- Loading the object from file:
+
+  ```{r}
+  some_complicated_object <- readRDS("object.RDS")
+  ```
 :::
 
-- saveRDS, readRDS
+<hr style="height:1pt; visibility:hidden;" />
+
+## Don't repeat yourself (DRY)
+
+If you find yourself...
+
+- Copying and pasting large chunks of code only to make minor
+  edits to the pasted code, or
+- Using the abovementioned strategy where you run the code in your script multiple
+  times after changing a setting or input file
+
+...then you may want to learn about techniques that can help you avoid repeating yourself.
+One of the best ways of doing so is to write your own functions,
+and then iterate with "functional programming" functions (`map()`, `apply`-family, etc)
+or loops to elegantly run these functions multiple times.
+
+How to do this in practice in beyond the scope of this session,
+but we do have a previous [series of Code Club sessions about this](/pages/previous.html#spring-22).
