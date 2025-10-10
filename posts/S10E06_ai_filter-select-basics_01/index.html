@@ -1,0 +1,1680 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Cooperstone">
+<meta name="dcterms.date" content="2025-10-13">
+
+<title>GenAI prep: data wrangling with filter and select – OSU Code Club</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2fa0555fe88427c29efa1b60aaf9e62d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cd03ec2eb3d93126c40b3547cc84a9a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.qmdgit st"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more-resources">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup (installations) for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/other.html">
+ <span class="dropdown-text">Other coding-related OSU activities</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-feb-2025/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Feb ’25)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-aug-2025/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Aug ’25)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#why-do-we-wrangle-our-data" id="toc-why-do-we-wrangle-our-data" class="nav-link" data-scroll-target="#why-do-we-wrangle-our-data"><span class="header-section-number">1.1</span> Why do we wrangle our data?</a>
+  <ul class="collapse">
+  <li><a href="#poll---who-is-new-to-r" id="toc-poll---who-is-new-to-r" class="nav-link" data-scroll-target="#poll---who-is-new-to-r"><span class="header-section-number">1.1.1</span> Poll - who is new to R?</a></li>
+  </ul></li>
+  <li><a href="#load-packages" id="toc-load-packages" class="nav-link" data-scroll-target="#load-packages"><span class="header-section-number">1.2</span> Load packages</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data"><span class="header-section-number">1.3</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#cleaning-column-names" id="toc-cleaning-column-names" class="nav-link" data-scroll-target="#cleaning-column-names"><span class="header-section-number">1.3.1</span> Cleaning column names</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#pick-observations-with-filter" id="toc-pick-observations-with-filter" class="nav-link" data-scroll-target="#pick-observations-with-filter"><span class="header-section-number">2</span> Pick observations with <code>filter()</code></a>
+  <ul class="collapse">
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice"><span class="header-section-number">2.1</span> Practice</a></li>
+  </ul></li>
+  <li><a href="#choose-columns-with-select" id="toc-choose-columns-with-select" class="nav-link" data-scroll-target="#choose-columns-with-select"><span class="header-section-number">3</span> Choose columns with <code>select()</code></a>
+  <ul class="collapse">
+  <li><a href="#practice-1" id="toc-practice-1" class="nav-link" data-scroll-target="#practice-1"><span class="header-section-number">3.1</span> Practice</a></li>
+  </ul></li>
+  <li><a href="#sorting-data-with-arrange" id="toc-sorting-data-with-arrange" class="nav-link" data-scroll-target="#sorting-data-with-arrange"><span class="header-section-number">4</span> Sorting data with <code>arrange()</code></a>
+  <ul class="collapse">
+  <li><a href="#practice-2" id="toc-practice-2" class="nav-link" data-scroll-target="#practice-2"><span class="header-section-number">4.1</span> Practice</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S10E06_ai_filter-select-basics_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">GenAI prep: data wrangling with <code>filter</code> and <code>select</code></h1>
+  <div class="quarto-categories">
+    <div class="quarto-category">r-basics</div>
+    <div class="quarto-category">tidyverse</div>
+    <div class="quarto-category">github-copilot</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jessica Cooperstone </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 13, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/go-wrangling.png" class="img-fluid figure-img"></p>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>We are going to spend the next handful of Code Club sessions learning how to code with the help of generative AI. We have decided to structure these lessons by providing you a little bit of context about some functions that can be used to achieve a task, and then will spend the next session playing around with these functions using <a href="https://docs.posit.co/ide/user/ide/guide/tools/copilot.html">GitHub Copilot which can be integrated into RStudio</a>.</p>
+<p>We are taking this approach so we are not starting using generative AI without any knowledge of our task or functions, so we can better see how its working and how we can make it work for us.</p>
+<p>We won’t be using Github Copilot today but we will use it next week.</p>
+<section id="why-do-we-wrangle-our-data" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="why-do-we-wrangle-our-data"><span class="header-section-number">1.1</span> Why do we wrangle our data?</h2>
+<blockquote class="blockquote">
+<p>“Yet far too much handcrafted work — what data scientists call “data wrangling,” “data munging” and “data janitor work” — is still required. Data scientists, according to interviews and expert estimates, spend from 50 percent to 80 percent of their time mired in this more mundane labor of collecting and preparing unruly digital data, before it can be explored for useful nuggets.” - <a href="https://www.nytimes.com/2014/08/18/technology/for-big-data-scientists-hurdle-to-insights-is-janitor-work.html">For Big-Data Scientists, ‘Janitor Work’ Is Key Hurdle to Insights, NY Times</a></p>
+</blockquote>
+<section id="poll---who-is-new-to-r" class="level3" data-number="1.1.1">
+<h3 data-number="1.1.1" class="anchored" data-anchor-id="poll---who-is-new-to-r"><span class="header-section-number">1.1.1</span> Poll - who is new to R?</h3>
+<p>If you don’t have R and RStudio on your computer, you can find instructions for installation <a href="https://osu-codeclub.github.io/pages/setup.html">here</a>. You can also find some additional introductory material on getting set up in RStudio <a href="https://osu-codeclub.github.io/posts/S07E01_basics_01/">here</a>.</p>
+</section>
+</section>
+<section id="load-packages" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="load-packages"><span class="header-section-number">1.2</span> Load packages</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("tidyverse") # i have version 2.0.0</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("janitor") # i have version 2.2.1</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># for wrangling</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(janitor) <span class="co"># for cleaning up column names</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'janitor'
+
+The following objects are masked from 'package:stats':
+
+    chisq.test, fisher.test</code></pre>
+</div>
+</div>
+</section>
+<section id="data" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="data"><span class="header-section-number">1.3</span> Data</h2>
+<p>We are going to use data from <a href="https://www.cia.gov/the-world-factbook/">The World Factbook</a>, put together by the CIA to “provides basic intelligence on the history, people, government, economy, energy, geography, environment, communications, transportation, military, terrorism, and transnational issues for 265 world entities.” I thought this data would give us some opportunities to flex our R skills, and learn a bit about the world.</p>
+<p>The data we are going to download can be found <a href="https://www.cia.gov/the-world-factbook/field/population/country-comparison/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">url =</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S08E01_wrangling_01/data/factbook-2015.csv"</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">destfile =</span> <span class="st">"factbook_download_2015.csv"</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You should now see the file “factbook_download_2015.csv” in your working directory.</p>
+<p>We can read it in using the tidyverse function from the <a href="https://readr.tidyverse.org/index.html"><code>readr</code></a> package called <a href="https://readr.tidyverse.org/reference/read_delim.html"><code>read_csv()</code></a>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"factbook_download_2015.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 217 Columns: 53
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (2): Country Name, Country Code
+dbl (51): Population, total, Population growth (annual %), Surface area (sq....
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+</div>
+<p>Let’s get a better handle on this data. We can use the function <a href="https://dplyr.tidyverse.org/reference/glimpse.html"><code>glimpse()</code></a> to get a “glimpse” at our data.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(factbook_2015)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>Rows: 217
+Columns: 53
+$ `Country Name`                                                                                     &lt;chr&gt; …
+$ `Country Code`                                                                                     &lt;chr&gt; …
+$ `Population, total`                                                                                &lt;dbl&gt; …
+$ `Population growth (annual %)`                                                                     &lt;dbl&gt; …
+$ `Surface area (sq. km)`                                                                            &lt;dbl&gt; …
+$ `Poverty headcount ratio at national poverty lines (% of population)`                              &lt;dbl&gt; …
+$ `GNI, Atlas method (current US$)`                                                                  &lt;dbl&gt; …
+$ `GNI per capita, Atlas method (current US$)`                                                       &lt;dbl&gt; …
+$ `GNI, PPP (current international $)`                                                               &lt;dbl&gt; …
+$ `GNI per capita, PPP (current international $)`                                                    &lt;dbl&gt; …
+$ `Income share held by lowest 20%`                                                                  &lt;dbl&gt; …
+$ `Life expectancy at birth, total (years)`                                                          &lt;dbl&gt; …
+$ `Fertility rate, total (births per woman)`                                                         &lt;dbl&gt; …
+$ `Adolescent fertility rate (births per 1,000 women ages 15-19)`                                    &lt;dbl&gt; …
+$ `Contraceptive prevalence, any method (% of married women ages 15-49)`                             &lt;dbl&gt; …
+$ `Births attended by skilled health staff (% of total)`                                             &lt;dbl&gt; …
+$ `Mortality rate, under-5 (per 1,000 live births)`                                                  &lt;dbl&gt; …
+$ `Prevalence of underweight, weight for age (% of children under 5)`                                &lt;dbl&gt; …
+$ `Immunization, measles (% of children ages 12-23 months)`                                          &lt;dbl&gt; …
+$ `Primary completion rate, total (% of relevant age group)`                                         &lt;dbl&gt; …
+$ `School enrollment, secondary (% gross)`                                                           &lt;dbl&gt; …
+$ `School enrollment, primary and secondary (gross), gender parity index (GPI)`                      &lt;dbl&gt; …
+$ `Prevalence of HIV, total (% of population ages 15-49)`                                            &lt;dbl&gt; …
+$ `Forest area (sq. km)`                                                                             &lt;dbl&gt; …
+$ `Water productivity, total (constant 2015 US$ GDP per cubic meter of total freshwater withdrawal)` &lt;dbl&gt; …
+$ `Energy use (kg of oil equivalent per capita)`                                                     &lt;dbl&gt; …
+$ `CO2 emissions (metric tons per capita)`                                                           &lt;dbl&gt; …
+$ `Electric power consumption (kWh per capita)`                                                      &lt;dbl&gt; …
+$ `GDP (current US$)`                                                                                &lt;dbl&gt; …
+$ `GDP growth (annual %)`                                                                            &lt;dbl&gt; …
+$ `Inflation, GDP deflator (annual %)`                                                               &lt;dbl&gt; …
+$ `Agriculture, forestry, and fishing, value added (% of GDP)`                                       &lt;dbl&gt; …
+$ `Industry (including construction), value added (% of GDP)`                                        &lt;dbl&gt; …
+$ `Exports of goods and services (% of GDP)`                                                         &lt;dbl&gt; …
+$ `Imports of goods and services (% of GDP)`                                                         &lt;dbl&gt; …
+$ `Gross capital formation (% of GDP)`                                                               &lt;dbl&gt; …
+$ `Revenue, excluding grants (% of GDP)`                                                             &lt;dbl&gt; …
+$ `Start-up procedures to register a business (number)`                                              &lt;dbl&gt; …
+$ `Market capitalization of listed domestic companies (% of GDP)`                                    &lt;dbl&gt; …
+$ `Military expenditure (% of GDP)`                                                                  &lt;dbl&gt; …
+$ `Mobile cellular subscriptions (per 100 people)`                                                   &lt;dbl&gt; …
+$ `High-technology exports (% of manufactured exports)`                                              &lt;dbl&gt; …
+$ `Merchandise trade (% of GDP)`                                                                     &lt;dbl&gt; …
+$ `Net barter terms of trade index (2015 = 100)`                                                     &lt;dbl&gt; …
+$ `External debt stocks, total (DOD, current US$)`                                                   &lt;dbl&gt; …
+$ `Total debt service (% of GNI)`                                                                    &lt;dbl&gt; …
+$ `Net migration`                                                                                    &lt;dbl&gt; …
+$ `Personal remittances, paid (current US$)`                                                         &lt;dbl&gt; …
+$ `Foreign direct investment, net inflows (BoP, current US$)`                                        &lt;dbl&gt; …
+$ `Net ODA received per capita (current US$)`                                                        &lt;dbl&gt; …
+$ `GDP per capita (current US$)`                                                                     &lt;dbl&gt; …
+$ `Foreign direct investment, net (BoP, current US$)`                                                &lt;dbl&gt; …
+$ `Inflation, consumer prices (annual %)`                                                            &lt;dbl&gt; …</code></pre>
+</div>
+</div>
+<p>We see that <code>Country Name</code> and <code>Country Code</code> are character columns while the others are numeric (i.e., dbl).</p>
+<p>We can look at this data another way, using the function <code>head()</code> to look at the first six rows, and every column.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(factbook_2015)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 6 × 53
+  `Country Name` `Country Code` `Population, total` Population growth (annual …¹
+  &lt;chr&gt;          &lt;chr&gt;                        &lt;dbl&gt;                        &lt;dbl&gt;
+1 Afghanistan    AFG                       33753499                        3.12 
+2 Albania        ALB                        2880703                       -0.291
+3 Algeria        DZA                       39543154                        2.00 
+4 American Samoa ASM                          51368                       -1.64 
+5 Andorra        AND                          71746                        0.174
+6 Angola         AGO                       28127721                        3.62 
+# ℹ abbreviated name: ¹​`Population growth (annual %)`
+# ℹ 49 more variables: `Surface area (sq. km)` &lt;dbl&gt;,
+#   `Poverty headcount ratio at national poverty lines (% of population)` &lt;dbl&gt;,
+#   `GNI, Atlas method (current US$)` &lt;dbl&gt;,
+#   `GNI per capita, Atlas method (current US$)` &lt;dbl&gt;,
+#   `GNI, PPP (current international $)` &lt;dbl&gt;,
+#   `GNI per capita, PPP (current international $)` &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<section id="cleaning-column-names" class="level3" data-number="1.3.1">
+<h3 data-number="1.3.1" class="anchored" data-anchor-id="cleaning-column-names"><span class="header-section-number">1.3.1</span> Cleaning column names</h3>
+<p>It looks like we have some column names that don’t use standard R practices (i.e., they have spaces, start with numbers). This isn’t a critical problem (meaning you can use column names like this - we know that because we have them here!) but it does make things slightly more difficult. The main difficulty is that you will have to refer to column names surrounded in back ticks and this can be annoying.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Note that you can access a single column in a dataframe by using the <code>$</code> (dollar sign operator). This will give you your column as a vector.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># look how annoying it is to refer to a column that has unconventional naming</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>factbook_2015<span class="sc">$</span><span class="st">`</span><span class="at">Country Name</span><span class="st">`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s use the function <a href=""><code>clean_names()</code></a> from the <code>janitor</code> package to clean those names up.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># old column names</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(factbook_2015)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code> [1] "Country Name"                                                                                    
+ [2] "Country Code"                                                                                    
+ [3] "Population, total"                                                                               
+ [4] "Population growth (annual %)"                                                                    
+ [5] "Surface area (sq. km)"                                                                           
+ [6] "Poverty headcount ratio at national poverty lines (% of population)"                             
+ [7] "GNI, Atlas method (current US$)"                                                                 
+ [8] "GNI per capita, Atlas method (current US$)"                                                      
+ [9] "GNI, PPP (current international $)"                                                              
+[10] "GNI per capita, PPP (current international $)"                                                   
+[11] "Income share held by lowest 20%"                                                                 
+[12] "Life expectancy at birth, total (years)"                                                         
+[13] "Fertility rate, total (births per woman)"                                                        
+[14] "Adolescent fertility rate (births per 1,000 women ages 15-19)"                                   
+[15] "Contraceptive prevalence, any method (% of married women ages 15-49)"                            
+[16] "Births attended by skilled health staff (% of total)"                                            
+[17] "Mortality rate, under-5 (per 1,000 live births)"                                                 
+[18] "Prevalence of underweight, weight for age (% of children under 5)"                               
+[19] "Immunization, measles (% of children ages 12-23 months)"                                         
+[20] "Primary completion rate, total (% of relevant age group)"                                        
+[21] "School enrollment, secondary (% gross)"                                                          
+[22] "School enrollment, primary and secondary (gross), gender parity index (GPI)"                     
+[23] "Prevalence of HIV, total (% of population ages 15-49)"                                           
+[24] "Forest area (sq. km)"                                                                            
+[25] "Water productivity, total (constant 2015 US$ GDP per cubic meter of total freshwater withdrawal)"
+[26] "Energy use (kg of oil equivalent per capita)"                                                    
+[27] "CO2 emissions (metric tons per capita)"                                                          
+[28] "Electric power consumption (kWh per capita)"                                                     
+[29] "GDP (current US$)"                                                                               
+[30] "GDP growth (annual %)"                                                                           
+[31] "Inflation, GDP deflator (annual %)"                                                              
+[32] "Agriculture, forestry, and fishing, value added (% of GDP)"                                      
+[33] "Industry (including construction), value added (% of GDP)"                                       
+[34] "Exports of goods and services (% of GDP)"                                                        
+[35] "Imports of goods and services (% of GDP)"                                                        
+[36] "Gross capital formation (% of GDP)"                                                              
+[37] "Revenue, excluding grants (% of GDP)"                                                            
+[38] "Start-up procedures to register a business (number)"                                             
+[39] "Market capitalization of listed domestic companies (% of GDP)"                                   
+[40] "Military expenditure (% of GDP)"                                                                 
+[41] "Mobile cellular subscriptions (per 100 people)"                                                  
+[42] "High-technology exports (% of manufactured exports)"                                             
+[43] "Merchandise trade (% of GDP)"                                                                    
+[44] "Net barter terms of trade index (2015 = 100)"                                                    
+[45] "External debt stocks, total (DOD, current US$)"                                                  
+[46] "Total debt service (% of GNI)"                                                                   
+[47] "Net migration"                                                                                   
+[48] "Personal remittances, paid (current US$)"                                                        
+[49] "Foreign direct investment, net inflows (BoP, current US$)"                                       
+[50] "Net ODA received per capita (current US$)"                                                       
+[51] "GDP per capita (current US$)"                                                                    
+[52] "Foreign direct investment, net (BoP, current US$)"                                               
+[53] "Inflation, consumer prices (annual %)"                                                           </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># use clean_names and save over the current df factbook_2015</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="ot">&lt;-</span> <span class="fu">clean_names</span>(factbook_2015)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># new column names</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(factbook_2015)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code> [1] "country_name"                                                                                
+ [2] "country_code"                                                                                
+ [3] "population_total"                                                                            
+ [4] "population_growth_annual_percent"                                                            
+ [5] "surface_area_sq_km"                                                                          
+ [6] "poverty_headcount_ratio_at_national_poverty_lines_percent_of_population"                     
+ [7] "gni_atlas_method_current_us"                                                                 
+ [8] "gni_per_capita_atlas_method_current_us"                                                      
+ [9] "gni_ppp_current_international"                                                               
+[10] "gni_per_capita_ppp_current_international"                                                    
+[11] "income_share_held_by_lowest_20_percent"                                                      
+[12] "life_expectancy_at_birth_total_years"                                                        
+[13] "fertility_rate_total_births_per_woman"                                                       
+[14] "adolescent_fertility_rate_births_per_1_000_women_ages_15_19"                                 
+[15] "contraceptive_prevalence_any_method_percent_of_married_women_ages_15_49"                     
+[16] "births_attended_by_skilled_health_staff_percent_of_total"                                    
+[17] "mortality_rate_under_5_per_1_000_live_births"                                                
+[18] "prevalence_of_underweight_weight_for_age_percent_of_children_under_5"                        
+[19] "immunization_measles_percent_of_children_ages_12_23_months"                                  
+[20] "primary_completion_rate_total_percent_of_relevant_age_group"                                 
+[21] "school_enrollment_secondary_percent_gross"                                                   
+[22] "school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi"                       
+[23] "prevalence_of_hiv_total_percent_of_population_ages_15_49"                                    
+[24] "forest_area_sq_km"                                                                           
+[25] "water_productivity_total_constant_2015_us_gdp_per_cubic_meter_of_total_freshwater_withdrawal"
+[26] "energy_use_kg_of_oil_equivalent_per_capita"                                                  
+[27] "co2_emissions_metric_tons_per_capita"                                                        
+[28] "electric_power_consumption_k_wh_per_capita"                                                  
+[29] "gdp_current_us"                                                                              
+[30] "gdp_growth_annual_percent"                                                                   
+[31] "inflation_gdp_deflator_annual_percent"                                                       
+[32] "agriculture_forestry_and_fishing_value_added_percent_of_gdp"                                 
+[33] "industry_including_construction_value_added_percent_of_gdp"                                  
+[34] "exports_of_goods_and_services_percent_of_gdp"                                                
+[35] "imports_of_goods_and_services_percent_of_gdp"                                                
+[36] "gross_capital_formation_percent_of_gdp"                                                      
+[37] "revenue_excluding_grants_percent_of_gdp"                                                     
+[38] "start_up_procedures_to_register_a_business_number"                                           
+[39] "market_capitalization_of_listed_domestic_companies_percent_of_gdp"                           
+[40] "military_expenditure_percent_of_gdp"                                                         
+[41] "mobile_cellular_subscriptions_per_100_people"                                                
+[42] "high_technology_exports_percent_of_manufactured_exports"                                     
+[43] "merchandise_trade_percent_of_gdp"                                                            
+[44] "net_barter_terms_of_trade_index_2015_100"                                                    
+[45] "external_debt_stocks_total_dod_current_us"                                                   
+[46] "total_debt_service_percent_of_gni"                                                           
+[47] "net_migration"                                                                               
+[48] "personal_remittances_paid_current_us"                                                        
+[49] "foreign_direct_investment_net_inflows_bo_p_current_us"                                       
+[50] "net_oda_received_per_capita_current_us"                                                      
+[51] "gdp_per_capita_current_us"                                                                   
+[52] "foreign_direct_investment_net_bo_p_current_us"                                               
+[53] "inflation_consumer_prices_annual_percent"                                                    </code></pre>
+</div>
+</div>
+<p>By default, <code>clean_names()</code> converts to “snake_case” (where words are separated by an underscore instead of a space).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/cases.png" class="img-fluid figure-img"></p>
+<figcaption><a href="https://kiranvajrapu.medium.com/exploring-programming-naming-styles-85aefd54c188">Exploring Programming Naming Styles by Kiran Vajrapu</a></figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Having spaces, starting with numbers, or have unallowable characters (e.g., %, ?, !) is only a problem for column <strong>names</strong> not for cell <strong>contents</strong>.</p>
+</div>
+</div>
+<p>What if we want to see a complete list of our countries? We could run the following code to see that:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>factbook_2015<span class="sc">$</span>country_name</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code>  [1] "Afghanistan"                    "Albania"                       
+  [3] "Algeria"                        "American Samoa"                
+  [5] "Andorra"                        "Angola"                        
+  [7] "Antigua and Barbuda"            "Argentina"                     
+  [9] "Armenia"                        "Aruba"                         
+ [11] "Australia"                      "Austria"                       
+ [13] "Azerbaijan"                     "Bahamas, The"                  
+ [15] "Bahrain"                        "Bangladesh"                    
+ [17] "Barbados"                       "Belarus"                       
+ [19] "Belgium"                        "Belize"                        
+ [21] "Benin"                          "Bermuda"                       
+ [23] "Bhutan"                         "Bolivia"                       
+ [25] "Bosnia and Herzegovina"         "Botswana"                      
+ [27] "Brazil"                         "British Virgin Islands"        
+ [29] "Brunei Darussalam"              "Bulgaria"                      
+ [31] "Burkina Faso"                   "Burundi"                       
+ [33] "Cabo Verde"                     "Cambodia"                      
+ [35] "Cameroon"                       "Canada"                        
+ [37] "Cayman Islands"                 "Central African Republic"      
+ [39] "Chad"                           "Channel Islands"               
+ [41] "Chile"                          "China"                         
+ [43] "Colombia"                       "Comoros"                       
+ [45] "Congo, Dem. Rep."               "Congo, Rep."                   
+ [47] "Costa Rica"                     "Cote d'Ivoire"                 
+ [49] "Croatia"                        "Cuba"                          
+ [51] "Curacao"                        "Cyprus"                        
+ [53] "Czechia"                        "Denmark"                       
+ [55] "Djibouti"                       "Dominica"                      
+ [57] "Dominican Republic"             "Ecuador"                       
+ [59] "Egypt, Arab Rep."               "El Salvador"                   
+ [61] "Equatorial Guinea"              "Eritrea"                       
+ [63] "Estonia"                        "Ethiopia"                      
+ [65] "Faroe Islands"                  "Fiji"                          
+ [67] "Finland"                        "France"                        
+ [69] "French Polynesia"               "Gabon"                         
+ [71] "Gambia, The"                    "Georgia"                       
+ [73] "Germany"                        "Ghana"                         
+ [75] "Gibraltar"                      "Greece"                        
+ [77] "Greenland"                      "Grenada"                       
+ [79] "Guam"                           "Guatemala"                     
+ [81] "Guinea"                         "Guinea-Bissau"                 
+ [83] "Guyana"                         "Haiti"                         
+ [85] "Honduras"                       "Hong Kong SAR, China"          
+ [87] "Hungary"                        "Iceland"                       
+ [89] "India"                          "Indonesia"                     
+ [91] "Iran, Islamic Rep."             "Iraq"                          
+ [93] "Ireland"                        "Isle of Man"                   
+ [95] "Israel"                         "Italy"                         
+ [97] "Jamaica"                        "Japan"                         
+ [99] "Jordan"                         "Kazakhstan"                    
+[101] "Kenya"                          "Kiribati"                      
+[103] "Korea, Dem. People's Rep."      "Korea, Rep."                   
+[105] "Kosovo"                         "Kuwait"                        
+[107] "Kyrgyz Republic"                "Lao PDR"                       
+[109] "Latvia"                         "Lebanon"                       
+[111] "Lesotho"                        "Liberia"                       
+[113] "Libya"                          "Liechtenstein"                 
+[115] "Lithuania"                      "Luxembourg"                    
+[117] "Macao SAR, China"               "North Macedonia"               
+[119] "Madagascar"                     "Malawi"                        
+[121] "Malaysia"                       "Maldives"                      
+[123] "Mali"                           "Malta"                         
+[125] "Marshall Islands"               "Mauritania"                    
+[127] "Mauritius"                      "Mexico"                        
+[129] "Micronesia, Fed. Sts."          "Moldova"                       
+[131] "Monaco"                         "Mongolia"                      
+[133] "Montenegro"                     "Morocco"                       
+[135] "Mozambique"                     "Myanmar"                       
+[137] "Namibia"                        "Nauru"                         
+[139] "Nepal"                          "Netherlands"                   
+[141] "New Caledonia"                  "New Zealand"                   
+[143] "Nicaragua"                      "Niger"                         
+[145] "Nigeria"                        "Northern Mariana Islands"      
+[147] "Norway"                         "Oman"                          
+[149] "Pakistan"                       "Palau"                         
+[151] "Panama"                         "Papua New Guinea"              
+[153] "Paraguay"                       "Peru"                          
+[155] "Philippines"                    "Poland"                        
+[157] "Portugal"                       "Puerto Rico"                   
+[159] "Qatar"                          "Romania"                       
+[161] "Russian Federation"             "Rwanda"                        
+[163] "Samoa"                          "San Marino"                    
+[165] "Sao Tome and Principe"          "Saudi Arabia"                  
+[167] "Senegal"                        "Serbia"                        
+[169] "Seychelles"                     "Sierra Leone"                  
+[171] "Singapore"                      "Sint Maarten (Dutch part)"     
+[173] "Slovak Republic"                "Slovenia"                      
+[175] "Solomon Islands"                "Somalia"                       
+[177] "South Africa"                   "South Sudan"                   
+[179] "Spain"                          "Sri Lanka"                     
+[181] "St. Kitts and Nevis"            "St. Lucia"                     
+[183] "St. Martin (French part)"       "St. Vincent and the Grenadines"
+[185] "Sudan"                          "Suriname"                      
+[187] "Eswatini"                       "Sweden"                        
+[189] "Switzerland"                    "Syrian Arab Republic"          
+[191] "Tajikistan"                     "Tanzania"                      
+[193] "Thailand"                       "Timor-Leste"                   
+[195] "Togo"                           "Tonga"                         
+[197] "Trinidad and Tobago"            "Tunisia"                       
+[199] "Turkiye"                        "Turkmenistan"                  
+[201] "Turks and Caicos Islands"       "Tuvalu"                        
+[203] "Uganda"                         "Ukraine"                       
+[205] "United Arab Emirates"           "United Kingdom"                
+[207] "United States"                  "Uruguay"                       
+[209] "Uzbekistan"                     "Vanuatu"                       
+[211] "Venezuela, RB"                  "Viet Nam"                      
+[213] "Virgin Islands (U.S.)"          "West Bank and Gaza"            
+[215] "Yemen, Rep."                    "Zambia"                        
+[217] "Zimbabwe"                      </code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="pick-observations-with-filter" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Pick observations with <code>filter()</code></h1>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/filter.png" class="img-fluid figure-img" style="width:70.0%" alt="Cartoon showing three fuzzy monsters either selecting or crossing out rows of a data table. If the type of animal in the table is “otter” and the site is “bay”, a monster is drawing a purple rectangle around the row. If those conditions are not met, another monster is putting a line through the column indicating it will be excluded. Stylized text reads “dplyr::filter() - keep rows that satisfy your conditions.” Learn more about dplyr::filter."></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Sometimes you want to select observations (rows) based on values. To do this you use <a href="https://dplyr.tidyverse.org/reference/filter.html"><code>filter()</code></a>. Try not to confuse this with <code>select()</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="`select()` picks columns, while `filter()` picks rows.">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<code>select()</code> picks columns, while <code>filter()</code> picks rows.
+</div>
+</div>
+<div class="callout-body-container callout-body">
+
+</div>
+</div>
+<p>The function <code>filter()</code> will keep only observations that meet your filtering criteria.</p>
+<p>Let’s filter for countries that have a population more than Ohio (11.76M).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(population_total <span class="sc">&gt;</span> <span class="dv">11760000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 73 × 53
+   country_name country_code population_total population_growth_annual_percent
+   &lt;chr&gt;        &lt;chr&gt;                   &lt;dbl&gt;                            &lt;dbl&gt;
+ 1 Afghanistan  AFG                  33753499                            3.12 
+ 2 Algeria      DZA                  39543154                            2.00 
+ 3 Angola       AGO                  28127721                            3.62 
+ 4 Argentina    ARG                  43131966                            1.08 
+ 5 Australia    AUS                  23815995                            1.44 
+ 6 Bangladesh   BGD                 157830000                            1.19 
+ 7 Brazil       BRA                 205188205                            0.846
+ 8 Burkina Faso BFA                  18718019                            2.97 
+ 9 Cambodia     KHM                  15417523                            1.35 
+10 Cameroon     CMR                  23012646                            3.15 
+# ℹ 63 more rows
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;,
+#   gni_per_capita_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>If we want to see the countries that also have an area that is less than the size of Ohio (116,098 km^2), we can also add that to our filter statement using the <code>&amp;</code> operator.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(population_total <span class="sc">&gt;</span> <span class="dv">11760000</span> <span class="sc">&amp;</span> surface_area_sq_km <span class="sc">&lt;</span> <span class="dv">116098</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 4 × 53
+  country_name country_code population_total population_growth_annual_percent
+  &lt;chr&gt;        &lt;chr&gt;                   &lt;dbl&gt;                            &lt;dbl&gt;
+1 Guatemala    GTM                  15567419                            1.69 
+2 Korea, Rep.  KOR                  51014947                            0.527
+3 Netherlands  NLD                  16939923                            0.443
+4 Sri Lanka    LKA                  21336697                            0.457
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;,
+#   gni_per_capita_ppp_current_international &lt;dbl&gt;,
+#   income_share_held_by_lowest_20_percent &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>There are four countries that have more people than Ohio in a space that is less than Ohio.</p>
+<section id="practice" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="practice"><span class="header-section-number">2.1</span> Practice</h2>
+<p>How many countries have negative annual population growth? This variable is called <code>population_growth_annual_percent</code>.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Try to <code>filter</code> for <code>population_growth_annual_percent</code> &lt; 0.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(population_growth_annual_percent <span class="sc">&lt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 34 × 53
+   country_name           country_code population_total population_growth_annu…¹
+   &lt;chr&gt;                  &lt;chr&gt;                   &lt;dbl&gt;                    &lt;dbl&gt;
+ 1 Albania                ALB                   2880703                   -0.291
+ 2 American Samoa         ASM                     51368                   -1.64 
+ 3 Armenia                ARM                   2878595                   -0.393
+ 4 Bosnia and Herzegovina BIH                   3524324                   -1.32 
+ 5 Bulgaria               BGR                   7177991                   -0.638
+ 6 Croatia                HRV                   4203604                   -0.824
+ 7 Greece                 GRC                  10820883                   -0.659
+ 8 Greenland              GRL                     56114                   -0.322
+ 9 Hungary                HUN                   9843028                   -0.238
+10 Isle of Man            IMN                     83593                   -0.362
+# ℹ 24 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>There are 34 countries that have a negative annual growth rate in 2015.</p>
+</details>
+</section>
+</section>
+<section id="choose-columns-with-select" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Choose columns with <code>select()</code></h1>
+<p>Often you will want to pick only certain columns in your dataframe, and you can do this with the function <a href="https://dplyr.tidyverse.org/reference/select.html"><code>select()</code></a>. You can pick columns generally by:</p>
+<ul>
+<li>their names</li>
+<li>their position</li>
+<li>characteristics of that column</li>
+</ul>
+<p>If we want to know how the arguments to <code>select()</code> work, we can access the documentation material about the function.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>?<span class="fu">select</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s first select columns by their names. Let’s pick just the <code>country_name</code>, <code>population_total</code>, and <code>surface_area_sq_km</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, population_total, surface_area_sq_km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 3
+   country_name        population_total surface_area_sq_km
+   &lt;chr&gt;                          &lt;dbl&gt;              &lt;dbl&gt;
+ 1 Afghanistan                 33753499             652860
+ 2 Albania                      2880703              28750
+ 3 Algeria                     39543154            2381741
+ 4 American Samoa                 51368                200
+ 5 Andorra                        71746                470
+ 6 Angola                      28127721            1246700
+ 7 Antigua and Barbuda            89941                440
+ 8 Argentina                   43131966            2780400
+ 9 Armenia                      2878595              29740
+10 Aruba                         104257                180
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>Those columns are also the 1st, 3rd, and 5th columns in our data frame, do we can select them by their indices, or by their location.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 3
+   country_name        population_total surface_area_sq_km
+   &lt;chr&gt;                          &lt;dbl&gt;              &lt;dbl&gt;
+ 1 Afghanistan                 33753499             652860
+ 2 Albania                      2880703              28750
+ 3 Algeria                     39543154            2381741
+ 4 American Samoa                 51368                200
+ 5 Andorra                        71746                470
+ 6 Angola                      28127721            1246700
+ 7 Antigua and Barbuda            89941                440
+ 8 Argentina                   43131966            2780400
+ 9 Armenia                      2878595              29740
+10 Aruba                         104257                180
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>In general I would recommend against this because its really hard to remember which column indices are which variables today, nevermind returning back to old code 1 year from now.</p>
+<p>We can also select columns that are consecutive, using the <code>:</code> operator. Below I’m selecting the columns <code>country_name</code> through <code>population_growth_annual_percent</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name<span class="sc">:</span>population_growth_annual_percent)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 4
+   country_name        country_code population_total population_growth_annual_…¹
+   &lt;chr&gt;               &lt;chr&gt;                   &lt;dbl&gt;                       &lt;dbl&gt;
+ 1 Afghanistan         AFG                  33753499                       3.12 
+ 2 Albania             ALB                   2880703                      -0.291
+ 3 Algeria             DZA                  39543154                       2.00 
+ 4 American Samoa      ASM                     51368                      -1.64 
+ 5 Andorra             AND                     71746                       0.174
+ 6 Angola              AGO                  28127721                       3.62 
+ 7 Antigua and Barbuda ATG                     89941                       0.787
+ 8 Argentina           ARG                  43131966                       1.08 
+ 9 Armenia             ARM                   2878595                      -0.393
+10 Aruba               ABW                    104257                       0.638
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent</code></pre>
+</div>
+</div>
+<p>We can remove columns using the <code>!</code> operator: you can read the <code>!</code> as “not”.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">!</span>country_code)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 52
+   country_name       population_total population_growth_an…¹ surface_area_sq_km
+   &lt;chr&gt;                         &lt;dbl&gt;                  &lt;dbl&gt;              &lt;dbl&gt;
+ 1 Afghanistan                33753499                  3.12              652860
+ 2 Albania                     2880703                 -0.291              28750
+ 3 Algeria                    39543154                  2.00             2381741
+ 4 American Samoa                51368                 -1.64                 200
+ 5 Andorra                       71746                  0.174                470
+ 6 Angola                     28127721                  3.62             1246700
+ 7 Antigua and Barbu…            89941                  0.787                440
+ 8 Argentina                  43131966                  1.08             2780400
+ 9 Armenia                     2878595                 -0.393              29740
+10 Aruba                        104257                  0.638                180
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 48 more variables:
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>We can also select data based on its characteristics. We can select using <a href="https://dplyr.tidyverse.org/reference/select.html">selection helpers</a> like:</p>
+<ul>
+<li><a href="https://tidyselect.r-lib.org/reference/everything.html"><code>everything()</code></a>: picks all variables</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>starts_with()</code></a>: starts with some prefix</li>
+<li><a href=""><code>ends_with()</code></a>: ends with some suffix</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>contains()</code></a>: contains a specific string</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>matches()</code></a>: matches a regular expression</li>
+<li><a href="https://tidyselect.r-lib.org/reference/starts_with.html"><code>num_range()</code></a>: matches a numeric range</li>
+<li><a href="https://tidyselect.r-lib.org/reference/where.html"><code>where()</code></a>: selects columns where the statement given in the argument is TRUE</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>all_of()</code></a>: matches all of the variable names in a character vector</li>
+<li><a href="https://tidyselect.r-lib.org/reference/all_of.html"><code>any_of()</code></a>: matches any of the names in a character vector</li>
+</ul>
+<p>For example, we might want each column that has anything to do with gross domestic product, or gdp. We can select all of the columns which contain the string “gdp” in their name. I’m also going to add <code>country_name</code> so we know what we’re working with.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, <span class="fu">contains</span>(<span class="st">"gdp"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 15
+   country_name     water_productivity_t…¹ gdp_current_us gdp_growth_annual_pe…²
+   &lt;chr&gt;                             &lt;dbl&gt;          &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                       0.943    19134221645                  1.45 
+ 2 Albania                          12.4      11386853113                  2.22 
+ 3 Algeria                          20.9     187494000000                  3.2  
+ 4 American Samoa                   NA          673000000                  3.15 
+ 5 Andorra                          NA         2789881259                  1.43 
+ 6 Angola                          128.       90496420507                  0.944
+ 7 Antigua and Bar…                327.        1437755556                  1.45 
+ 8 Argentina                        15.8     594749000000                  2.73 
+ 9 Armenia                           3.23     10553337518                  3.20 
+10 Aruba                            NA         2962907263                 -0.624
+# ℹ 207 more rows
+# ℹ abbreviated names:
+#   ¹​water_productivity_total_constant_2015_us_gdp_per_cubic_meter_of_total_freshwater_withdrawal,
+#   ²​gdp_growth_annual_percent
+# ℹ 11 more variables: inflation_gdp_deflator_annual_percent &lt;dbl&gt;,
+#   agriculture_forestry_and_fishing_value_added_percent_of_gdp &lt;dbl&gt;,
+#   industry_including_construction_value_added_percent_of_gdp &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>We can also select all column that meet a certain predicate. For example, we can pick all of the column that are of the type character.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.character))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   country_name        country_code
+   &lt;chr&gt;               &lt;chr&gt;       
+ 1 Afghanistan         AFG         
+ 2 Albania             ALB         
+ 3 Algeria             DZA         
+ 4 American Samoa      ASM         
+ 5 Andorra             AND         
+ 6 Angola              AGO         
+ 7 Antigua and Barbuda ATG         
+ 8 Argentina           ARG         
+ 9 Armenia             ARM         
+10 Aruba               ABW         
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>We can also combine selections using the <code>&amp;</code> (and), <code>|</code> (or), and <code>!</code> (not) operators. For example, if I want the columns about GNI but only the international ones I can:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">starts_with</span>(<span class="st">"gni"</span>) <span class="sc">&amp;</span> <span class="fu">ends_with</span>(<span class="st">"international"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   gni_ppp_current_international gni_per_capita_ppp_current_international
+                           &lt;dbl&gt;                                    &lt;dbl&gt;
+ 1                   77739869000                                     2300
+ 2                   33981401261                                    11800
+ 3                  541234000000                                    13690
+ 4                            NA                                       NA
+ 5                            NA                                       NA
+ 6                  190283000000                                     6760
+ 7                    1766297473                                    19640
+ 8                  848960000000                                    19680
+ 9                   30505448341                                    10600
+10                    3718236361                                    35660
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>We can also use <code>select()</code> to order our columns, as the order we select them in dictates the order they will exist in our dataframe.</p>
+<section id="practice-1" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">3.1</span> Practice</h2>
+<p>Come up with 3 different ways to select the columns about children, and make sure you also include a country column so you know what you’re looking at.</p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>Here are the columns that I’m considering to be about children:</p>
+<p>[1] “country_name”<br>
+[17] “mortality_rate_under_5_per_1_000_live_births”<br>
+[18] “prevalence_of_underweight_weight_for_age_percent_of_children_under_5”<br>
+[19] “immunization_measles_percent_of_children_ages_12_23_months”<br>
+[20] “primary_completion_rate_total_percent_of_relevant_age_group”<br>
+[21] “school_enrollment_secondary_percent_gross”<br>
+[22] “school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi”</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>By name and for columns in a row, using the <code>:</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>         mortality_rate_under_5_per_1_000_live_births<span class="sc">:</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>         school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By index:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span>, <span class="dv">17</span><span class="sc">:</span><span class="dv">22</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_secondary_percent_gross &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By name characteristics:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, <span class="fu">contains</span>(<span class="st">"under_5"</span>), <span class="fu">contains</span>(<span class="st">"children"</span>),</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>         <span class="fu">contains</span>(<span class="st">"primary"</span>), <span class="fu">contains</span>(<span class="st">"school"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 7
+   country_name        mortality_rate_under_5_per_1_000…¹ prevalence_of_underw…²
+   &lt;chr&gt;                                            &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Afghanistan                                       72.7                     NA
+ 2 Albania                                            9.6                     NA
+ 3 Algeria                                           25.3                     NA
+ 4 American Samoa                                    NA                       NA
+ 5 Andorra                                            3.6                     NA
+ 6 Angola                                            87.9                     19
+ 7 Antigua and Barbuda                               10.9                     NA
+ 8 Argentina                                         11.8                     NA
+ 9 Armenia                                           14.5                     NA
+10 Aruba                                             NA                       NA
+# ℹ 207 more rows
+# ℹ abbreviated names: ¹​mortality_rate_under_5_per_1_000_live_births,
+#   ²​prevalence_of_underweight_weight_for_age_percent_of_children_under_5
+# ℹ 4 more variables:
+#   immunization_measles_percent_of_children_ages_12_23_months &lt;dbl&gt;,
+#   primary_completion_rate_total_percent_of_relevant_age_group &lt;dbl&gt;,
+#   school_enrollment_primary_and_secondary_gross_gender_parity_index_gpi &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>These are just some ways!</p>
+</details>
+</section>
+</section>
+<section id="sorting-data-with-arrange" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Sorting data with <code>arrange()</code></h1>
+<p>A nice helper function for looking at your data is <a href="https://dplyr.tidyverse.org/reference/arrange.html"><code>arrange()</code></a> which sorts your data.</p>
+<p>We can sort our data based on how much forest (<code>forest_area_sq_km</code>) each country has.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(forest_area_sq_km)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 53
+   country_name             country_code population_total population_growth_an…¹
+   &lt;chr&gt;                    &lt;chr&gt;                   &lt;dbl&gt;                  &lt;dbl&gt;
+ 1 Gibraltar                GIB                     32520                  0.209
+ 2 Monaco                   MCO                     36760                  1.78 
+ 3 Nauru                    NRU                     11185                  2.21 
+ 4 Qatar                    QAT                   2414573                  8.65 
+ 5 Curacao                  CUW                    157980                  1.32 
+ 6 Faroe Islands            FRO                     48816                  0.722
+ 7 Greenland                GRL                     56114                 -0.322
+ 8 Malta                    MLT                    445053                  2.39 
+ 9 Sint Maarten (Dutch par… SXM                     38825                  2.98 
+10 Aruba                    ABW                    104257                  0.638
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>By default, <code>arrange()</code> sorts small to big, if we want to go from big to small we can set <code>arrange(desc())</code> to sort by descending.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(forest_area_sq_km))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 53
+   country_name       country_code population_total population_growth_annual_p…¹
+   &lt;chr&gt;              &lt;chr&gt;                   &lt;dbl&gt;                        &lt;dbl&gt;
+ 1 Russian Federation RUS                 144640716                        0.279
+ 2 Brazil             BRA                 205188205                        0.846
+ 3 Canada             CAN                  35704498                        0.760
+ 4 United States      USA                 320738994                        0.736
+ 5 China              CHN                1379860000                        0.581
+ 6 Australia          AUS                  23815995                        1.44 
+ 7 Congo, Dem. Rep.   COD                  78656904                        3.39 
+ 8 Indonesia          IDN                 259091970                        1.11 
+ 9 Peru               PER                  30711863                        1.17 
+10 India              IND                1322866505                        1.19 
+# ℹ 207 more rows
+# ℹ abbreviated name: ¹​population_growth_annual_percent
+# ℹ 49 more variables: surface_area_sq_km &lt;dbl&gt;,
+#   poverty_headcount_ratio_at_national_poverty_lines_percent_of_population &lt;dbl&gt;,
+#   gni_atlas_method_current_us &lt;dbl&gt;,
+#   gni_per_capita_atlas_method_current_us &lt;dbl&gt;,
+#   gni_ppp_current_international &lt;dbl&gt;, …</code></pre>
+</div>
+</div>
+<p>It’s not too surprising that the biggest countries in forest-feasible latitudes have the most forest.</p>
+<p>We can also add <code>select()</code> into our pipe, so that we don’t have to scroll so far to see what the actual amount of forest is.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, surface_area_sq_km, forest_area_sq_km) <span class="sc">|&gt;</span> </span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(forest_area_sq_km))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 3
+   country_name       surface_area_sq_km forest_area_sq_km
+   &lt;chr&gt;                           &lt;dbl&gt;             &lt;dbl&gt;
+ 1 Russian Federation           17098250          8149305.
+ 2 Brazil                        8515770          5038848 
+ 3 Canada                        9879750          3471157.
+ 4 United States                 9831510          3100950 
+ 5 China                         9562911          2102942.
+ 6 Australia                     7741220          1330945 
+ 7 Congo, Dem. Rep.              2344860          1316621.
+ 8 Indonesia                     1913580           950279 
+ 9 Peru                          1285220           731945.
+10 India                         3287260           708280 
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+<p>Wow almost 50% of Russia is forested.</p>
+<section id="practice-2" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="practice-2"><span class="header-section-number">4.1</span> Practice</h2>
+<p>Which countries have the lowest cell phone subscriptions? <code>mobile_cellular_subscriptions_per_100_people</code></p>
+<details>
+<summary>
+Need a hint?
+</summary>
+<p>You can use the function <code>arrange()</code> to sort your columns. The default arranging is from low to high, so if you want to go from high to low, you can set <code>arrange(desc())</code>.</p>
+</details>
+<details>
+<summary>
+Click for the solution
+</summary>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>factbook_2015 <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country_name, mobile_cellular_subscriptions_per_100_people) <span class="sc">|&gt;</span> </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(mobile_cellular_subscriptions_per_100_people)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre class="styled-output"><code># A tibble: 217 × 2
+   country_name              mobile_cellular_subscriptions_per_100_people
+   &lt;chr&gt;                                                            &lt;dbl&gt;
+ 1 Korea, Dem. People's Rep.                                         12.8
+ 2 Eritrea                                                           14.2
+ 3 Micronesia, Fed. Sts.                                             20.6
+ 4 Central African Republic                                          25.8
+ 5 South Sudan                                                       25.9
+ 6 Cuba                                                              29.4
+ 7 Djibouti                                                          31.2
+ 8 Marshall Islands                                                  31.4
+ 9 Kiribati                                                          35.1
+10 Chad                                                              38.7
+# ℹ 207 more rows</code></pre>
+</div>
+</div>
+</details>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S10E06_ai_filter-select-basics_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
