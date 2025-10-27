@@ -1,0 +1,79 @@
+---
+title: "Plotting with GitHub Copilot"
+subtitle: "From Prompts to Plots: Exploring AI-Assisted Graphing in R"
+author: "Horacio Lopez-Nicora"
+date: "2025-10-27"
+categories: [tidyverse, github-copilot]
+title-block-banner: false
+image: img/ggplot2_Horst.png
+number-depth: 3
+execute: 
+  eval: false
+editor_options: 
+  chunk_output_type: console
+---
+
+<br>
+
+## Introduction
+
+If you’ve joined previous Code Club sessions on plotting with ggplot2, you’ve already seen how powerful and flexible this package can be for data visualization in R. Today, we’ll take a different approach: instead of writing every line of ggplot2 code ourselves, we’ll let GitHub Copilot help us get started—even if you’ve never used ggplot2 before.
+
+[![Figure from Allison Horst](img/ggplot2_Horst.png)](https://allisonhorst.com/allison-horst)
+
+If you’d like to review or catch up on the earlier Code Club sessions that introduced ggplot2, check out these resources:
+
+-   [Introduction to ggplot2 - 01](https://osu-codeclub.github.io/posts/S09E01_ggplot_01/)
+-   [Introduction to ggplot2 - 02](https://osu-codeclub.github.io/posts/S09E02_ggplot_02/)
+-   [Introduction to ggplot2 - 03 & 04](https://osu-codeclub.github.io/posts/S09E03_ggplot_03/)
+
+```{r setup}
+# Load required packages
+library(tidyverse)
+library(palmerpenguins)
+
+# Load datasets
+data(mtcars)
+data(iris)
+data(penguins)
+```
+
+## Data Inspection
+
+```{r, eval=FALSE}
+mtcars |> glimpse()
+
+iris |> glimpse()
+
+palmerpenguins::penguins |> glimpse()
+
+```
+
+## Session Overview
+
+In this Code Club session, you will explore how to use GitHub Copilot inside RStudio to develop and customize data visualizations in R. Using a series of 15 progressively complex prompts, you will guide Copilot to generate code that produces bar plots, scatterplots, boxplots, violin plots, line charts, and faceted graphics. Starting with simple datasets like mtcars and iris and finishing with real-world examples from the palmerpenguins package, you’ll see how Copilot interprets natural-language instructions to suggest ggplot2 code. The goal is to understand how to collaborate with Copilot—refining prompts, comparing different visual outputs, and learning efficient ways to produce publication-quality figures directly in RStudio.
+
+| \# | Dataset | Graph Type | Copilot Prompt | Key Concept |
+|---------|---------|---------|------------------------------------|---------|
+| 1 | mtcars | Barplot | "Create a barplot showing the number of cars for each cylinder in mtcars." | Basic categorical plot |
+| 2 | iris | Scatterplot | "Plot Sepal.Length vs Sepal.Width as points from the iris dataset." | Continuous vs continuous |
+| 3 | mtcars | Barplot with color | "Make a bar plot showing cars by cylinder, colored by gears, with minimal theme." | Grouped bars + theme |
+| 4 | iris | Scatterplot with groups | "Create a scatterplot of Sepal.Length vs Sepal.Width colored by Species, with linear regression lines." | Color + regression |
+| 5 | iris | Boxplot | "Draw a boxplot of Sepal.Length for each iris species with a white background theme." | Distribution + theme |
+| 6 | iris | Violin + jitter | "Create a violin plot of Sepal.Length by Species with individual points overlaid." | Combined geoms |
+| 7 | mtcars | Line graph | "Plot average mpg by cylinder as a line chart with points." | Summarization + line |
+| 8 | mtcars | Scatterplot with labels | "Scatterplot of mpg vs weight, color by cylinders, label each point with car names." | Labeling data points |
+| 9 | iris | Facet plot | "Scatterplot of Sepal.Length vs Sepal.Width with separate panels for each Species." | Faceting |
+| 10 | iris | Multi-feature plot | "Make a scatterplot of Sepal.Length vs Sepal.Width, color by Species, add regression line, facet by Species, apply minimal theme." | Layered plot |
+| 11 | iris | Custom colors & theme | "Create a boxplot of Sepal.Length by Species, use custom fill colors, and theme_classic()." | Manual color scales |
+| 12 | mtcars/iris | Challenge | "Make a publication-ready plot: color by group, add labels, add regression or summary line, apply a nice theme." | Integration + polish |
+| 13 | penguins | Scatterplot with multiple aesthetics | "Plot flipper_length_mm vs body_mass_g, color by species, shape by island, size by bill_length_mm." | Multiple aesthetics |
+| 14 | penguins | Faceted scatterplot | "Scatterplot of flipper_length_mm vs body_mass_g, color by species, facet by island." | Facets + grouping |
+| 15 | penguins | Advanced composite | "Create a scatterplot of flipper_length_mm vs body_mass_g, color by species, add regression lines, facet by island, and apply a clean theme." | Complex layering |
+
+## Notes for Participants
+
+-   Copy each prompt into RStudio and let **Copilot generate the code**.
+-   Experiment with **themes, colors, point sizes, and labels**.
+-   Work sequentially: `mtcars` → `iris` → `penguins`.
+-   Advanced plots: combine **color, shape, size, regression lines, and facets**.
