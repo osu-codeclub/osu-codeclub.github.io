@@ -1,0 +1,68 @@
+---
+title: "Wrangling and plotting with Copilot"
+author:
+  - "Jessica Cooperstone"
+date: "2025-11-03"
+categories: [r-basics, tidyverse, github-copilot, ggplot2]
+title-block-banner: false
+image: img/github-copilot.jpeg
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+![GitHub Copilot Logo](img/github-copilot.jpeg)
+
+# Introduction
+
+We are going to continue playing around today with wrangling and plotting with the help of GitHub Copilot in RStudio.
+
+## Loading data
+
+I want to pick some data that has a bunch of dimensions so we can ask some interesting questions. Let's use a dataset we've used before, `gapminder` and I've created some files for you to download.
+
+::: callout-note
+Remember that files with by default be downloaded into your working directory.
+:::
+
+Here is some code to download a file that includes information about the happiness score for each country in the world from 2005-2022.
+
+```{r}
+# download the happiness data
+download.file(url = "https://github.com/jcooperstone/dataviz-site/raw/refs/heads/master/2_04_wrangling/data/hapiscore_whr.csv",
+              destfile = "happiness.csv")
+```
+
+And some data on life expectancy around the world from 1800 to predicted values from 2022-2100.
+
+```{r}
+# download the life expectancy data
+download.file(url = "https://github.com/jcooperstone/dataviz-site/raw/refs/heads/master/2_04_wrangling/data/life_expectancy.csv",
+              destfile = "life-expectancy.csv")
+```
+
+# Tasks to play around with
+
+Let's together work on writing prompts to get R to write to complete each tasks or that answer the following questions:
+
+1. Get R to read in your happiness and life expectancy data
+
+2. Understand what your data contains
+
+3. Which is the country with the highest life expectancy in 2025?
+
+4. Which country increased life expectancy the most from 2000 to 2025?
+
+5. Create a plot that shows the line expectancy in the United States over the time period for which we have data
+
+6. Create a plot that shows the relationship between life expectancy and happiness score in 2022.
+
+
