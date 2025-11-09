@@ -1,0 +1,172 @@
+---
+title: "Using Copilot, `chattr`, and `ellmer`"
+author:
+  - "Jessica Cooperstone and Horacio Lopez-Nicora"
+date: "2025-11-11"
+categories: [r-basics, tidyverse, github-copilot, chattr, ellmer, copilot, gen-ai, ggplot2]
+title-block-banner: false
+image: img/chattr-ellmer-hex.png
+knitr:
+  opts_chunk:
+    out.width: "85%"
+    class-output: styled-output
+    fig.align: 'center'
+---
+
+```{r knitr_options, echo=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+------------------------------------------------------------------------
+
+![`chattr` and `ellmer` hexes](img/chattr-ellmer-hex.png)
+
+# Introduction
+
+We have spent the last handful of sessions using GitHub Copilot embedded in the RStudio IDE. Today we are going to try using:
+
+-   Microsoft Copilot in our browser
+-   The package [`chattr`](https://mlverse.github.io/chattr/) and [`ellmer`](https://ellmer.tidyverse.org/)
+
+## Loading data
+
+Let's use the same data as last week to play around. If you have it from last week, no need to download, but if you need to get it, you can download the file using the code below.
+
+::: callout-note
+Remember that files with by default be downloaded into your working directory.
+:::
+
+```{r, eval = FALSE}
+# download the happiness data
+download.file(url = "https://github.com/jcooperstone/dataviz-site/raw/refs/heads/master/2_04_wrangling/data/hapiscore_whr.csv",
+              destfile = "happiness.csv")
+```
+
+And some data on life expectancy around the world from 1800 to predicted values from 2022-2100.
+
+```{r, eval = FALSE}
+# download the life expectancy data
+download.file(url = "https://github.com/jcooperstone/dataviz-site/raw/refs/heads/master/2_04_wrangling/data/life_expectancy.csv",
+              destfile = "life-expectancy.csv")
+```
+
+# Get setup with Microsoft Copilot
+
+Open a browser and navigate to [Microsoft Copilot](https://copilot.microsoft.com/). Log in with your OSU credentials and indicate you are using your Work account
+
+![Screenshot of selecting the Work Copilot experience](img/copilot-work.png)
+
+This would be the way to use generative AI that is compliant with with OSU's data policies. You can learn more about this in OSU"s administrative resource center page on [Copilot chat](https://admin.resources.osu.edu/microsoft-365/copilot-chat?check_logged_in=1).
+
+# Get setup with `chattr` and `ellmer`
+
+The package `chattr` is a chat interface to using a large language model (LLM) with R. `chattr` lets you "chat" with your LLM via your script or in a Shiny Gadget. 
+
+The package `ellmer` helps make it easier to use LLMs with R.
+
+## Install
+
+First we will install both packages
+
+```{r, eval = FALSE}
+install.packages("chattr")
+install.packages("ellmer")
+```
+
+Then we need to tell `chattr` which LLM we want to use. `ellmer` helps us do this, and at the time of writing this tutorial, it [supports lots of different models](https://ellmer.tidyverse.org/#providers):
+
+-   Anthropic’s Claude: `chat_anthropic()`
+-   AWS Bedrock: `chat_aws_bedrock()`
+-   Azure OpenAI: `chat_azure_openai()`
+-   Cloudflare: `chat_cloudflare()`
+-   Databricks: `chat_databricks()`
+-   DeepSeek: `chat_deepseek()`
+-   GitHub model marketplace: `chat_github()`.
+-   Google Gemini/Vertex AI: `chat_google_gemini()`, `chat_google_vertex().`
+-   Groq: `chat_groq()`
+-   Hugging Face: `chat_huggingface()`
+-   Mistral: `chat_mistral()`
+-   Ollama: `chat_ollama()`
+-   OpenAI: `chat_openai()`
+-   OpenRouter: `chat_openrouter()`
+-   perplexity.ai: `chat_perplexity()`
+-   Snowflake Cortex: `chat_snowflake()` and `c`hat_cortex_analyst()`
+-   VLLM: `chat_vllm()`
+
+You can pick which one you'd like to use, for the rest of this session I am going to use Google Gemini since I have a google/gmail account (as assume many of you do too), and their free tier is generous. I am including instructions on how to get your Google Gemini API key, but if you want to use a different model you can search how to find that API key.
+
+:::callout-warning
+Remember, your API key is personal so do not share it in repositories or elsewhere. 
+:::
+
+## Set up your API key
+
+To get your Google API key, go to [https://aistudio.google.com/app/api-keys](https://aistudio.google.com/app/api-keys) and sign in with your Google credentials. 
+
+I'm showing a screenshot below of what my Google AI studio looks like, yours may be slightly different and you want to create an API key if you don't have one. 
+
+![Google AI studio for finding your API key](img/google-api.png)
+
+Then, you can click on the little double box to copy your API code. Your key code will be in your clipboard.
+
+![](img/copy-api.png)
+
+Now let's set our API key. We can do that in R like this:
+
+```{r, eval = FALSE}
+# for Gemini
+Sys.setenv(GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY")
+```
+
+Again - if you have this in your scripts be sure then not to share them with anyone.
+
+:::callout-note
+There is a more elegant way to do this by setting up our API key in our R environment `.Renviron` file but I'm not going to set that up until we decide we like this :)
+:::
+
+## Use `chattr`
+
+Now we are set up to launch our chat. First we need to load our packages.
+
+```{r}
+library(chattr)
+library(ellmer)
+```
+
+Then we will tell `chattr` which LLM we want to use, with `ellmer` helping us:
+
+```{r}
+chattr_use(ellmer::chat_google_gemini())
+```
+
+Let's see how well that worked:
+
+```{r}
+# check our settings
+chattr_defaults()
+```
+
+Now we can launch our chat app.
+```{r, eval = FALSE}
+chattr_app()
+```
+
+
+
+# Let's ideate together what guidance we want to provide our LLM for helping us with code.
+
+# Tasks to play around with
+
+Let's together work on writing prompts to get R to write to complete each tasks or that answer the following questions:
+
+1.  Get R to read in your happiness and life expectancy data
+
+2.  Understand what your data contains
+
+3.  Which is the country with the highest life expectancy in 2025?
+
+4.  Which country increased life expectancy the most from 2000 to 2025?
+
+5.  Create a plot that shows the line expectancy in the United States over the time period for which we have data
+
+6.  Create a plot that shows the relationship between life expectancy and happiness score in 2022.

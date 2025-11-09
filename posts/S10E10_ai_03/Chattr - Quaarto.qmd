@@ -1,0 +1,90 @@
+---
+title: "Using chattr and Gemini in RStudio"
+author: "Code Club @ OSU"
+format: html
+---
+
+## 🧩 Overview
+
+In this tutorial, you will learn how to install and configure **chattr** and **ellmer** to use **GitHub Copilot–style LLM assistance** inside **RStudio**.\
+You will connect RStudio to the **Gemini API** and use `chattr` to generate R code interactively for Quarto documents.
+
+------------------------------------------------------------------------
+
+## 🛠 Step 1 — Install Required Packages
+
+Open RStudio and run the following commands in your **Console**:
+
+```{r, eval=FALSE}
+# Install required packages
+install.packages("pak")
+
+install.packages("chattr")
+
+install.packages("ellmer")
+
+install.packages("shiny")
+
+```
+
+If you want the latest development version of **chattr** from GitHub:
+
+```{r, eval=FALSE}
+pak::pak("mlverse/chattr")
+```
+
+## 🔑 Step 2 — Set Up Your API Keys
+
+You will need an API key for **OpenAI** or **Google Gemini**.
+
+> ⚠️ **Important:** Never share your API key in public scripts, repos, or shared documents.
+
+Replace `"YOUR_OPENAI_API_KEY"` or `"YOUR_GOOGLE_API_KEY"` below with your own keys.
+
+```{r}
+# For OpenAI (GPT-4o)
+Sys.setenv(OPENAI_API_KEY = "YOUR_OPENAI_API_KEY")
+
+# For Gemini
+Sys.setenv(GOOGLE_API_KEY = "YOUR_GOOGLE_API_KEY")
+```
+
+## 🤖 Step 3 — Choose Your Chat Model
+
+You can use either OpenAI’s GPT models or Google’s Gemini models.
+
+### Option 1: Use GPT-4o
+
+```         
+library(chattr)
+chattr_use("gpt4o")
+```
+
+### Option 2: Use Gemini (recommended for this session)
+
+```         
+library(chattr)
+library(ellmer)
+chattr_use(ellmer::chat_google_gemini())
+```
+
+## 💬 Step 4 — Launch chattr in RStudio
+
+To open the interactive chat interface in RStudio:
+
+```         
+chattr_app()
+```
+
+This opens a **Shiny gadget** where you can type natural-language prompts (e.g.,\
+“Create a boxplot of Sepal.Width by Species using the iris dataset”) and get R code suggestions.
+
+## ⚡ Step 5 — Use the Live Console (Optional)
+
+If you prefer chatting directly in the console:
+
+```         
+live_console(ellmer::chat_gemini())
+```
+
+You can ask coding questions and generate R code right inside the console.

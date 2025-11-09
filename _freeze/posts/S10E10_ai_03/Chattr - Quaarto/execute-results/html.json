@@ -1,0 +1,15 @@
+{
+  "hash": "455b19f12bf78d2711543b3cf9ad681a",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Using chattr and Gemini in RStudio\"\nauthor: \"Code Club @ OSU\"\nformat: html\n---\n\n## 🧩 Overview\n\nIn this tutorial, you will learn how to install and configure **chattr** and **ellmer** to use **GitHub Copilot–style LLM assistance** inside **RStudio**.\\\nYou will connect RStudio to the **Gemini API** and use `chattr` to generate R code interactively for Quarto documents.\n\n------------------------------------------------------------------------\n\n## 🛠 Step 1 — Install Required Packages\n\nOpen RStudio and run the following commands in your **Console**:\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# Install required packages\ninstall.packages(\"pak\")\n\ninstall.packages(\"chattr\")\n\ninstall.packages(\"ellmer\")\n\ninstall.packages(\"shiny\")\n```\n:::\n\n\nIf you want the latest development version of **chattr** from GitHub:\n\n\n::: {.cell}\n\n```{.r .cell-code}\npak::pak(\"mlverse/chattr\")\n```\n:::\n\n\n## 🔑 Step 2 — Set Up Your API Keys\n\nYou will need an API key for **OpenAI** or **Google Gemini**.\n\n> ⚠️ **Important:** Never share your API key in public scripts, repos, or shared documents.\n\nReplace `\"YOUR_OPENAI_API_KEY\"` or `\"YOUR_GOOGLE_API_KEY\"` below with your own keys.\n\n\n::: {.cell}\n\n```{.r .cell-code}\n# For OpenAI (GPT-4o)\nSys.setenv(OPENAI_API_KEY = \"YOUR_OPENAI_API_KEY\")\n\n# For Gemini\nSys.setenv(GOOGLE_API_KEY = \"YOUR_GOOGLE_API_KEY\")\n```\n:::\n\n\n## 🤖 Step 3 — Choose Your Chat Model\n\nYou can use either OpenAI’s GPT models or Google’s Gemini models.\n\n### Option 1: Use GPT-4o\n\n```         \nlibrary(chattr)\nchattr_use(\"gpt4o\")\n```\n\n### Option 2: Use Gemini (recommended for this session)\n\n```         \nlibrary(chattr)\nlibrary(ellmer)\nchattr_use(ellmer::chat_google_gemini())\n```\n\n## 💬 Step 4 — Launch chattr in RStudio\n\nTo open the interactive chat interface in RStudio:\n\n```         \nchattr_app()\n```\n\nThis opens a **Shiny gadget** where you can type natural-language prompts (e.g.,\\\n“Create a boxplot of Sepal.Width by Species using the iris dataset”) and get R code suggestions.\n\n## ⚡ Step 5 — Use the Live Console (Optional)\n\nIf you prefer chatting directly in the console:\n\n```         \nlive_console(ellmer::chat_gemini())\n```\n\nYou can ask coding questions and generate R code right inside the console.\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
