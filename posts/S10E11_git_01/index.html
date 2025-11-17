@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Cooperstone">
+<meta name="dcterms.date" content="2025-11-17">
+
+<title>Getting started with Git and GitHub 🐱 – OSU Code Club</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-c1f63da3e08f13bc72dc17e92cfd001d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-9e7f0a356c33b92d3688c022ba1ebde5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more-resources">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup (installations) for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/other.html">
+ <span class="dropdown-text">Other coding-related OSU activities</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-feb-2025/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Feb ’25)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-aug-2025/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Aug ’25)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-is-git" id="toc-what-is-git" class="nav-link" data-scroll-target="#what-is-git"><span class="header-section-number">1.1</span> What is Git?</a></li>
+  <li><a href="#what-is-github" id="toc-what-is-github" class="nav-link" data-scroll-target="#what-is-github"><span class="header-section-number">1.2</span> What is GitHub?</a></li>
+  <li><a href="#what-is-github-desktop" id="toc-what-is-github-desktop" class="nav-link" data-scroll-target="#what-is-github-desktop"><span class="header-section-number">1.3</span> What is GitHub Desktop?</a></li>
+  </ul></li>
+  <li><a href="#install-git" id="toc-install-git" class="nav-link" data-scroll-target="#install-git"><span class="header-section-number">2</span> Install Git</a></li>
+  <li><a href="#create-a-github-account" id="toc-create-a-github-account" class="nav-link" data-scroll-target="#create-a-github-account"><span class="header-section-number">3</span> Create a GitHub account</a></li>
+  <li><a href="#install-github-desktop-and-link-it-to-your-account" id="toc-install-github-desktop-and-link-it-to-your-account" class="nav-link" data-scroll-target="#install-github-desktop-and-link-it-to-your-account"><span class="header-section-number">4</span> Install GitHub Desktop and link it to your account</a></li>
+  <li><a href="#render-a-github-flavored-markdown-gfm-document-to-prepare-to-push" id="toc-render-a-github-flavored-markdown-gfm-document-to-prepare-to-push" class="nav-link" data-scroll-target="#render-a-github-flavored-markdown-gfm-document-to-prepare-to-push"><span class="header-section-number">5</span> Render a GitHub flavored markdown (GFM) document to prepare to push</a></li>
+  <li><a href="#add-a-local-repository-to-github-desktop-and-add-version-control" id="toc-add-a-local-repository-to-github-desktop-and-add-version-control" class="nav-link" data-scroll-target="#add-a-local-repository-to-github-desktop-and-add-version-control"><span class="header-section-number">6</span> Add a local repository to GitHub desktop and add version control</a></li>
+  <li><a href="#publish-our-repo" id="toc-publish-our-repo" class="nav-link" data-scroll-target="#publish-our-repo"><span class="header-section-number">7</span> Publish our repo</a></li>
+  <li><a href="#next-time" id="toc-next-time" class="nav-link" data-scroll-target="#next-time"><span class="header-section-number">8</span> Next time</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S10E11_git_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Getting started with Git and GitHub 🐱</h1>
+<p class="subtitle lead">Using Quarto/RStudio, GitHub, and GitHub Desktop to post code to a repository 🤩️.</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">git</div>
+    <div class="quarto-category">github</div>
+    <div class="quarto-category">version control</div>
+    <div class="quarto-category">quarto</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jessica Cooperstone </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">November 17, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>We are continuing one of this semester’s Code Club series on reproducible research. Since we started this at the beginning of the semester and now its mid-November let’s recap. So far, we have gone through:</p>
+<ol type="1">
+<li><a href="https://osu-codeclub.github.io/posts/S10E01_reprod_01/">An intro to Quarto</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S10E02_reprod_02/">A little more about Quarto</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S10E03_reprod_03/">File organization and RStudio projects</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S10E04_reprod_04/">Code structuring</a></li>
+<li><a href="https://osu-codeclub.github.io/posts/S10E05_reprod_05/">Code styling</a></li>
+</ol>
+<p>Today, we are going to take some code we’ve written and push it to a repository on GitHub. To do this we will need to:</p>
+<ul>
+<li>Install <a href="https://git-scm.com/downloads">Git</a></li>
+<li>Create a <a href="https://github.com/join">GitHub account</a></li>
+<li>Install <a href="https://desktop.github.com/">GitHub desktop</a> and link it to your GitHub account</li>
+<li>Render a GitHub flavored markdown document</li>
+<li>Add our repository to GitHub desktop and add version control</li>
+<li>Publish your repository</li>
+</ul>
+<p>The book <a href="https://happygitwithr.com/">Happy Git and GitHub for the useR</a> is a super good resource by Jenny Bryan that talks about all this in extreme detail. Some of my materials below are inspired by some of this material.</p>
+<section id="what-is-git" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="what-is-git"><span class="header-section-number">1.1</span> What is Git?</h2>
+<p><a href="https://git-scm.com/">Git</a> is a version control system that allows materials (mostly code) to be tracked in an organized way. Every time any changes to the files that are being monitored by Git are changed, that change is tracked. You can think of it as combining the tracked changes capabilities of Word, with the file sharing from OneDrive.</p>
+<p>We are going to use Git (combined with GitHub, more on that in a second) to take the information embedded within our Quarto document and make it available on GitHub. You could opt use Git for just yourself because it would allow you to always revert back to a previous version of any of your files in case you make a big mistake.</p>
+<p>Here is a nice illustration by <a href="https://allisonhorst.com/allison-horst">Allison Horst</a> that shows the basics of git (at least the basics of what we will be using).</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="what-is-github" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="what-is-github"><span class="header-section-number">1.2</span> What is GitHub?</h2>
+<p><a href="https://github.com/">GitHub</a> hosts Git-based projects. GitHub can be free (especially for academic projects), and is where we house all our <a href="https://github.com/osu-codeclub/osu-codeclub.github.io">Code Club content</a>. I additionally use GitHub in my lab for <a href="https://github.com/CooperstoneLab">creating code repositories that go along with our publications</a>.</p>
+</section>
+<section id="what-is-github-desktop" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="what-is-github-desktop"><span class="header-section-number">1.3</span> What is GitHub Desktop?</h2>
+<p><a href="https://desktop.github.com/">GitHub Desktop</a> is a application that lets you use Git and GitHub in a less-scary-than-working-in-your-terminal way. <a href="https://www.simplilearn.com/how-to-use-github-desktop-tutorial-article">Here</a> is a longer tutorial on how to use GitHub desktop.</p>
+</section>
+</section>
+<section id="install-git" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Install Git</h1>
+<p>If you don’t already have Git, download and install it: <a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a>.</p>
+</section>
+<section id="create-a-github-account" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Create a GitHub account</h1>
+<p>In order to connect your local files to GitHub, you need a GitHub account.</p>
+<p>Create a GitHub account by going to <a href="https://github.com/join">github.com/join</a>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/create-gh-account.png" class="img-fluid figure-img"></p>
+<figcaption>a screenshot of getting a GitHub account</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you’ve been here all semester, you will already have created a GitHub account to enable GitHub Copilot in RStudio.</p>
+</div>
+</div>
+<p>You will have to pick a username - remember that other people will see this username so use one you’d feel comfortable with. <a href="https://happygitwithr.com/github-acct.html">Here</a> is some advice for picking a username. I use my OSU email address with GitHub but you can use a personal one too.</p>
+<p>You will then have a profile on GitHub, here’s an example of <a href="https://github.com/jcooperstone">mine</a>.</p>
+</section>
+<section id="install-github-desktop-and-link-it-to-your-account" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Install GitHub Desktop and link it to your account</h1>
+<p>We are going to interface with GitHub via Github Desktop because I think this is the easiest way to do so. It is definitely not the only way.</p>
+<p>First download GitHub Desktop and install it: <a href="https://desktop.github.com/" class="uri">https://desktop.github.com/</a></p>
+<p>Open GitHub Desktop and log into your GitHub account by going to <code>Preferences</code> &gt; <code>Accounts</code> &gt; <code>Sign in</code></p>
+</section>
+<section id="render-a-github-flavored-markdown-gfm-document-to-prepare-to-push" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Render a GitHub flavored markdown (GFM) document to prepare to push</h1>
+<p>We need some material to put in our new repository. We can use the <a href="https://osu-codeclub.github.io/posts/S08E08_reprod_03/">some old code club code</a>, you can download a <code>.qmd</code> file to work from <a href="https://github.com/osu-codeclub/osu-codeclub.github.io/blob/main/posts/S10E11_git_01/factbook_20251117.qmd">here</a>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+If you download my <code>.qmd</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I indicated in the YAML that <code>eval: false</code> so that the code doesn’t run on the website. You will want to remove this part of the YAML on lines 5 and 6.</p>
+</div>
+</div>
+<p>Open up this <code>.qmd</code> and set your YAML such that it renders as the format GitHub flavored markdown.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"My first code on GitHub"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"Jessica Cooperstone"</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">"November 17, 2025"</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span><span class="at"> gfm</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Render this document. You should now see in the <code>Files</code> quadrant a new file called <code>name-of-quarto-doc.md</code> which contains your rendered document in GitHub flavored markdown (markdown is what the <code>.md</code> is).</p>
+<p>Your rendered document should look something like this:</p>
+<p><img src="img/md-rendered-screenshot.png" class="img-fluid"></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Why use GitHub flavored markdown? What’s nice about it is that your code and output will all be immediately viewable on GitHub. You could push a Quarto or RMarkdown document, or one of these files that has been rendered (so now its a <code>.html</code>) and those files will be downloadable from GitHub but not viewable in your browser online.</p>
+</div>
+</div>
+<p>In the folder of my repo, I have the following content:</p>
+<ul>
+<li>an .<code>Rproj</code> file</li>
+<li>a <code>.qmd</code> file</li>
+<li>a <code>.md</code> file that rendered from the <code>.qmd</code></li>
+<li>a data folder where I store the data I read in</li>
+</ul>
+<p>We can upload all, or only some of this material to GitHub. I am going to show you how to send it all today, and in the next lesson on Git, we will go over gitignore.</p>
+</section>
+<section id="add-a-local-repository-to-github-desktop-and-add-version-control" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Add a local repository to GitHub desktop and add version control</h1>
+<p>Now we are going to add the folder containing our <code>.Rproj</code> to be tracked with GitHub Desktop.</p>
+<p>In GitHub Desktop, click <code>File</code> &gt; <code>Add Local Repository</code>, select the directory with your <code>.Rproj</code>’s top-level folder, and click <code>Add Repository</code>.</p>
+<p><img src="img/add-local-repo.png" class="img-fluid"></p>
+<p>When we go to do this, we see that GitHub desktop is telling us that this directory does not appear to be a Git repository. We can click “create a repository” to initiate version control on this folder.</p>
+<p>Here, you want to:</p>
+<ul>
+<li>give your repo a name (mine is first-repo)</li>
+<li>provide a description</li>
+<li>provide a local path to your folder (this should have already been done in the previous step)</li>
+<li>check if you want to initialize with a README (we do, check yes)</li>
+<li>select if you want a git ignore (we do, set the type as R, and we will talk about it more next week)</li>
+<li>indicate if you want a license on your repo (I am not going to set one up)</li>
+</ul>
+<p>Then you can click the blue button <code>Create Repository</code>.</p>
+<p><img src="img/create-repo-github-desktop.png" class="img-fluid"></p>
+<p>You will notice that now in our <code>.Rproj</code> folder, we have some new files, including:</p>
+<ul>
+<li><code>.gitattributes</code> (which gives attributes for pathnames)</li>
+<li><code>.gitignore</code> (which tells git which files to ignore, and we are going to go over this in the next sessions)</li>
+<li><code>README.md</code> (contains the information that will be a part of your readme file)</li>
+</ul>
+</section>
+<section id="publish-our-repo" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Publish our repo</h1>
+<p>Now, we can publish our repo on GitHub. This will create the repo on GitHub, and it will contain all of our content in it.</p>
+<p>What we can see that GitHub desktop has done for us, since we are setting our repo up for the first time, is automatically made an Initial Commit (see bottom left). We are going to click Undo next to this so we can practice doing this ourselves. You won’t have to do this step in the future.</p>
+<p><img src="img/undo-initial-commit.png" class="img-fluid"></p>
+<p>Now we can see in GitHub desktop all of the files that are going to be sent to our repository on the lefthand side of the screen.</p>
+<p><img src="img/before-first-commit.png" class="img-fluid"></p>
+<p>Remember, this is the process of interacting with GitHub.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-cartoon.png" class="img-fluid figure-img" style="width:70.0%" alt="A basic git workflow represented as two islands, one with local repo and working directory, and another with remote repo. Bunnies move file boxes from the working directory to the staging area, then with Commit move them to the local repo. Bunnies in rowboats move changes from the local repo to the remote repo (labeled PUSH) and from the remote repo to the working directory (labeled PULL). Art by Allison Horst"></p>
+<figcaption>Figure from <a href="https://github.com/allisonhorst/stats-illustrations">Allison Horst</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>We can then add a message about our first commit and click <code>Commit to main</code>.</p>
+<p><img src="img/first-commit.png" class="img-fluid"></p>
+<p>Now we need to send our repository to GitHub. Since we are doing this for the first time, we see a button that says <code>Publish repository</code>. In the future, this button will say <code>Push to origin</code>.</p>
+<p><img src="img/publish-repository-post-commit.png" class="img-fluid"></p>
+<p>We are getting one last popup asking us to confirm our repo info, which can do with the <code>Publish Repository</code> button.</p>
+<p><img src="img/publish-repo-final-conf.png" class="img-fluid"></p>
+<p>Our repo is now on GitHub, and we can see it online if we go to the repositories tab of your personal GitHub page. You can see how this looks on my page - this is probably your first repo, and although I’ve called mine <code>first-repo</code> it is not for me.</p>
+<p><img src="img/git-repo-screenshot.png" class="img-fluid"></p>
+<p>We can click on our repo and see what it contains. If we click on our file that ends in <code>.md</code>, we can see our GitHub flavored markdown rendered document. Here is <a href="https://github.com/jcooperstone/first-repo/blob/main/first-push.md">mine</a>.</p>
+</section>
+<section id="next-time" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Next time</h1>
+<p>Next session we are going to go over:</p>
+<ul>
+<li>Making changes and pushing them to GitHub</li>
+<li>Setting our gitignore</li>
+<li>Maybe some other stuff</li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S10E11_git_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
