@@ -1,0 +1,267 @@
+---
+title: "Introduction to `ggplot2` - 02"
+subtitle: "More about *aesthetics*."
+author:
+  - "Horacio Lopez-Nicora"
+date: "2026-02-09"
+categories: [ggplot2, dataviz, plotting, tidyverse]
+title-block-banner: false
+image: img/penguins.png
+alttext: "Three Palmer Penguins from the palmerpinguins package are depicted in R Studio: an Adelie Penguin, a Chinstrap Penguin, and a Gentoo Penguin. Art by Allison Horst"
+---
+
+<br>
+
+![Artwork by [Allison Horst](https://twitter.com/allison_horst).](img/penguins.png){fig-align="center" width="80%"}
+
+<br>
+
+## Introduction
+
+#### Recap of the past session
+
+Last week's session marked the beginning of our data visualization journey with `ggplot2`. We explored the philosophy of coding graphics, created a versatile ggplot template for various charts, and discovered how to add visual elements using aesthetics and layers. Exciting times ahead!
+
+#### Session Goals
+
+-   Let's pick up on **aesthetics** and learn some more about it. Furthermore, let's introduce the  [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html) function.
+-   Learn the basic of **theme**, **scale**, **color**, **transparency**, **size**, and **more!** 
+
+<br>
+
+## Our data set
+
+![Illustration by [Allison Horst](https://allisonhorst.github.io/palmerpenguins/articles/art.html)](img/palmerpenguins_hex.png){width="50%"}
+
+We are going to continue using our 🐧 data set from the package [`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/). If you haven't done so, please install that package first:
+
+```{r, eval = FALSE}
+install.packages("palmerpenguins")
+```
+
+[`palmerpenguins`](https://allisonhorst.github.io/palmerpenguins/index.html) is a package developed by Allison Horst, Alison Hill and Kristen Gorman, including a data set collected by Dr. Kristen Gorman at the Palmer Station Antarctica, as part of the Long Term Ecological Research Network. It is a nice, relatively simple data set to practice data exploration and visualization in R.
+
+We'll now load the package, along with the tidyverse (which includes ggplot2):
+
+```{r}
+library(palmerpenguins)
+library(tidyverse)
+```
+
+Once you've loaded that package you will have a data frame called `penguins` at your disposal --- let's take a look:
+
+```{r}
+penguins
+```
+
+```{r}
+# Or glimpse() for a sort of transposed view, so we can see all columns:
+glimpse(penguins)
+```
+
+<br>
+
+## The Absolute Power of Aesthetics
+
+[![Aesthetics enable us to showcase multiple dimensions of our dataset in a single plot by modifying elements such as color, shape, size, labels, and transparency.](img/4plot_aesthetic.png)](http://r.qcbs.ca/workshop03/book-en/aesthetics.html)
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### Last week's example on "The power of aesthetics"
+
+Last week we **added a third aesthetic** to our graph, `color`. Our current plot mapped `bill_length_mm` to the `x` aesthetic, and `bill_depth_mm` to the `y` aesthetic --- , we then added a mapping of `species` to the `color` aesthetic:
+
+```{r, warning = FALSE}
+p <- ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species))
+p
+```
+
+::: callout-warning
+#### Please note that we begin by using our data set to create a **plot object** with the function `ggplot()`. We then assign this object to the variable **p**. From this point forward, we can add layers by using the `+` operator.
+:::
+
+### What if we want to customize our plot?
+
+We can do this using [`theme()`](https://ggplot2.tidyverse.org/reference/ggtheme.html). There are several options of themes which control all non-data display. Use `theme()` if you just need to tweak the display of an existing theme.
+
+For this session, let's utilize `theme_bw()`. 
+```{r, warning = FALSE}
+p <- ggplot(data = penguins) + theme_bw() +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species))
+p
+```
+
+### What if we want to change colors?
+
+We can manually change colors.
+
+```{r, warning = FALSE}
+# Manual color change
+# By using scale_colour_manual(),
+# we can specify the exact colours we want to use
+p + 
+scale_color_manual(
+  # Note that the color order will correspond to
+  # the order of the species given in the legend
+  values = c("grey55", "orange", "skyblue"))
+
+```
+
+By using the `colors()` function, you can explore numerous color options that are available for selection.
+
+### Using a different color palette: `RColorBrewer`
+
+There is a wide variety of `R` color packages specifically designed to offer a range of color palette options, each evoking a distinct mood. For instance, the `RColorBrewer` package provides a choice of 35 palettes!
+
+*At this point, you have become an expert in the fundamentals of `R`. Installing packages and loading them with `library()` is now second nature to you.* 
+
+Now, we can install `RColorBrewer` and choose one from the many palettes it offers.
+
+```{r, warning = FALSE}
+RColorBrewer::display.brewer.all(type = "qual")
+```
+
+Above, you can observe the organization of the colors into distinct groups based on their sequential, diverging, or mixed characteristics. It is important to note that varied palettes are advantageous for varying data types.
+
+Let's use these palettes with our original penguin graph. Here is an example demonstrating how the **Set1** palette is utilized to group data points with the function `scale_color_brewer()` and the palette argument.
+
+```{r, warning = FALSE}
+p + 
+scale_color_brewer(palette = "Set1")
+```
+
+In addition, the `ggplot2` package offers other functions. Two such functions are `scale_color_viridis()` and `scale_color_grey()`, which allows us to convert colors to **grayscale** without sacrificing information. This is especially important for individuals with colorblindness.
+
+```{r, warning = FALSE}
+p + 
+scale_color_viridis_d()
+```
+
+::: callout-warning
+#### Please note that when using `scale_color_viridis()` to color data points, we need to specify whether our variable is continuous [using `scale_color_viridis_c()`] or discrete [using `scale_color_viridis_d()`]. In this case, the variable **species** is discrete.
+:::
+
+<br>
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 1
+
+-   Let us revisit the scatter plot depicting the correlation between bill length and depth, distinguished by different species using colored data points.
+
+-   What if we want to use only a grayscale palette for publication purposes?
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+We can use the `scale_color_grey()` function to color our grouped data points.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+p + 
+scale_color_grey()
+```
+
+</details>
+:::
+
+<br>
+
+### Colorblind-friendly palettes
+
+Have you ever contemplated how your figure might appear when viewed by individuals with different types of color blindness? We can utilize the [`colorBlindness`](https://cran.r-project.org/web/packages/colorBlindness/index.html) package to explore this aspect.
+
+Let's install the `colorBlindness` package and load it.
+
+```{r, eval = FALSE}
+# Let's install the colorBlindness package
+install.packages("colorBlindness")
+library(colorBlindness)
+```
+
+To begin with, let's test out various colors using the `cvdPlot()` function. This will demonstrate how our current plot appears to individuals with different types of color blindness.
+
+```{r, warning = FALSE}
+colorBlindness::cvdPlot(p)
+```
+
+Our current color palette is not accessible, as can be observed. However, by using `viridis` palettes, we can ensure that our plots consistently convey the same information, regardless of the audience.
+
+Let's use the same `viridis` palette we used above to make our plot more accessible.
+
+```{r, warning = FALSE}
+p_viridis <- p + 
+scale_color_viridis_d()
+```
+
+Were we successful? Let's use `cvdPlot()` to check again.
+
+```{r, warning = FALSE}
+colorBlindness::cvdPlot(p_viridis)
+```
+
+### Providing transparency with `alpha`
+
+How can we incorporate transparency into the data points in our graph? One way to achieve this is by utilizing the `alpha` feature.
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(alpha = 0.5, mapping = aes(x = bill_length_mm, 
+                                        y = bill_depth_mm, 
+                                        color = species))
+```
+
+Here, we present an example of how to utilize the `alpha` function to incorporate transparency into our data points. By doing so, we are able to exhibit four variables within a single graph.
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species,
+                           alpha = flipper_length_mm))
+```
+
+::: exercise
+#### {{< fa user-edit >}} Exercise 2
+
+-   We like the graph we produced above. We want, however, to also display `body_mass_g`.
+
+-   How can we add this additional variable to our graph?
+
+<details>
+
+<summary>Hints (click here)</summary>
+
+We can use the `size` function within `aes()`.
+
+</details>
+
+<details>
+
+<summary>Solutions (click here)</summary>
+
+```{r, warning = FALSE}
+ggplot(data = penguins) +
+  geom_point(mapping = aes(x = bill_length_mm,
+                           y = bill_depth_mm,
+                           color = species,
+                           alpha = flipper_length_mm,
+                           size = body_mass_g))
+```
+
+</details>
+:::
+
+<br>
+
+
