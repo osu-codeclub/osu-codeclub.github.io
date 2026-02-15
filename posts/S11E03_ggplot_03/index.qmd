@@ -1,0 +1,389 @@
+---
+title: "Introduction to `ggplot2` - 03 & 04"
+subtitle: "More geoms, faceting plots, and adding labels"
+author:
+  - "Horacio Lopez-Nicora and Jessica Cooperstone"
+date: "2026-02-16"
+categories: [ggplot2, dataviz, plotting, tidyverse]
+title-block-banner: false
+image: img/ggplot2_exploratory.png
+alttext: "A group of fuzzy round monsters with binoculars, backpacks and guide books looking up a graphs flying around with wings (like birders, but with exploratory data visualizations). Stylized text reads “ggplot2: visual data exploration.”"
+---
+
+# Introduction
+
+```{r, fig.alt = "A group of fuzzy round monsters with binoculars, backpacks and guide books looking up a graphs flying around with wings (like birders, but with exploratory data visualizations). Stylized text reads “ggplot2: visual data exploration.”", fig.cap= "Figure from [Allison Horst](https://github.com/allisonhorst/stats-illustrations)", out.width = "70%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/ggplot2_exploratory.png")
+```
+
+We have spent the last two Code Club sessions talking about plotting with [`ggplot2`](https://ggplot2.tidyverse.org/). We have gone through:
+
+- [Code structure, data, aesthetic mappings, and some geoms](https://osu-codeclub.github.io/posts/S11E01_ggplot_01/)
+- [Changing colors ad checking accessibility](https://osu-codeclub.github.io/posts/S11E02_ggplot_02/)
+
+This week, we will go over:
+
+- Additional geoms
+- Creating a faceted plot
+- Adding labels
+
+## Loading packages and data
+
+The first thing we will do is load the `tidyverse` so we can use the functions it contains.
+
+```{r}
+library(tidyverse)
+```
+
+
+We are going to continue to use the `penguins` dataset we've been working with for the last couple of weeks. Let's load that data so we can use it.
+```{r}
+library(palmerpenguins)
+```
+
+We can also take a "glimpse" at our data with the function `glimpse()` to remind ourselves of what data is contained within `penguins`.
+
+```{r}
+glimpse(penguins)
+```
+
+# More geoms
+
+So far we've focused really on scatterplots (using `geom_point()`), so let's try some other plot types.
+
+What if we want to see what the body mass of penguins looks like on different islands? We can do that using a variety of different geoms.
+
+## Bar plot (be wary!)
+
+A bar plot is a very commonly used plot type, but often can hide the true distribution of your data, so be careful when you use it.
+
+### Means
+
+If we want to plot what the average body mass is per island, we need to either:
+
+- calculate a mean, and then plot it
+- use a function that calculates the mean for us
+
+First let's calculate the mean manually. This way we can know what those averages should be, and we can reference this against our plot later. 
+
+We can go back to some [content we've gone over in Code Club in the past](https://osu-codeclub.github.io/posts/S08E03_wrangling_03/#the-summarize-function) about the function [`summarize()`](https://dplyr.tidyverse.org/reference/summarise.html). 
+
+```{r}
+# calculating the mean body mass for each island
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            .by = island) # summarize by island
+```
+
+Now we can see what the average mass should be for each island. We can take that same code and pipe that into `ggplot()` to use that as the data to plot. 
+
+```{r}
+# then plotting
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            .by = island) |> # summarize by island
+  ggplot(aes(x = island, y = mean_body_mass)) +
+  geom_col()
+```
+
+Note that the variable we are plotting to `y` is `mean_body_mass` - a new variable we calculated using `summarize()`.
+
+See how this is different from passing. your data directly to `geom_col()`? Pay careful attention to the y-axis values.
+```{r}
+# this is wrong
+# do not do this
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_col()
+```
+
+
+If you don't want to bother with the pre-calculation, you can use the function [`stat_summary()`](https://ggplot2.tidyverse.org/reference/stat_summary.html) which will pre-calculate the mean for you, and plot via the geom of your choice.
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  stat_summary(geom  = "col") # geom should be column
+```
+
+It is a good idea to do these calculations yourself first, even if you end up using a function like `stat_summary()`, this way you can be sure that the result you are getting makes sense.
+
+### Error bars
+
+If we want to add error bars, we can do that too, and in the same way. We can either calculate the values we want to map to the error bars, and then add them, or use another `stat_summary()` to have `ggplot2` calculate the values for us. I will show you code for both, but only go through doing this manually (as the other way is a little bit more complicated than I want to get into right now).how to do both.
+
+Just like we used `summarize()` to calculate the means, we can also use similar code to calculate a standard deviation. Let's grab that code, and we can add to it.
+
+```{r}
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            sd_body_mass = sd(body_mass_g,
+                              na.rm = TRUE), # remove missing values
+            .by = island) # summarize by island
+```
+
+Now we see both a standard deviation along with our mass. And we can plot this now.
+
+```{r}
+penguins |> 
+  summarize(mean_body_mass = mean(body_mass_g, 
+                                  na.rm = TRUE), # remove missing values
+            sd_body_mass = sd(body_mass_g,
+                              na.rm = TRUE), # remove missing values
+            .by = island) |> # summarize by island
+  ggplot(aes(x = island, y = mean_body_mass)) +
+  geom_col() + 
+  geom_errorbar(aes(ymin = (mean_body_mass - sd_body_mass), # set min
+                    ymax = (mean_body_mass + sd_body_mass)), # set max
+                width = 0.2) # set width of the bars
+```
+
+You can have `ggplot()` make your error bars for you but it's a little more complicated than what I want to get into. You can read more about it below.
+
+::: {.callout-tip collapse="true"}
+## Or, we could have `ggplot()` calculate and make our error bars for us. We can start with our code from our original bar plot, and add to it.
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  stat_summary(geom  = "col") + # makes the bars
+  stat_summary(fun.data = mean_sdl, # function is mean_sd
+               fun.args = list(mult=1), # more arguments arguments to mean_sdl as a list
+               geom = "errorbar")
+```
+:::
+
+### Counting
+
+We could also use bar plots to "count" instead of to display a mean. For this, we use [`geom_bar()`](https://ggplot2.tidyverse.org/reference/geom_bar.html).
+
+```{r}
+penguins |> 
+  ggplot(aes(x = island)) +
+  geom_bar()
+```
+
+
+## Boxplot
+
+```{r summary stats, fig.alt = "A cartoon showing a clip art style bar graph, on the left where all the data point dots are held at the bottom by a net, and one on the right where the fidelity of the datapoints are shown. The center says 'are your summary statistics hiding something interesting?'", fig.cap= "Figure from [Allison Horst](https://github.com/allisonhorst/stats-illustrations/blob/main/other-stats-artwork/summary_statistics.png)", out.width = "70%", fig.align = "center", echo = FALSE}
+knitr::include_graphics("img/summary_statistics.png")
+```
+
+There is rarely a situation where a bar plot wouldn't be improved by turning it into a boxplot. A boxplot allows us to see the distribution of our data (instead of just the mean). Lots can be hiding when you summarize before plotting!
+
+We can make a boxplot simply by using [`geom_boxplot()`](https://ggplot2.tidyverse.org/reference/geom_boxplot.html).
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot()
+```
+
+We can supplement our boxplot with all our actual data too, as that might help us see trends in our data. This is a special type of `geom_point()` called `geom_jitter()`, which takes your data points and puts them, in this case, on top of your boxplot.
+
+Here I will color the points by `sex` so we can see what that effect is.
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot() +
+  geom_jitter(aes(color = sex))
+```
+
+## Practice
+We are going to try looking at some new geoms. Create a plot that shows you the distribution of value for flipper length across all the penguins.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Take a look at the [`ggplot` cheatsheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf) and pick a geom that you think would be good for this data that is one continuous variable.
+
+</details>
+
+<details>
+
+<summary>Need another hint?</summary>
+
+Try [`geom_density()`](https://ggplot2.tidyverse.org/reference/geom_density.html) or [`geom_histogram()`](https://ggplot2.tidyverse.org/reference/geom_histogram.html). Keep in mind that when you have one continuous variable, count gets mapped to `y` and this happens automatically.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+A density plot:
+```{r}
+penguins |> 
+  ggplot(aes(x = flipper_length_mm)) + 
+  geom_density()
+```
+
+A histogram, you can play around with `bins = ` and `binwidth = ` to make the plot look how you want:
+```{r}
+penguins |> 
+  ggplot(aes(x = flipper_length_mm)) +
+  geom_histogram()
+```
+
+
+</details>
+
+# Facets
+
+Faceting allows to create small multiples of plots, enabling the easy comparison across the entirety of your data. A benefit of plots like this is they are all structured the same way, so once you understand one, you can begin to look at trends across groups/treatments/conditions simply and easily.
+
+
+What if we want to see the distribution of body mass across penguins, by both islands and sex? Facets can help with this.
+
+There are two faceting functions:
+
+* [`facet_wrap`](https://ggplot2.tidyverse.org/reference/facet_wrap.html): allows to  lay out your facets in a wrapped type. You can use `facet_wrap` if you have 1 variable you'd like to facet on.
+* [`facet_grid`](https://ggplot2.tidyverse.org/reference/facet_grid.html): allows you to lay out your facets in a grid. You can use `facet_grid` if you have 1 or 2 variables you'd like to facet on.
+
+Let's try faceting by `species` first.
+```{r}
+penguins |> 
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot() +
+  facet_wrap(vars(species))
+```
+
+We can also facet by both `species` and `sex` - let's try that.
+
+```{r}
+penguins |> 
+  drop_na(island, body_mass_g, species, sex) |> # remove missing values
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot() +
+  facet_grid(rows = vars(sex), cols = vars(species))
+```
+
+If we prefer to be able to compare by `sex` more easily, we can switch the order of rows and cols.
+
+```{r}
+penguins |> 
+  drop_na(island, body_mass_g, species, sex) |> # remove missing values
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot() +
+  facet_grid(rows = vars(species), cols = vars(sex))
+```
+
+The default in both `facet_wrap` and `facet_grid` are for the x and y-axis to be fixed and constant among all the plots. This is often what you want to take advance of the comparisons between small multiples, but this is something you can change if you want. You can adjust the scales within facets to:
+
+* `scales = "fixed"`: both the x- and y-axes are fixed for all plots to be the same (this is the default)
+* `scales = "free"`: both the x- and y-axes are set per plot
+* `scales = "free_x"`: the x-axis scales are free between plots
+* `scales = "free_y"`: the y-axis scales are free between plots
+
+## Practice
+
+Create a faceted plot for different penguins species that shows the relationship between flipper length and bill length. Color your points by sex. Remove any missing values.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Try using the variables `flipper_length`, `bill_length_mm`, `species` and `sex`. Try faceting by `species` and coloring by `sex`. You can drop missing values with the function `drop_na()`.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  drop_na() |> 
+  ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = sex)) +
+  geom_point() + 
+  facet_wrap(vars(species))
+```
+
+</details>
+
+Take your faceted plot and add a linear line showing the relationship flipper length and bill length for each species, by sex.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Add another layer with `geom_smooth()`. If you want a linear line, you can set `method = "lm"`.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  drop_na() |> 
+  ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = sex)) +
+  geom_point() + 
+  geom_smooth(method = "lm") +
+  facet_wrap(vars(species))
+```
+
+</details>
+
+# Labels
+
+Having good labels helps your reader (and you, when you come back to the plot in the future) understand what its all about. 
+
+In the [`labs()`](https://ggplot2.tidyverse.org/reference/labs.html) function, you can indicate:
+
+* `x` for the x-axis label
+* `y` for the y-axis label
+* `title` for a title
+* `subtitle` for a subtitle underneath your title
+* `caption` for a caption
+
+Let's take a plot we worked on and adjust the labels.
+
+```{r}
+penguins |> 
+  drop_na(island, body_mass_g, species, sex) |> # remove missing values
+  ggplot(aes(x = island, y = body_mass_g)) +
+  geom_boxplot() +
+  facet_grid(rows = vars(sex), cols = vars(species)) +
+  labs(x = "Island",
+       y = "Body mass (g)",
+       title = "Penguin body mass by island and species",
+       subtitle = "Data collected from LTER, Antarctica in 2007/08")
+```
+
+
+## Practice
+
+Take the final plot from the last series of exercises and add some more descriptive labels for x, y, and a title.
+
+<details>
+
+<summary>Need a hint?</summary>
+
+Use `labs()` and set `x`, `y`, and `title`. You can also add others.
+
+</details>
+
+<details>
+
+<summary>Click for the solution</summary>
+
+```{r}
+penguins |> 
+  drop_na() |> 
+  ggplot(aes(x = flipper_length_mm, y = bill_length_mm, color = sex)) +
+  geom_point() + 
+  geom_smooth(method = "lm") +
+  facet_wrap(vars(species)) +
+  labs(x = "Flipper length (mm)",
+       y = "Bill length (mm)",
+       color = "", # remove the legend title, could also rename this way
+       title = "Relationship between penguin flipper and bill length",
+       subtitle = "Data collected from LTER, Antarctica")
+```
+
+</details>
