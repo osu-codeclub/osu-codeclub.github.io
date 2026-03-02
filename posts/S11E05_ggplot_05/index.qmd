@@ -172,7 +172,13 @@ You layer it on top of a preset:
 p + theme_classic() + theme(...)
 ```
 
-One example of a `theme()` call:
+::: {.callout-warning appearance="simple"}
+If you use both a `theme_` preset and `theme()`,
+the `theme()` call **must** go _after_ the preset,
+otherwise the preset will override your customizations.
+:::
+
+A first example of a `theme()` call -- to make the legend title bold:
 
 ```r
 theme(legend.title = element_text(face = "bold"))
@@ -669,4 +675,24 @@ though some journals may request a resolution up to 600 dpi or so.
 
 Open the SVG file, and the two `large` PNG files,
 and compare how they look when you zoom in closely.
+
+:::: columns
+::: {.column width="47%"}
+
+PNG at 300 dpi:
+
+![](img/png_zoom.png){width="100%" fig-align="center" .lightbox}
+
+:::
+::: {.column width="1%"}
+:::
+::: {.column width="52%"}
+
+SVG:
+
+![](img/svg_zoom.png){width="100%" fig-align="center" .lightbox}
+
+:::
+::::
+
 :::
