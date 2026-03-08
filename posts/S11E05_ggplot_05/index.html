@@ -9,7 +9,7 @@
 <meta name="author" content="Jelmer Poelstra">
 <meta name="dcterms.date" content="2026-03-02">
 
-<title>ggplot part 5 – OSU Code Club</title>
+<title>ggplot publication prep – OSU Code Club</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -78,9 +78,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../../site_libs/bootstrap/bootstrap-cd03ec2eb3d93126c40b3547cc84a9a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
 <link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
-<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
-<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
-<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -228,12 +225,6 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
   <li><a href="#customizing-with-theme" id="toc-customizing-with-theme" class="nav-link" data-scroll-target="#customizing-with-theme"><span class="header-section-number">2.3</span> Customizing with <code>theme()</code></a></li>
   </ul></li>
   <li><a href="#multi-panel-figures" id="toc-multi-panel-figures" class="nav-link" data-scroll-target="#multi-panel-figures"><span class="header-section-number">3</span> Multi-panel figures</a></li>
-  <li><a href="#saving-plots-to-file" id="toc-saving-plots-to-file" class="nav-link" data-scroll-target="#saving-plots-to-file"><span class="header-section-number">4</span> Saving plots to file</a>
-  <ul class="collapse">
-  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">4.1</span> Basic usage</a></li>
-  <li><a href="#controlling-figure-size" id="toc-controlling-figure-size" class="nav-link" data-scroll-target="#controlling-figure-size"><span class="header-section-number">4.2</span> Controlling figure size</a></li>
-  <li><a href="#raster-vs.-vector-formats" id="toc-raster-vs.-vector-formats" class="nav-link" data-scroll-target="#raster-vs.-vector-formats"><span class="header-section-number">4.3</span> Raster vs.&nbsp;vector formats</a></li>
-  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E05_ggplot_05/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -242,7 +233,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Preparing your (gg)plots for publication</h1>
+<h1 class="title">Preparing (gg)plots for publication</h1>
 <p class="subtitle lead">Formatting, multi-panel layouts, and saving plots</p>
   <div class="quarto-categories">
     <div class="quarto-category">ggplot2</div>
@@ -293,7 +284,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
 <section id="what-well-cover" class="level3" data-number="1.1">
 <h3 data-number="1.1" class="anchored" data-anchor-id="what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</h3>
-<p>Today, we’ll cover three topics to help you prepare your plots for publication. Specifically, we’ll have figures for scientific publications in mind, and will cover:</p>
+<p>Today, we’ll cover two topics to help you prepare your plots for publication. Specifically, we’ll have figures for scientific publications in mind, and will cover:</p>
 <ul>
 <li><strong>Formatting plots</strong> – theme presets and customizing plot appearance with <em>ggplot</em>’s <code>theme()</code></li>
 <li><strong>Multi-panel layouts</strong> – with the <em>patchwork</em> package</li>
@@ -309,11 +300,11 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.1     ✔ stringr   1.5.2
-✔ ggplot2   4.0.0     ✔ tibble    3.3.0
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.1.0     
+✔ dplyr     1.2.0     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
@@ -329,7 +320,7 @@ The following objects are masked from 'package:datasets':
     penguins, penguins_raw</code></pre>
 </div>
 </div>
-<p>We’ll need two additional packages later on, but we’ll install and load these along the way.</p>
+<p>We’ll need an additional packages later on, but we’ll install and load that one along the way.</p>
 </section>
 <section id="a-base-plot" class="level4">
 <h4 class="anchored" data-anchor-id="a-base-plot">A base plot</h4>
@@ -709,7 +700,7 @@ Want to place the legend <em>inside</em> the plot? <em>(Click to expand)</em>
 <ul>
 <li><code>plot1 | plot2</code> puts two plots side-by-side</li>
 <li><code>plot1 / plot2</code> stacks two plots vertically</li>
-<li><code>(plot1 / plot2) | plot3)</code> puts <code>plot1</code> and <code>plot2</code> on the top row, and <code>plot3</code> on the bottom row</li>
+<li><code>(plot1 | plot2) / plot3)</code> puts <code>plot1</code> and <code>plot2</code> on the top row, and <code>plot3</code> on the bottom row</li>
 </ul>
 <p>For example, to combine the three plots we just made, with the first (faceted) plot on top, and the other two side-by-side below it:</p>
 <div class="cell">
@@ -786,219 +777,11 @@ Want to place the legend <em>inside</em> the plot? <em>(Click to expand)</em>
 </div>
 </details>
 </section>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="saving-plots-to-file" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="saving-plots-to-file"><span class="header-section-number">4</span> Saving plots to file</h2>
-<p>So far, we printed plots to the screen in RStudio but did not save them to file. You may have noticed the “Export” button in the Plots pane — it works, but a more flexible and reproducible approach is the <code>ggsave()</code> function.</p>
-<section id="basic-usage" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">4.1</span> Basic usage</h3>
-<p>Tell <code>ggsave()</code> about the filename and the plot you want to save:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"plot.png"</span>, <span class="at">plot =</span> p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 7 x 5 in image</code></pre>
-</div>
-</div>
-<ul>
-<li><p>The <strong>file type</strong> is determined by the extension you provide. Above, we used PNG, but there are other options, as we’ll see in a bit.</p></li>
-<li><p>We did not specify the <code>width</code> and <code>height</code> of the figure above, so it reports saving it at a default size of 7 × 5 inches.</p></li>
-</ul>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Saving plots without specifying the plot
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>By default, <code>ggsave()</code> saves the last plot you produced, and you only need to specify the filename:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"plot.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>This can e.g.&nbsp;be handy because you may not have saved your plot to an object.</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Saving the file elsewhere on your computer
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>In both cases above, the file would be saved to the folder that represents your current “working directory” (directory = folder) in R. But you can save the file to any location on your computer by specifying the path as part of the filename:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to a "figures" subfolder in the current working directory:</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"figures/plot.png"</span>, <span class="at">plot =</span> p)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to a specific folder on your computer:</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"C:/Users/YourName/Documents/figures/plot.png"</span>, <span class="at">plot =</span> p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To learn more about file paths and how R deals with them, see <a href="../../posts/S10E03_reprod_03/">this Code Club session from last fall</a>.</p>
-<p>If the folder you’re trying to save to does not already exist, a prompt like this will appear to create the folder:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="img/ggsave_create-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="controlling-figure-size" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="controlling-figure-size"><span class="header-section-number">4.2</span> Controlling figure size</h3>
-<p><code>ggsave()</code> accepts <code>width</code> and <code>height</code> arguments, with a default unit of inches<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"wide.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>The figure’s size may not seem to matter much, because you could always resize the figure on the computer, right? But it matters quite a bit: for example, for the <strong>aspect ratio</strong> and the <strong>relative text size</strong>, as we’ll see below.</p>
-<section id="aspect-ratio" class="level4">
-<h4 class="anchored" data-anchor-id="aspect-ratio">Aspect ratio</h4>
-<p>The <code>width</code> relative to the <code>height</code>, somewhat obviously, determines the figure’s aspect ratio – this can be useful to customize.</p>
-<p>Above, our figure is 50% wider than it is high, and that is sensible…</p>
-<p>Let’s also try saving the same plot with a different aspect ratio:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"tall.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Here is what the resulting figures should look like:</p>
-<div class="columns">
-<div class="column" style="width:48%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="wide.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div><div class="column" style="width:4%;">
-
-</div><div class="column" style="width:48%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="tall.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="relative-text-size" class="level4">
-<h4 class="anchored" data-anchor-id="relative-text-size">Relative text size</h4>
-<p><strong>Text and points do not scale with the figure</strong> — they stay at their absolute sizes (in points/mm). This means:</p>
-<ul>
-<li>A plot saved at 3 × 3 will have large-looking text relative to the data</li>
-<li>A plot saved at 10 × 8 will have small-looking text</li>
-</ul>
-<p>This behavior may seem strange but is actually useful: if your text looks too large or too small in the saved file, you can adjust <code>width</code> and <code>height</code> rather than modifying the plotting code.</p>
-<p>Let’s see this in action, too:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "Small" figure — text will look relatively large</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"small.png"</span>, <span class="at">plot =</span> p_combined, <span class="at">width =</span> <span class="fl">4.5</span>, <span class="at">height =</span> <span class="dv">3</span>)</span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># "Large" figure — text will look relatively small</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"large.png"</span>, <span class="at">plot =</span> p_combined, <span class="at">width =</span> <span class="dv">9</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>Here is what the resulting figures should look like:</p>
-<div class="columns">
-<div class="column" style="width:48%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="small.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div><div class="column" style="width:4%;">
-
-</div><div class="column" style="width:48%;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="large.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="raster-vs.-vector-formats" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="raster-vs.-vector-formats"><span class="header-section-number">4.3</span> Raster vs.&nbsp;vector formats</h3>
-<p>When saving a figure, you have two fundamentally different types of format to choose from:</p>
-<ul>
-<li><p><strong>Raster formats</strong> (PNG, JPEG, TIFF) store the image as a grid of pixels.</p>
-<p>Quality is fixed at save time using the figure’s “<em>resolution</em>” — but zoom in far enough and you’ll see pixelation. Among these formats, TIFF is generally preferred for scientific publications while PNG may also work, while JPEG should typically be avoided.</p></li>
-<li><p><strong>Vector formats</strong> (SVG, PDF) store the image as geometric instructions — lines, curves, text.</p>
-<p>They render sharply at any size, and text is selectable and searchable. Among these formats, SVG is generally preferred or scientific publications.</p></li>
-</ul>
-<p>For publication, <strong>vector formats are generally preferable</strong> when the journal accepts them. Figures will be crisp at any print size, and editors or co-authors can make minor tweaks in a vector editor such as InkScape or Illustrator.</p>
-<p>To save to SVG format, we need the <code>svglite</code> package – let’s install that:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"svglite"</span>)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (We don't need to load it with library() because ggsave() will use it </span></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  automatically when we save to SVG)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>As mentioned above, the filetype is simply specified in <code>ggsave()</code> using the file extension. Earlier, we saved to PNG, so let’s now practice saving to SVG:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"large.svg"</span>, <span class="at">plot =</span> p_combined, <span class="at">width =</span> <span class="dv">9</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Controlling resolution for raster formats
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>For raster formats (PNG, JPEG, TIFF), resolution of the figure is controlled with the <code>dpi</code> argument (dots per inch).</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"large_dpi300.png"</span>,</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p_combined,</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>A dpi of 300 is sufficient in almost any context, though some journals may request a resolution up to 600 dpi or so.</p>
-</div>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-<section id="exercise-compare-formats" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="exercise-compare-formats"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Compare formats</h4>
-<p>Open the SVG file, and the two <code>large</code> PNG files, and compare how they look when you zoom in closely.</p>
-<div class="columns">
-<div class="column" style="width:47%;">
-<p>PNG at 300 dpi:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/png_zoom.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="img/png_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
-</figure>
-</div>
-</div><div class="column" style="width:1%;">
-
-</div><div class="column" style="width:52%;">
-<p>SVG:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/svg_zoom.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="img/svg_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></a></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 
 
 </section>
-</section>
 
-
-<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
-
-<ol>
-<li id="fn1"><p> You can change this with the <code>units</code> argument, other options are: (<code>"cm"</code>, <code>"mm"</code>, or <code>"px"</code>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section></div></main> <!-- /main -->
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
@@ -1417,40 +1200,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E05_ggplot_05/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
-(function() {
-  let previousOnload = window.onload;
-  window.onload = () => {
-    if (previousOnload) {
-      previousOnload();
-    }
-    lightboxQuarto.on('slide_before_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      const href = trigger.getAttribute('href');
-      if (href !== null) {
-        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
-        if (imgEl !== null) {
-          const srcAttr = imgEl.getAttribute("src");
-          if (srcAttr && srcAttr.startsWith("data:")) {
-            slideConfig.href = srcAttr;
-          }
-        }
-      } 
-    });
-  
-    lightboxQuarto.on('slide_after_load', (data) => {
-      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
-      if (window.Quarto?.typesetMath) {
-        window.Quarto.typesetMath(slideNode);
-      }
-    });
-  
-  };
-  
-})();
-          </script>
 
 
 
 
-</body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E05_ggplot_05/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
