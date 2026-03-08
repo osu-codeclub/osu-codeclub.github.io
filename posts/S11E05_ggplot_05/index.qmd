@@ -1,7 +1,7 @@
 ---
-title: "Preparing your (gg)plots for publication"
+title: "Preparing (gg)plots for publication"
 subtitle: "Formatting, multi-panel layouts, and saving plots"
-pagetitle: "ggplot part 5"
+pagetitle: "ggplot publication prep"
 author:
   - name: Jelmer Poelstra
     orcid: 0000-0002-3514-7462
@@ -28,7 +28,7 @@ editor_options:
 
 ### What we'll cover
 
-Today, we'll cover three topics to help you prepare your plots for publication.
+Today, we'll cover two topics to help you prepare your plots for publication.
 Specifically, we'll have figures for scientific publications in mind,
 and will cover:
 
@@ -49,8 +49,8 @@ library(tidyverse)
 library(palmerpenguins)
 ```
 
-We'll need two additional packages later on,
-but we'll install and load these along the way.
+We'll need an additional packages later on,
+but we'll install and load that one along the way.
 
 #### A base plot
 
@@ -375,7 +375,7 @@ For example:
 
 - `plot1 | plot2` puts two plots side-by-side
 - `plot1 / plot2` stacks two plots vertically
-- `(plot1 / plot2) | plot3)` puts `plot1` and `plot2` on the top row,
+- `(plot1 | plot2) / plot3)` puts `plot1` and `plot2` on the top row,
   and `plot3` on the bottom row
 
 For example, to combine the three plots we just made,
@@ -457,242 +457,4 @@ p_bill_flipper / p_mass_yr +
   plot_annotation(tag_levels = 'I')
 ```
 </details>
-:::
-
-<hr style="height:1pt; visibility:hidden;" />
-
-## Saving plots to file
-
-So far, we printed plots to the screen in RStudio but did not save them to file.
-You may have noticed the "Export" button in the Plots pane —
-it works, but a more flexible and reproducible approach is the `ggsave()` function.
-
-### Basic usage
-
-Tell `ggsave()` about the filename and the plot you want to save:
-
-```{r}
-ggsave(filename = "plot.png", plot = p)
-```
-
-- The **file type** is determined by the extension you provide.
-  Above, we used PNG, but there are other options, as we'll see in a bit.
-
-- We did not specify the `width` and `height` of the figure above,
-  so it reports saving it at a default size of 7 × 5 inches.
-
-::: callout-tip
-#### Saving plots without specifying the plot
-
-By default, `ggsave()` saves the last plot you produced,
-and you only need to specify the filename:
-
-```{r, eval=FALSE}
-ggsave(filename = "plot.png")
-```
-
-This can e.g. be handy because you may not have saved your plot to an object.
-:::
-
-::: callout-note
-#### Saving the file elsewhere on your computer
-
-In both cases above, the file would be saved to the folder that represents your
-current "working directory" (directory = folder) in R.
-But you can save the file to any location on your computer by specifying
-the path as part of the filename:
-
-```{r, eval=FALSE}
-# Save to a "figures" subfolder in the current working directory:
-ggsave(filename = "figures/plot.png", plot = p)
-
-# Save to a specific folder on your computer:
-ggsave(filename = "C:/Users/YourName/Documents/figures/plot.png", plot = p)
-```
-
-To learn more about file paths and how R deals with them,
-see [this Code Club session from last fall](/posts/S10E03_reprod_03/).
-
-If the folder you're trying to save to does not already exist,
-a prompt like this will appear to create the folder: 
-
-![](img/ggsave_create-folder.png){width="45%" fig-align="center"}
-
-:::
-
-<hr style="height:1pt; visibility:hidden;" />
-
-### Controlling figure size
-
-`ggsave()` accepts `width` and `height` arguments, with a default unit of inches^[
-You can change this with the `units` argument, other options are:
-(`"cm"`, `"mm"`, or `"px"`).]:
-
-```{r}
-ggsave(filename = "wide.png", plot = p, width = 6, height = 4)
-```
-
-The figure's size may not seem to matter much,
-because you could always resize the figure on the computer, right?
-But it matters quite a bit:
-for example, for the **aspect ratio** and the **relative text size**,
-as we'll see below.
-
-#### Aspect ratio
-
-The `width` relative to the `height`, somewhat obviously,
-determines the figure's aspect ratio -- this can be useful to customize.
-
-Above, our figure is 50% wider than it is high, 
-and that is sensible...
-
-Let's also try saving the same plot with a different aspect ratio:
-
-```{r}
-ggsave(filename = "tall.png", plot = p, width = 4, height = 6)
-```
-
-Here is what the resulting figures should look like:
-
-:::: columns
-::: {.column width="48%"}
-
-![](wide.png){width="100%" fig-align="center"}
-
-:::
-::: {.column width="4%"}
-:::
-::: {.column width="48%"}
-
-![](tall.png){width="100%" fig-align="center"}
-
-:::
-::::
-  
-#### Relative text size
-
-**Text and points do not scale with the figure** —
-they stay at their absolute sizes (in points/mm). This means:
-
-- A plot saved at 3 × 3 will have large-looking text relative to the data
-- A plot saved at 10 × 8 will have small-looking text
-
-This behavior may seem strange but is actually useful:
-if your text looks too large or too small in the saved file,
-you can adjust `width` and `height` rather than modifying the plotting code.
-
-Let's see this in action, too:
-
-```{r}
-# "Small" figure — text will look relatively large
-ggsave(filename = "small.png", plot = p_combined, width = 4.5, height = 3)
-
-# "Large" figure — text will look relatively small
-ggsave(filename = "large.png", plot = p_combined, width = 9, height = 6)
-```
-
-Here is what the resulting figures should look like:
-
-:::: columns
-::: {.column width="48%"}
-
-![](small.png){width="100%" fig-align="center"}
-
-:::
-::: {.column width="4%"}
-:::
-::: {.column width="48%"}
-
-![](large.png){width="100%" fig-align="center"}
-
-:::
-::::
-
-### Raster vs. vector formats
-
-When saving a figure,
-you have two fundamentally different types of format to choose from:
-
-- **Raster formats** (PNG, JPEG, TIFF) store the image as a grid of pixels.
-
-  Quality is fixed at save time using the figure's "_resolution_" —
-  but zoom in far enough and you'll see pixelation.
-  Among these formats, TIFF is generally preferred for scientific publications
-  while PNG may also work, while JPEG should typically be avoided.
-
-- **Vector formats** (SVG, PDF) store the image as geometric instructions —
-  lines, curves, text.
-  
-  They render sharply at any size, and text is selectable and searchable.
-  Among these formats, SVG is generally preferred or scientific publications.
-
-For publication,
-**vector formats are generally preferable** when the journal accepts them.
-Figures will be crisp at any print size,
-and editors or co-authors can make minor tweaks in a vector editor such as InkScape
-or Illustrator.
-
-To save to SVG format, we need the `svglite` package -- let's install that:
-
-```{r, eval=FALSE}
-install.packages("svglite")
-# (We don't need to load it with library() because ggsave() will use it 
-#  automatically when we save to SVG)
-```
-
-As mentioned above,
-the filetype is simply specified in `ggsave()` using the file extension.
-Earlier, we saved to PNG, so let's now practice saving to SVG:
-
-```{r}
-ggsave(filename = "large.svg", plot = p_combined, width = 9, height = 6)
-```
-
-::: callout-note
-### Controlling resolution for raster formats
-
-For raster formats (PNG, JPEG, TIFF),
-resolution of the figure is controlled with the `dpi` argument (dots per inch).
-
-```{r}
-ggsave(
-  filename = "large_dpi300.png",
-  plot = p_combined,
-  width = 6,
-  height = 4,
-  dpi = 300
-  )
-```
-
-A dpi of 300 is sufficient in almost any context,
-though some journals may request a resolution up to 600 dpi or so.
-:::
-
-<hr style="height:1pt; visibility:hidden;" />
-
-::: exercise
-#### {{< fa user-edit >}} Exercise: Compare formats
-
-Open the SVG file, and the two `large` PNG files,
-and compare how they look when you zoom in closely.
-
-:::: columns
-::: {.column width="47%"}
-
-PNG at 300 dpi:
-
-![](img/png_zoom.png){width="100%" fig-align="center" .lightbox}
-
-:::
-::: {.column width="1%"}
-:::
-::: {.column width="52%"}
-
-SVG:
-
-![](img/svg_zoom.png){width="100%" fig-align="center" .lightbox}
-
-:::
-::::
-
 :::
