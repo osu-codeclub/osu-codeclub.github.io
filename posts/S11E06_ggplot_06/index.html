@@ -296,8 +296,8 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>Today, we’ll continue on the topic of preparing your plots for publication. Specifically, we’ll cover:</p>
 <ul>
 <li><p><strong>Saving plots to file</strong> – with <em>ggplot</em>’s <code>ggsave()</code> <em>(moved from last weeksince we didn’t get there)</em></p></li>
-<li><p><strong>ggtext</strong> – for formatting text in plots with Markdown and HTML</p></li>
-<li><p>Adding any kind of image to a plot, including:</p>
+<li><p>Advanced <strong>text formatting</strong> with <em>ggtext</em>. For example, italicizing individual words in axis titles and legends.</p></li>
+<li><p>Adding any kind of <strong>image to a plot</strong>, including:</p>
 <ul>
 <li>An image inside a plot</li>
 <li>A plot of an image in a multi-panel layout</li>
@@ -448,11 +448,11 @@ Saving the file in a different folder on your computer <em>(Click to expand)</em
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"wide.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The figure’s size may not seem to matter much, because you could always resize the figure on the computer, right? In fact, what does an inch even mean in the context of a figure displayed on a screen?</p>
-<p>But it matters quite a bit: for example, for the <strong>aspect ratio</strong> and the <strong>relative text size</strong>.</p>
+<p>But these dimensions are important when considering the figure’s <strong>aspect ratio</strong> and the <strong>relative text size</strong>.</p>
 <section id="aspect-ratio" class="level4">
 <h4 class="anchored" data-anchor-id="aspect-ratio">Aspect ratio</h4>
-<p>The figure’s <code>width</code> relative to the <code>height</code>, somewhat obviously, determines its aspect ratio – and this can be useful to customize.</p>
-<p>Above, our figure is 50% wider than it is high, and that is sensible, because we have a legend on the right-hand side of the plot, and that takes up some horizontal space. But for the sake of practice, let’s save the same plot with a different aspect ratio:</p>
+<p>The figure’s <code>width</code> relative to the <code>height</code>, somewhat obviously, determines its aspect ratio – and this can be useful to be mindful of and customize when appropriate.</p>
+<p>Above, our figure is 50% wider than it is high, and that is sensible because we have a legend on the right-hand side of the plot that takes up horizontal space. But for the sake of practice, let’s save the same plot with a different aspect ratio:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"tall.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -583,8 +583,7 @@ Controlling resolution for raster formats
 <section id="format-individual-words-with-ggtext" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="format-individual-words-with-ggtext"><span class="header-section-number">3</span> Format individual words with <em>ggtext</em></h2>
 <p>While you can set the fontface (plain, bold, italic, etc.) of axis titles, legend titles, and so on with <code>theme()</code>, you can’t make individual words in these titles bold or italic with that approach. (The same is true for applying colors.)</p>
-<p><em>ggtext</em> is a package that lets you use Markdown and HTML markup to format text in ggplot2 plots. It is useful for things like bolding or italicizing individual words in a label, or coloring individual words to match data colors, which can make a legend unnecessary.</p>
-<p>Install it if you don’t have it yet:</p>
+<p><em>ggtext</em> is a package that lets you use Markdown and HTML markup to format text in ggplot2 plots. It is useful for things like bolding, italicizing or coloring individual words in a label. Install it if you don’t have it yet:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggtext"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -593,7 +592,7 @@ Controlling resolution for raster formats
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>The main function in <em>ggtext</em> is <code>element_markdown()</code>. It works as a drop-in replacement for <code>element_text()</code> in <code>theme()</code> calls, and enables Markdown and HTML parsing for that text element.</p>
-<p>Let’s say for the sake of argument that we wanted to make parts of the axis titles bold and italic. The <a href="https://www.markdownguide.org/basic-syntax/">Markdown syntax</a> to make text <strong>bold</strong> is <code>**text**</code> and <code>*text*</code> to make it <em>italic</em>.</p>
+<p>Let’s say for the sake of argument that in our penguin scatterplot, we wanted to make parts of the axis titles bold and italic. The <a href="https://www.markdownguide.org/basic-syntax/">Markdown syntax</a> to make text <strong>bold</strong> is <code>**text**</code> and <code>*text*</code> to make it <em>italic</em>.</p>
 <p>Without <code>element_markdown()</code>, the asterisks are printed literally:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
@@ -655,7 +654,7 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
 </figure>
 </div>
 </div>
@@ -672,9 +671,10 @@ Colored text! <em>(Click to expand)</em>
 </div>
 <div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
+<p>You probably won’t need this in a scientific publication, but it can be useful for other, more informal, contexts. For example, you could color species names in a plot title to match the data colors, making the legend redundant.</p>
 <p>To color individual words, use an HTML <code>&lt;span&gt;</code> tag with inline CSS:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#1B9E77"</span><span class="dt">&gt;</span>some text<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>The most powerful application of this is coloring the species names in the plot title to match the data colors, making the legend redundant. First, let’s find the three colors that <code>scale_fill_brewer(palette = "Dark2")</code> assigns to the three species:</p>
+<p>Above, <code>#1B9E77</code> is the hex code for a specific color. Let’s find the three colors that <code>scale_fill_brewer(palette = "Dark2")</code> assigns to the three species:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Dark2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -711,9 +711,10 @@ Colored text! <em>(Click to expand)</em>
 </section>
 <section id="adding-images-to-plots" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="adding-images-to-plots"><span class="header-section-number">4</span> Adding images to plots</h2>
-<p>If you want to follow along with the code below, you’ll need to download the file <code>3penguins.png</code> from our GitHub repo:</p>
+<p>To follow along with the code below, download the file <code>3penguins.png</code> from our GitHub repo:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="st">"https://raw.githubusercontent.com/jelmerpoelstra/ggplot2-course/master/img/3penguins.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>penguin_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/3penguins.png"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> penguin_img_url, <span class="at">destfile =</span> <span class="st">"3penguins.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>We’ll also load two additional packages for working with images in R:</p>
 <div class="cell">
@@ -823,8 +824,7 @@ Disabled features: fftw, ghostscript, x11</code></pre>
 </section>
 <section id="an-image-inside-a-plot" class="level3" data-number="4.2">
 <h3 data-number="4.2" class="anchored" data-anchor-id="an-image-inside-a-plot"><span class="header-section-number">4.2</span> An image inside a plot</h3>
-<p>It seems to me that this is most easily done with the <em>cowplot</em> package. This provides a <code>draw_image()</code> function that can be used in combination with <code>ggdraw()</code> to add images to ggplots.</p>
-<p>Install <em>cowplot</em> if you don’t have it already, then load it:</p>
+<p>I think this is most easily done with the <em>cowplot</em> package, which has a <code>draw_image()</code> function to add images to ggplots. Install <em>cowplot</em> if you don’t have it already, then load it:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"cowplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -848,7 +848,7 @@ Attaching package: 'cowplot'</code></pre>
 <p>Now, we can add the image to our plot with <code>ggdraw()</code> and <code>draw_image()</code>, where:</p>
 <ul>
 <li><p>The <code>x</code> and <code>y</code> arguments specify the position of the image in the plot (between 0 and 1), with x being the left-most position and y being the bottom-most position. These are not the same as the x and y axes of the plot, but rather the position of the image relative to the plot area.</p></li>
-<li><p>The <code>height</code> and <code>width</code> arguments specify the size of the image relative to the plot (between 0 and 1). One thing to note is that the aspect ratio of the image is preserved, so even if you specify a square image like we do below, the actual image may not be square if the original image is not square. While it may seem odd in that case to specify both width and height, when omitting one of these, the function somehow has strange behavior with respect to the <code>x</code> and <code>y</code> coordinates.</p></li>
+<li><p>The <code>height</code> and <code>width</code> arguments specify the size of the image relative to the plot (between 0 and 1). One thing to note is that the aspect ratio of the image is preserved, so even if you specify a square image like we do below, the actual image may not be square if the original image is not square. While it may seem odd in that case to specify both width and height, when omitting one of these, the function somehow has strange behavior with respect to the <code>x</code> and <code>y</code> coordinates. 🤷‍♂️</p></li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p) <span class="sc">+</span></span>
@@ -866,7 +866,13 @@ Attaching package: 'cowplot'</code></pre>
 <h3 data-number="4.3" class="anchored" data-anchor-id="an-example-with-multiple-images"><span class="header-section-number">4.3</span> An example with multiple images</h3>
 <p>Say that we wanted to add a separate image for each penguin species in an appopriate part of the plot. First, download the following penguin images:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co">#TBA</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>adelie_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/adelie.png"</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>chinstrap_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/chinstrap.png"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>gentoo_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/gentoo.png"</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> adelie_img_url, <span class="at">destfile =</span> <span class="st">"adelie.png"</span>)</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> chinstrap_img_url, <span class="at">destfile =</span> <span class="st">"chinstrap.png"</span>)</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> gentoo_img_url, <span class="at">destfile =</span> <span class="st">"gentoo.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>And add them to the plot:</p>
 <div class="cell">
@@ -905,15 +911,17 @@ Multiple images in a plot, with boxes <em>(Click to expand)</em>
 <span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>img <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(raw, <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>), <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>))</span>
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the image's aspect ratio and compute the height from that:</span></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>aspect_ratio <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw)[<span class="dv">2</span>]</span>
-<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>height <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_ratio</span>
-<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot with the inserted image</span></span>
-<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a><span class="co"># (Setting the plot panel's aspect ratio to 1 seems necessary for the image's</span></span>
-<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co">#  aspect ratio to be correctly displayed.)</span></span>
-<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
-<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img, <span class="at">right =</span> <span class="fl">0.4</span>, <span class="at">left =</span> <span class="fl">0.4</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="dv">1</span> <span class="sc">-</span> height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># This is necessary because we need to specify the coordinates of all corners</span></span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a><span class="co"># of the image when using inset_element(), and we want the aspect ratio to be correct.</span></span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>aspect_ratio <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw)[<span class="dv">2</span>]</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>height <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_ratio</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot with the inserted image</span></span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a><span class="co"># (Setting the plot panel's aspect ratio to 1 seems necessary for the image's</span></span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  aspect ratio to be correctly displayed.)</span></span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img, <span class="at">right =</span> <span class="fl">0.4</span>, <span class="at">left =</span> <span class="fl">0.4</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="dv">1</span> <span class="sc">-</span> height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -922,7 +930,7 @@ Multiple images in a plot, with boxes <em>(Click to expand)</em>
 </div>
 </div>
 </div>
-<p>That works, but you can hopefully see why I choose to use <code>draw_image()</code> instead for the earlier examples. Now, let’s expand this to insert individual penguins’ images with colored boxes:</p>
+<p>That works, but you can hopefully see why I choose to use <code>draw_image()</code> instead for the earlier examples. Now, let’s expand this approach in order to insert individual penguins’ images with colored boxes:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the width and save the desired box colors</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>width <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
