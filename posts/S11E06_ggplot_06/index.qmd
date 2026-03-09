@@ -35,9 +35,10 @@ Specifically, we'll cover:
 - **Saving plots to file** -- with _ggplot_'s `ggsave()`
   _(moved from last weeksince we didn't get there)_
 
-- **ggtext** -- for formatting text in plots with Markdown and HTML
+- Advanced **text formatting** with *ggtext*.
+  For example, italicizing individual words in axis titles and legends.
 
-- Adding any kind of image to a plot, including:
+- Adding any kind of **image to a plot**, including:
   - An image inside a plot
   - A plot of an image in a multi-panel layout
 
@@ -125,7 +126,6 @@ ggsave(filename = "plot.png")
 
 This can e.g. be handy because you may not have saved your plot to an object.
 :::
-
 ::: {.callout-note collapse="true"}
 #### Saving the file in a different folder on your computer _(Click to expand)_
 
@@ -168,21 +168,22 @@ The figure's size may not seem to matter much,
 because you could always resize the figure on the computer, right?
 In fact, what does an inch even mean in the context of a figure displayed on a screen?
 
-But it matters quite a bit:
-for example, for the **aspect ratio** and the **relative text size**.
+But these dimensions are important when considering the figure's 
+**aspect ratio** and the **relative text size**.
 
 #### Aspect ratio
 
 The figure's `width` relative to the `height`, somewhat obviously,
-determines its aspect ratio -- and this can be useful to customize.
+determines its aspect ratio --
+and this can be useful to be mindful of and customize when appropriate.
 
 Above, our figure is 50% wider than it is high, 
-and that is sensible, because we have a legend on the right-hand side of the plot,
-and that takes up some horizontal space.
+and that is sensible because we have a legend on the right-hand side of the plot
+that takes up horizontal space.
 But for the sake of practice,
 let's save the same plot with a different aspect ratio:
 
-```{r}
+```{r, eval=FALSE}
 ggsave(filename = "tall.png", plot = p, width = 4, height = 6)
 ```
 
@@ -216,7 +217,7 @@ if your text looks too large or too small in the saved file,
 you can adjust `width` and `height` rather than modifying the plotting code.
 Let's see this in action, too:
 
-```{r}
+```{r,eval=FALSE}
 # "Small" figure — text will look relatively large
 ggsave(filename = "small.png", plot = p, width = 4.5, height = 3)
 
@@ -275,7 +276,7 @@ As mentioned above,
 the filetype is simply specified in `ggsave()` using the file extension.
 Earlier, we saved to PNG, so let's now practice saving to SVG:
 
-```{r}
+```{r, eval=FALSE}
 ggsave(filename = "large.svg", plot = p, width = 9, height = 6)
 ```
 
@@ -285,7 +286,7 @@ ggsave(filename = "large.svg", plot = p, width = 9, height = 6)
 For raster formats (PNG, JPEG, TIFF),
 resolution of the figure is controlled with the `dpi` argument (dots per inch).
 
-```{r}
+```{r, eval=FALSE}
 ggsave(
   filename = "large_dpi300.png",
   plot = p,
@@ -339,10 +340,8 @@ you can't make individual words in these titles bold or italic with that approac
 
 _ggtext_ is a package that lets you use Markdown and HTML markup to format text
 in ggplot2 plots.
-It is useful for things like bolding or italicizing individual words in a label,
-or coloring individual words to match data colors,
-which can make a legend unnecessary.
-
+It is useful for things like bolding, italicizing or coloring individual words
+in a label.
 Install it if you don't have it yet:
 
 ```{r, eval=FALSE}
@@ -359,8 +358,8 @@ The main function in _ggtext_ is `element_markdown()`.
 It works as a drop-in replacement for `element_text()` in `theme()` calls,
 and enables Markdown and HTML parsing for that text element.
 
-Let's say for the sake of argument that we wanted to make parts of the axis
-titles bold and italic.
+Let's say for the sake of argument that in our penguin scatterplot,
+we wanted to make parts of the axis titles bold and italic.
 The [Markdown syntax](https://www.markdownguide.org/basic-syntax/)
 to make text **bold** is  `**text**` and `*text*` to make it *italic*.
 
@@ -411,6 +410,8 @@ Next, we can use these labels in the legend with `scale_fill_brewer()`,
 and then tell `theme()` to interpret the legend text as Markdown with `element_markdown()`:
 
 ```{r}
+#| fig-width: 8
+#| fig-height: 5
 p +
   scale_fill_brewer(palette = "Dark2", labels = species_labs) +
   theme(legend.text = element_markdown())
@@ -419,15 +420,19 @@ p +
 ::: {.callout-note collapse="true"}
 ### Colored text! _(Click to expand)_
 
+You probably won't need this in a scientific publication,
+but it can be useful for other, more informal, contexts.
+For example, you could color species names in a plot title to match the data colors,
+making the legend redundant.
+
 To color individual words, use an HTML `<span>` tag with inline CSS:
 
 ```html
 <span style="color:#1B9E77">some text</span>
 ```
 
-The most powerful application of this is coloring the species names in the plot
-title to match the data colors, making the legend redundant.
-First, let's find the three colors that `scale_fill_brewer(palette = "Dark2")`
+Above, `#1B9E77` is the hex code for a specific color.
+Let's find the three colors that `scale_fill_brewer(palette = "Dark2")`
 assigns to the three species:
 
 ```{r}
@@ -456,7 +461,54 @@ we can choose to remove the legend with `legend.position = "none"`.
 <hr style="height:1pt; visibility:hidden;" />
 
 ::: exercise
-#### {{< fa user-edit >}} Exercise: ....
+#### {{< fa user-edit >}} Exercise: Text formatting
+
+It's common to need subscripts and superscipts in axis titles.
+R has a special syntax for that, but it can be a bit tricky to get right.
+Now that we're using _ggtext_,
+we can use Markdown syntax for subscripts and superscripts instead, which is:
+
+- `^...^` for superscripts, e.g. `3x10^-3^` to produce 3x10^-3^
+- `~...~` for subscripts, e.g. `H~2~O` to produce H~2~O
+
+Let's pretend that the x-axis of our plot is showing **flipper surface in mm^2^**,
+and that the y-axis is on a **log~10~-scale**.
+Modify the axis titles to reflect this,
+using Markdown syntax for the superscripts and subscripts.
+
+(Bonus: actually change the y-axis to a log~10~-scale.)
+
+<details><summary>_Click to see a solution_</summary>
+
+```{r}
+p +
+  labs(
+    x = "Flipper surface (mm^2^)",
+    y = "Body mass (g on a log~10~-scale)"
+    ) +
+  theme(
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown()
+  )
+```
+
+Bonus: changing the y-axis to a log~10~-scale --
+though because our y-axis shows a fairly small range and doesn't
+start at zero, the log transformation doesn't really do anything useful:
+
+```{r}
+p +
+  scale_y_log10() +
+  labs(
+    x = "Flipper surface (mm^2^)",
+    y = "Body mass (g on a log~10~-scale)"
+    ) +
+  theme(
+    axis.title.x = element_markdown(),
+    axis.title.y = element_markdown()
+  )
+```
+</details>
 
 :::
 
@@ -464,114 +516,31 @@ we can choose to remove the legend with `legend.position = "none"`.
 
 ## Adding images to plots
 
-If you want to follow along with the code below,
-you'll need to download the file `3penguins.png` from our GitHub repo:
+Say that we wanted to add this beatiful AI-generated image of the three penguin
+species in the `penguins` dataset to our plot:
+
+![From left to right: Adélie, Chinstrap, and Gentoo.](3penguins.png){width="50%" fig-align="center"}
+
+To follow along with the code below,
+download the file `3penguins.png` with this image from our GitHub repo:
 
 ```{r, eval=FALSE}
-download.file("https://raw.githubusercontent.com/jelmerpoelstra/ggplot2-course/master/img/3penguins.png")
+penguin_img_url <- "https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/3penguins.png"
+download.file(url = penguin_img_url, destfile = "3penguins.png")
 ```
 
 We'll also load two additional packages for working with images in R:
 
 ```{r}
+# (This is needed for the second part: adding images as a panel)
 library(grid)   # Should always be installed
 library(png)    # If you don't have it, install with install.packages("png")
 ```
 
-### An image in a multi-panel layout
-
-First, we'll practice adding an image to a multi-panel layout,
-so basically treating the image as just another plot in the layout.
-
-Let's start with the same three-panel layout we had in the previous session:
-
-```{r}
-p_scatter <- penguins |> 
-  drop_na() |>
-  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
-  geom_point() +
-  facet_wrap(vars(species))
-p_bar <- penguins |> 
-  ggplot(aes(x = island)) +
-  geom_bar()
-p_box <- penguins |> 
-  drop_na() |> 
-  ggplot(aes(x = sex, y = body_mass_g)) +
-  geom_boxplot()
-
-p_scatter / (p_bar | p_box)
-```
-
-First, we'll read the image in as a graphical object with
-`readPNG()` and `rasterGrob()`:
-
-```{r}
-img <- rasterGrob(readPNG("3penguins.png"))
-```
-
-Next, we can add the image to the layout with _patchwork_'s
-`wrap_elements()` function:
-
-```{r}
-# Store the image as a plot element with wrap_elements():
-p_img <- wrap_elements(panel = img)
-
-# Add the image to the layout with patchwork syntax:
-(p_scatter + p_img) / (p_bar | p_box)
-```
-
-Above, the plot with the image is quite small,
-and this is because the image is being resized to fit the plot _panel_
-(that is, the area inside the axes of a plot).
-Note that it's taking up the entire plot panel height,
-but because the image has a 1:1 aspect ratio,
-it is not taking up the entire plot panel width.
-While that makes it appear even smaller,
-it's a good thing that the image's aspect ratio is respected,
-or the image would look stretched.
-
-Alternatively, we can tell `wrap_elements()` to use the entire _plot_ area
-for the image with `plot =` (above, we used `panel =`):
-
-```{r}
-p_img_big <- wrap_elements(plot = img)
-(p_scatter + p_img_big) / (p_bar | p_box)
-```
-
-::: {.callout-tip collapse="true"}
-#### A different method with different image-fitting behavior 
-
-A final alternative is to read the image in with the _magick_ package.
-That's an easy way to fix the aspect ratio of the image,
-such that patchwork will automatically take that aspect ratio into account
-when allocating space for each plot in the layout.
-
-First, install and then load the package:
-
-```{r, eval=FALSE}
-install.packages("magick")
-```
-
-```{r}
-library(magick)
-```
-
-Now use _magick_'s `image_read()` to read the image in,
-and `image_ggplot()` to convert it to a ggplot object:
-
-```{r}
-p_img_fixed <- image_ggplot(image_read("3penguins.png"))
-
-(p_scatter + p_img_fixed) / (p_bar + p_box)
-```
-:::
-
 ### An image inside a plot
 
-It seems to me that this is most easily done with the _cowplot_ package.
-This provides a `draw_image()` function that can be used in combination with
-`ggdraw()` to add images to ggplots.
-
+I think this is most easily done with the _cowplot_ package,
+which has a `draw_image()` function to add images to ggplots.
 Install _cowplot_ if you don't have it already, then load it:
 
 ```{r, eval=FALSE}
@@ -597,7 +566,7 @@ Now, we can add the image to our plot with `ggdraw()` and `draw_image()`, where:
   the actual image may not be square if the original image is not square.
   While it may seem odd in that case to specify both width and height,
   when omitting one of these, the function somehow has strange behavior with
-  respect to the `x` and `y` coordinates.
+  respect to the `x` and `y` coordinates. 🤷‍♂️
 
 ```{r}
 ggdraw(p) +
@@ -614,8 +583,14 @@ Say that we wanted to add a separate image for each penguin species in an
 appopriate part of the plot.
 First, download the following penguin images:
 
-```{r}
-#TBA
+```{r, eval=FALSE}
+adelie_img_url <- "https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/adelie.png"
+chinstrap_img_url <- "https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/chinstrap.png"
+gentoo_img_url <- "https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/gentoo.png"
+
+download.file(url = adelie_img_url, destfile = "adelie.png")
+download.file(url = chinstrap_img_url, destfile = "chinstrap.png")
+download.file(url = gentoo_img_url, destfile = "gentoo.png")
 ```
 
 And add them to the plot:
@@ -626,6 +601,64 @@ ggdraw(p) +
   draw_image("chinstrap.png", x = 0.5, y = 0.25, height = 0.15, width = 0.15) +
   draw_image("gentoo.png", x = 0.4, y = 0.8, height = 0.15, width = 0.15)
 ```
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: exercise
+#### {{< fa user-edit >}} Bonus Exercise: Add images to a boxplot
+
+Create a boxplot with penguin species along the x-axis,
+and any of the penguin measurements along the y-axis.
+Then add the three penguin images to the plot, 
+placing each image either above the boxplot for the corresponding species,
+or just below the plot panel (i.e. in the plot margin).
+
+<details><summary>_Click to see a solution_</summary>
+
+At the top of the plot:
+
+```{r}
+p <- penguins |>
+  drop_na() |>
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  scale_y_continuous(
+    labels = scales::label_comma(),
+    # Manually specify the upper axis limitsand breaks to make room for the image
+    limits = c(NA, 6800),
+    breaks = seq(3000, 6000, by = 1000)
+    ) +
+  labs(x = NULL, y = "Body mass (g)")
+
+ggdraw(p) +
+  draw_image("adelie.png",    x = 0.20, y = 0.85, height = 0.15, width = 0.15) +
+  draw_image("chinstrap.png", x = 0.48, y = 0.85, height = 0.15, width = 0.15) +
+  draw_image("gentoo.png",    x = 0.75, y = 0.85, height = 0.15, width = 0.15)
+```
+
+In the lower margin:
+
+```{r}
+p <- penguins |>
+  drop_na() |>
+  ggplot(aes(x = species, y = body_mass_g)) +
+  geom_boxplot() +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(x = NULL, y = "Body mass (g)") +
+  theme(
+    plot.margin = margin(t = 5, r = 5, b = 60, l = 5), # extra bottom margin
+    )  
+
+ggdraw(p) +
+  draw_image("adelie.png",    x = 0.20, y = -0.01, height = 0.15, width = 0.15) +
+  draw_image("chinstrap.png", x = 0.48, y = -0.01, height = 0.15, width = 0.15) +
+  draw_image("gentoo.png",    x = 0.75, y = -0.01, height = 0.15, width = 0.15)
+```
+
+</details>
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
 
 ::: {.callout-note collapse="true"}
 ### Multiple images in a plot, with boxes _(Click to expand)_
@@ -650,6 +683,8 @@ raw <- readPNG("3penguins.png")
 img <- rasterGrob(raw, width = unit(1, "npc"), height = unit(1, "npc"))
 
 # Obtain the image's aspect ratio and compute the height from that:
+# This is necessary because we need to specify the coordinates of all corners
+# of the image when using inset_element(), and we want the aspect ratio to be correct.
 aspect_ratio <- dim(raw)[1] / dim(raw)[2]
 height <- width * aspect_ratio
 
@@ -663,7 +698,8 @@ p +
 
 That works, but you can hopefully see why I choose to use `draw_image()` instead
 for the earlier examples.
-Now, let's expand this to insert individual penguins' images with colored boxes:
+Now, let's expand this approach in order to insert individual penguins' images
+with colored boxes:
 
 ```{r}
 # Set the width and save the desired box colors
@@ -710,4 +746,96 @@ p +
 
 ```
 
+:::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+### An image in a multi-panel layout
+
+Now, let's explore adding an image to a multi-panel layout,
+so basically treating the image as just another plot in the layout.
+
+For that,
+we'll start with the same three-panel layout as in the previous session:
+
+```{r}
+p_scatter <- penguins |> 
+  drop_na() |>
+  ggplot(aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point() +
+  facet_wrap(vars(species))
+p_bar <- penguins |> 
+  ggplot(aes(x = island)) +
+  geom_bar()
+p_box <- penguins |> 
+  drop_na() |> 
+  ggplot(aes(x = sex, y = body_mass_g)) +
+  geom_boxplot()
+
+p_scatter / (p_bar | p_box)
+```
+
+As a first step in including the penguin image,
+we'll read it in as a graphical object with
+`readPNG()` and `rasterGrob()`:
+
+```{r}
+img <- rasterGrob(readPNG("3penguins.png"))
+```
+
+Next, we can add the image to the layout with _patchwork_'s
+`wrap_elements()` function:
+
+```{r}
+# Store the image as a plot element with wrap_elements():
+p_img <- wrap_elements(panel = img)
+
+# Add the image to the layout with patchwork syntax:
+(p_scatter + p_img) / (p_bar | p_box)
+```
+
+Above, the plot with the image is quite small,
+and this is because the image is being resized to fit the plot _panel_
+(that is, the area inside the axes of a plot).
+Note that it's taking up the entire plot panel height,
+but because the image has a 1:1 aspect ratio,
+it is not taking up the entire plot panel width.
+While that makes it appear even smaller,
+it's a good thing that the image's aspect ratio is respected,
+or the image would look stretched.
+
+Alternatively, we can tell `wrap_elements()` to use the entire _plot_ area
+for the image with `plot =` (above, we used `panel =`):
+
+```{r}
+p_img_big <- wrap_elements(plot = img)
+(p_scatter + p_img_big) / (p_bar | p_box)
+```
+
+::: {.callout-tip collapse="true"}
+#### A different method with different image-fitting behavior _(Click to expand)_
+
+A final alternative is to read the image in with the _magick_ package.
+That's an easy way to fix the aspect ratio of the image,
+such that patchwork will automatically take that aspect ratio into account
+when allocating space for each plot in the layout.
+
+First, install and then load the package:
+
+```{r, eval=FALSE}
+install.packages("magick")
+```
+
+```{r}
+library(magick)
+```
+
+Now use _magick_'s `image_read()` to read the image in,
+and `image_ggplot()` to convert it to a ggplot object:
+
+```{r}
+p_img_fixed <- image_ggplot(image_read("3penguins.png"))
+
+(p_scatter + p_img_fixed) / (p_bar + p_box)
+```
 :::
