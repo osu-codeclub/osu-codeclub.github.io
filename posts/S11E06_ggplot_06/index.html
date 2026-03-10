@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2026-03-09">
+
+<title>ggplot publication prep II – OSU Code Club</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-57476271c5f0467c372e20ff5d25630e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cd03ec2eb3d93126c40b3547cc84a9a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script src="../../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more-resources">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup (installations) for Code Club</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../../pages/other.html">
+ <span class="dropdown-text">Related resources and activities</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-feb-2026/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Feb ’26)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-well-cover" id="toc-what-well-cover" class="nav-link" data-scroll-target="#what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</a></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup"><span class="header-section-number">1.2</span> Setup</a></li>
+  </ul></li>
+  <li><a href="#saving-plots-to-file" id="toc-saving-plots-to-file" class="nav-link" data-scroll-target="#saving-plots-to-file"><span class="header-section-number">2</span> Saving plots to file</a>
+  <ul class="collapse">
+  <li><a href="#basic-usage" id="toc-basic-usage" class="nav-link" data-scroll-target="#basic-usage"><span class="header-section-number">2.1</span> Basic usage</a></li>
+  <li><a href="#controlling-figure-size" id="toc-controlling-figure-size" class="nav-link" data-scroll-target="#controlling-figure-size"><span class="header-section-number">2.2</span> Controlling figure size</a></li>
+  <li><a href="#raster-vs.-vector-formats" id="toc-raster-vs.-vector-formats" class="nav-link" data-scroll-target="#raster-vs.-vector-formats"><span class="header-section-number">2.3</span> Raster vs.&nbsp;vector formats</a></li>
+  </ul></li>
+  <li><a href="#format-individual-words-with-ggtext" id="toc-format-individual-words-with-ggtext" class="nav-link" data-scroll-target="#format-individual-words-with-ggtext"><span class="header-section-number">3</span> Format individual words with <em>ggtext</em></a></li>
+  <li><a href="#adding-images-to-plots" id="toc-adding-images-to-plots" class="nav-link" data-scroll-target="#adding-images-to-plots"><span class="header-section-number">4</span> Adding images to plots</a>
+  <ul class="collapse">
+  <li><a href="#an-image-inside-a-plot" id="toc-an-image-inside-a-plot" class="nav-link" data-scroll-target="#an-image-inside-a-plot"><span class="header-section-number">4.1</span> An image inside a plot</a></li>
+  <li><a href="#an-example-with-multiple-images" id="toc-an-example-with-multiple-images" class="nav-link" data-scroll-target="#an-example-with-multiple-images"><span class="header-section-number">4.2</span> An example with multiple images</a></li>
+  <li><a href="#an-image-in-a-multi-panel-layout" id="toc-an-image-in-a-multi-panel-layout" class="nav-link" data-scroll-target="#an-image-in-a-multi-panel-layout"><span class="header-section-number">4.3</span> An image in a multi-panel layout</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E06_ggplot_06/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Preparing (gg)plots for publication: part II</h1>
+<p class="subtitle lead">Formatting, multi-panel layouts, and saving plots</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">ggplot2</div>
+    <div class="quarto-category">dataviz</div>
+    <div class="quarto-category">plotting</div>
+    <div class="quarto-category">tidyverse</div>
+  </div>
+  </div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Jelmer Poelstra <a href="mailto:poelstra.1@osu.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-3514-7462" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://mcic.osu.edu/bioinformatics">
+            CFAES Bioinformatics Core, Ohio State University
+            </a>
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">March 9, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="what-well-cover" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</h3>
+<p>Today, we’ll continue on the topic of preparing your plots for publication. Specifically, we’ll cover:</p>
+<ul>
+<li><p><strong>Saving plots to file</strong> – with <em>ggplot</em>’s <code>ggsave()</code> <em>(moved from last weeksince we didn’t get there)</em></p></li>
+<li><p>Advanced <strong>text formatting</strong> with <em>ggtext</em>. For example, italicizing individual words in axis titles and legends.</p></li>
+<li><p>Adding any kind of <strong>image to a plot</strong>, including:</p>
+<ul>
+<li>An image inside a plot</li>
+<li>A plot of an image in a multi-panel layout</li>
+</ul></li>
+</ul>
+</section>
+<section id="setup" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="setup"><span class="header-section-number">1.2</span> Setup</h3>
+<section id="loading-packages" class="level4">
+<h4 class="anchored" data-anchor-id="loading-packages">Loading packages</h4>
+<p>We’ll start by loading the <em>tidyverse</em>, which includes <em>ggplot2</em>, and <em>palmerpenguins</em>, which contains the penguins dataset we’ve been working with:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(palmerpenguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'palmerpenguins'
+
+The following objects are masked from 'package:datasets':
+
+    penguins, penguins_raw</code></pre>
+</div>
+</div>
+<p>Like last week, we will load the <em>patchwork</em> package as well, which provides a convenient syntax for multi-panel layouts:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="setting-the-theme" class="level4">
+<h4 class="anchored" data-anchor-id="setting-the-theme">Setting the theme</h4>
+<p>Like we learned last week, we can set a plotting theme with <code>theme_set()</code>, and customize the theme with <code>theme_update()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_set</span>(<span class="fu">theme_classic</span>(<span class="at">base_size =</span> <span class="dv">13</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">theme_update</span>(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">color =</span> <span class="st">"grey70"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="a-base-plot" class="level4">
+<h4 class="anchored" data-anchor-id="a-base-plot">A base plot</h4>
+<p>We’ll also create the same basic plot as last week, so that we have a plot to work with when saving plots:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> <span class="co"># Get rid of rows with NAs</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> flipper_length_mm, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">fill =</span> species), <span class="at">shape =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Flipper length (mm)"</span>, <span class="at">y =</span> <span class="st">"Body mass (g)"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+</section>
+<section id="saving-plots-to-file" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="saving-plots-to-file"><span class="header-section-number">2</span> Saving plots to file</h2>
+<p>So far, we printed plots to the screen in RStudio but did not save them to file. You may have noticed the “Export” button in the Plots pane — it works, but a more flexible and reproducible approach is the <code>ggsave()</code> function.</p>
+<section id="basic-usage" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="basic-usage"><span class="header-section-number">2.1</span> Basic usage</h3>
+<p>Tell <code>ggsave()</code> about the filename and the plot you want to save:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"plot.png"</span>, <span class="at">plot =</span> p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+</div>
+<ul>
+<li><p>The <strong>file type</strong> is determined by the extension you provide. Above, we used <code>.png</code> i.e.&nbsp;a PNG file, but there are other options, as we’ll see in a bit.</p></li>
+<li><p>We did not specify the <code>width</code> and <code>height</code> of the figure above, so it reports saving it to a default size of 7 × 5 inches.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Saving plots without specifying the plot object <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>By default, <code>ggsave()</code> saves the last plot you produced, and you only need to specify the filename:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"plot.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This can e.g.&nbsp;be handy because you may not have saved your plot to an object.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Saving the file in a different folder on your computer <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In both cases above, the file would be saved to the folder that represents your current “working directory” (directory = folder) in R. But you can save the file to any location on your computer by specifying the path as part of the filename:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to a "figures" subfolder in the current working directory:</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"figures/plot.png"</span>, <span class="at">plot =</span> p)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Save to a specific folder on your computer:</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"C:/Users/YourName/Documents/figures/plot.png"</span>, <span class="at">plot =</span> p)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To learn more about file paths and how R deals with them, see <a href="../../posts/S10E03_reprod_03/">this Code Club session from last fall</a>.</p>
+<p>If the folder you’re trying to save to does not already exist, a prompt like this will appear to create the folder:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/ggsave_create-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:45.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="controlling-figure-size" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="controlling-figure-size"><span class="header-section-number">2.2</span> Controlling figure size</h3>
+<p><code>ggsave()</code> accepts <code>width</code> and <code>height</code> arguments, with a default unit of inches<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"wide.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">6</span>, <span class="at">height =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The figure’s size may not seem to matter much, because you could always resize the figure on the computer, right? In fact, what does an inch even mean in the context of a figure displayed on a screen?</p>
+<p>But these dimensions are important when considering the figure’s <strong>aspect ratio</strong> and the <strong>relative text size</strong>.</p>
+<section id="aspect-ratio" class="level4">
+<h4 class="anchored" data-anchor-id="aspect-ratio">Aspect ratio</h4>
+<p>The figure’s <code>width</code> relative to the <code>height</code>, somewhat obviously, determines its aspect ratio – and this can be useful to be mindful of and customize when appropriate.</p>
+<p>Above, our figure is 50% wider than it is high, and that is sensible because we have a legend on the right-hand side of the plot that takes up horizontal space. But for the sake of practice, let’s save the same plot with a different aspect ratio:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"tall.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">4</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is what the resulting figures should look like:</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="wide.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="tall.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="relative-text-size" class="level4">
+<h4 class="anchored" data-anchor-id="relative-text-size">Relative text size</h4>
+<p><strong>Text and points do not scale with the figure</strong> — they stay at their absolute sizes (in points/mm). This means:</p>
+<ul>
+<li>A plot saved at 3 × 3 will have large-looking text relative to the data</li>
+<li>A plot saved at 10 × 8 will have small-looking text</li>
+</ul>
+<p>This behavior may seem strange but is actually useful: if your text looks too large or too small in the saved file, you can adjust <code>width</code> and <code>height</code> rather than modifying the plotting code. Let’s see this in action, too:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># "Small" figure — text will look relatively large</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"small.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="fl">4.5</span>, <span class="at">height =</span> <span class="dv">3</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># "Large" figure — text will look relatively small</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"large.png"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">9</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here is what the resulting figures should look like:</p>
+<div class="columns">
+<div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="small.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div><div class="column" style="width:4%;">
+
+</div><div class="column" style="width:48%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="large.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="raster-vs.-vector-formats" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="raster-vs.-vector-formats"><span class="header-section-number">2.3</span> Raster vs.&nbsp;vector formats</h3>
+<p>When saving a figure, you have two fundamentally different types of format to choose from:</p>
+<ul>
+<li><p><strong>Raster formats</strong> (PNG, JPEG, TIFF) store the image as a grid of pixels.<br>
+Quality is fixed at save time using the figure’s “<em>resolution</em>” — but zoom in far enough and you’ll see pixelation. Among these formats, TIFF is generally preferred for scientific publications while PNG may also work, while JPEG should typically be avoided.</p></li>
+<li><p><strong>Vector formats</strong> (SVG, PDF) store the image as geometric instructions — lines, curves, text.<br>
+They render sharply at any size, and text is selectable and searchable. Among these formats, SVG is generally preferred or scientific publications.</p></li>
+</ul>
+<p>For publication, <strong>vector formats are generally preferable</strong> when the journal accepts them. Figures will be crisp at any print size, and editors or co-authors can make minor tweaks in a vector editor such as InkScape or Illustrator.</p>
+<p>To save to SVG format, we need the <code>svglite</code> package – let’s install that:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"svglite"</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># (We don't need to load it with library() because ggsave() will use it </span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  automatically when we save to SVG)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As mentioned above, the filetype is simply specified in <code>ggsave()</code> using the file extension. Earlier, we saved to PNG, so let’s now practice saving to SVG:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">filename =</span> <span class="st">"large.svg"</span>, <span class="at">plot =</span> p, <span class="at">width =</span> <span class="dv">9</span>, <span class="at">height =</span> <span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Controlling resolution for raster formats
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For raster formats (PNG, JPEG, TIFF), resolution of the figure is controlled with the <code>dpi</code> argument (dots per inch).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="st">"large_dpi300.png"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">6</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">height =</span> <span class="dv">4</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A dpi of 300 is sufficient in almost any context, though some journals may request a resolution up to 600 dpi or so.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="exercise-compare-formats" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-compare-formats"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Compare formats</h4>
+<p>Open the SVG file, and the two <code>large</code> PNG files, and compare how they look when you zoom in closely.</p>
+<div class="columns">
+<div class="column" style="width:47%;">
+<p><strong>PNG (at 300 dpi!)</strong>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="img/png_zoom.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="img/png_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a></p>
+</figure>
+</div>
+</div><div class="column" style="width:1%;">
+
+</div><div class="column" style="width:52%;">
+<p><strong>SVG</strong>:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="img/svg_zoom.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="img/svg_zoom.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="format-individual-words-with-ggtext" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="format-individual-words-with-ggtext"><span class="header-section-number">3</span> Format individual words with <em>ggtext</em></h2>
+<p>While you can set the fontface (plain, bold, italic, etc.) of axis titles, legend titles, and so on with <code>theme()</code>, you can’t make individual words in these titles bold or italic with that approach. (The same is true for applying colors.)</p>
+<p><em>ggtext</em> is a package that lets you use Markdown and HTML markup to format text in ggplot2 plots. It is useful for things like bolding, italicizing or coloring individual words in a label. Install it if you don’t have it yet:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"ggtext"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then load it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggtext)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The main function in <em>ggtext</em> is <code>element_markdown()</code>. It works as a drop-in replacement for <code>element_text()</code> in <code>theme()</code> calls, and enables Markdown and HTML parsing for that text element.</p>
+<p>Let’s say for the sake of argument that in our penguin scatterplot, we wanted to make parts of the axis titles bold and italic. The <a href="https://www.markdownguide.org/basic-syntax/">Markdown syntax</a> to make text <strong>bold</strong> is <code>**text**</code> and <code>*text*</code> to make it <em>italic</em>.</p>
+<p>Without <code>element_markdown()</code>, the asterisks are printed literally:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"**Flipper length** (*mm*)"</span>, <span class="at">y =</span> <span class="st">"**Body mass** (*g*)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Once we switch to <code>element_markdown()</code>, the formatting is applied:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"**Flipper length** (*mm*)"</span>, <span class="at">y =</span> <span class="st">"**Body mass** (*g*)"</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_markdown</span>()</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><code>element_markdown()</code> can be used for any text element in <code>theme()</code>: axis titles, axis tick labels, plot titles, captions, and so on.</p>
+<p>As another example, say we wanted italic species names in the legend. First, note that if it’s OK that everything becomes italic, we can just do that with <code>theme()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">face =</span> <span class="st">"italic"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>But what if we needed to make only one part of the text italic? We could do that once again with <em>ggtext</em>. First, let’s define the labels we want to use for the legend, with Markdown syntax for italics:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>species_labs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Adélie (*P. adeliae*)"</span>,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Chinstrap (*P. antarcticus*)"</span>, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Gentoo (*P. papua*)"</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we can use these labels in the legend with <code>scale_fill_brewer()</code>, and then tell <code>theme()</code> to interpret the legend text as Markdown with <code>element_markdown()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>, <span class="at">labels =</span> species_labs) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.text =</span> <span class="fu">element_markdown</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="768"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Colored text! <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You probably won’t need this in a scientific publication, but it can be useful for other, more informal, contexts. For example, you could color species names in a plot title to match the data colors, making the legend redundant.</p>
+<p>To color individual words, use an HTML <code>&lt;span&gt;</code> tag with inline CSS:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode html code-with-copy"><code class="sourceCode html"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">"color:#1B9E77"</span><span class="dt">&gt;</span>some text<span class="dt">&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Above, <code>#1B9E77</code> is the hex code for a specific color. Let’s find the three colors that <code>scale_fill_brewer(palette = "Dark2")</code> assigns to the three species:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="dv">3</span>, <span class="st">"Dark2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "#1B9E77" "#D95F02" "#7570B3"</code></pre>
+</div>
+</div>
+<p>The species factor levels in the penguins data are alphabetical (Adelie, Chinstrap, Gentoo), so those colors are assigned in that order. Now let’s use them in the title:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"&lt;span style='color:#1B9E77'&gt;**Adelie**&lt;/span&gt;,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="st">&lt;span style='color:#D95F02'&gt;**Chinstrap**&lt;/span&gt;, and</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="st">&lt;span style='color:#7570B3'&gt;**Gentoo**&lt;/span&gt; penguins"</span>) <span class="sc">+</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.title =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"none"</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Because the title now carries the color information, we can choose to remove the legend with <code>legend.position = "none"</code>.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="exercise-text-formatting" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="exercise-text-formatting"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Text formatting</h4>
+<p>It’s common to need subscripts and superscipts in axis titles. R has a special syntax for that, but it can be a bit tricky to get right. Now that we’re using <em>ggtext</em>, we can use Markdown syntax for subscripts and superscripts instead, which is:</p>
+<ul>
+<li><code>^...^</code> for superscripts, e.g.&nbsp;<code>3x10^-3^</code> to produce 3x10<sup>-3</sup></li>
+<li><code>~...~</code> for subscripts, e.g.&nbsp;<code>H~2~O</code> to produce H<sub>2</sub>O</li>
+</ul>
+<p>Let’s pretend that the x-axis of our plot is showing <strong>flipper surface in mm<sup>2</sup></strong>, and that the y-axis is on a <strong>log<sub>10</sub>-scale</strong>. Modify the axis titles to reflect this, using Markdown syntax for the superscripts and subscripts.</p>
+<p>(Bonus: actually change the y-axis to a log<sub>10</sub>-scale.)</p>
+<details>
+<summary>
+<em>Click to see a solution</em>
+</summary>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Flipper surface (mm^2^)"</span>,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Body mass (g on a log~10~-scale)"</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_markdown</span>()</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Bonus: changing the y-axis to a log<sub>10</sub>-scale – though because our y-axis shows a fairly small range and doesn’t start at zero, the log transformation doesn’t really do anything useful:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_log10</span>() <span class="sc">+</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Flipper surface (mm^2^)"</span>,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Body mass (g on a log~10~-scale)"</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.x =</span> <span class="fu">element_markdown</span>(),</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">axis.title.y =</span> <span class="fu">element_markdown</span>()</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for y is already present.
+Adding another scale for y, which will replace the existing scale.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="adding-images-to-plots" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="adding-images-to-plots"><span class="header-section-number">4</span> Adding images to plots</h2>
+<p>Say that we wanted to add this beatiful AI-generated image of the three penguin species in the <code>penguins</code> dataset to our plot:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="3penguins.png" class="img-fluid figure-img" style="width:50.0%"></p>
+<figcaption>From left to right: Adélie, Chinstrap, and Gentoo.</figcaption>
+</figure>
+</div>
+<p>To follow along with the code below, download the file <code>3penguins.png</code> with this image from our GitHub repo:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>penguin_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/3penguins.png"</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> penguin_img_url, <span class="at">destfile =</span> <span class="st">"3penguins.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We’ll also load two additional packages for working with images in R:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># (This is needed for the second part: adding images as a panel)</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(grid)   <span class="co"># Should always be installed</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(png)    <span class="co"># If you don't have it, install with install.packages("png")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="an-image-inside-a-plot" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="an-image-inside-a-plot"><span class="header-section-number">4.1</span> An image inside a plot</h3>
+<p>I think this is most easily done with the <em>cowplot</em> package, which has a <code>draw_image()</code> function to add images to ggplots. Install <em>cowplot</em> if you don’t have it already, then load it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"cowplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'cowplot'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:patchwork':
+
+    align_plots</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:lubridate':
+
+    stamp</code></pre>
+</div>
+</div>
+<p>Now, we can add the image to our plot with <code>ggdraw()</code> and <code>draw_image()</code>, where:</p>
+<ul>
+<li><p>The <code>x</code> and <code>y</code> arguments specify the position of the image in the plot (between 0 and 1), with x being the left-most position and y being the bottom-most position. These are not the same as the x and y axes of the plot, but rather the position of the image relative to the plot area.</p></li>
+<li><p>The <code>height</code> and <code>width</code> arguments specify the size of the image relative to the plot (between 0 and 1). One thing to note is that the aspect ratio of the image is preserved, so even if you specify a square image like we do below, the actual image may not be square if the original image is not square. While it may seem odd in that case to specify both width and height, when omitting one of these, the function somehow has strange behavior with respect to the <code>x</code> and <code>y</code> coordinates. 🤷‍♂️</p></li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p) <span class="sc">+</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"3penguins.png"</span>, <span class="at">x =</span> <span class="fl">0.1</span>, <span class="at">y =</span> <span class="fl">0.65</span>, <span class="at">height =</span> <span class="fl">0.35</span>, <span class="at">width =</span> <span class="fl">0.35</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="an-example-with-multiple-images" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="an-example-with-multiple-images"><span class="header-section-number">4.2</span> An example with multiple images</h3>
+<p>Say that we wanted to add a separate image for each penguin species in an appopriate part of the plot. First, download the following penguin images:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>adelie_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/adelie.png"</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>chinstrap_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/chinstrap.png"</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>gentoo_img_url <span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/osu-codeclub/osu-codeclub.github.io/main/posts/S11E06_ggplot_06/gentoo.png"</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> adelie_img_url, <span class="at">destfile =</span> <span class="st">"adelie.png"</span>)</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> chinstrap_img_url, <span class="at">destfile =</span> <span class="st">"chinstrap.png"</span>)</span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a><span class="fu">download.file</span>(<span class="at">url =</span> gentoo_img_url, <span class="at">destfile =</span> <span class="st">"gentoo.png"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And add them to the plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p) <span class="sc">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"adelie.png"</span>, <span class="at">x =</span> <span class="fl">0.2</span>, <span class="at">y =</span> <span class="fl">0.6</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"chinstrap.png"</span>, <span class="at">x =</span> <span class="fl">0.5</span>, <span class="at">y =</span> <span class="fl">0.25</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"gentoo.png"</span>, <span class="at">x =</span> <span class="fl">0.4</span>, <span class="at">y =</span> <span class="fl">0.8</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="bonus-exercise-add-images-to-a-boxplot" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="bonus-exercise-add-images-to-a-boxplot"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus Exercise: Add images to a boxplot</h4>
+<p>Create a boxplot with penguin species along the x-axis, and any of the penguin measurements along the y-axis. Then add the three penguin images to the plot, placing each image either above the boxplot for the corresponding species, or just below the plot panel (i.e.&nbsp;in the plot margin).</p>
+<details>
+<summary>
+<em>Click to see a solution</em>
+</summary>
+<p>At the top of the plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>p_box <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>(),</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Manually specify the upper axis limitsand breaks to make room for the image</span></span>
+<span id="cb43-8"><a href="#cb43-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="dv">6800</span>),</span>
+<span id="cb43-9"><a href="#cb43-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">3000</span>, <span class="dv">6000</span>, <span class="at">by =</span> <span class="dv">1000</span>)</span>
+<span id="cb43-10"><a href="#cb43-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb43-11"><a href="#cb43-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Body mass (g)"</span>)</span>
+<span id="cb43-12"><a href="#cb43-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb43-13"><a href="#cb43-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p_box) <span class="sc">+</span></span>
+<span id="cb43-14"><a href="#cb43-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"adelie.png"</span>,    <span class="at">x =</span> <span class="fl">0.20</span>, <span class="at">y =</span> <span class="fl">0.85</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb43-15"><a href="#cb43-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"chinstrap.png"</span>, <span class="at">x =</span> <span class="fl">0.48</span>, <span class="at">y =</span> <span class="fl">0.85</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb43-16"><a href="#cb43-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"gentoo.png"</span>,    <span class="at">x =</span> <span class="fl">0.75</span>, <span class="at">y =</span> <span class="fl">0.85</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the lower margin:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>p_box <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> species, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_comma</span>()) <span class="sc">+</span></span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Body mass (g)"</span>) <span class="sc">+</span></span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="at">t =</span> <span class="dv">5</span>, <span class="at">r =</span> <span class="dv">5</span>, <span class="at">b =</span> <span class="dv">60</span>, <span class="at">l =</span> <span class="dv">5</span>), <span class="co"># extra bottom margin</span></span>
+<span id="cb44-9"><a href="#cb44-9" aria-hidden="true" tabindex="-1"></a>    )  </span>
+<span id="cb44-10"><a href="#cb44-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb44-11"><a href="#cb44-11" aria-hidden="true" tabindex="-1"></a><span class="fu">ggdraw</span>(p_box) <span class="sc">+</span></span>
+<span id="cb44-12"><a href="#cb44-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"adelie.png"</span>,    <span class="at">x =</span> <span class="fl">0.20</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb44-13"><a href="#cb44-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"chinstrap.png"</span>, <span class="at">x =</span> <span class="fl">0.48</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span></span>
+<span id="cb44-14"><a href="#cb44-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">draw_image</span>(<span class="st">"gentoo.png"</span>,    <span class="at">x =</span> <span class="fl">0.75</span>, <span class="at">y =</span> <span class="sc">-</span><span class="fl">0.01</span>, <span class="at">height =</span> <span class="fl">0.15</span>, <span class="at">width =</span> <span class="fl">0.15</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</details>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Multiple images in a plot, with boxes <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>I thought drawing colored boxes around the penguins images could be a useful example. This turned out to be more difficult than expected, so we won’t cover it during the Code Club session. But for your and my future reference, I am including the code here.</p>
+<p>First off, I couldn’t get this to work in combination with the <code>draw_image()</code> approach used above to insert the images. Instead, we’ll have to switch to a <em>patchwork</em>-based approach. To insert a single image like we did above, that would look as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the image width as a variables</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>width <span class="ot">&lt;-</span> <span class="fl">0.35</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Read in the image</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>raw <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"3penguins.png"</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>img <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(raw, <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>), <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>))</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Obtain the image's aspect ratio and compute the height from that:</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a><span class="co"># This is necessary because we need to specify the coordinates of all corners</span></span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a><span class="co"># of the image when using inset_element(), and we want the aspect ratio to be correct.</span></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a>aspect_ratio <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw)[<span class="dv">2</span>]</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>height <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_ratio</span>
+<span id="cb45-13"><a href="#cb45-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-14"><a href="#cb45-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the plot with the inserted image</span></span>
+<span id="cb45-15"><a href="#cb45-15" aria-hidden="true" tabindex="-1"></a><span class="co"># (Setting the plot panel's aspect ratio to 1 seems necessary for the image's</span></span>
+<span id="cb45-16"><a href="#cb45-16" aria-hidden="true" tabindex="-1"></a><span class="co">#  aspect ratio to be correctly displayed.)</span></span>
+<span id="cb45-17"><a href="#cb45-17" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb45-18"><a href="#cb45-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb45-19"><a href="#cb45-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img, <span class="at">right =</span> <span class="fl">0.4</span>, <span class="at">left =</span> <span class="fl">0.4</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="dv">1</span>, <span class="at">bottom =</span> <span class="dv">1</span> <span class="sc">-</span> height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>That works, but you can hopefully see why I choose to use <code>draw_image()</code> instead for the earlier examples. Now, let’s expand this approach in order to insert individual penguins’ images with colored boxes:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the width and save the desired box colors</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>width <span class="ot">&lt;-</span> <span class="fl">0.15</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>colors <span class="ot">&lt;-</span> RColorBrewer<span class="sc">::</span><span class="fu">brewer.pal</span>(<span class="at">n =</span> <span class="dv">8</span>, <span class="at">name =</span> <span class="st">"Dark2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adelie</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>raw_ade <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"adelie.png"</span>)</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>img_ade <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(raw_ade, <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>), <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>))</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>aspect_ade <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw_ade)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw_ade)[<span class="dv">2</span>]</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>ht_ade <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_ade</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>box_ade <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> colors[<span class="dv">1</span>], <span class="at">linewidth =</span> <span class="dv">2</span>))</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Chinstrap</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>raw_chi <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"chinstrap.png"</span>)</span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>img_chi <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(raw_chi, <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>), <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>))</span>
+<span id="cb47-13"><a href="#cb47-13" aria-hidden="true" tabindex="-1"></a>aspect_chi <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw_chi)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw_chi)[<span class="dv">2</span>]</span>
+<span id="cb47-14"><a href="#cb47-14" aria-hidden="true" tabindex="-1"></a>ht_chi <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_chi</span>
+<span id="cb47-15"><a href="#cb47-15" aria-hidden="true" tabindex="-1"></a>box_chi <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb47-16"><a href="#cb47-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb47-17"><a href="#cb47-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> colors[<span class="dv">2</span>], <span class="at">linewidth =</span> <span class="dv">2</span>))</span>
+<span id="cb47-18"><a href="#cb47-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-19"><a href="#cb47-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Gentoo</span></span>
+<span id="cb47-20"><a href="#cb47-20" aria-hidden="true" tabindex="-1"></a>raw_gen <span class="ot">&lt;-</span> <span class="fu">readPNG</span>(<span class="st">"gentoo.png"</span>)</span>
+<span id="cb47-21"><a href="#cb47-21" aria-hidden="true" tabindex="-1"></a>img_gen <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(raw_gen, <span class="at">width =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>), <span class="at">height =</span> <span class="fu">unit</span>(<span class="dv">1</span>, <span class="st">"npc"</span>))</span>
+<span id="cb47-22"><a href="#cb47-22" aria-hidden="true" tabindex="-1"></a>aspect_gen <span class="ot">&lt;-</span> <span class="fu">dim</span>(raw_gen)[<span class="dv">1</span>] <span class="sc">/</span> <span class="fu">dim</span>(raw_gen)[<span class="dv">2</span>]</span>
+<span id="cb47-23"><a href="#cb47-23" aria-hidden="true" tabindex="-1"></a>ht_gen <span class="ot">&lt;-</span> width <span class="sc">*</span> aspect_gen</span>
+<span id="cb47-24"><a href="#cb47-24" aria-hidden="true" tabindex="-1"></a>box_gen <span class="ot">&lt;-</span> <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb47-25"><a href="#cb47-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb47-26"><a href="#cb47-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.border =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="cn">NA</span>, <span class="at">color =</span> colors[<span class="dv">3</span>], <span class="at">linewidth =</span> <span class="dv">2</span>))</span>
+<span id="cb47-27"><a href="#cb47-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-28"><a href="#cb47-28" aria-hidden="true" tabindex="-1"></a>p <span class="sc">+</span></span>
+<span id="cb47-29"><a href="#cb47-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">aspect.ratio =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb47-30"><a href="#cb47-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img_ade, <span class="at">right =</span> <span class="fl">0.2</span>, <span class="at">left =</span> <span class="fl">0.2</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.6</span>, <span class="at">bottom =</span> <span class="fl">0.6</span> <span class="sc">-</span> ht_ade) <span class="sc">+</span></span>
+<span id="cb47-31"><a href="#cb47-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(box_ade, <span class="at">right =</span> <span class="fl">0.2</span>, <span class="at">left =</span> <span class="fl">0.2</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.6</span>, <span class="at">bottom =</span> <span class="fl">0.6</span> <span class="sc">-</span> ht_ade) <span class="sc">+</span></span>
+<span id="cb47-32"><a href="#cb47-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img_chi, <span class="at">right =</span> <span class="fl">0.7</span>, <span class="at">left =</span> <span class="fl">0.7</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.3</span>, <span class="at">bottom =</span> <span class="fl">0.3</span> <span class="sc">-</span> ht_chi) <span class="sc">+</span></span>
+<span id="cb47-33"><a href="#cb47-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(box_chi, <span class="at">right =</span> <span class="fl">0.7</span>, <span class="at">left =</span> <span class="fl">0.7</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.3</span>, <span class="at">bottom =</span> <span class="fl">0.3</span> <span class="sc">-</span> ht_chi) <span class="sc">+</span></span>
+<span id="cb47-34"><a href="#cb47-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(img_gen, <span class="at">right =</span> <span class="fl">0.6</span>, <span class="at">left =</span> <span class="fl">0.6</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.9</span>, <span class="at">bottom =</span> <span class="fl">0.9</span> <span class="sc">-</span> ht_gen) <span class="sc">+</span></span>
+<span id="cb47-35"><a href="#cb47-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">inset_element</span>(box_gen, <span class="at">right =</span> <span class="fl">0.6</span>, <span class="at">left =</span> <span class="fl">0.6</span> <span class="sc">-</span> width, <span class="at">top =</span> <span class="fl">0.9</span>, <span class="at">bottom =</span> <span class="fl">0.9</span> <span class="sc">-</span> ht_gen)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="an-image-in-a-multi-panel-layout" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="an-image-in-a-multi-panel-layout"><span class="header-section-number">4.3</span> An image in a multi-panel layout</h3>
+<p>Now, let’s explore adding an image to a multi-panel layout, so basically treating the image as just another plot in the layout.</p>
+<p>For that, we’ll start with the same three-panel layout as in the previous session:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_length_mm, <span class="at">y =</span> bill_depth_mm)) <span class="sc">+</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(species))</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>p_bar <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> island)) <span class="sc">+</span></span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>p_box <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> sex, <span class="at">y =</span> body_mass_g)) <span class="sc">+</span></span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="sc">/</span> (p_bar <span class="sc">|</span> p_box)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As a first step in including the penguin image, we’ll read it in as a graphical object with <code>readPNG()</code> and <code>rasterGrob()</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>img <span class="ot">&lt;-</span> <span class="fu">rasterGrob</span>(<span class="fu">readPNG</span>(<span class="st">"3penguins.png"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we can add the image to the layout with <em>patchwork</em>’s <code>wrap_elements()</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Store the image as a plot element with wrap_elements():</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>p_img <span class="ot">&lt;-</span> <span class="fu">wrap_elements</span>(<span class="at">panel =</span> img)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add the image to the layout with patchwork syntax:</span></span>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>(p_scatter <span class="sc">+</span> p_img) <span class="sc">/</span> (p_bar <span class="sc">|</span> p_box)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Above, the plot with the image is quite small, and this is because the image is being resized to fit the plot <em>panel</em> (that is, the area inside the axes of a plot). Note that it’s taking up the entire plot panel height, but because the image has a 1:1 aspect ratio, it is not taking up the entire plot panel width. While that makes it appear even smaller, it’s a good thing that the image’s aspect ratio is respected, or the image would look stretched.</p>
+<p>Alternatively, we can tell <code>wrap_elements()</code> to use the entire <em>plot</em> area for the image with <code>plot =</code> (above, we used <code>panel =</code>):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>p_img_big <span class="ot">&lt;-</span> <span class="fu">wrap_elements</span>(<span class="at">plot =</span> img)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>(p_scatter <span class="sc">+</span> p_img_big) <span class="sc">/</span> (p_bar <span class="sc">|</span> p_box)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+A different method with different image-fitting behavior <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>A final alternative is to read the image in with the <em>magick</em> package. That’s an easy way to fix the aspect ratio of the image, such that patchwork will automatically take that aspect ratio into account when allocating space for each plot in the layout.</p>
+<p>First, install and then load the package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"magick"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magick)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Linking to ImageMagick 6.9.13.29
+Enabled features: cairo, fontconfig, freetype, heic, lcms, pango, raw, rsvg, webp
+Disabled features: fftw, ghostscript, x11</code></pre>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<p>Now use <em>magick</em>’s <code>image_read()</code> to read the image in, and <code>image_ggplot()</code> to convert it to a ggplot object:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>p_img_fixed <span class="ot">&lt;-</span> <span class="fu">image_ggplot</span>(<span class="fu">image_read</span>(<span class="st">"3penguins.png"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>And finally, include the image in the layout:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>(p_scatter <span class="sc">+</span> p_img_fixed) <span class="sc">/</span> (p_bar <span class="sc">+</span> p_box)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note that image is narrower than in the previous examples, and that the plot to its left is taking up more space. With this approach, the image is not being resized to fit the plot panel, but rather the plot panel is being resized to fit the image’s aspect ratio.</p>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p> You can change this with the <code>units</code> argument, other options are: (<code>"cm"</code>, <code>"mm"</code>, or <code>"px"</code>).<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E06_ggplot_06/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer><script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
+
+
+
+
+</body></html>
