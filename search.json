@@ -49,76 +49,6 @@
     "text": "The Code Club at Ohio State University is a regularly occurring, interactive, in-person and online gathering to improve coding skills. We aim for a supportive and fun culture of learning together, and hope to offer something to participants at any experience level.\nAnyone who studies or works at the Ohio State University is welcome to join: please fill out this short form if you want to do so.\nIn each session, one of the organizers will be presenting. Code Club sessions are meant to be interactive and involved, so be prepared to follow along yourself and to do exercises, sometimes in groups with other participants.\n\n\n\n\n\n\n\n\n\nTeaching materials for each Code Club session are added to this website and will continue to be available. Code Club has run since the fall of 2020, and materials for the 71 sessions in the semesters prior to autumn 2023 are currently available at https://biodash.github.io but will eventually be migrated to this website.\nBy popular demand, Code Club has so far focused entirely on the R language and its surrounding ecosystem (R Markdown, Shiny, etc). If you have any suggestions or requests for Code Club, don’t hesitate to contact one of the organizers.\n\n\nSign up!\nTo sign up, please fill out this short form and you will be added to Code Club email list. Then, you’ll receive emails with updates about each session, links to the Zoom meeting and our folder with Zoom recordings of previous sessions.\n\n\nOrganizers\nThe current organizers of Code Club are:\n\nJelmer Poelstra, lead of the CFAES Bioinformatics and Microscopy Core Facilities\nJessica Cooperstone, associate professor in the departments of Horticulture and Crop Science and Food Science and Technology\nHoracio Lopez-Nicora, assistant professor in the department of Plant Pathology\n\nIn previous semesters, other co-organizers included Michael Broe (EEOB), Mike Sovic (CAPS), and Stephen Opiyo (MCIC Columbus).\n\n\nLearn more about –and get ready for– Code Club\n\nSchedule with upcoming sessions\nComputer setup instructions\nList of previous sessions by semester\n\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "posts/S11E11_packages_03/index.html#introduction-from-local-to-global",
-    "href": "posts/S11E11_packages_03/index.html#introduction-from-local-to-global",
-    "title": "Building Your First R Package: Day 3",
-    "section": "0.1 Introduction: From Local to Global",
-    "text": "0.1 Introduction: From Local to Global\n\n\n\n\n\nPackaging your code saves future you a lot of time.\n\n\n\n\nWelcome to Day 3! Over the last two days, we transitioned from script-writers to package-developers. We built the vizwizard package, packed it with custom ggplot2 and gt wrappers, and learned how to bundle our own custom datasets.\nTo reiterate, effective package design can be summarized in the below diagram/flowchart. Whether you’re leading a classroom instruction and want to create a package for students to share datasets, functions, etc. or spreading your love for medical analysis and alleviating headaches for researchers/physicians, the below chart is helpful.\n\n\n\n\n\nPackaging your code saves future you a lot of time.\n\n\n\n\nToday is all about deployment. An R package is incredibly useful for your own reproducibility, but its true power is unlocked when you share it.\nToday we will cover:\n\nTying Up Loose Ends: Making sure our package is completely finished and error-free.\nPublishing to GitHub (From Scratch): The modern, fast standard for sharing packages with colleagues, including how to authenticate your account.\nPublishing to CRAN: Understanding the strict rules and rigorous checks required for the official R repository.\nTroubleshooting: Solving common deployment problems.\n\nLet’s load our tools one last time!\n\nlibrary(devtools)\n\nLoading required package: usethis\n\nlibrary(usethis)"
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#the-final-check",
-    "href": "posts/S11E11_packages_03/index.html#the-final-check",
-    "title": "Building Your First R Package: Day 3",
-    "section": "1.1 The Final Check",
-    "text": "1.1 The Final Check\nOn Day 2, we learned about the ultimate package spellcheck: devtools::check(). This function is the gatekeeper for publishing.\nRun it now in your console:\n\ndevtools::check()\n\nLook at the bottom of your console output. Your goal before proceeding is 0 Errors, 0 Warnings, and 0 Notes!\nErrors: Your package is fundamentally broken. Must be fixed.\nWarnings: Your package works, but you did something risky. Must be fixed if you want to go to CRAN.\nNotes: Minor formatting suggestions. CRAN reviewers might let a Note slide, but it’s best practice to resolve them."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#step-1-version-control-with-git",
-    "href": "posts/S11E11_packages_03/index.html#step-1-version-control-with-git",
-    "title": "Building Your First R Package: Day 3",
-    "section": "2.1 Step 1: Version Control with Git",
-    "text": "2.1 Step 1: Version Control with Git\nYour project needs to be a Git repository before it can go to GitHub. The usethis package makes this a one-liner. Run this in your console:\n\nusethis::use_git()\n\nRStudio will ask if it is okay to commit your files and restart. Select “Yes” to both."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#step-2-authentication-the-tricky-part",
-    "href": "posts/S11E11_packages_03/index.html#step-2-authentication-the-tricky-part",
-    "title": "Building Your First R Package: Day 3",
-    "section": "2.2 Step 2: Authentication (The Tricky Part!)",
-    "text": "2.2 Step 2: Authentication (The Tricky Part!)\nTo send code from your local computer to GitHub, GitHub needs to know it’s really you. We do this using a Personal Access Token.\n\nCreate the Token: Run this command. It will open a GitHub webpage in your browser.\n\n\nusethis::create_github_token()\n\n\nScroll down on the webpage and click “Generate Token”.\nCopy the token (it looks like a long string of random letters and numbers). Do not lose this!\nGive the Token to R: Go back to RStudio and run:\nPaste your token into the console when prompted and hit Enter."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#step-3-push-to-github",
-    "href": "posts/S11E11_packages_03/index.html#step-3-push-to-github",
-    "title": "Building Your First R Package: Day 3",
-    "section": "2.3 Step 3: Push to GitHub",
-    "text": "2.3 Step 3: Push to GitHub\nNow that RStudio and GitHub are linked, you can push your package to the cloud!\n\nusethis::use_github()\n\n\n\n\n\n\n\nTip\n\n\n\nHow users install your GitHub package Once your package is on GitHub, you can tell your colleagues to run this code to download and install your tools:\n\n# They only need to run this once\ninstall.packages(\"remotes\")\nremotes::install_github(\"your-username/vizwizard\")"
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#step-1-cross-platform-testing",
-    "href": "posts/S11E11_packages_03/index.html#step-1-cross-platform-testing",
-    "title": "Building Your First R Package: Day 3",
-    "section": "3.1 Step 1: Cross-Platform Testing",
-    "text": "3.1 Step 1: Cross-Platform Testing\nYour computer is only one operating system. R has a built-in “inspector” that checks your package, but CRAN requires your package to work on all operating systems. devtools provides ways to send your package to external servers to be tested.\nRun these and wait for the email results:\n\n# Test on a CRAN-like Windows server\ndevtools::check_win_devel()\n\n# Test on a CRAN-like Mac server\ndevtools::check_mac_release()"
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#step-2-the-final-submission",
-    "href": "posts/S11E11_packages_03/index.html#step-2-the-final-submission",
-    "title": "Building Your First R Package: Day 3",
-    "section": "3.2 Step 2: The Final Submission",
-    "text": "3.2 Step 2: The Final Submission\nIf your local devtools::check() is totally clean, and your cross-platform checks came back green, you are ready to submit!\n\ndevtools::release()\n\nR will ask you a series of questions to double-check that you are absolutely ready. Once you say yes, it bundles your package and emails it to the CRAN team. You will usually hear back from a volunteer reviewer within a few days."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#problem-1-the-description-file-dependency-error",
-    "href": "posts/S11E11_packages_03/index.html#problem-1-the-description-file-dependency-error",
-    "title": "Building Your First R Package: Day 3",
-    "section": "4.1 Problem 1: The DESCRIPTION File Dependency Error",
-    "text": "4.1 Problem 1: The DESCRIPTION File Dependency Error\nScenario: You ran devtools::check() and got the following Error:\nError: namespace ‘ggplot2’ is not available and has been NOTED.\n\n\nClick for the solution\n\nWhy it happened: You wrote a function that relies on ggplot2, but you forgot to tell your package that it requires it! R doesn’t know to load it.\nThe Fix: As we learned on Day 1, never type package names into the DESCRIPTION file manually. Run this in your console to automatically add it:\n\nusethis::use_package(\"ggplot2\")\n\n\n\n\nBonus: What if the problem was missing dplyr or gt?\n\nThe fix is exactly the same! Just replace ggplot2 with the missing package name."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#problem-2-the-undocumented-argument-warning",
-    "href": "posts/S11E11_packages_03/index.html#problem-2-the-undocumented-argument-warning",
-    "title": "Building Your First R Package: Day 3",
-    "section": "4.2 Problem 2: The “Undocumented Argument” Warning",
-    "text": "4.2 Problem 2: The “Undocumented Argument” Warning\nScenario: You ran devtools::check() and received a Warning:\nWarning: Undocumented arguments in documentation object ‘pub_scatter’: ‘color_var’\n\n\nClick for the solution\n\nWhy it happened: You added a new argument (color_var) to your custom scatterplot function, but you forgot to write a roxygen2 comment for it. CRAN will reject this immediately because the help file doesn’t match the function.\nThe Fix:\nOpen your R/plots.R script.\nFind the pub_scatter function.\nAdd the missing tag above the function: #’ @param color_var The variable to color points by (unquoted)\nRun devtools::document() to update the manual.\nRe-run devtools::check()."
-  },
-  {
-    "objectID": "posts/S11E11_packages_03/index.html#problem-3-the-cran-rejection",
-    "href": "posts/S11E11_packages_03/index.html#problem-3-the-cran-rejection",
-    "title": "Building Your First R Package: Day 3",
-    "section": "4.3 Problem 3: The CRAN Rejection",
-    "text": "4.3 Problem 3: The CRAN Rejection\nScenario: You submitted to CRAN, but two days later you get an email from a reviewer saying:\n“Please do not use T and F in your code. Spell out TRUE and FALSE. Please fix and resubmit.”\n\n\nClick for the solution\n\nWhy it happened: In R, T and F are technically variables that can be overwritten by the user (e.g., someone could run T &lt;- FALSE in their console and break everything). CRAN prohibits the use of T and F abbreviations in package code.\nThe Fix:\nUse Ctrl+F (or Cmd+F) to search your entire project for instances of T and F.\nChange them to TRUE and FALSE.\nOpen your DESCRIPTION file and bump your version number up (e.g., change 0.1.0 to 0.1.1).\nRe-run devtools::check() to ensure everything is perfect.\nSubmit again using devtools::release().\n\nConclusion: You Did It! Congratulations! Over the last three days, you have conquered one of the steepest learning curves in the R ecosystem. You’ve learned how to harness usethis to generate boilerplate code , use tidy evaluation ({{ }}) for custom functions , bundle data, and ultimately share your work with the world. +2\nWhether you keep your packages local, put them on GitHub, or send them to CRAN, you are now an R Package Developer. Happy coding!"
-  },
-  {
     "objectID": "posts/S07E06_tidy_01/index.html#introduction",
     "href": "posts/S07E06_tidy_01/index.html#introduction",
     "title": "Tidyverse 1: Introduction to the tidyverse",
@@ -2000,55 +1930,6 @@
     "title": "Quarto website 2",
     "section": "6 Exercises II",
     "text": "6 Exercises II\n\nSite-wide configuration\n\nModify your _quarto.yml to configure your website. You can play around with whatever you prefer, but here are some suggestions:\n\nTry several different themes and pick one for your website.\nMove the navbar entry for the about.qmd page to the right-hand side.\nAdd one more icons to the Navbar, for example:\n\nAdd a link to your Twitter account and use the twitter icon\nIf you have one, add a link to your GitHub account and use the github icon\nAdd e.g. a question mark icon to your About page link (search for one here).\nTake a look at the visual list of possible icons and see if there are some that you’d like to use.\n\nAdd a favicon for your website."
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#introduction-leveling-up-your-package",
-    "href": "posts/S11E10_packages_02/index.html#introduction-leveling-up-your-package",
-    "title": "Building Your First R Package: Day 2",
-    "section": "0.1 Introduction: Leveling Up Your Package",
-    "text": "0.1 Introduction: Leveling Up Your Package\n\n\n\n\n\nPackaging your code saves future you a lot of time.\n\n\n\n\nWelcome to Day 2! In our first session, we learned that copying and pasting the same code across projects is a recipe for headaches. We solved this by wrapping our favorite ggplot2 and gt code into reusable functions using the usethis package and the “curly-curly” ({ }) operator.\nToday, we are going to make our vizwizard package even more useful for your daily work. We will cover:\n\nPackage Data: How to properly store data inside your package so it travels with your functions.\nMulti-Layer Plots: Writing slightly more advanced, multi-layered publication figures.\nDocumentation: Best practices for documenting your datasets so future-you knows what they are.\nPackage Checking: Running the ultimate “spellcheck” on your package (with special notes for Mac vs. Windows!).\nAI Assistance: A brief guide on using AI tools to assist in your R package development.\n\nLet’s start by loading our essential tools.\n\nlibrary(devtools)\n\nLoading required package: usethis\n\nlibrary(usethis)\nlibrary(tidyverse)\n\n── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──\n✔ dplyr     1.2.0     ✔ readr     2.2.0\n✔ forcats   1.0.1     ✔ stringr   1.6.0\n✔ ggplot2   4.0.2     ✔ tibble    3.3.1\n✔ lubridate 1.9.5     ✔ tidyr     1.3.2\n✔ purrr     1.2.1     \n\n\n── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──\n✖ dplyr::filter() masks stats::filter()\n✖ dplyr::lag()    masks stats::lag()\nℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors\n\nlibrary(palmerpenguins)\n\n\nAttaching package: 'palmerpenguins'\n\nThe following objects are masked from 'package:datasets':\n\n    penguins, penguins_raw\n\n\n\n\n\n\n\n\nWarning\n\n\n\nMac vs. Windows: The “Under the Hood” Tools Before we go further, package development requires your computer to have certain tools installed to build code. If you haven’t already:\nWindows Users: You must download and install Rtools from the CRAN website. Rtools is a set of programs that allow Windows to build R packages.\nMac Users: You need the Xcode Command Line Tools. You can install this by opening your Mac’s Terminal app and typing xcode-select --install and hitting Enter."
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#the-problem-where-does-the-data-go",
-    "href": "posts/S11E10_packages_02/index.html#the-problem-where-does-the-data-go",
-    "title": "Building Your First R Package: Day 2",
-    "section": "1.1 The Problem: Where does the data go?",
-    "text": "1.1 The Problem: Where does the data go?\nWhen you write a normal R script, you usually load data from your computer.\nWindows users might use a path like read_csv(\"C:/Users/Name/Documents/my_data.csv\").\nMac users might use a path like read_csv(\"~/Documents/my_data.csv\").\nIf you share your package with a colleague on a different operating system, those hard-coded paths will instantly break!"
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#the-solution-r-packages-have-a-special-built-in-way-to-store-data-so-that-it-is-always-available-whenever-you-type-libraryvizwizard-regardless-of-whether-the-user-is-on-a-mac-or-a-pc.",
-    "href": "posts/S11E10_packages_02/index.html#the-solution-r-packages-have-a-special-built-in-way-to-store-data-so-that-it-is-always-available-whenever-you-type-libraryvizwizard-regardless-of-whether-the-user-is-on-a-mac-or-a-pc.",
-    "title": "Building Your First R Package: Day 2",
-    "section": "1.2 The Solution: R packages have a special built-in way to store data so that it is always available whenever you type library(vizwizard), regardless of whether the user is on a Mac or a PC.",
-    "text": "1.2 The Solution: R packages have a special built-in way to store data so that it is always available whenever you type library(vizwizard), regardless of whether the user is on a Mac or a PC."
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#step-1-set-up-the-raw-data-folder",
-    "href": "posts/S11E10_packages_02/index.html#step-1-set-up-the-raw-data-folder",
-    "title": "Building Your First R Package: Day 2",
-    "section": "2.1 Step 1: Set up the raw data folder",
-    "text": "2.1 Step 1: Set up the raw data folder\nRun this command in your console:\n\nusethis::use_data_raw(name = \"lab_demographics\")\n\nWhat this does: It creates a new folder called data-raw/ and opens a script inside it. This script is basically your “scratchpad.” It’s where you put the code that reads your messy CSVs and cleans them up."
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#step-2-write-your-cleaning-code-and-save-the-data",
-    "href": "posts/S11E10_packages_02/index.html#step-2-write-your-cleaning-code-and-save-the-data",
-    "title": "Building Your First R Package: Day 2",
-    "section": "2.2 Step 2: Write your cleaning code and save the data",
-    "text": "2.2 Step 2: Write your cleaning code and save the data\nInside that new data-raw/lab_demographics.R script, you might write something like this:\n\n# 1. Pretend we are loading and cleaning a dataset here\n# (For this example, we will just create a small dataframe from scratch)\nlab_demographics &lt;- data.frame(\n  group = c(\"Control\", \"Treatment A\", \"Treatment B\"),\n  target_n = c(100, 50, 50),\n  active = c(TRUE, TRUE, FALSE)\n)\n\n\n# 2. THE MAGIC STEP: Save it to the package!\nusethis::use_data(lab_demographics, overwrite = TRUE)\n\nWhat this does: use_data() takes your cleaned dataframe and secretly compresses it into a special .rda (R Data) file inside a hidden data/ folder.\nNow, if you install your package and restart R, you can just type lab_demographics into the console and the data will appear, as if by magic!\nPractice: Exporting your own simple dataset\nYour Turn: Create a very simple dataset called my_favorite_colors that contains a dataframe of two columns: color_name and hex_code. Save it to your package using usethis::use_data().\n\n\nNeed a hint?\n\nYou don’t need to read a CSV for this! Just use data.frame() or tibble() to type out two or three colors manually, assign it to the variable my_favorite_colors, and pass that variable to use_data().\n\n\n\nClick for the solution\n\n\n# Create the dataset directly in your workspace\nmy_favorite_colors &lt;- data.frame(\n  color_name = c(\"Navy\", \"Forest Green\", \"Crimson\"),\n  hex_code = c(\"#000080\", \"#228B22\", \"#DC143C\")\n)\n\n\n# Save it so it lives inside your package forever!\nusethis::use_data(my_favorite_colors, overwrite = TRUE)"
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#tutorial-density-plots-with-means",
-    "href": "posts/S11E10_packages_02/index.html#tutorial-density-plots-with-means",
-    "title": "Building Your First R Package: Day 2",
-    "section": "3.1 Tutorial: Density Plots with Means",
-    "text": "3.1 Tutorial: Density Plots with Means\nOn Day 1, we learned that when we pass unquoted column names (like body_mass_g) into our custom functions, we have to wrap them in “curly-curly” braces ({{ }}).\nLet’s use that rule to build a function that adds multiple layers to a plot. We are going to make a pub_density() function. It will:\nDraw a density plot (a smoothed-out histogram).\nAutomatically calculate the overall average (mean) of the data.\nDraw a dashed vertical line right at that average.\n\n#' Create a Publication-Ready Density Plot with a Mean Line\n#'\n#' @param data A dataframe\n#' @param numeric_var The numeric variable to plot (unquoted)\n#' @return A ggplot object\n#' @export\npub_density &lt;- function(data, numeric_var) {\n  \n  # Step 1: Calculate the mean of the variable the user provides\n  # We use drop_na() so the mean calculation doesn't fail if there are blanks!\n  mean_val &lt;- data %&gt;% \n    drop_na({{ numeric_var }}) %&gt;% \n    summarize(avg = mean({{ numeric_var }})) %&gt;% \n    pull(avg) # 'pull' extracts just the number out of the dataframe\n  \n  # Step 2: Build the plot\n  ggplot(data, aes(x = {{ numeric_var }})) +\n    # Layer 1: The density curve\n    geom_density(fill = \"lightblue\", alpha = 0.6, color = \"darkblue\") +\n    # Layer 2: The vertical line for the mean\n    geom_vline(xintercept = mean_val, color = \"red\", linetype = \"dashed\", size = 1) +\n    # Layer 3: Clean up the theme\n    theme_minimal(base_size = 14) +\n    labs(subtitle = paste(\"The red dashed line represents the mean:\", round(mean_val, 2)))\n}\n\n# Test it out on the penguins dataset!\npub_density(penguins, body_mass_g) +\n  labs(title = \"Distribution of Penguin Body Mass\", x = \"Body Mass (g)\")\n\nWarning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.\nℹ Please use `linewidth` instead.\n\n\nWarning: Removed 2 rows containing non-finite outside the scale range\n(`stat_density()`).\n\n\n\n\n\n\n\n\n\nPractice: The Simple Violin Plot\nYour Turn: Write a function called pub_violin. It should take a dataframe, a categorical x_var, and a numeric y_var. It should output a geom_violin() plot. Make sure the violins are filled with a color based on the x_var.\n\n\nNeed a hint?\n\nStart your function exactly like we did on Day 1. Remember to put {{ x_var }} and {{ y_var }} inside the aes() function. To get the colors right, you also need to add fill = {{ x_var }} inside aes().\n\n\n\nClick for the solution\n\n\n#' Create a Simple Violin Plot\n#'\n#' @param data A dataframe\n#' @param x_var A categorical variable for the x-axis (unquoted)\n#' @param y_var A numeric variable for the y-axis (unquoted)\n#' @return A ggplot object\n#' @export\npub_violin &lt;- function(data, x_var, y_var) {\n  \n  ggplot(data, aes(x = {{ x_var }}, y = {{ y_var }}, fill = {{ x_var }})) +\n    # Trim = FALSE makes the violin tails look a bit more natural\n    geom_violin(trim = FALSE, alpha = 0.7) +\n    theme_classic(base_size = 14) +\n    theme(\n      legend.position = \"none\" # Hide the legend since the x-axis already tells us the groups!\n    )\n}\n\n# Test it out!\npub_violin(penguins, species, flipper_length_mm) +\n  labs(title = \"Penguin Flipper Lengths by Species\")\n\nWarning: Removed 2 rows containing non-finite outside the scale range\n(`stat_ydensity()`)."
-  },
-  {
-    "objectID": "posts/S11E10_packages_02/index.html#tips-for-getting-good-r-package-code-from-ai",
-    "href": "posts/S11E10_packages_02/index.html#tips-for-getting-good-r-package-code-from-ai",
-    "title": "Building Your First R Package: Day 2",
-    "section": "7.1 Tips for getting good R Package code from AI:",
-    "text": "7.1 Tips for getting good R Package code from AI:\nBe specific about the Tidyverse: R has changed a lot in 10 years. If you ask an AI for a plot, it might give you ancient Base R code.\n\n7.1.1 Good Prompt: “Write an R function using ggplot2 and dplyr…”\nTell it you are making a package: AI needs context.\n\n\n7.1.2 Good Prompt: “I am writing an R package. Generate the roxygen2 documentation header for this function…”\nRemind it about Tidy Evaluation: AIs often forget the {{ }} syntax. Remind them!\n\n\n7.1.3 Good Prompt: “Write a function that takes a dataframe and an unquoted column name. You MUST use the curly-curly {{ }} operator for the column name.”"
   },
   {
     "objectID": "posts/S09E07_maps_03/index.html",

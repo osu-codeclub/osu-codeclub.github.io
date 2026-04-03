@@ -10,984 +10,7 @@
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
 <generator>quarto-1.6.40</generator>
-<lastBuildDate>Mon, 20 Apr 2026 04:00:00 GMT</lastBuildDate>
-<item>
-  <title>Building Your First R Package: Day 3</title>
-  <dc:creator>Neel Agarwal</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S11E11_packages_03/</link>
-  <description><![CDATA[ 
-
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction-from-local-to-global" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="introduction-from-local-to-global"><span class="header-section-number">0.1</span> Introduction: From Local to Global</h2>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S11E11_packages_03/img/package-box.png" class="img-fluid figure-img" style="width:100.0%" alt="Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it."></p>
-<figcaption>Packaging your code saves future you a lot of time.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Welcome to Day 3! Over the last two days, we transitioned from script-writers to package-developers. We built the <code>vizwizard</code> package, packed it with custom <code>ggplot2</code> and <code>gt</code> wrappers, and learned how to bundle our own custom datasets.</p>
-<p>To reiterate, effective package design can be summarized in the below diagram/flowchart. Whether you’re leading a classroom instruction and want to create a package for students to share datasets, functions, etc. or spreading your love for medical analysis and alleviating headaches for researchers/physicians, the below chart is helpful.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S11E11_packages_03/img/rflow.png" class="img-fluid figure-img" style="width:100.0%" alt="Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it."></p>
-<figcaption>Packaging your code saves future you a lot of time.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Today is all about deployment. An R package is incredibly useful for your own reproducibility, but its true power is unlocked when you share it.</p>
-<p>Today we will cover:</p>
-<ol type="1">
-<li><strong>Tying Up Loose Ends:</strong> Making sure our package is completely finished and error-free.</li>
-<li><strong>Publishing to GitHub (From Scratch):</strong> The modern, fast standard for sharing packages with colleagues, including how to authenticate your account.</li>
-<li><strong>Publishing to CRAN:</strong> Understanding the strict rules and rigorous checks required for the official R repository.</li>
-<li><strong>Troubleshooting:</strong> Solving common deployment problems.</li>
-</ol>
-<p>Let’s load our tools one last time!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(devtools)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: usethis</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(usethis)</span></code></pre></div>
-</div>
-</section>
-<section id="part-1-tying-up-loose-ends" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Part 1: Tying Up Loose Ends</h1>
-<p>Before we can publish anything, we need to ensure our house is in order.</p>
-<section id="the-final-check" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="the-final-check"><span class="header-section-number">1.1</span> The Final Check</h2>
-<p>On Day 2, we learned about the ultimate package spellcheck: <code>devtools::check()</code>. This function is the gatekeeper for publishing.</p>
-<p>Run it now in your console:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">check</span>()</span></code></pre></div>
-</div>
-<p>Look at the bottom of your console output. Your goal before proceeding is 0 Errors, 0 Warnings, and 0 Notes!</p>
-<p>Errors: Your package is fundamentally broken. Must be fixed.</p>
-<p>Warnings: Your package works, but you did something risky. Must be fixed if you want to go to CRAN.</p>
-<p>Notes: Minor formatting suggestions. CRAN reviewers might let a Note slide, but it’s best practice to resolve them.</p>
-</section>
-</section>
-<section id="part-2-publishing-to-github-from-scratch" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Part 2: Publishing to GitHub (From Scratch)</h1>
-<p>CRAN is great, but it has extremely strict rules. If you want to share a package with your lab mates immediately, or if you are hosting internal clinical code that shouldn’t be public, GitHub is the way to go.</p>
-<section id="step-1-version-control-with-git" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="step-1-version-control-with-git"><span class="header-section-number">2.1</span> Step 1: Version Control with Git</h2>
-<p>Your project needs to be a Git repository before it can go to GitHub. The usethis package makes this a one-liner. Run this in your console:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_git</span>()</span></code></pre></div>
-</div>
-<p>RStudio will ask if it is okay to commit your files and restart. Select “Yes” to both.</p>
-</section>
-<section id="step-2-authentication-the-tricky-part" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="step-2-authentication-the-tricky-part"><span class="header-section-number">2.2</span> Step 2: Authentication (The Tricky Part!)</h2>
-<p>To send code from your local computer to GitHub, GitHub needs to know it’s really you. We do this using a Personal Access Token.</p>
-<ol type="1">
-<li>Create the Token: Run this command. It will open a GitHub webpage in your browser.</li>
-</ol>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">create_github_token</span>()</span></code></pre></div>
-</div>
-<ol start="2" type="1">
-<li><p>Scroll down on the webpage and click “Generate Token”.</p></li>
-<li><p>Copy the token (it looks like a long string of random letters and numbers). Do not lose this!</p></li>
-<li><p>Give the Token to R: Go back to RStudio and run:</p></li>
-<li><p>Paste your token into the console when prompted and hit Enter.</p></li>
-</ol>
-</section>
-<section id="step-3-push-to-github" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="step-3-push-to-github"><span class="header-section-number">2.3</span> Step 3: Push to GitHub</h2>
-<p>Now that RStudio and GitHub are linked, you can push your package to the cloud!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_github</span>()</span></code></pre></div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>How users install your GitHub package Once your package is on GitHub, you can tell your colleagues to run this code to download and install your tools:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># They only need to run this once</span></span>
-<span id="cb8-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"remotes"</span>)</span>
-<span id="cb8-3">remotes<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">install_github</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"your-username/vizwizard"</span>)</span></code></pre></div>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="part-3-publishing-to-cran" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Part 3: Publishing to CRAN</h1>
-<p>The Comprehensive R Archive Network (CRAN) is the official repository for R packages. Publishing here means your package can be installed with a simple <code>install.packages("vizwizard")</code>.</p>
-<p>Understanding CRAN Rules and Requirements</p>
-<p>CRAN is notoriously strict. They are protecting the entire R ecosystem from malicious code, broken dependencies, and bloated file sizes. Here is what CRAN strictly requires:</p>
-<p>Zero Errors or Warnings: Your R CMD check must pass cleanly on Windows, Mac, Linux, and Solaris.</p>
-<p>File Size Limits: Your package must generally be under 5MB. If you include massive datasets, you will be rejected.</p>
-<p>Impeccable Documentation: Every single exported function must have a complete help file with working examples. If an example throws an error, the package is rejected.</p>
-<p>Standard Licenses: You must clearly declare an open-source license (e.g., MIT or GPL-3) in your DESCRIPTION file.</p>
-<p>No “Hidden” Changes: Your package cannot modify the user’s global .Rprofile, secretly install other software, or change their working directory without permission.</p>
-<section id="step-1-cross-platform-testing" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="step-1-cross-platform-testing"><span class="header-section-number">3.1</span> Step 1: Cross-Platform Testing</h2>
-<p>Your computer is only one operating system. R has a built-in “inspector” that checks your package, but CRAN requires your package to work on all operating systems. devtools provides ways to send your package to external servers to be tested.</p>
-<p>Run these and wait for the email results:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Test on a CRAN-like Windows server</span></span>
-<span id="cb9-2">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">check_win_devel</span>()</span>
-<span id="cb9-3"></span>
-<span id="cb9-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Test on a CRAN-like Mac server</span></span>
-<span id="cb9-5">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">check_mac_release</span>()</span></code></pre></div>
-</div>
-</section>
-<section id="step-2-the-final-submission" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="step-2-the-final-submission"><span class="header-section-number">3.2</span> Step 2: The Final Submission</h2>
-<p>If your local <code>devtools::check()</code> is totally clean, and your cross-platform checks came back green, you are ready to submit!</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">release</span>()</span></code></pre></div>
-</div>
-<p>R will ask you a series of questions to double-check that you are absolutely ready. Once you say yes, it bundles your package and emails it to the CRAN team. You will usually hear back from a volunteer reviewer within a few days.</p>
-</section>
-</section>
-<section id="part-4-practice-problems-troubleshooting" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Part 4: Practice Problems &amp; Troubleshooting</h1>
-<p>Package development rarely goes perfectly on the first try. Let’s walk through some common problems.</p>
-<section id="problem-1-the-description-file-dependency-error" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="problem-1-the-description-file-dependency-error"><span class="header-section-number">4.1</span> Problem 1: The DESCRIPTION File Dependency Error</h2>
-<p>Scenario: You ran <code>devtools::check()</code> and got the following Error:</p>
-<p>Error: namespace ‘ggplot2’ is not available and has been NOTED.</p>
-<details>
-<summary>
-Click for the solution
-</summary>
-<p>Why it happened: You wrote a function that relies on ggplot2, but you forgot to tell your package that it requires it! R doesn’t know to load it.</p>
-<p>The Fix: As we learned on Day 1, never type package names into the DESCRIPTION file manually. Run this in your console to automatically add it:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_package</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"ggplot2"</span>)</span></code></pre></div>
-</div>
-</details>
-<details>
-<summary>
-Bonus: What if the problem was missing <code>dplyr</code> or <code>gt</code>?
-</summary>
-The fix is exactly the same! Just replace <code>ggplot2</code> with the missing package name.
-</details>
-</section>
-<section id="problem-2-the-undocumented-argument-warning" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="problem-2-the-undocumented-argument-warning"><span class="header-section-number">4.2</span> Problem 2: The “Undocumented Argument” Warning</h2>
-<p>Scenario: You ran <code>devtools::check()</code> and received a Warning:</p>
-<p>Warning: Undocumented arguments in documentation object ‘pub_scatter’: ‘color_var’</p>
-<details>
-<summary>
-Click for the solution
-</summary>
-<p>Why it happened: You added a new argument (color_var) to your custom scatterplot function, but you forgot to write a roxygen2 comment for it. CRAN will reject this immediately because the help file doesn’t match the function.</p>
-<p>The Fix:</p>
-<p>Open your R/plots.R script.</p>
-<p>Find the pub_scatter function.</p>
-<p>Add the missing tag above the function: #’ <span class="citation" data-cites="param">@param</span> color_var The variable to color points by (unquoted)</p>
-<p>Run <code>devtools::document()</code> to update the manual.</p>
-<p>Re-run <code>devtools::check()</code>.</p>
-</details>
-</section>
-<section id="problem-3-the-cran-rejection" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="problem-3-the-cran-rejection"><span class="header-section-number">4.3</span> Problem 3: The CRAN Rejection</h2>
-<p>Scenario: You submitted to CRAN, but two days later you get an email from a reviewer saying:</p>
-<p>“Please do not use T and F in your code. Spell out TRUE and FALSE. Please fix and resubmit.”</p>
-<details>
-<summary>
-Click for the solution
-</summary>
-<p>Why it happened: In R, T and F are technically variables that can be overwritten by the user (e.g., someone could run T &lt;- FALSE in their console and break everything). CRAN prohibits the use of T and F abbreviations in package code.</p>
-<p>The Fix:</p>
-<p>Use Ctrl+F (or Cmd+F) to search your entire project for instances of T and F.</p>
-<p>Change them to TRUE and FALSE.</p>
-<p>Open your DESCRIPTION file and bump your version number up (e.g., change 0.1.0 to 0.1.1).</p>
-<p>Re-run <code>devtools::check()</code> to ensure everything is perfect.</p>
-<p>Submit again using <code>devtools::release()</code>.</p>
-</details>
-<p>Conclusion: You Did It! Congratulations! Over the last three days, you have conquered one of the steepest learning curves in the R ecosystem. You’ve learned how to harness usethis to generate boilerplate code , use tidy evaluation ({{ }}) for custom functions , bundle data, and ultimately share your work with the world. +2</p>
-<p>Whether you keep your packages local, put them on GitHub, or send them to CRAN, you are now an R Package Developer. Happy coding!</p>
-
-
-</section>
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>R packages</category>
-  <category>GitHub</category>
-  <category>CRAN</category>
-  <category>publishing</category>
-  <category>open source</category>
-  <guid>https://osu-codeclub.github.io/posts/S11E11_packages_03/</guid>
-  <pubDate>Mon, 20 Apr 2026 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S11E11_packages_03/img/package-box.png" medium="image" type="image/png" height="79" width="144"/>
-</item>
-<item>
-  <title>Building Your First R Package: Day 2</title>
-  <dc:creator>Neel Agarwal</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S11E10_packages_02/</link>
-  <description><![CDATA[ 
-
-
-
-
-<hr>
-<p><br></p>
-<section id="introduction-leveling-up-your-package" class="level2" data-number="0.1">
-<h2 data-number="0.1" class="anchored" data-anchor-id="introduction-leveling-up-your-package"><span class="header-section-number">0.1</span> Introduction: Leveling Up Your Package</h2>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S11E10_packages_02/img/package-box.png" class="img-fluid figure-img" style="width:100.0%" alt="Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it."></p>
-<figcaption>Packaging your code saves future you a lot of time.</figcaption>
-</figure>
-</div>
-</div>
-</div>
-<p>Welcome to Day 2! In our first session, we learned that copying and pasting the same code across projects is a recipe for headaches. We solved this by wrapping our favorite <code>ggplot2</code> and <code>gt</code> code into reusable functions using the <code>usethis</code> package and the “curly-curly” (<code>{ }</code>) operator.</p>
-<p>Today, we are going to make our <code>vizwizard</code> package even more useful for your daily work. We will cover:</p>
-<ol type="1">
-<li><strong>Package Data:</strong> How to properly store data inside your package so it travels with your functions.</li>
-<li><strong>Multi-Layer Plots:</strong> Writing slightly more advanced, multi-layered publication figures.</li>
-<li><strong>Documentation:</strong> Best practices for documenting your datasets so future-you knows what they are.</li>
-<li><strong>Package Checking:</strong> Running the ultimate “spellcheck” on your package (with special notes for Mac vs.&nbsp;Windows!).</li>
-<li><strong>AI Assistance:</strong> A brief guide on using AI tools to assist in your R package development.</li>
-</ol>
-<p>Let’s start by loading our essential tools.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(devtools)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Loading required package: usethis</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(usethis)</span>
-<span id="cb3-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.2.0     ✔ readr     2.2.0
-✔ forcats   1.0.1     ✔ stringr   1.6.0
-✔ ggplot2   4.0.2     ✔ tibble    3.3.1
-✔ lubridate 1.9.5     ✔ tidyr     1.3.2
-✔ purrr     1.2.1     </code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(palmerpenguins)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
-Attaching package: 'palmerpenguins'
-
-The following objects are masked from 'package:datasets':
-
-    penguins, penguins_raw</code></pre>
-</div>
-</div>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Warning
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Mac vs.&nbsp;Windows: The “Under the Hood” Tools Before we go further, package development requires your computer to have certain tools installed to build code. If you haven’t already:</p>
-<p>Windows Users: You must download and install Rtools from the CRAN website. Rtools is a set of programs that allow Windows to build R packages.</p>
-<p>Mac Users: You need the Xcode Command Line Tools. You can install this by opening your Mac’s Terminal app and typing <code>xcode-select --install</code> and hitting Enter.</p>
-</div>
-</div>
-</section>
-<section id="including-data-in-your-package" class="level1" data-number="1">
-<h1 data-number="1"><span class="header-section-number">1</span> Including Data in Your Package</h1>
-<section id="the-problem-where-does-the-data-go" class="level2" data-number="1.1">
-<h2 data-number="1.1" class="anchored" data-anchor-id="the-problem-where-does-the-data-go"><span class="header-section-number">1.1</span> The Problem: Where does the data go?</h2>
-<p>When you write a normal R script, you usually load data from your computer.</p>
-<p>Windows users might use a path like <code>read_csv("C:/Users/Name/Documents/my_data.csv")</code>.</p>
-<p>Mac users might use a path like <code>read_csv("~/Documents/my_data.csv")</code>.</p>
-<p>If you share your package with a colleague on a different operating system, those hard-coded paths will instantly break!</p>
-</section>
-<section id="the-solution-r-packages-have-a-special-built-in-way-to-store-data-so-that-it-is-always-available-whenever-you-type-libraryvizwizard-regardless-of-whether-the-user-is-on-a-mac-or-a-pc." class="level2" data-number="1.2">
-<h2 data-number="1.2" class="anchored" data-anchor-id="the-solution-r-packages-have-a-special-built-in-way-to-store-data-so-that-it-is-always-available-whenever-you-type-libraryvizwizard-regardless-of-whether-the-user-is-on-a-mac-or-a-pc."><span class="header-section-number">1.2</span> The Solution: R packages have a special built-in way to store data so that it is always available whenever you type library(vizwizard), regardless of whether the user is on a Mac or a PC.</h2>
-</section>
-</section>
-<section id="tutorial-step-by-step-package-data" class="level1" data-number="2">
-<h1 data-number="2"><span class="header-section-number">2</span> Tutorial: Step-by-Step Package Data</h1>
-<p>Let’s say your lab has a standardized “Demographics Table” that you always use as a reference, and you want it baked right into your package.</p>
-<section id="step-1-set-up-the-raw-data-folder" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="step-1-set-up-the-raw-data-folder"><span class="header-section-number">2.1</span> Step 1: Set up the raw data folder</h2>
-<p>Run this command in your console:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_data_raw</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">name =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lab_demographics"</span>)</span></code></pre></div>
-</div>
-<p>What this does: It creates a new folder called data-raw/ and opens a script inside it. This script is basically your “scratchpad.” It’s where you put the code that reads your messy CSVs and cleans them up.</p>
-</section>
-<section id="step-2-write-your-cleaning-code-and-save-the-data" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="step-2-write-your-cleaning-code-and-save-the-data"><span class="header-section-number">2.2</span> Step 2: Write your cleaning code and save the data</h2>
-<p>Inside that new data-raw/lab_demographics.R script, you might write something like this:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># 1. Pretend we are loading and cleaning a dataset here</span></span>
-<span id="cb9-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># (For this example, we will just create a small dataframe from scratch)</span></span>
-<span id="cb9-3">lab_demographics <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(</span>
-<span id="cb9-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">group =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Control"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Treatment A"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Treatment B"</span>),</span>
-<span id="cb9-5">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">target_n =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">50</span>),</span>
-<span id="cb9-6">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">active =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>, <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>, <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>)</span>
-<span id="cb9-7">)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># 2. THE MAGIC STEP: Save it to the package!</span></span>
-<span id="cb10-2">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_data</span>(lab_demographics, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">overwrite =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>)</span></code></pre></div>
-</div>
-<p>What this does: <code>use_data()</code> takes your cleaned dataframe and secretly compresses it into a special .rda (R Data) file inside a hidden data/ folder.</p>
-<p>Now, if you install your package and restart R, you can just type lab_demographics into the console and the data will appear, as if by magic!</p>
-<p>Practice: Exporting your own simple dataset</p>
-<p>Your Turn: Create a very simple dataset called my_favorite_colors that contains a dataframe of two columns: color_name and hex_code. Save it to your package using <code>usethis::use_data()</code>.</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-You don’t need to read a CSV for this! Just use <code>data.frame()</code> or <code>tibble()</code> to type out two or three colors manually, assign it to the variable my_favorite_colors, and pass that variable to <code>use_data()</code>.
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Create the dataset directly in your workspace</span></span>
-<span id="cb11-2">my_favorite_colors <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">data.frame</span>(</span>
-<span id="cb11-3">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color_name =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Navy"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Forest Green"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Crimson"</span>),</span>
-<span id="cb11-4">  <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">hex_code =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#000080"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#228B22"</span>, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"#DC143C"</span>)</span>
-<span id="cb11-5">)</span></code></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Save it so it lives inside your package forever!</span></span>
-<span id="cb12-2">usethis<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">use_data</span>(my_favorite_colors, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">overwrite =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>)</span></code></pre></div>
-</div>
-</details>
-</section>
-</section>
-<section id="multi-layer-plotting-functions" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Multi-Layer Plotting Functions</h1>
-<section id="tutorial-density-plots-with-means" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="tutorial-density-plots-with-means"><span class="header-section-number">3.1</span> Tutorial: Density Plots with Means</h2>
-<p>On Day 1, we learned that when we pass unquoted column names (like body_mass_g) into our custom functions, we have to wrap them in “curly-curly” braces ({{ }}).</p>
-<p>Let’s use that rule to build a function that adds multiple layers to a plot. We are going to make a <code>pub_density()</code> function. It will:</p>
-<p>Draw a density plot (a smoothed-out histogram).</p>
-<p>Automatically calculate the overall average (mean) of the data.</p>
-<p>Draw a dashed vertical line right at that average.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' Create a Publication-Ready Density Plot with a Mean Line</span></span>
-<span id="cb13-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'</span></span>
-<span id="cb13-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @param data A dataframe</span></span>
-<span id="cb13-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @param numeric_var The numeric variable to plot (unquoted)</span></span>
-<span id="cb13-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @return A ggplot object</span></span>
-<span id="cb13-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @export</span></span>
-<span id="cb13-7">pub_density <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(data, numeric_var) {</span>
-<span id="cb13-8">  </span>
-<span id="cb13-9">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 1: Calculate the mean of the variable the user provides</span></span>
-<span id="cb13-10">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># We use drop_na() so the mean calculation doesn't fail if there are blanks!</span></span>
-<span id="cb13-11">  mean_val <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> data <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb13-12">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">drop_na</span>({{ numeric_var }}) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb13-13">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">avg =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>({{ numeric_var }})) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">%&gt;%</span> </span>
-<span id="cb13-14">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pull</span>(avg) <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># 'pull' extracts just the number out of the dataframe</span></span>
-<span id="cb13-15">  </span>
-<span id="cb13-16">  <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Step 2: Build the plot</span></span>
-<span id="cb13-17">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(data, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> {{ numeric_var }})) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-18">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Layer 1: The density curve</span></span>
-<span id="cb13-19">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_density</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lightblue"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.6</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"darkblue"</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-20">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Layer 2: The vertical line for the mean</span></span>
-<span id="cb13-21">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_vline</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">xintercept =</span> mean_val, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"red"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">linetype =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"dashed"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">1</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-22">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Layer 3: Clean up the theme</span></span>
-<span id="cb13-23">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_minimal</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">14</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-24">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">subtitle =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">paste</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"The red dashed line represents the mean:"</span>, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">round</span>(mean_val, <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">2</span>)))</span>
-<span id="cb13-25">}</span>
-<span id="cb13-26"></span>
-<span id="cb13-27"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Test it out on the penguins dataset!</span></span>
-<span id="cb13-28"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pub_density</span>(penguins, body_mass_g) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb13-29">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Distribution of Penguin Body Mass"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Body Mass (g)"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-ℹ Please use `linewidth` instead.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
-(`stat_density()`).</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S11E10_packages_02/index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Practice: The Simple Violin Plot</p>
-<p>Your Turn: Write a function called pub_violin. It should take a dataframe, a categorical x_var, and a numeric y_var. It should output a <code>geom_violin()</code> plot. Make sure the violins are filled with a color based on the x_var.</p>
-<details>
-<summary>
-Need a hint?
-</summary>
-Start your function exactly like we did on Day 1. Remember to put {{ x_var }} and {{ y_var }} inside the aes() function. To get the colors right, you also need to add fill = {{ x_var }} inside <code>aes()</code>.
-</details>
-<details>
-<summary>
-Click for the solution
-</summary>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' Create a Simple Violin Plot</span></span>
-<span id="cb16-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'</span></span>
-<span id="cb16-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @param data A dataframe</span></span>
-<span id="cb16-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @param x_var A categorical variable for the x-axis (unquoted)</span></span>
-<span id="cb16-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @param y_var A numeric variable for the y-axis (unquoted)</span></span>
-<span id="cb16-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @return A ggplot object</span></span>
-<span id="cb16-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @export</span></span>
-<span id="cb16-8">pub_violin <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> <span class="cf" style="color: #003B4F;
-background-color: null;
-font-weight: bold;
-font-style: inherit;">function</span>(data, x_var, y_var) {</span>
-<span id="cb16-9">  </span>
-<span id="cb16-10">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(data, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> {{ x_var }}, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> {{ y_var }}, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">fill =</span> {{ x_var }})) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb16-11">    <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Trim = FALSE makes the violin tails look a bit more natural</span></span>
-<span id="cb16-12">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_violin</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">trim =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">FALSE</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">alpha =</span> <span class="fl" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">0.7</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb16-13">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme_classic</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
-background-color: null;
-font-style: inherit;">14</span>) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb16-14">    <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">theme</span>(</span>
-<span id="cb16-15">      <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">legend.position =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"none"</span> <span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Hide the legend since the x-axis already tells us the groups!</span></span>
-<span id="cb16-16">    )</span>
-<span id="cb16-17">}</span>
-<span id="cb16-18"></span>
-<span id="cb16-19"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Test it out!</span></span>
-<span id="cb16-20"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">pub_violin</span>(penguins, species, flipper_length_mm) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb16-21">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">title =</span> <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"Penguin Flipper Lengths by Species"</span>)</span></code></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
-(`stat_ydensity()`).</code></pre>
-</div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S11E10_packages_02/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</details>
-</section>
-</section>
-<section id="documenting-datasets" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Documenting Datasets</h1>
-<p>We know that running <code>devtools::document()</code> turns our #’ comments into help files for our functions.</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Shortcut Alert! Instead of typing <code>devtools::document()</code> into the console every time, use your keyboard:</p>
-<p>Mac Users: Press Cmd + Shift + D</p>
-<p>Windows Users: Press Ctrl + Shift + D</p>
-</div>
-</div>
-<p>But how do you document a dataset?</p>
-<p>Datasets don’t have code underneath them to attach comments to. Instead, we create a script just for documentation.</p>
-</section>
-<section id="tutorial-documenting-lab_demographics" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Tutorial: Documenting lab_demographics</h1>
-<p>Create a standard R script and save it as R/data.R. Inside, write out the roxygen2 comments, and then just put the name of the dataset in quotes at the very bottom.</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Inside R/data.R</span></span>
-<span id="cb18-2"></span>
-<span id="cb18-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' Laboratory Demographics Reference</span></span>
-<span id="cb18-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'</span></span>
-<span id="cb18-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' A small dataset containing the target enrollment numbers for our</span></span>
-<span id="cb18-6"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' three main study groups.</span></span>
-<span id="cb18-7"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'</span></span>
-<span id="cb18-8"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' @format A data frame with 3 rows and 3 columns:</span></span>
-<span id="cb18-9"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' \describe{</span></span>
-<span id="cb18-10"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'   \item{group}{The name of the study group}</span></span>
-<span id="cb18-11"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'   \item{target_n}{The number of participants we want to enroll}</span></span>
-<span id="cb18-12"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#'   \item{active}{TRUE if the group is currently enrolling, FALSE otherwise}</span></span>
-<span id="cb18-13"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">#' }</span></span>
-<span id="cb18-14"><span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"lab_demographics"</span></span></code></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "lab_demographics"</code></pre>
-</div>
-</div>
-<p>Now, when you document your package, you can type ?lab_demographics in your console, and a beautiful help page will pop up explaining exactly what every column means!</p>
-</section>
-<section id="the-ultimate-package-spellcheck" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> The Ultimate Package Spellcheck</h1>
-<p>Whether you want to share your package with the world on CRAN (The Comprehensive R Archive Network), put it on GitHub, or just keep it for yourself, you want to make sure your package isn’t fundamentally broken.</p>
-<p>R has a built-in “inspector” that checks your package for missing commas, undocumented arguments, and messy code.</p>
-<p>Run this in your console:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">devtools<span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">check</span>()</span>
-<span id="cb20-2"></span>
-<span id="cb20-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Keyboard Shortcut: </span></span>
-<span id="cb20-4"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Mac: Cmd + Shift + E</span></span>
-<span id="cb20-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># Windows: Ctrl + Shift + E</span></span></code></pre></div>
-</div>
-<p>When you run this, your console will output a lot of text. It is building your package from scratch and testing it. Note: If this step fails immediately with an error about missing compilers, refer back to the warning at the top of this page about Rtools (Windows) and Xcode (Mac).</p>
-<p>At the very end, it will give you a score:</p>
-<p>Errors: Your package is broken and will not install. You must fix these.</p>
-<p>Warnings: Your package works, but you did something risky (like forgetting to add ggplot2 to your DESCRIPTION file dependencies).</p>
-<p>Notes: Minor formatting suggestions.</p>
-<p>Goal: Try to get 0 Errors, 0 Warnings, and 0 Notes!</p>
-</section>
-<section id="ai-assisted-coding-for-casual-coders" class="level1" data-number="7">
-<h1 data-number="7"><span class="header-section-number">7</span> AI-Assisted Coding for Casual Coders</h1>
-<p>Writing out documentation and boilerplate code can feel tedious. Generative AI (like Gemini, ChatGPT, or Claude) is a fantastic tool for casual coders to speed up this process, if you know how to talk to it.</p>
-<section id="tips-for-getting-good-r-package-code-from-ai" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="tips-for-getting-good-r-package-code-from-ai"><span class="header-section-number">7.1</span> Tips for getting good R Package code from AI:</h2>
-<p>Be specific about the Tidyverse: R has changed a lot in 10 years. If you ask an AI for a plot, it might give you ancient Base R code.</p>
-<section id="good-prompt-write-an-r-function-using-ggplot2-and-dplyr" class="level3" data-number="7.1.1">
-<h3 data-number="7.1.1" class="anchored" data-anchor-id="good-prompt-write-an-r-function-using-ggplot2-and-dplyr"><span class="header-section-number">7.1.1</span> Good Prompt: “Write an R function using ggplot2 and dplyr…”</h3>
-<p>Tell it you are making a package: AI needs context.</p>
-</section>
-<section id="good-prompt-i-am-writing-an-r-package.-generate-the-roxygen2-documentation-header-for-this-function" class="level3" data-number="7.1.2">
-<h3 data-number="7.1.2" class="anchored" data-anchor-id="good-prompt-i-am-writing-an-r-package.-generate-the-roxygen2-documentation-header-for-this-function"><span class="header-section-number">7.1.2</span> Good Prompt: “I am writing an R package. Generate the roxygen2 documentation header for this function…”</h3>
-<p>Remind it about Tidy Evaluation: AIs often forget the {{ }} syntax. Remind them!</p>
-</section>
-<section id="good-prompt-write-a-function-that-takes-a-dataframe-and-an-unquoted-column-name.-you-must-use-the-curly-curly-operator-for-the-column-name." class="level3" data-number="7.1.3">
-<h3 data-number="7.1.3" class="anchored" data-anchor-id="good-prompt-write-a-function-that-takes-a-dataframe-and-an-unquoted-column-name.-you-must-use-the-curly-curly-operator-for-the-column-name."><span class="header-section-number">7.1.3</span> Good Prompt: “Write a function that takes a dataframe and an unquoted column name. You MUST use the curly-curly {{ }} operator for the column name.”</h3>
-</section>
-</section>
-</section>
-<section id="practice-prompt-engineering" class="level1" data-number="8">
-<h1 data-number="8"><span class="header-section-number">8</span> Practice: Prompt Engineering</h1>
-<p>Imagine you have a messy script that creates a scatterplot, and you want AI to turn it into a neat package function for you. Which of these prompts will give you a better result?</p>
-<p>Prompt A: “Make a scatterplot function for my data.”</p>
-<p>Prompt B: “I am building an R package. Please write a function using ggplot2 that takes a dataframe, an unquoted x variable, and an unquoted y variable to make a scatterplot. Use the {{ }} operator for the variables, and include a roxygen2 header with <span class="citation" data-cites="param">@param</span> and <span class="citation" data-cites="export">@export</span> tags.”</p>
-<details>
-<summary>
-Click for the answer
-</summary>
-Prompt B is significantly better! Prompt A will likely give you a function that works in a standard script but fails completely when put inside a package because it will lack the correct parameter definitions, {{ }} formatting, and <span class="citation" data-cites="export">@export</span> documentation.
-</details>
-<p>You’ve made it through Day 2! By now, you know how to bundle custom datasets into your package, write multi-layered plotting wrappers, and use tools like <code>devtools::check()</code> and AI to make your life easier.</p>
-
-
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
-  <category>R packages</category>
-  <category>data</category>
-  <category>advanced ggplot2</category>
-  <category>CRAN</category>
-  <category>AI</category>
-  <guid>https://osu-codeclub.github.io/posts/S11E10_packages_02/</guid>
-  <pubDate>Mon, 13 Apr 2026 04:00:00 GMT</pubDate>
-  <media:content url="https://osu-codeclub.github.io/posts/S11E10_packages_02/img/package-box.png" medium="image" type="image/png" height="79" width="144"/>
-</item>
+<lastBuildDate>Mon, 06 Apr 2026 04:00:00 GMT</lastBuildDate>
 <item>
   <title>Building Your First R Package: Day 1</title>
   <dc:creator>Neel Agarwal</dc:creator>
@@ -16271,6 +15294,730 @@ Wilson, Greg, Jennifer Bryan, Karen Cranston, Justin Kitzes, Lex Nederbragt, and
   <category>reproducibility</category>
   <guid>https://osu-codeclub.github.io/posts/S10E03_reprod_03/</guid>
   <pubDate>Mon, 22 Sep 2025 04:00:00 GMT</pubDate>
+</item>
+<item>
+  <title>Reproducibility 2: More about Quarto</title>
+  <dc:creator>Horacio Lopez-Nicora and Jessica Cooperstone</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S10E02_reprod_02/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<section id="a-recap" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> A recap</h1>
+<p><em>Last week</em>: We introduced Quarto, created a basic <code>.qmd</code> file, and rendered it to HTML.</p>
+<p><em>Today</em>: We’ll explore more of what <strong>Quarto</strong> can do - how to control document metadata, customize appearance, manage code chunk options, and render to different formats.</p>
+<p><em>Next week</em>: We will go over <em>file organization</em> and <em>RStudio Projects</em>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E02_reprod_02/img/quarto-gazing.png" class="img-fluid figure-img"></p>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+<p>Open the <code>.qmd</code> document you created last week for Code Club. If you haven’t created one yet, start a new Quarto document by going to <code>File</code> &gt; <code>New File</code> &gt; <code>Quarto Document</code>.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Heads up for next week!</strong> We’ll be diving into <code>.Rproj</code> files and why they’re essential for reproducible workflows. If you haven’t set one up yet, no worries — we’ll walk through it together next session.</p>
+</div>
+</div>
+<p>Now that we have our Quarto document open, we can start exploring how changes to the file affect the output in real time.</p>
+<p>Remember, there are three parts of a Quarto document:</p>
+<ul>
+<li>The YAML (rhymes with camel) header</li>
+<li>Text</li>
+<li>Code</li>
+</ul>
+</section>
+<section id="yaml-the-control-center" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> YAML: The Control Center</h1>
+<p>Last week we talked about the YAML. The YAML is where you can set the content that will show up on the top of your knitted document, as well as control how your document is rendered. It defines metadata (title, author, date) and controls rendering.</p>
+<p>The YAML is surrounded by three dashes <code>---</code>.</p>
+<p>Here’s a simple example:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my descriptive title"</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Horacio Lopez-Nicora"</span></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"September 15, 2025"</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> html</span></span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">editor</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> visual </span></span>
+<span id="cb1-7"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>But we can make some changes to arguments we pass to our YAML that will adjust how our resulting report looks. For example, the code below will add a table of contents, and number the sections according to the header levels we set.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My document"</span></span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb2-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # set parameters under the html category</span></span>
+<span id="cb2-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # add a table of contents</span></span>
+<span id="cb2-6"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">number-sections</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # incremental numbering of sections</span></span>
+<span id="cb2-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span></span>
+<span id="cb2-8"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>Let’s look at what our options are for rendering to <code>.html</code> <a href="https://quarto.org/docs/output-formats/html-basics.html">here</a>.</p>
+<section id="rendering-to-other-formats" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="rendering-to-other-formats"><span class="header-section-number">2.1</span> Rendering to other formats</h2>
+<p>We’ve been practicing by rendering to a <code>.html</code>file, but you can render your <code>.qmd</code> document to other formats, including PDFs, Microsoft Word, Markdown, and a special one that we will talk about in the coming weeks called Github [or Github Flavored Markdown (GFM)]. <a href="https://github.com/CooperstoneLab/tomato-liver-omics/blob/main/metabolomics/Dzakovich_MouseLiverMetabolomics_20221211_githubdoc.md">Here</a> is an example of code from Jessica’s team that you might push to GitHub. It could also serve as supplementary material for a research paper.</p>
+<p>You can see all the different formats you can render a Quarto document to <a href="https://quarto.org/docs/output-formats/all-formats.html">here</a>.</p>
+</section>
+<section id="themes" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="themes"><span class="header-section-number">2.2</span> Themes</h2>
+<p>You can also change the theming of your document to make it look very pretty. Quarto comes with some complete themes, which we can look at here with <a href="https://bootswatch.com/">Bootswatch</a>. You can see the full list of complete themes <a href="https://quarto.org/docs/output-formats/html-themes.html">here</a>.</p>
+<p>This website for example, uses the theme <code>flatly</code> (and <code>darkly</code> if you are a dark mode afficionado). The Quarto website uses the theme <code>cosmo</code>.</p>
+<p>You can set your theme in your YAML like this:</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"My document"</span></span>
+<span id="cb3-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb3-4"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"> # set parameters under the html category</span></span>
+<span id="cb3-5"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> litera</span></span>
+<span id="cb3-6"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+</section>
+<section id="practice" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="practice"><span class="header-section-number">2.3</span> Practice</h2>
+<ol type="1">
+<li>Try adding a theme to your <code>.qmd</code></li>
+<li>Add a new parameter to your YAML - you can pick one from <a href="https://quarto.org/docs/reference/formats/html.html">here</a> and see how that goes.</li>
+</ol>
+</section>
+</section>
+<section id="text-writing-in-quarto" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Text: Writing in Quarto</h1>
+<p>Unlike an R script (<code>.R</code>), where R by default interprets anything as code (and material that isn’t code needed to be commented out by using <code>#</code>), in an Quarto, the <em>default is text</em> (and code exists only within code chunks or backticks).</p>
+<p>The text portion of the document is written in a language called <a href="https://pandoc.org/MANUAL.html#pandocs-markdown">Markdown</a>. The philosophy of Markdown is that it is easy to both write and read. If you want to learn more about markup languages I’d recommend the this <a href="https://biodash.github.io/codeclub/s02e03_rmarkdown/#i-markdown">brief explanation by Michael Broe from a past Code Club Session</a> and the <a href="https://en.m.wikipedia.org/wiki/Markup_language">Markup language wikipedia page</a>.</p>
+<p>Below I’m compiling some commonly used markdown syntax.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E02_reprod_02/img/syntax.png" class="img-fluid figure-img" style="width:120.0%" alt="A list of the commonly used markdown syntax."></p>
+<figcaption>Figure from <a href="https://www.rstudio.com/wp-content/uploads/2015/03/rmarkdown-reference.pdf?_ga=2.18808953.1342527773.1652110638-1577376121.1638478125">R Markdown Reference Guide</a></figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="code-chunks" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Code Chunks</h1>
+<p>As we learned last week, <strong>code chunks</strong> are sections of your Quarto document where you can run code. They support multiple languages, including R, Python, Julia, and Observable JavaScript, and allow you to integrate code directly into your document for dynamic output. To insert a new code chunk, you can:</p>
+<ol type="1">
+<li>Use the keyboard shortcut <code>Cmd</code> + <code>Option</code> + <code>I</code> (Mac) or <code>Ctrl</code> + <code>Alt</code> + <code>I</code> (Windows).</li>
+<li>Type <code>```{r}</code> to start the chunk and <code>```</code> to end it, placing your code in between.</li>
+<li>Use the “Add Chunk” command from the editor toolbar and select R.</li>
+</ol>
+<p>Code chunks appear as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E02_reprod_02/img/chunk-screenshot.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.</p>
+<ul>
+<li>The gear icon allows you to modify chunk options, which we will discuss in more detail later.</li>
+<li>The triangle with a line below it executes all code chunks that precede the current one.</li>
+<li>The play button runs the current chunk.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you render your Quarto document, the process will execute all the code within it. This means that if your code contains errors or doesn’t function properly, your document <strong>will not be rendered</strong>.</p>
+</div>
+</div>
+<section id="code-chunk-options" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="code-chunk-options"><span class="header-section-number">4.1</span> Code chunk options</h2>
+<p>We can set different options for our code chunks to adjust if/how they are run. Here are some that we can set.</p>
+<ul>
+<li><code>echo: FALSE</code> runs your code chunk, displays output, but does not display code in your final doc (this is useful if you want to show a figure but not the code used to create it)</li>
+<li><code>eval: FALSE</code> does not run your code, but does display it in your final doc</li>
+<li><code>include: FALSE</code> runs your code but does not display the code or its output in your final doc</li>
+<li><code>message: FALSE</code> prevents messages from showing up in your final doc</li>
+<li><code>warning: FALSE</code> prevents earnings from showing up in your final doc</li>
+<li><code>fig.height: X</code> and <code>fig.width: Y</code> will allow you to specify the dimensions of your figures (in inches)</li>
+<li><code>fig.align:</code> can be set to “left”, “right”, or “center”</li>
+<li><code>fig.cap: "Your figure caption"</code> will allow you to set a figure caption</li>
+<li><code>fig.alt: "Your alt text"</code> will allow you to set alt text for screen readers</li>
+<li><code>cache: TRUE</code> will cache results, meaning if you have a chunk that takes a long time to run, if you haven’t changed anything and you knit again, the code won’t run again but access the cache.</li>
+</ul>
+<p>You can find a long list of code chunk options <a href="https://quarto.org/docs/reference/cells/cells-knitr.html#code-output">here</a>.</p>
+<p>We can set the code chunk options 3 ways:</p>
+<ol type="1">
+<li>by using the syntax <code>|#</code> within the chunk, like this:</li>
+</ol>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">{r}</span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: TRUE </span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| warning: FALSE</span></span></code></pre></div>
+<ol start="2" type="1">
+<li>by clicking on the gear icon in the top right corner of a code chunk.</li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E02_reprod_02/img/chunk-screenshot.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<ol start="3" type="1">
+<li>within the <code>{r}</code> of a chunk</li>
+</ol>
+<div class="sourceCode" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">{r, echo <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">TRUE</span>, fig.width <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span>}</span></code></pre></div>
+<p>The options can be very useful to get your document to render exactly how you want it.</p>
+</section>
+<section id="practice-1" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">4.2</span> Practice</h2>
+<ol type="1">
+<li>Try adjusting your code chunk options and observe how they affect the rendering of your document.</li>
+<li>Load the <code>tidyverse</code> package in a code chunk using <code>library(tidyverse)</code>. Notice how much text is printed. Can you adjust your chunk options so that tidyverse loads but the startup messages do <strong>not</strong> appear in your rendered report?</li>
+</ol>
+<details>
+<summary>
+Hint (click here)
+</summary>
+<p>Think about the chunk option that controls whether messages from R packages get printed. It’s the same option you would use if you wanted to silence startup notes or other messages.</p>
+</details>
+</section>
+</section>
+<section id="other-things-you-can-make-with-quarto" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Other things you can make with Quarto</h1>
+<p>We have focused on using Quarto to store and annotate code, and create reports based on that information. But, there is lots more you can do with Quarto, including:</p>
+<ul>
+<li>Websites: we have a <a href="https://osu-codeclub.github.io/#category=website">whole series of Code Club sessions</a> on making a website with Quarto. This website is made with Quarto!</li>
+<li>Presentations: you can make pretty nice looking presentations, here’s a <a href="https://osu-codeclub.github.io/#category=quarto%20presentations">Code Club session on the basics of making presentations</a></li>
+<li><a href="https://quarto.org/docs/books/">Books</a></li>
+<li><a href="https://quarto.org/docs/manuscripts/">Manuscripts</a></li>
+<li><a href="https://quarto.org/docs/dashboards/">Dashboards</a></li>
+<li>and <a href="https://quarto.org/docs/guide/">more</a></li>
+</ul>
+</section>
+<section id="key-takeaways" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Key Takeaways</h1>
+<ul>
+<li>YAML controls metadata, output, and appearance.</li>
+<li>Markdown keeps writing simple and reproducible, but when using the Visual Editor we can work with it much like any familiar word processor.</li>
+<li>Code chunk options give flexibility for analysis and presentation.</li>
+<li>Quarto is not only for documents—you can build slides, websites, and more.</li>
+</ul>
+
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>reproducibility</category>
+  <category>quarto</category>
+  <guid>https://osu-codeclub.github.io/posts/S10E02_reprod_02/</guid>
+  <pubDate>Mon, 15 Sep 2025 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S10E02_reprod_02/img/quarto-selfie.png" medium="image" type="image/png" height="81" width="144"/>
+</item>
+<item>
+  <title>Reproducibility 1: Introduction to Quarto</title>
+  <dc:creator>Horacio Lopez-Nicora</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S10E01_reprod_01/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>Quarto is an open-source scientific and technical publishing system supporting multiple programming languages. It allows seamless integration of code, outputs, and narrative in a single document.</p>
+<p>Quarto documents include all code and data analysis steps, which improves understanding and reproducibility for readers. Reproducibility ensures that analyses can be independently verified, enhancing credibility and transparency.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/Quarto_MultiLanguage.png" class="img-fluid figure-img"></p>
+<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>Why Choose Quarto?</strong>
+<ul>
+<li>Consistent document creation for reports, articles, and documentation.</li>
+<li>Supports multi-format outputs like HTML, PDF, Markdown, etc.</li>
+<li>Facilitates collaborative analysis through version control systems.</li>
+</ul></li>
+<li><strong>Applications of Reproducibility</strong>:
+<ul>
+<li>Essential in academic research for replicating experiments.</li>
+<li>Useful in data science for maintaining project integrity across teams.</li>
+</ul></li>
+</ol>
+</div>
+</div>
+</section>
+<section id="creating-a-quarto-document" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Creating a Quarto Document</h1>
+<p>Quarto (<code>.qmd</code> files) is a versatile document format that enables the integration of narrative text, R code, and the results of code execution into a single document. In RStudio, navigate to <em>File &gt; New File &gt; Quarto Document</em> to create a new document.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/Create_Quarto_Doc.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>Initially, this document will be titled <code>Untitled.qmd</code>. Let’s rename it to something more recognizable for future reference. To do so, go to <em>File &gt; Save As</em>, place this new Quarto document alongside your other course materials, and give it a meaningful name.</p>
+<section id="practice" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="practice"><span class="header-section-number">2.1</span> Practice</h2>
+<ol type="1">
+<li>Start a new R Project.</li>
+<li>Within your R Project, create a new Quarto document and save it.</li>
+</ol>
+</section>
+</section>
+<section id="rendering-your-quarto-document" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Rendering your Quarto document</h1>
+<p>Once you create and save your Quarto document (<code>.qmd</code>), open it in RStudio, and click on <img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render-button.png" width="25" height="20"> Render.</p>
+<p>To render the file and preview the output quickly in the RStudio IDE, simply click the <img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render-button.png" width="25" height="20"> Render button or use the keyboard shortcut (⇧⌘K).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>If you prefer to have the file render automatically every time you save, you can enable the “Render on Save” option located on the editor toolbar. This ensures the preview updates each time you re-render the document. The side-by-side preview feature supports both HTML and PDF outputs.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render-on-save.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>Additionally, more options can be discovered by clicking the gear icon next to the <img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render-button.png" width="25" height="20"> Render button.</p>
+<section id="how-does-it-works" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="how-does-it-works"><span class="header-section-number">3.1</span> How does it works</h2>
+<p>When you render a Quarto document, the process begins with <a href="https://yihui.org/knitr/">knitr</a> executing all the code chunks and generating a new markdown (<code>.md</code>) document that includes both the code and its output. This Markdown file is then processed by <a href="https://pandoc.org">Pandoc</a>, which creates the final, polished format. The <img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/rstudio-render-button.png" width="25" height="20"> Render button automates and organizes these steps, executing them in the correct sequence for you.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><a href="https://quarto.org/docs/get-started/"><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/Quarto_Rendering.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></a></p>
+</figure>
+</div>
+<p>During the rendering process, Quarto creates a new file that includes the selected text, code, and results from the <code>.qmd</code> file. This new file can be formatted as an <a href="https://quarto.org/docs/output-formats/html-basics.html">HTML</a>, <a href="https://quarto.org/docs/output-formats/pdf-basics.html">PDF</a>, <a href="https://quarto.org/docs/output-formats/ms-word.html">MS Word</a> document, <a href="https://quarto.org/docs/presentations/">presentation</a>, <a href="https://quarto.org/docs/websites/">website</a>, <a href="https://quarto.org/docs/books/">book</a>, <a href="https://quarto.org/docs/interactive/">interactive document</a>, or <a href="https://quarto.org/docs/output-formats/all-formats.html">other formats</a>.</p>
+</section>
+<section id="practice-1" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="practice-1"><span class="header-section-number">3.2</span> Practice</h2>
+<ol type="1">
+<li>Render your Quarto document.</li>
+<li>Use the gear icon to select your preferred preview option, such as displaying it in the viewer panel or opening it in a new window, after rendering.</li>
+</ol>
+</section>
+</section>
+<section id="components-of-a-quarto-document" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Components of a Quarto document</h1>
+<p>There are 3 main parts of a Quarto document:</p>
+<ol type="1">
+<li>The YAML (rhymes with camel) header</li>
+<li>Text</li>
+<li>Code</li>
+</ol>
+<section id="yaml-header" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="yaml-header"><span class="header-section-number">4.1</span> YAML Header</h2>
+<p>The YAML (Yet Another Markdown Language, or YAML Ain’t Markup Language) is located at the top of your document and is enclosed by “—” lines.</p>
+<p>YAML is where you can set the content that will appear at the beginning of your compiled document. For instance:</p>
+<ul>
+<li><strong>title</strong>: “Your title here” (make sure it is enclosed in quotes)</li>
+<li><strong>author</strong>: “The author’s name” (again, in quotes)</li>
+<li><strong>date</strong>: The date you want to display at the top of your document, enclosed in quotes. If you wish to learn more about other options, see <a href="https://quarto.org/docs/reference/dates.html" class="uri">https://quarto.org/docs/reference/dates.html</a>.</li>
+<li><strong>output</strong>: Specifies the format of the compiled document. For this class, I recommend using <code>html_document</code>, as it offers the richest format. Your output will be a <code>.html</code> file, which you can save or share.</li>
+</ul>
+<p>Here’s a simple example:</p>
+<div class="sourceCode" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb1-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb1-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my descriptive title"</span></span>
+<span id="cb1-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Horacio Lopez-Nicora"</span></span>
+<span id="cb1-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"September 08, 2025"</span></span>
+<span id="cb1-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> html</span></span>
+<span id="cb1-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">editor</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> visual </span></span>
+<span id="cb1-7"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>Quarto supports various format types, such as HTML, PDF, and Word documents. In this course, we will focus exclusively on HTML. The example below demonstrates how you can modify the YAML to include a table of contents (<code>toc</code>). The YAML provided below highlights several options available for HTML output.</p>
+<div class="sourceCode" id="cb2" style="background: #f1f3f5;"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span>
+<span id="cb2-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">title</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"This is my descriptive title"</span></span>
+<span id="cb2-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">author</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Horacio Lopez-Nicora"</span></span>
+<span id="cb2-4"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> today</span></span>
+<span id="cb2-5"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">date-format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> long</span></span>
+<span id="cb2-6"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">format</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb2-7"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">  </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">html</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span></span>
+<span id="cb2-8"><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">    </span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">toc</span><span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">:</span><span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;"> </span><span class="ch" style="color: #20794D;
+background-color: null;
+font-style: inherit;">true</span></span>
+<span id="cb2-9"><span class="pp" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">---</span></span></code></pre></div>
+<p>A full list of HTML format options can be found at the <a href="https://quarto.org/docs/reference/formats/html.html">HTML Options</a> page on the quarto website.</p>
+</section>
+<section id="text" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="text"><span class="header-section-number">4.2</span> Text</h2>
+<p>By default, a Quarto document opens in <strong>Visual Editor</strong> mode. This user-friendly visual interface resembles writing in programs like Word or Google Docs, offering options for clickable buttons such as Bold (or keyboard shortcut ⌘B), Italicize (or keyboard shortcut ⌘I), and adding bulleted lists, among others.</p>
+<p>Alternatively, switching to <strong>Source Editor</strong> mode provides a text-based editor where these buttons are not available. In this mode, familiarity with Markdown syntax is necessary.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Markdown Syntax:</strong> see cheatsheet here:<a href="https://www.markdownguide.org/cheat-sheet/" class="uri">https://www.markdownguide.org/cheat-sheet/</a>) or in RStudio <em>Help &gt; Markdown Quick Reference</em>.</p>
+</div>
+</div>
+</section>
+<section id="code" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="code"><span class="header-section-number">4.3</span> Code</h2>
+<p>Code chunks are sections of your Quarto document designated for executing code. To insert a new code chunk, you can:</p>
+<ol type="1">
+<li>Use the keyboard shortcut <code>Cmd</code> + <code>Option</code> + <code>I</code> (Mac) or <code>Ctrl</code> + <code>Alt</code> + <code>I</code> (Windows).</li>
+<li>Type <code>```{r}</code> to start the chunk and <code>```</code> to end it, placing your code in between.</li>
+<li>Use the “Add Chunk” command from the editor toolbar and select R.</li>
+</ol>
+<p>Code chunks appear as follows:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/chunk_screenshot.png" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
+</figure>
+</div>
+<p>You place your code on the empty line within the chunk. You can include multiple lines of code in a single chunk; however, if you find yourself needing to scroll through the chunk, it might be too lengthy.</p>
+<ul>
+<li>The gear icon allows you to modify chunk options, which we will discuss in more detail later.</li>
+<li>The triangle with a line below it executes all code chunks that precede the current one.</li>
+<li>The play button runs the current chunk.</li>
+</ul>
+<p>You can also include comments within a code chunk by using the # symbol to comment them out.</p>
+<div class="sourceCode" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># A very interesting comment</span></span>
+<span id="cb3-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">Super_Code</span>()</span></code></pre></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you render your Quarto document, the process will execute all the code within it. This means that if your code contains errors or doesn’t function properly, your document <strong>will not be rendered</strong>.</p>
+</div>
+</div>
+<p>In Quarto, you can use inline code to embed code directly within your document’s text. To apply this syntax, simply enclose the expression in backticks. For example:</p>
+<p>The sum of 6 and 6 is 12. In this case, <code>12</code> was generated with the following inline code <code>`r 6+6`</code>.</p>
+<section id="enhancing-your-code-chunks-with-options" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="enhancing-your-code-chunks-with-options"><span class="header-section-number">4.3.1</span> Enhancing Your Code Chunks with Options</h3>
+<p>You can enhance your code chunks by adding options using <code>#|</code>. This provides R with further instructions on executing your code and compiling your document. <a href="https://quarto.org/docs/reference/cells/cells-knitr.html#code-output">HERE</a> are some common examples.</p>
+<div class="sourceCode" id="cb4" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1">{r}</span>
+<span id="cb4-2"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| eval: FALSE</span></span>
+<span id="cb4-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| echo: TRUE</span></span>
+<span id="cb4-4"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">#| code-fold: TRUE</span></span>
+<span id="cb4-5"></span>
+<span id="cb4-6"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span></span></code></pre></div>
+<p>This occurs after the code chunk is rendered.</p>
+<div class="cell" data-layout-align="center">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">6</span></span></code></pre></div>
+</details>
+</div>
+</section>
+</section>
+<section id="practice-2" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="practice-2"><span class="header-section-number">4.4</span> Practice</h2>
+<p>Now, let’s edit our Quarto document.</p>
+<ol type="1">
+<li>In your Quarto document’s YAML section, include a subtitle and specify a date format. Additionally, enable a table of contents for improved navigation.</li>
+<li>Make use of the Visual editor to draft text. Regularly switch between the visual and source editors to familiarize yourself with <a href="https://rmarkdown.rstudio.com/lesson-8.html">RMarkdown</a>.</li>
+<li>Integrate code chunks while configuring them with the following options: execute the code but hide the code itself in the output.</li>
+</ol>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a> ]]></description>
+  <category>reproducibility</category>
+  <category>quarto</category>
+  <guid>https://osu-codeclub.github.io/posts/S10E01_reprod_01/</guid>
+  <pubDate>Mon, 08 Sep 2025 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S10E01_reprod_01/img/Quarto.png" medium="image" type="image/png" height="81" width="144"/>
 </item>
 </channel>
 </rss>
