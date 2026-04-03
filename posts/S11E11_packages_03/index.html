@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.40">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Neel Agarwal">
+<meta name="dcterms.date" content="2026-04-20">
+
+<title>Building Your First R Package: Day 3 – OSU Code Club</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-57476271c5f0467c372e20ff5d25630e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-cd03ec2eb3d93126c40b3547cc84a9a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous sessions</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-more-resources" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">More resources</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-more-resources">    
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Computer setup (installations) for Code Club</span></a>
+  </li>  
+        <li><hr class="dropdown-divider"></li>
+        <li>
+    <a class="dropdown-item" href="../../pages/other.html">
+ <span class="dropdown-text">Related resources and activities</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-feb-2026/">
+ <span class="dropdown-text">Material of an R for beginners workshop (Feb ’26)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://forms.gle/eYkMvmJShrcANUrt5"> 
+<span class="menu-text">Sign up!</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <div class="dropdown">
+      <a href="" title="" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label=""><i class="bi bi-github"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io">
+            Source Code
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item quarto-navbar-tools-item" href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new">
+            Report an Issue
+            </a>
+          </li>
+      </ul>
+    </div>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-from-local-to-global" id="toc-introduction-from-local-to-global" class="nav-link active" data-scroll-target="#introduction-from-local-to-global"><span class="header-section-number">0.1</span> Introduction: From Local to Global</a></li>
+  <li><a href="#part-1-tying-up-loose-ends" id="toc-part-1-tying-up-loose-ends" class="nav-link" data-scroll-target="#part-1-tying-up-loose-ends"><span class="header-section-number">1</span> Part 1: Tying Up Loose Ends</a>
+  <ul class="collapse">
+  <li><a href="#the-final-check" id="toc-the-final-check" class="nav-link" data-scroll-target="#the-final-check"><span class="header-section-number">1.1</span> The Final Check</a></li>
+  </ul></li>
+  <li><a href="#part-2-publishing-to-github-from-scratch" id="toc-part-2-publishing-to-github-from-scratch" class="nav-link" data-scroll-target="#part-2-publishing-to-github-from-scratch"><span class="header-section-number">2</span> Part 2: Publishing to GitHub (From Scratch)</a>
+  <ul class="collapse">
+  <li><a href="#step-1-version-control-with-git" id="toc-step-1-version-control-with-git" class="nav-link" data-scroll-target="#step-1-version-control-with-git"><span class="header-section-number">2.1</span> Step 1: Version Control with Git</a></li>
+  <li><a href="#step-2-authentication-the-tricky-part" id="toc-step-2-authentication-the-tricky-part" class="nav-link" data-scroll-target="#step-2-authentication-the-tricky-part"><span class="header-section-number">2.2</span> Step 2: Authentication (The Tricky Part!)</a></li>
+  <li><a href="#step-3-push-to-github" id="toc-step-3-push-to-github" class="nav-link" data-scroll-target="#step-3-push-to-github"><span class="header-section-number">2.3</span> Step 3: Push to GitHub</a></li>
+  </ul></li>
+  <li><a href="#part-3-publishing-to-cran" id="toc-part-3-publishing-to-cran" class="nav-link" data-scroll-target="#part-3-publishing-to-cran"><span class="header-section-number">3</span> Part 3: Publishing to CRAN</a>
+  <ul class="collapse">
+  <li><a href="#step-1-cross-platform-testing" id="toc-step-1-cross-platform-testing" class="nav-link" data-scroll-target="#step-1-cross-platform-testing"><span class="header-section-number">3.1</span> Step 1: Cross-Platform Testing</a></li>
+  <li><a href="#step-2-the-final-submission" id="toc-step-2-the-final-submission" class="nav-link" data-scroll-target="#step-2-the-final-submission"><span class="header-section-number">3.2</span> Step 2: The Final Submission</a></li>
+  </ul></li>
+  <li><a href="#part-4-practice-problems-troubleshooting" id="toc-part-4-practice-problems-troubleshooting" class="nav-link" data-scroll-target="#part-4-practice-problems-troubleshooting"><span class="header-section-number">4</span> Part 4: Practice Problems &amp; Troubleshooting</a>
+  <ul class="collapse">
+  <li><a href="#problem-1-the-description-file-dependency-error" id="toc-problem-1-the-description-file-dependency-error" class="nav-link" data-scroll-target="#problem-1-the-description-file-dependency-error"><span class="header-section-number">4.1</span> Problem 1: The DESCRIPTION File Dependency Error</a></li>
+  <li><a href="#problem-2-the-undocumented-argument-warning" id="toc-problem-2-the-undocumented-argument-warning" class="nav-link" data-scroll-target="#problem-2-the-undocumented-argument-warning"><span class="header-section-number">4.2</span> Problem 2: The “Undocumented Argument” Warning</a></li>
+  <li><a href="#problem-3-the-cran-rejection" id="toc-problem-3-the-cran-rejection" class="nav-link" data-scroll-target="#problem-3-the-cran-rejection"><span class="header-section-number">4.3</span> Problem 3: The CRAN Rejection</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E11_packages_03/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Building Your First R Package: Day 3</h1>
+<p class="subtitle lead">In our final session, we will wrap up our package development and learn how to share our tools with the world by publishing to GitHub and to CRAN.</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">R packages</div>
+    <div class="quarto-category">GitHub</div>
+    <div class="quarto-category">CRAN</div>
+    <div class="quarto-category">publishing</div>
+    <div class="quarto-category">open source</div>
+  </div>
+  </div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Neel Agarwal </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">April 20, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction-from-local-to-global" class="level2" data-number="0.1">
+<h2 data-number="0.1" class="anchored" data-anchor-id="introduction-from-local-to-global"><span class="header-section-number">0.1</span> Introduction: From Local to Global</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/package-box.png" class="img-fluid figure-img" style="width:100.0%" alt="Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it."></p>
+<figcaption>Packaging your code saves future you a lot of time.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Welcome to Day 3! Over the last two days, we transitioned from script-writers to package-developers. We built the <code>vizwizard</code> package, packed it with custom <code>ggplot2</code> and <code>gt</code> wrappers, and learned how to bundle our own custom datasets.</p>
+<p>To reiterate, effective package design can be summarized in the below diagram/flowchart. Whether you’re leading a classroom instruction and want to create a package for students to share datasets, functions, etc. or spreading your love for medical analysis and alleviating headaches for researchers/physicians, the below chart is helpful.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/rflow.png" class="img-fluid figure-img" style="width:100.0%" alt="Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it."></p>
+<figcaption>Packaging your code saves future you a lot of time.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>Today is all about deployment. An R package is incredibly useful for your own reproducibility, but its true power is unlocked when you share it.</p>
+<p>Today we will cover:</p>
+<ol type="1">
+<li><strong>Tying Up Loose Ends:</strong> Making sure our package is completely finished and error-free.</li>
+<li><strong>Publishing to GitHub (From Scratch):</strong> The modern, fast standard for sharing packages with colleagues, including how to authenticate your account.</li>
+<li><strong>Publishing to CRAN:</strong> Understanding the strict rules and rigorous checks required for the official R repository.</li>
+<li><strong>Troubleshooting:</strong> Solving common deployment problems.</li>
+</ol>
+<p>Let’s load our tools one last time!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(devtools)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Loading required package: usethis</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(usethis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="part-1-tying-up-loose-ends" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Part 1: Tying Up Loose Ends</h1>
+<p>Before we can publish anything, we need to ensure our house is in order.</p>
+<section id="the-final-check" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="the-final-check"><span class="header-section-number">1.1</span> The Final Check</h2>
+<p>On Day 2, we learned about the ultimate package spellcheck: <code>devtools::check()</code>. This function is the gatekeeper for publishing.</p>
+<p>Run it now in your console:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Look at the bottom of your console output. Your goal before proceeding is 0 Errors, 0 Warnings, and 0 Notes!</p>
+<p>Errors: Your package is fundamentally broken. Must be fixed.</p>
+<p>Warnings: Your package works, but you did something risky. Must be fixed if you want to go to CRAN.</p>
+<p>Notes: Minor formatting suggestions. CRAN reviewers might let a Note slide, but it’s best practice to resolve them.</p>
+</section>
+</section>
+<section id="part-2-publishing-to-github-from-scratch" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Part 2: Publishing to GitHub (From Scratch)</h1>
+<p>CRAN is great, but it has extremely strict rules. If you want to share a package with your lab mates immediately, or if you are hosting internal clinical code that shouldn’t be public, GitHub is the way to go.</p>
+<section id="step-1-version-control-with-git" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="step-1-version-control-with-git"><span class="header-section-number">2.1</span> Step 1: Version Control with Git</h2>
+<p>Your project needs to be a Git repository before it can go to GitHub. The usethis package makes this a one-liner. Run this in your console:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_git</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>RStudio will ask if it is okay to commit your files and restart. Select “Yes” to both.</p>
+</section>
+<section id="step-2-authentication-the-tricky-part" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="step-2-authentication-the-tricky-part"><span class="header-section-number">2.2</span> Step 2: Authentication (The Tricky Part!)</h2>
+<p>To send code from your local computer to GitHub, GitHub needs to know it’s really you. We do this using a Personal Access Token.</p>
+<ol type="1">
+<li>Create the Token: Run this command. It will open a GitHub webpage in your browser.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">create_github_token</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li><p>Scroll down on the webpage and click “Generate Token”.</p></li>
+<li><p>Copy the token (it looks like a long string of random letters and numbers). Do not lose this!</p></li>
+<li><p>Give the Token to R: Go back to RStudio and run:</p></li>
+<li><p>Paste your token into the console when prompted and hit Enter.</p></li>
+</ol>
+</section>
+<section id="step-3-push-to-github" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="step-3-push-to-github"><span class="header-section-number">2.3</span> Step 3: Push to GitHub</h2>
+<p>Now that RStudio and GitHub are linked, you can push your package to the cloud!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_github</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>How users install your GitHub package Once your package is on GitHub, you can tell your colleagues to run this code to download and install your tools:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># They only need to run this once</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"remotes"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"your-username/vizwizard"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="part-3-publishing-to-cran" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Part 3: Publishing to CRAN</h1>
+<p>The Comprehensive R Archive Network (CRAN) is the official repository for R packages. Publishing here means your package can be installed with a simple <code>install.packages("vizwizard")</code>.</p>
+<p>Understanding CRAN Rules and Requirements</p>
+<p>CRAN is notoriously strict. They are protecting the entire R ecosystem from malicious code, broken dependencies, and bloated file sizes. Here is what CRAN strictly requires:</p>
+<p>Zero Errors or Warnings: Your R CMD check must pass cleanly on Windows, Mac, Linux, and Solaris.</p>
+<p>File Size Limits: Your package must generally be under 5MB. If you include massive datasets, you will be rejected.</p>
+<p>Impeccable Documentation: Every single exported function must have a complete help file with working examples. If an example throws an error, the package is rejected.</p>
+<p>Standard Licenses: You must clearly declare an open-source license (e.g., MIT or GPL-3) in your DESCRIPTION file.</p>
+<p>No “Hidden” Changes: Your package cannot modify the user’s global .Rprofile, secretly install other software, or change their working directory without permission.</p>
+<section id="step-1-cross-platform-testing" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="step-1-cross-platform-testing"><span class="header-section-number">3.1</span> Step 1: Cross-Platform Testing</h2>
+<p>Your computer is only one operating system. R has a built-in “inspector” that checks your package, but CRAN requires your package to work on all operating systems. devtools provides ways to send your package to external servers to be tested.</p>
+<p>Run these and wait for the email results:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Test on a CRAN-like Windows server</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check_win_devel</span>()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Test on a CRAN-like Mac server</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">check_mac_release</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="step-2-the-final-submission" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="step-2-the-final-submission"><span class="header-section-number">3.2</span> Step 2: The Final Submission</h2>
+<p>If your local <code>devtools::check()</code> is totally clean, and your cross-platform checks came back green, you are ready to submit!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">release</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>R will ask you a series of questions to double-check that you are absolutely ready. Once you say yes, it bundles your package and emails it to the CRAN team. You will usually hear back from a volunteer reviewer within a few days.</p>
+</section>
+</section>
+<section id="part-4-practice-problems-troubleshooting" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Part 4: Practice Problems &amp; Troubleshooting</h1>
+<p>Package development rarely goes perfectly on the first try. Let’s walk through some common problems.</p>
+<section id="problem-1-the-description-file-dependency-error" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="problem-1-the-description-file-dependency-error"><span class="header-section-number">4.1</span> Problem 1: The DESCRIPTION File Dependency Error</h2>
+<p>Scenario: You ran <code>devtools::check()</code> and got the following Error:</p>
+<p>Error: namespace ‘ggplot2’ is not available and has been NOTED.</p>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>Why it happened: You wrote a function that relies on ggplot2, but you forgot to tell your package that it requires it! R doesn’t know to load it.</p>
+<p>The Fix: As we learned on Day 1, never type package names into the DESCRIPTION file manually. Run this in your console to automatically add it:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_package</span>(<span class="st">"ggplot2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</details>
+<details>
+<summary>
+Bonus: What if the problem was missing <code>dplyr</code> or <code>gt</code>?
+</summary>
+The fix is exactly the same! Just replace <code>ggplot2</code> with the missing package name.
+</details>
+</section>
+<section id="problem-2-the-undocumented-argument-warning" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="problem-2-the-undocumented-argument-warning"><span class="header-section-number">4.2</span> Problem 2: The “Undocumented Argument” Warning</h2>
+<p>Scenario: You ran <code>devtools::check()</code> and received a Warning:</p>
+<p>Warning: Undocumented arguments in documentation object ‘pub_scatter’: ‘color_var’</p>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>Why it happened: You added a new argument (color_var) to your custom scatterplot function, but you forgot to write a roxygen2 comment for it. CRAN will reject this immediately because the help file doesn’t match the function.</p>
+<p>The Fix:</p>
+<p>Open your R/plots.R script.</p>
+<p>Find the pub_scatter function.</p>
+<p>Add the missing tag above the function: #’ <span class="citation" data-cites="param">@param</span> color_var The variable to color points by (unquoted)</p>
+<p>Run <code>devtools::document()</code> to update the manual.</p>
+<p>Re-run <code>devtools::check()</code>.</p>
+</details>
+</section>
+<section id="problem-3-the-cran-rejection" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="problem-3-the-cran-rejection"><span class="header-section-number">4.3</span> Problem 3: The CRAN Rejection</h2>
+<p>Scenario: You submitted to CRAN, but two days later you get an email from a reviewer saying:</p>
+<p>“Please do not use T and F in your code. Spell out TRUE and FALSE. Please fix and resubmit.”</p>
+<details>
+<summary>
+Click for the solution
+</summary>
+<p>Why it happened: In R, T and F are technically variables that can be overwritten by the user (e.g., someone could run T &lt;- FALSE in their console and break everything). CRAN prohibits the use of T and F abbreviations in package code.</p>
+<p>The Fix:</p>
+<p>Use Ctrl+F (or Cmd+F) to search your entire project for instances of T and F.</p>
+<p>Change them to TRUE and FALSE.</p>
+<p>Open your DESCRIPTION file and bump your version number up (e.g., change 0.1.0 to 0.1.1).</p>
+<p>Re-run <code>devtools::check()</code> to ensure everything is perfect.</p>
+<p>Submit again using <code>devtools::release()</code>.</p>
+</details>
+<p>Conclusion: You Did It! Congratulations! Over the last three days, you have conquered one of the steepest learning curves in the R ecosystem. You’ve learned how to harness usethis to generate boilerplate code , use tidy evaluation ({{ }}) for custom functions , bundle data, and ultimately share your work with the world. +2</p>
+<p>Whether you keep your packages local, put them on GitHub, or send them to CRAN, you are now an R Package Developer. Happy coding!</p>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S11E11_packages_03/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
