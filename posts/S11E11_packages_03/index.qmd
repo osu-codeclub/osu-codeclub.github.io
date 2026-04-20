@@ -8,7 +8,7 @@ categories: [R packages, GitHub, CRAN, publishing, open source]
 title-block-banner: false
 image: img/package-box.png
 alttext: "Illustration of an open cardboard box with datasets and advanced plots flying out."
-draft: true
+draft: false
 ---
 
 ------------------------------------------------------------------------
@@ -28,10 +28,6 @@ To reiterate, effective package design can be summarized in the below diagram/fl
 ```{r, fig.alt = "Illustration of an open cardboard box with the R logo on it, with plots and tables flying out of it.", fig.cap= "Packaging your code saves future you a lot of time.", out.width = "100%", fig.align = "center", echo = FALSE}
 knitr::include_graphics("img/rflow.png")
 ```
-
-
-
-
 
 
 Today is all about deployment. An R package is incredibly useful for your own reproducibility, but its true power is unlocked when you share it. 
@@ -70,6 +66,13 @@ Errors: Your package is fundamentally broken. Must be fixed.
 Warnings: Your package works, but you did something risky. Must be fixed if you want to go to CRAN.
 
 Notes: Minor formatting suggestions. CRAN reviewers might let a Note slide, but it's best practice to resolve them.
+
+::: {.callout-warning}
+
+A common error from previous weeks surrounds dependency errors - when a package is needed but not called/referenced. If this occurs, ensure that there are no function calls in your R scripts and that every script declares 1 function! See the previous trouble shooting tip from other sessions:
+
+Remember, while you can/should put the `pubscatter()` command in the same file as the `function()` for evaluation purposes (to test if your code works), remember to delete this line before you build/compile/send your package out for others to use. 
+:::
 
 # Part 2: Publishing to GitHub (From Scratch)
 CRAN is great, but it has extremely strict rules. If you want to share a package with your lab mates immediately, or if you are hosting internal clinical code that shouldn't be public, GitHub is the way to go.
