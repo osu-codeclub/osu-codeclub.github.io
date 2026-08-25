@@ -9,8 +9,1214 @@
 <link>https://osu-codeclub.github.io/</link>
 <atom:link href="https://osu-codeclub.github.io/index.xml" rel="self" type="application/rss+xml"/>
 <description></description>
-<generator>quarto-1.9.37</generator>
-<lastBuildDate>Mon, 20 Apr 2026 04:00:00 GMT</lastBuildDate>
+<generator>quarto-1.10.18</generator>
+<lastBuildDate>Thu, 27 Aug 2026 04:00:00 GMT</lastBuildDate>
+<item>
+  <title>Getting Started with Positron</title>
+  <dc:creator>Jelmer Poelstra</dc:creator>
+  <link>https://osu-codeclub.github.io/posts/S12E01_positron_01/</link>
+  <description><![CDATA[ 
+
+
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="what-well-cover" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</h3>
+<p>Every Code Club session so far has used <strong>RStudio</strong>. Today we’ll spend the session in a different program: <strong><a href="https://positron.posit.co/">Positron</a></strong>, a newer data science IDE from Posit, the same company that makes RStudio.</p>
+<p>By the end of the session, you should be able to open your own work in Positron, find your way around, and decide for yourself whether you want to keep using it. Specifically, we’ll cover:</p>
+<ul>
+<li><strong>Installing Positron and opening a folder</strong></li>
+<li><strong>Touring the interface</strong></li>
+<li><strong>Exploring data</strong> — the Data Explorer, Variables pane, and Plots pane</li>
+<li><strong>Customizing Positron</strong> — keyboard shortcuts, settings, and extensions</li>
+</ul>
+</section>
+<section id="why-is-there-a-new-ide" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="why-is-there-a-new-ide"><span class="header-section-number">1.2</span> Why is there a new IDE?</h3>
+<p>Basically, Posit wanted better support for other programming languages, particularly Python, alongside R. This turned out to be harder with RStudio than starting fresh, so they created a new IDE: Positron.</p>
+<p>Positron is built on <a href="https://github.com/microsoft/vscode">Code OSS</a>, the open-source version of the popular general-purpose code IDE called Visual Studio Code (<strong>VS Code</strong>). It adds data science features that RStudio has but VS Code does not, such as a Variables pane, a Plots pane, and a Data Explorer.</p>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Discussion</h4>
+<ul>
+<li>Which languages do you use besides R — Python, bash, SQL, none?</li>
+<li>Has anyone tried Positron already? Did you stick with it?</li>
+<li>Do you consider yourself familiar with the basics of RStudio?</li>
+</ul>
+</section>
+</section>
+<section id="why-should-you-consider-switching" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="why-should-you-consider-switching"><span class="header-section-number">1.3</span> Why should you consider switching?</h3>
+<p>If you use Python alongside R, or are already familiar with VS Code, Positron is a natural choice and I’d strongly recommend switching.</p>
+<p>If you use R only, you may not need to switch, but should still consider it, because:</p>
+<ul>
+<li><p><strong>New features</strong>: While Posit has committed to maintaining and updating RStudio, major new features are now going to Positron first. And some features may never make it to RStudio, because Positron is more adaptable.</p></li>
+<li><p><strong>AI support</strong>: This is much more flexible in Positron, where you can connect to different model providers and subscriptions, and even use Claude Code. In RStudio, you can only use AI via a Posit AI subscription. We’ll demonstrate using AI assistance in Positron in the next session!</p></li>
+</ul>
+<p>And two more minor points:</p>
+<ul>
+<li><p><strong>Data Explorer</strong>: Positron’s Data Explorer can open data files (CSV, Excel, etc.) directly, without having to load them in R at all.</p></li>
+<li><p><strong>Remote connections</strong>: A niche feature, but it was important to me: Positron can be connected to the Ohio Supercomputer Center and any other remote server. This isn’t possible with RStudio and while you can use RStudio directly at OSC through OSC OnDemand, this has its downsides. (Happy to expand on this for any OSC users!)</p></li>
+</ul>
+</section>
+<section id="before-we-start" class="level3" data-number="1.4">
+<h3 data-number="1.4" class="anchored" data-anchor-id="before-we-start"><span class="header-section-number">1.4</span> Before we start</h3>
+<p>If you haven’t done so already, please:</p>
+<ol type="1">
+<li><p><strong>Install Positron</strong>: download the appropriate installer from the <a href="https://positron.posit.co/download.html" target="_blank">download page</a>, and run it. There are installers for Windows, macOS, and Linux.</p></li>
+<li><p><strong>Make sure you have a recent R</strong> (4.4.0 or higher) installed; Positron does not come with its own copy of R.</p></li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Using an OSU-managed computer and have no admin rights?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You should still be able to install Positron, just do so at the user level rather than system-wide.</p>
+<p>On a Mac, this involves dragging the Positron app into your <strong>User</strong> Applications folder, <code>/Users/&lt;username&gt;/Applications</code> (i.e.&nbsp;this Applications folder is in the same parent folder as your Documents, Downloads, and Desktop folder).</p>
+<p>On Windows, the Positron installer has a <strong>“User install”</strong> option. Look for a checkbox or dropdown labeled <strong>“Install for me only”</strong> (vs.&nbsp;“for all users”) during setup — that keeps the install in your user profile without needing admin rights.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="getting-started" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">2</span> Getting started</h2>
+<p>Go ahead and start Positron! It should look something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/positron-whole.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%" alt="Screenshot of the Positron IDE, with the Editor, Console, and various panes"></p>
+</figure>
+</div>
+<section id="opening-a-folder-replaces-rstudio-projects" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects!)</h3>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p>When you first start Positron, you should see something like what’s shown in the screenshot on the right, prompting you to <strong>open a folder</strong>.</p>
+<p>“Opening a folder” is Positron’s <strong>equivalent of opening an RStudio Project</strong>. The idea is the same: a folder is a self-contained workspace, and opening it sets your working directory and gives you a fresh R session.</p>
+<p>But instead of requiring the special <code>.Rproj</code> file that is created when you make an RStudio Project, Positron simply <strong>treats any folder you open as a project</strong>.</p>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Let’s create and open a new folder for today’s session:</p>
+</div><div class="column" style="width:55%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/open-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Positron welcome screen, with a button to open a folder"></p>
+</figure>
+</div>
+</div>
+</div>
+<ol type="1">
+<li><p>Create a new folder on your computer. You can create it in any way, such as with your File Explorer / Finder.</p>
+<p>I would suggest putting this folder within a folder for Code Club, for example: <code>Documents</code> &gt; <code>codeclub</code> &gt; <code>positron</code> (or put another way: <code>~/Documents/codeclub/positron</code>).</p></li>
+<li><p>Open this folder in Positron by clicking the <strong>Open Folder</strong> button shown above<sup>1</sup>.</p></li>
+<li><p>Positron will reload and ask whether you want to trust the folder. Click <strong>Yes, I trust the authors</strong> and optionally check the box above it.</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/trust.png" class="img-fluid figure-img" style="width:70.0%" alt="Positron dialog asking whether to trust the folder you just opened"></p>
+<figcaption>The dialog for trusting a folder.</figcaption>
+</figure>
+</div>
+<p><strong>Why are Projects or open folders needed?</strong> These encourage good practices:</p>
+<ul>
+<li>Keep each research project in its own self-contained folder</li>
+<li>Use paths <em>relative</em> to the folder root, not absolute paths</li>
+<li>Avoid using <code>setwd()</code></li>
+</ul>
+<p>They also make a lot of Positron’s features work better, such as the Explorer, Search, and version control support.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>More on RStudio Projects vs.&nbsp;Positron folders
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you open a folder that already contains an <code>.Rproj</code> file, Positron simply ignores the file. So a folder can work as both an RStudio Project and a Positron workspace, which is perhaps handy while you’re trying Positron out.</p>
+<p>The good thing about Positron’s mechanism is that you’re practically forced to use it, whereas in RStudio using Projects is optional and easy to skip or not know about.</p>
+</div>
+</div>
+</section>
+<section id="starting-an-r-session" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="starting-an-r-session"><span class="header-section-number">2.2</span> Starting an R session</h3>
+<div class="columns">
+<div class="column" style="width:60%;">
+<p>Near the <strong>top-right corner</strong> of the Positron window is the so-called <strong>interpreter picker</strong>, which lets you choose which installation of R (or Python) to use for your session.</p>
+<p>If Positron found your R installation, it may have started a session already — then it would look like something on the right (with the R version number corresponding to what you have installed).</p>
+</div><div class="column" style="width:40%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/interpreter.png" class="img-fluid figure-img" style="width:90.0%" alt="Screenshot of the Positron interpreter picker"></p>
+<figcaption>The interpreter picker.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>If not, click the picker</strong>, and choose your version of R (you may have to click <strong>New Console Session</strong> before you see the options).</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/interpreter-pick.png" class="img-fluid figure-img" style="width:80.0%" alt="Screenshot of the Positron interpreter picker with options"></p>
+<figcaption>The dialog for selecting an interpreter after you click the picker.</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>More on R and Python sessions in Positron
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The picker lists <em>every</em> interpreter Positron can find, which could include several versions of R and Python.</p>
+<p>Two nice features of Positron:</p>
+<ul>
+<li>Switching between R versions is a single click here, which is considerably easier than in RStudio.</li>
+<li>You can also have several sessions running at once. Say, an R session and a Python session, or two R sessions on different R versions.</li>
+</ul>
+<p>On the other hand, if you’re an R user only and have no need to switch between different R versions, you might prefer the simplicity of RStudio’s approach.</p>
+</div>
+</div>
+<p>Once a session is running, the R <strong>Console</strong> works just like in RStudio. Try it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span> <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 2</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">head</span>(iris)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Sepal.Length Sepal.Width Petal.Length Petal.Width Species
+1          5.1         3.5          1.4         0.2  setosa
+2          4.9         3.0          1.4         0.2  setosa
+3          4.7         3.2          1.3         0.2  setosa
+4          4.6         3.1          1.5         0.2  setosa
+5          5.0         3.6          1.4         0.2  setosa
+6          5.4         3.9          1.7         0.4  setosa</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/console.png" class="img-fluid figure-img" style="width:90.0%" alt="Screenshot of the Positron console, showing a simple calculation and the head of the iris dataset"></p>
+<figcaption>The Positron console.</figcaption>
+</figure>
+</div>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise</h4>
+<hr style="height:1pt; visibility:hidden;">
+<p><strong>A) Confirm your working directory</strong></p>
+<p>Confirm that opening a folder really did set your working directory: run <code>getwd()</code> and check that the path matches the folder you opened.</p>
+<p><strong>B) Try running two sessions</strong></p>
+<p>Start a <em>second</em> R session from the interpreter picker (click the picker, then <strong>New Console Session</strong>). You likely only have a single R version installed, and can pick the same version for the second session.</p>
+<p>You should now have two Console sessions, and you can see this as shown in the screenshot:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/two-sessions.png" class="img-fluid figure-img" style="width:80.0%" alt="Screenshot of Positron with two console sessions"></p>
+<figcaption>Two console sessions in Positron: R 4.6.0 is shown twice, and each of these is a session.</figcaption>
+</figure>
+</div>
+<p>Click on the second (bottom) session, and run:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1">x <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span></span></code></pre></div></div>
+</div>
+<p>Then switch back to the first session, and run:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1">x</span></code></pre></div></div>
+<div class="cell-output cell-output-error">
+<pre><code>Error:
+! object 'x' not found</code></pre>
+</div>
+</div>
+<p>If you get the above error, that means the two sessions are independent: objects created in one session do not exist in the other.</p>
+</section>
+</section>
+<section id="packages-and-a-script" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="packages-and-a-script"><span class="header-section-number">2.3</span> Packages and a script</h3>
+<p>We’ll use the <code>flights</code> dataset from the <strong>nycflights13</strong> package: every flight that departed New York City in 2013. I picked a relatively large dataset, so we can see some of the nice features of the Data Explorer later.</p>
+<p>First, let’s install the packages we need:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tidyverse"</span>)</span>
+<span id="cb8-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">install.packages</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"nycflights13"</span>)</span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Already have these packages installed?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you already have them or think you do, you can skip the installation step and try running the <code>library()</code> calls below directly. Alternatively, it won’t hurt to run the <code>install.packages()</code> calls again — R will simply check that you have the latest version and skip the installation if you do.</p>
+</div>
+</div>
+<p>Now, let’s <strong>create a new R script</strong>:</p>
+<ul>
+<li><p>This can be done in several ways, but here is one: Click <code>File</code> (or the “New” button) &gt; <code>New File...</code>, then select “R File”.</p></li>
+<li><p>Save it right away (<code>File</code> &gt; <code>Save</code> or <code>Save As</code>, or <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>S</kbd>) in your current folder as <code>explore.R</code>.</p></li>
+</ul>
+<p>I recommend that you <strong>add all the code below to this script</strong>, and run it from the script (instead of typing it into the console).</p>
+<p>Load the two packages we’ll use:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb9-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(nycflights13)</span></code></pre></div></div>
+</div>
+<p>Run the code with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Enter</kbd> — the same shortcut as in RStudio. Also as in RStudio, this moves the cursor down after running the current line (or your selection of a part of a line or multiple lines).</p>
+</section>
+<section id="the-command-palette" class="level3" data-number="2.4">
+<h3 data-number="2.4" class="anchored" data-anchor-id="the-command-palette"><span class="header-section-number">2.4</span> The Command Palette</h3>
+<p>The Command Palette is Positron’s <strong>main way to access the program’s functionality</strong>. It may take some getting used to, but is very handy and powerful.</p>
+<p>To open the Command Palette, press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Mac) or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Windows).</p>
+<p>A search box will appear at the top of the window: start typing what you want to do, and Positron will fuzzy-match it against every piece of functionality (command) it knows. Here are some things you might think of looking for in the Command Palette:</p>
+<ul>
+<li>Type <code>theme</code> → <em>Preferences: Color Theme</em></li>
+<li>Type <code>restart</code> → <em>Interpreter: Restart Active Interpreter Session</em></li>
+<li>Type <code>settings</code> → <em>Preferences: Open Settings (UI)</em></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Keyboard shortcuts
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Pay attention to the keyboard shortcuts it shows next to each command that has one. For commonly used commands, it’s worth learning the shortcut so you can skip the palette next time.</p>
+<p>Side note: RStudio has a Command Palette as well, but it’s more essential in Positron, because Positron has fewer menus and buttons, but more options.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-find-your-way-around" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-find-your-way-around"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Find your way around</h4>
+<p>Use the Command Palette to do the following:</p>
+<ol type="1">
+<li><p>Change the <strong>color theme</strong> to something you like better than the default.</p></li>
+<li><p><strong>Restart your R session</strong>, then run <code>ls()</code> in the console to confirm that your workspace is now empty.</p></li>
+<li><p>Run your whole script <em>(there’s a command for this — find it!)</em>.</p></li>
+</ol>
+<details>
+<summary>
+<em>Click here to see hints</em>
+</summary>
+<p>For each of these, open the palette with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> and type:</p>
+<ol type="1">
+<li><code>theme</code> — look for <em>Preferences: Color Theme</em>, then use the arrow keys to preview themes live before hitting Enter</li>
+<li><code>restart</code> — look for <em>Interpreter: Restart Active Interpreter Session</em></li>
+<li><code>run</code> — look for <em>R: Run R File in Console</em> or similar</li>
+</ol>
+<p>Notice how each of these showed you a keyboard shortcut on the right-hand side.</p>
+</details>
+</section>
+</section>
+</section>
+<section id="a-tour-of-the-interface" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="a-tour-of-the-interface"><span class="header-section-number">3</span> A tour of the interface</h2>
+<p>If you’ve used RStudio before, Positron’s layout should feel broadly familiar. There’s an editor to write code, a console to run it, and various panes to display results. But several things have moved, and there are some aspects without an RStudio equivalent.</p>
+<p>Your interface should currently look something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/positron-whole2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" alt="Screenshot of the Positron IDE, with the Editor, Console, and various panes"></p>
+</figure>
+</div>
+<section id="the-five-regions" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="the-five-regions"><span class="header-section-number">3.1</span> The five regions</h3>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/user-interface-for-rstudio-migration.jpeg" class="no-border img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%" alt="Diagram of the Positron interface, with the five regions labeled: Editor, Panel, Activity Bar, Primary Side Bar, Secondary Side Bar. Image from <https://positron.posit.co/layout.html>"></p>
+</figure>
+</div>
+<table class="table-striped caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 18%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Where</th>
+<th>What’s in it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Editor</strong></td>
+<td>Center - top</td>
+<td>Open scripts and other documents, in tabs</td>
+</tr>
+<tr class="even">
+<td><strong>Panel</strong></td>
+<td>Center - bottom</td>
+<td>R console and Terminal</td>
+</tr>
+<tr class="odd">
+<td><strong>Activity Bar</strong></td>
+<td>Far left</td>
+<td>Icons that <em>switch</em> what the Primary Side Bar shows</td>
+</tr>
+<tr class="even">
+<td><strong>Primary Side Bar</strong></td>
+<td>Left</td>
+<td>Explorer (files), Search, Source Control, Extensions, Packages</td>
+</tr>
+<tr class="odd">
+<td><strong>Secondary Side Bar</strong></td>
+<td>Right</td>
+<td>Variables, Plots, Help, Viewer, History, Connections</td>
+</tr>
+</tbody>
+</table>
+<hr style="height:1pt; visibility:hidden;">
+<p>Almost every pane in Positron can be <strong>resized</strong> (like in RStudio) and <strong>dragged somewhere else</strong> (much more flexible than in RStudio). There are also layout presets.</p>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-modify-the-layout" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-modify-the-layout"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Modify the layout</h4>
+<ul>
+<li><p>Resize panes such as the Primary Side Bar and the Editor.</p></li>
+<li><p>Drag the <strong>Help</strong> tab down to the bottom, next to the Console, and see whether you prefer it there. Drag it back if you want.</p></li>
+<li><p>Try moving something else. If you make a mess of things, you can always get back to the default layout with the <em>View: Reset View Locations</em> command.</p></li>
+<li><p><strong>Explore the presets</strong>: Open the Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) and type <code>layout</code>. Select “<strong>Customize Layout…</strong>” and you should see several options for layout presets. Try them.</p></li>
+<li><p>The Customize Layout dialog also lets you <strong>hide or move regions</strong> — these options are below the presets. For example, try clicking on Activity Bar to hide it.</p></li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/layout-dialog.png" class="img-fluid figure-img" style="width:70.0%" alt="Screenshot of the Positron Customize Layout dialog"></p>
+<figcaption>The Customize Layout dialog</figcaption>
+</figure>
+</div>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Where did my RStudio pane go? <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="table-striped table-hover caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 69%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>In RStudio</th>
+<th>In Positron</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Source pane</td>
+<td>Editor (center)</td>
+</tr>
+<tr class="even">
+<td>Console</td>
+<td>Console (bottom)</td>
+</tr>
+<tr class="odd">
+<td>Environment</td>
+<td><strong>Variables</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Plots</td>
+<td><strong>Plots</strong> pane (right)</td>
+</tr>
+<tr class="odd">
+<td>Help</td>
+<td><strong>Help</strong> pane (right), or press <code>F1</code> on a function</td>
+</tr>
+<tr class="even">
+<td>Files</td>
+<td><strong>Explorer</strong> (Activity Bar, far left)</td>
+</tr>
+<tr class="odd">
+<td>Packages</td>
+<td><strong>Packages</strong> pane (Activity Bar)</td>
+</tr>
+<tr class="even">
+<td>Git</td>
+<td><strong>Source Control</strong> (Activity Bar)</td>
+</tr>
+<tr class="odd">
+<td>Viewer</td>
+<td><strong>Viewer</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Terminal</td>
+<td>A tab next to the Console</td>
+</tr>
+<tr class="odd">
+<td>History</td>
+<td><strong>History</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Build</td>
+<td><em>No pane</em> — use the Command Palette</td>
+</tr>
+<tr class="odd">
+<td><code>View(df)</code> data viewer</td>
+<td><strong>Data Explorer</strong> (opens as an editor tab)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="the-activity-and-primary-side-bars" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="the-activity-and-primary-side-bars"><span class="header-section-number">3.2</span> The Activity and Primary Side Bars</h3>
+<p>The <strong>Activity Bar</strong> is the strip of icons on the far left. Clicking an icon swaps out what’s shown in the <strong>Primary Side Bar</strong> right next to it. Among the options are:</p>
+<section id="explorer" class="level4" data-number="3.2.1">
+<h4 data-number="3.2.1" class="anchored" data-anchor-id="explorer"><span class="header-section-number">3.2.1</span> Explorer</h4>
+<p>The <strong>Explorer</strong> (the top icon, looks like stacked documents) shows the folders and files in your currently open folder. Clicking a file will open it in the Editor.</p>
+<p>This is Positron’s equivalent of RStudio’s <strong>Files</strong> pane, but a bit nicer as you can see the whole project’s structure at once and expand/collapse subfolders.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>A faster way to jump to a file: Cmd/Ctrl+P
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Especially when your project has many subfolders and files, it can be tedious to click through the Explorer tree to find a file. The <strong>Go to File</strong> feature is a faster way to jump to a file in your project, as long as you know part of its name (this is similar to RStudio’s <strong>Go to File/Function</strong>).</p>
+<p>Try it: press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>P</kbd> and type <code>expl</code> — your <code>explore.R</code> script should be the top hit. Press <kbd>Enter</kbd> to jump to it.</p>
+</div>
+</div>
+</section>
+<section id="search" class="level4" data-number="3.2.2">
+<h4 data-number="3.2.2" class="anchored" data-anchor-id="search"><span class="header-section-number">3.2.2</span> Search</h4>
+<p>The <strong>Search</strong> pane lets you search, and optionally replace, text across <em>every file</em> in your open folder.</p>
+<p>Try it: open Search by clicking the <strong>Search</strong> icon (magnifying glass) in the Activity Bar, then type <code>tidyverse</code> in the search box. Currently, there’s only one match, but we’ll see more later. Note that you can click on a result to jump straight to that line.</p>
+<p>This is especially useful once your project grows to span multiple scripts. For example, finding every place you reference a column name before renaming it, or every script that loads a particular package.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/search.png" class="img-fluid figure-img" style="width:55.0%" alt="Screenshot of the Positron Search pane, showing a search for 'tidyverse' and one match in explore.R"></p>
+<figcaption>The search pane</figcaption>
+</figure>
+</div>
+</section>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-search-and-replace" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-search-and-replace"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Search and replace</h4>
+<ol type="1">
+<li><p>Create a second script in your folder, <code>plots.R</code> with these two lines in it:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">library</span>(tidyverse)</span>
+<span id="cb10-2"></span>
+<span id="cb10-3"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># </span><span class="al" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">TODO</span><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">: plot the distribution of arr_delay for the flights data</span></span></code></pre></div></div></li>
+<li><p>Now that your project has two files, use <strong>Search</strong> to look for <code>tidyverse</code> again, paying attention to how the results are reported and organized.</p></li>
+<li><p>Type <code>tidymodels</code> in the search box’s <strong>replace</strong> field: Positron previews every change it <em>would</em> make, right in the results list. Have a look — then clear the replace field, since we don’t actually want to rename anything.</p></li>
+</ol>
+</section>
+<section id="other-sidebar-options" class="level4" data-number="3.2.3">
+<h4 data-number="3.2.3" class="anchored" data-anchor-id="other-sidebar-options"><span class="header-section-number">3.2.3</span> Other sidebar options</h4>
+<p>There are a few more icons in the Activity Bar:</p>
+<ul>
+<li><strong>Source Control</strong>: for Git (also much improved over RStudio’s Git pane!)</li>
+<li><strong>Run and Debug</strong>: for debugging code</li>
+<li><strong>Remote Explorer</strong>: for remote connections</li>
+<li><strong>Extensions</strong>: for installing add-ons — more on that in a minute</li>
+<li><strong>Testing</strong>: for running tests on your code</li>
+<li><strong>Packages</strong>: lists installed R/Python packages (Positron’s equivalent of RStudio’s Packages pane)</li>
+</ul>
+</section>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-explore-the-packages-pane" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-explore-the-packages-pane"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise: Explore the Packages pane</h4>
+<p>Click on the <strong>Packages</strong> icon (cube shape) in the Activity Bar, and you’ll see every package installed in your library, with:</p>
+<ul>
+<li>its <em>version</em>, and whether it’s attached (i.e.&nbsp;you ran <code>library()</code> on it)</li>
+<li>a filter to show only <em>outdated</em> packages</li>
+<li>buttons to <em>install</em>, <em>update</em>, and <em>remove</em> packages</li>
+<li>links to each package’s documentation and website</li>
+</ul>
+<p>Explore this and try, for example, to filter to outdated packages (if any), and optionally update one or two of them.</p>
+</section>
+</section>
+</section>
+<section id="exploring-data" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="exploring-data"><span class="header-section-number">4</span> Exploring data</h2>
+<p>Now, we’ll use the flights data to explore some of Positron’s data exploration features.</p>
+<p>To start, <code>nycflights13</code> provides the <code>flights</code> data frame, but it won’t show up as an object in your environment yet. Add the following line to <code>explore.R</code> and run it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1">flights <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> flights</span></code></pre></div></div>
+</div>
+<section id="the-variables-pane" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-variables-pane"><span class="header-section-number">4.1</span> The Variables pane</h3>
+<p>Look at the <strong>Variables</strong> pane on the right: <code>flights</code> should now be listed there. It’s the equivalent of RStudio’s Environment pane, and like there, you can <strong>expand objects</strong> to look inside them by clicking the arrow next to an object’s name.</p>
+<p>Try expanding <code>flights</code>. You should see each column, its type, and a preview of its contents.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/flights_var.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%" alt="Screenshot of the Positron Variables pane, showing the flights data frame"></p>
+</figure>
+</div>
+</section>
+<section id="the-data-explorer" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="the-data-explorer"><span class="header-section-number">4.2</span> The Data Explorer</h3>
+<p>The Data Explorer is Positron’s equivalent of RStudio’s <code>View()</code> function, but with a lot more functionality. Click the small <strong>table icon</strong> next to <code>flights</code> in the Variables pane, and it should open <em>as an editor Tab</em> and look something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/data-explorer.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Screenshot of the Positron Variables pane, showing the flights data frame with a small table icon next to it"></p>
+</figure>
+</div>
+<p>The Data Explorer has three parts:</p>
+<ul>
+<li>The <strong>data grid</strong> — the spreadsheet-like view of your rows and columns</li>
+<li>The <strong>summary panel</strong> — per-column statistics and a small distribution plot. <em><span style="color: salmon;">May be hidden by default: if you don’t see it, look for an arrow on the left-hand side of the spreadsheet view.</span></em></li>
+<li>The <strong>filter bar</strong> — for temporarily filtering rows</li>
+</ul>
+<section id="sorting-and-filtering" class="level4" data-number="4.2.1">
+<h4 data-number="4.2.1" class="anchored" data-anchor-id="sorting-and-filtering"><span class="header-section-number">4.2.1</span> Sorting and filtering</h4>
+<ul>
+<li><p><strong>Sort</strong> by clicking the three dots in the column header and picking <code>Sort Ascending</code> or <code>Sort Descending</code>.</p></li>
+<li><p><strong>Filter</strong> by clicking <code>+ Add Filter</code> in the filter bar, picking a column, and choosing a condition. You can add several filters, and they will combine.</p></li>
+</ul>
+<p>Sorting and filtering in the Data Explorer <strong>does not</strong> change the dataframe in your R session, but there is a <strong>“Convert to Code” button (!)</strong> that generates the R code to reproduce your filter and sort.</p>
+<div class="columns">
+<div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/convert2code1.png" class="img-fluid figure-img" style="width:90.0%" alt="Screenshot of the Positron Data Explorer, showing the Convert to Code button"></p>
+<figcaption>Above: When you’ve applied one or more filters, the Convert to Code button is activated (no longer grayed out).<br><br>Right: After clicking Convert to Code, you should see a popup with the generated R code.</figcaption>
+</figure>
+</div>
+</div><div class="column">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/convert2code2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%" alt="Screenshot of the Positron Data Explorer, showing the generated R code"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-explore-the-flights-data" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-explore-the-flights-data"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Explore the flights data</h4>
+<p>Use the <strong>Data Explorer</strong> to answer these:</p>
+<ol type="1">
+<li><p>Which column has the <strong>most missing values</strong>? <em>(Hint: the summary panel shows a missing-value percentage per column.)</em></p></li>
+<li><p>How many <strong>distinct airline carriers</strong> (<code>carrier</code>) are in the data?</p></li>
+<li><p>Filter to flights that departed from <code>JFK</code> <strong>and</strong> had a departure delay (<code>dep_delay</code>) of more than 120 minutes. Roughly how many rows are left? <em>(Look for the row count displayed in the Data Explorer —</em> <em>it reflects your active filters.)</em></p></li>
+<li><p>Sort those filtered flights by <code>dep_delay</code>, descending. What was the single worst departure delay out of JFK, in hours?</p></li>
+<li><p>Use the Convert to Code button to get code corresponding to what you did in steps 3 and 4, and copy it into your <code>explore.R</code> script.</p></li>
+</ol>
+</section>
+<section id="opening-data-files-directly-in-the-data-explorer" class="level4" data-number="4.2.2">
+<h4 data-number="4.2.2" class="anchored" data-anchor-id="opening-data-files-directly-in-the-data-explorer"><span class="header-section-number">4.2.2</span> Opening data files directly in the Data Explorer</h4>
+<p>You can <strong>open a data file directly in the Data Explorer</strong>, without any R code (this is a feature RStudio does not have at all). Let’s start by creating a CSV file from the <code>flights</code> dataset, so we have a data file to work with:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="co" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;"># Make a copy of the data as a CSV file, so we have a data file to work with</span></span>
+<span id="cb12-2"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">dir.create</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data"</span>)</span>
+<span id="cb12-3"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">write_csv</span>(flights, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"data/flights.csv"</span>)</span></code></pre></div></div>
+</div>
+<p>Next, open <code>data/flights.csv</code> via the Explorer or with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>P</kbd>. The file will open directly in the Data Explorer! And this will also work for <code>.tsv</code> and <strong>even <code>.xlsx</code> (Excel) files</strong>.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Want to see the raw text of a data file instead?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>For plain-text files, if you want to see the raw text instead of the Data Explorer, click the “Open as Plain Text File” button:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/data-explorer-show-plaintext.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Screenshot of the Positron Data Explorer, showing the Show Plain Text button"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="plots" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="plots"><span class="header-section-number">4.3</span> Plots</h3>
+<p>Let’s create a plot, so we can see where it appears. Copy the following code into the <code>plots.R</code> script and run it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(flights, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> arr_delay)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"steelblue"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey20"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-3">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_vline</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">xintercept =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"tomato1"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">linetype =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"dashed"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-4">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_x_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">limits =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">300</span>)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-5">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(</span>
+<span id="cb13-6">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mult =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.05</span>)),</span>
+<span id="cb13-7">    <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">comma_format</span>()</span>
+<span id="cb13-8">  ) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-9">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">labs</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Arrival delay (minutes)"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">y =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"Number of flights"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-10">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme_bw</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">base_size =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">14</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb13-11">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">theme</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">panel.grid.minor =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">element_blank</span>())</span></code></pre></div></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 10041 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_bar()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The <strong>Plots</strong> pane behaves much like RStudio’s, including the back/forward arrows through your plot history. Two things to try:</p>
+<ul>
+<li>The <strong>expand</strong> button, which pops the plot out into a large editor tab.</li>
+<li>Click the <strong>circle icon</strong> (to the right of “Auto”), and you should see options “Dark Filter” and “Follow Theme” (and the default “No Filter”): Dark Filter will show the plot on a dark background, and Follow Theme will match your color theme. Handy for those who prefer a dark theme for their IDE!</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The Help pane
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Like in RStudio, you can get help on a function by typing <code>?function_name</code> in the console, or by putting your cursor inside a function name in your script and pressing <kbd>F1</kbd>. Give one or both methods a go with <code>geom_histogram</code>.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="customize-positron" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="customize-positron"><span class="header-section-number">5</span> Customize Positron</h2>
+<p>Let’s finish by looking at some ways to customize Positron to your liking.</p>
+<section id="extensions" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="extensions"><span class="header-section-number">5.1</span> Extensions</h3>
+<p>Positron has <em>many</em> extensions (add-ins) that you can install, in large part because most <strong>VS Code extensions</strong> are compatible with Positron. To find and install extensions, click the <strong>Extensions</strong> icon in the Activity Bar (four blocks, with one set apart from the other three). Some useful ones:</p>
+<table class="table-striped caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 62%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Extension</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Code Spell Checker</strong></td>
+<td>Underlines misspelled words in code and prose</td>
+</tr>
+<tr class="even">
+<td><strong>Better Comments</strong></td>
+<td>Color-codes certain comments by type (TODOs, questions, etc.)</td>
+</tr>
+<tr class="odd">
+<td><strong>Pastum</strong></td>
+<td>Converts a table copied to your clipboard (!) <sup>2</sup></td>
+</tr>
+<tr class="even">
+<td><strong>Indent Rainbow</strong></td>
+<td>Colorizes indentation levels in scripts</td>
+</tr>
+<tr class="odd">
+<td><strong>Rainbow CSV</strong></td>
+<td>Colorizes CSV columns when viewing as plain text</td>
+</tr>
+<tr class="even">
+<td><strong>Air</strong></td>
+<td>R code formatter</td>
+</tr>
+<tr class="odd">
+<td><strong>Quarto</strong></td>
+<td>Quarto support</td>
+</tr>
+<tr class="even">
+<td><strong>Tomorrow Night Bright (R Classic)</strong></td>
+<td>The RStudio color theme</td>
+</tr>
+<tr class="odd">
+<td><strong>SVG Preview</strong></td>
+<td>Enables viewing of <code>.svg</code> files</td>
+</tr>
+</tbody>
+</table>
+<section id="automatic-code-formatting" class="level4" data-number="5.1.1">
+<h4 data-number="5.1.1" class="anchored" data-anchor-id="automatic-code-formatting"><span class="header-section-number">5.1.1</span> Automatic code formatting</h4>
+<p>Let’s try the <strong>Air</strong> extension: find it in the Extensions marketplace and install it. Then, type some deliberately messy code into <code>explore.R</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1">x<span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">=</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">2</span>,   <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">3</span>,<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>)</span>
+<span id="cb16-2">y   <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">1</span><span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">:</span><span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">10</span></span></code></pre></div></div>
+<p>Open the Command Palette and run <em>Format Document</em>.</p>
+<p>Let’s try it with one other example — add this to <code>plots.R</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">ggplot</span>(flights, <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">x =</span> arr_delay)) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">geom_histogram</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">bins =</span> <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">100</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">fill =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"steelblue"</span>, <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">color =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"grey20"</span>) <span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">+</span></span>
+<span id="cb17-2">  <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">scale_y_continuous</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">expand =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">expansion</span>(<span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">mult =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0</span>, <span class="fl" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">0.05</span>)), <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">labels =</span> scales<span class="sc" style="color: #5E5E5E;
+background-color: null;
+font-style: inherit;">::</span><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">comma_format</span>())</span></code></pre></div></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Want to always format code when you save a file?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Look for <code>editor.formatOnSave</code> further down on this page.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="settings-the-ui-and-the-json-file" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="settings-the-ui-and-the-json-file"><span class="header-section-number">5.2</span> Settings: the UI and the JSON file</h3>
+<p>The main way to change Positron’s settings is the <strong>Settings UI</strong>: open the Command Palette and run <em>Preferences: Open Settings (UI)</em>. We’ll explore some Editor-related settings next.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>settings.json</code> and user vs.&nbsp;workspace settings <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Under the hood, every setting lives in a <code>settings.json</code> file, which you can edit directly via <em>Preferences: Open User Settings (JSON)</em>.</p>
+<p>This can be useful because, for example, it lets you paste in a whole block of settings someone shared with you, and makes it easy to copy your entire configuration to a new computer. Occasionally, it’s also the only way to reach a setting that isn’t yet exposed in the UI.</p>
+<hr>
+<p>Settings come in two levels:</p>
+<ul>
+<li><strong>User</strong> settings apply everywhere, across every folder you open — these are your personal preferences, like a theme or keybindings.</li>
+<li><strong>Workspace</strong> settings apply only to the current folder, and get saved in a <code>.vscode/settings.json</code> file inside it.</li>
+</ul>
+<p>Workspace settings override user settings when the two conflict. Unless you have a specific reason to limit a setting to one project, change <strong>user</strong> settings by default, so your preferences carry over to every new folder you open.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="editor-features-and-settings" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="editor-features-and-settings"><span class="header-section-number">5.3</span> Editor features and settings</h3>
+<section id="side-by-side-editors" class="level4" data-number="5.3.1">
+<h4 data-number="5.3.1" class="anchored" data-anchor-id="side-by-side-editors"><span class="header-section-number">5.3.1</span> Side-by-side editors</h4>
+<p>Drag a tab to the left or right edge of the Editor area (or use <em>View: Split Editor</em> from the Command Palette) to view two files at once, side by side. This is useful for comparing two scripts, or keeping a script and a data file’s Data Explorer view open together.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/side-by-side-editor.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%" alt="Screenshot of the Positron IDE, showing two editor tabs side by side"></p>
+</figure>
+</div>
+</section>
+<section id="preview-mode" class="level4" data-number="5.3.2">
+<h4 data-number="5.3.2" class="anchored" data-anchor-id="preview-mode"><span class="header-section-number">5.3.2</span> Preview mode</h4>
+<p>By default, clicking a file opens it in <strong>preview mode</strong>: the tab title shows in italics, and opening a <em>different</em> file this way reuses that same tab instead of opening a new one. This can be handy to prevent your tab bar from filling up with files you only glance at, but takes some getting used to.</p>
+<p>Once you start editing a file, the tab becomes permanent and is no longer in preview mode. But sometimes you want to keep a file open even if you haven’t edited it yet. You can do this in two ways:</p>
+<ul>
+<li><strong>Double-click</strong> the file to open it in a permanent tab to begin with, or</li>
+<li>For a file in preview mode, with your cursor in the file, use the <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd> <kbd>P</kbd> shortcut to make it permanent.</li>
+</ul>
+<p>If you really don’t like preview mode, you can turn it off entirely with the setting <code>workbench.editor.enablePreview: false</code>.</p>
+</section>
+<section id="a-few-more-settings-and-features" class="level4" data-number="5.3.3">
+<h4 data-number="5.3.3" class="anchored" data-anchor-id="a-few-more-settings-and-features"><span class="header-section-number">5.3.3</span> A few more settings and features</h4>
+<ul>
+<li><p><code>files.autoSave</code> — saves files automatically; some people love this, others hate it, try it and see.</p></li>
+<li><p><code>editor.rulers: [80]</code> — draws a thin vertical guide line at column 80, helping you keep lines from getting too long (a common style convention in R). Off by default; add more numbers to the list for multiple guides.</p></li>
+<li><p><code>editor.formatOnSave</code> — automatically formats code when you save a file, if you have a formatter installed (we do — we installed Air above).</p></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Watch out: copying with nothing selected
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd> with no text selected, Positron (like VS Code) copies the <strong>entire current line</strong> instead of doing nothing. This is quite handy but can also catch you off guard. <strong>Try it</strong>: click somewhere in a line of your script <em>without selecting anything</em>, press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd>, and then paste on an empty line below.</p>
+<p>If you don’t want this behavior, you can turn it off with:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb18-1"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"editor.emptySelectionClipboard"</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">false</span></span></code></pre></div></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Want more space for your editor and panes?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you want to maximize the horizontal space for your editor and panes, you can move the Activity Bar from the left side to the top of the window, next to the menu bar, with the setting <code>workbench.activityBar.location: "top"</code>. Try it!</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiple cursors <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Multiple cursors work much as in RStudio (<kbd>Alt</kbd>+click, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+arrow keys), but Positron adds a handy way to build a multi-cursor selection from <em>matching text</em>:</p>
+<ul>
+<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>D</kbd> adds the <strong>next occurrence</strong> of whatever you have selected — press it repeatedly to build up the selection one match at a time.</li>
+<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> selects <strong>all occurrences</strong> in the file at once.</li>
+<li><kbd>Esc</kbd> returns you to a single cursor.</li>
+</ul>
+<p>This is a quick way to rename a variable or column throughout a script, without a find-and-replace.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="keyboard-shortcuts-keybindings" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="keyboard-shortcuts-keybindings"><span class="header-section-number">5.4</span> Keyboard shortcuts (keybindings)</h3>
+<p>Open the Command Palette and run <em>Preferences: Open Keyboard Shortcuts</em> to see every action (command) you can perform in Positron, and their current shortcut (if it has one) in a searchable list — type a command name or describe the action you want (e.g.&nbsp;<code>run line</code>) to find it.</p>
+<p>You can click any row to record a new shortcut, and right-click to reset it back to default.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Get your RStudio keybindings back <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Many RStudio shortcuts already work in Positron, but others don’t, because Positron inherits VS Code’s shortcuts, which sometimes conflict. But if you’re really used to the RStudio keybindings, and want to keep using those, you can essentially restore them.</p>
+<p>Open the Command Palette and run <em>Preferences: Open Settings (UI)</em>, then search for <code>rstudioKeybindings</code> and check the box:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"workbench.keybindings.rstudioKeybindings"</span><span class="er" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">:</span> <span class="kw" style="color: #003B4F;
+background-color: null;
+font-weight: bold;
+font-style: inherit;">true</span></span></code></pre></div></div>
+<p><strong>Restart Positron</strong> for it to take effect. This turns on a large set of RStudio shortcuts, including:</p>
+<table class="table-striped caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 80%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><kbd>Ctrl</kbd>+<kbd>1</kbd></td>
+<td>Focus the Source/Editor pane</td>
+</tr>
+<tr class="even">
+<td><kbd>Ctrl</kbd>+<kbd>2</kbd></td>
+<td>Focus the Console</td>
+</tr>
+<tr class="odd">
+<td><kbd>F2</kbd></td>
+<td>Go to definition</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-customize-positron" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-customize-positron"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Customize Positron</h4>
+<p>Spend a few minutes setting Positron up the way you like it. For example:</p>
+<ol type="1">
+<li><p>Turn on <strong>RStudio keybindings</strong>.</p></li>
+<li><p>Change some <strong>settings</strong> from the list above or find your own by browsing the Settings UI.</p></li>
+<li><p>Install an <strong>extension</strong> that looks useful to you.</p></li>
+</ol>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise: Open one of your own projects</h4>
+<ol type="1">
+<li><p>Use <code>File</code> &gt; <code>Open Folder...</code> to open a folder that corresponds to one of your own projects with R scripts and data files.</p></li>
+<li><p>Open a script you know well, and run the first few lines of it.</p></li>
+<li><p>Open one of your own data objects in the <strong>Data Explorer</strong>.</p></li>
+</ol>
+<p>Does anything stand out?</p>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Further resources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The <a href="https://positron.posit.co/" target="_blank">Positron documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>The <a href="https://positron.posit.co/migrate-rstudio.html" target="_blank">migration guide for RStudio users <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>An walkthrough within VS Code: open the Command Palette, run <em>Welcome: Open Walkthrough…</em>, and pick one, such as “Migrating from RStudio to Positron”.</li>
+<li><a href="https://www.youtube.com/watch?v=7Tog8OkrIWI" target="_blank">Video: Tips &amp; tricks from the maintainers of Positron <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li><a href="https://www.youtube.com/watch?v=QIYyeuZ_ISY" target="_blank">Video: Exploring Positron settings <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>The <a href="https://code.visualstudio.com/docs" target="_blank">VS Code documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a> — note that most VS Code documentation applies, since Positron is built on it.</li>
+</ul>
+</div>
+</div>
+
+
+</section>
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p> Or if that’s somehow not showing, by using the menu <code>File</code> &gt; <code>Open Folder...</code>.↩︎</p></li>
+<li id="fn2"><p>For example, a table copied from a webpage directly into R, Python, Julia, SQL, or Markdown code.↩︎</p></li>
+</ol>
+</section></div> ]]></description>
+  <category>positron</category>
+  <guid>https://osu-codeclub.github.io/posts/S12E01_positron_01/</guid>
+  <pubDate>Thu, 27 Aug 2026 04:00:00 GMT</pubDate>
+  <media:content url="https://osu-codeclub.github.io/posts/S12E01_positron_01/img/user-interface-for-rstudio-migration.jpeg" medium="image" type="image/jpeg"/>
+</item>
 <item>
   <title>Building Your First R Package: Day 3</title>
   <dc:creator>Neel Agarwal</dc:creator>
@@ -15640,651 +16846,6 @@ font-style: inherit;">"object.RDS"</span>)</span></code></pre></div></div>
   <category>reproducibility</category>
   <guid>https://osu-codeclub.github.io/posts/S10E04_reprod_04/</guid>
   <pubDate>Mon, 29 Sep 2025 04:00:00 GMT</pubDate>
-</item>
-<item>
-  <title>Reproducibility recommendations: File organization and RStudio Projects</title>
-  <dc:creator>Jelmer Poelstra</dc:creator>
-  <link>https://osu-codeclub.github.io/posts/S10E03_reprod_03/</link>
-  <description><![CDATA[ 
-
-
-
-
-<hr>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/rproj.png" class="img-fluid figure-img"></p>
-<figcaption>Artwork by <a href="https://twitter.com/allison_horst">@allison_horst</a></figcaption>
-</figure>
-</div>
-<p><br></p>
-<section id="introduction-reproducibility" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="introduction-reproducibility"><span class="header-section-number">1</span> Introduction: Reproducibility</h2>
-<p>After covering Quarto in the first two sessions, today is the third of a series of Code Club sessions covering several topics under the umbrella of “reproducibility”.</p>
-<section id="what-is-reproducibility" class="level3" data-number="1.1">
-<h3 data-number="1.1" class="anchored" data-anchor-id="what-is-reproducibility"><span class="header-section-number">1.1</span> What is reproducibility?</h3>
-<p>I would like to start by taking a step back to talk about reproducibility in general. What do we mean by <strong>reproducibility</strong>? Your research is reproducible when third parties are <strong>able to perform the same analysis on your data, and produce the same results.</strong></p>
-<p>Reproducibility is perhaps a low bar compared to the related concept of <strong>replicability</strong>, which is the ability to produce the same (qualitative) results when applying the same analysis to <em>different data</em>. Here is a helpful table showing these two and two other related concepts:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/reproducible-matrix.jpg" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="From The Turing Way"><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/reproducible-matrix.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%" alt="From The Turing Way"></a></p>
-</figure>
-</div>
-<figcaption>From <a href="https://book.the-turing-way.org/reproducible-research/reproducible-research">The Turing Way</a></figcaption>
-</figure>
-</div>
-<p>For example:</p>
-<ul>
-<li><p>Say that you’ve written a paper in which you present the results of one of your research projects. When this research is fully reproducible, it means that someone else should be able to be able to run the exact same analysis and produce all the results and figures using your paper and its associated documentation.</p></li>
-<li><p>Relatedly, when you work in a reproducible manner and you abandon an analysis for say two years, you will be able to pick up from where you left off without much trouble.</p></li>
-</ul>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="using-r-is-already-a-big-step-in-the-right-direction" class="level3" data-number="1.2">
-<h3 data-number="1.2" class="anchored" data-anchor-id="using-r-is-already-a-big-step-in-the-right-direction"><span class="header-section-number">1.2</span> Using R is already a big step in the right direction!</h3>
-<p>It is inherently more reproducible to write code, such as in R, than to do analyses by clicking in a program with a Graphical User Interface (GUI). This is because it it is easy to save your code and thereby to document and communicate what you did, but rather tedious to do this when you worked in a GUI.</p>
-<p>In addition, R is open source and freely available. If you use a proprietary program that requires an expensive license, your work may be reproducible in principle, but for many people. won’t be in practice.</p>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="additional-aspects-of-reproducibility-and-what-well-cover-in-code-club" class="level3" data-number="1.3">
-<h3 data-number="1.3" class="anchored" data-anchor-id="additional-aspects-of-reproducibility-and-what-well-cover-in-code-club"><span class="header-section-number">1.3</span> Additional aspects of reproducibility and what we’ll cover in Code Club</h3>
-<p>Research that is fully reproducible should use a set of tools and best-practices related to:</p>
-<ul>
-<li>File organization <span style="color:darkgrey"><em>(this session)</em></span></li>
-<li>Code style and organization <span style="color:darkgrey"><em>(next two sessions)</em></span></li>
-<li>Version management <span style="color:darkgrey"><em>(Git at the end of the semester)</em></span></li>
-<li>Data and code sharing <span style="color:darkgrey"><em>(In part: Git at the end of the semester)</em></span></li>
-<li>Software management <span style="color:darkgrey"><em>(Within R with <em>renv</em> - may cover this later?)</em></span></li>
-<li>Project documentation</li>
-</ul>
-</section>
-<section id="today" class="level3" data-number="1.4">
-<h3 data-number="1.4" class="anchored" data-anchor-id="today"><span class="header-section-number">1.4</span> Today</h3>
-<p>Today, we’ll go over the following four recommendations related to file organization that improve your research projects’ reproducibility.</p>
-<ol type="1">
-<li>Use a self-contained folder for each project</li>
-<li>Separate files using a consistent subfolder structure</li>
-<li>Use relative paths in your code</li>
-<li>Use RStudio Projects, not <code>setwd()</code></li>
-</ol>
-<p>And at the bottom of the page, there is at-home reading material on a fifth recommendation:</p>
-<ol start="5" type="1">
-<li>Use good file names</li>
-</ol>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-</section>
-<section id="use-a-self-contained-folder-for-each-project" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="use-a-self-contained-folder-for-each-project"><span class="header-section-number">2</span> Use a self-contained folder for each project</h2>
-<p>Using a self-contained folder, or really a hierarchy of folders, for one project means that you:</p>
-<ul>
-<li>Don’t mix files for multiple distinct projects inside one folder.</li>
-<li>Don’t keep files for one project in multiple places.</li>
-</ul>
-<p>For example:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/proj-dirs.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-2" title="Two research project folder hierarchies. Each box is a folder. The way to read this is that the blue data folder is contained within the project1 folder, which in turn is contained within the Documents folder."><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/proj-dirs.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%" alt="A diagram showing two research project folder hierarchies."></a></p>
-</figure>
-</div>
-<figcaption><em>Two research project folder hierarchies. Each box is a folder.<br>The way to read this is that the blue <code>data</code> folder is contained within the <code>project1</code> folder,<br>which in turn is contained within the Documents folder.</em></figcaption>
-</figure>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-<p>Using a self-contained folder for each projects has many downstream benefits and is fundamental to using other reproducibility-related best practices. It also is more convenient in the long run, as it is easier to find files, harder to accidentally throw away stuff, etc.</p>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="separate-files-using-a-consistent-subfolder-structure" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="separate-files-using-a-consistent-subfolder-structure"><span class="header-section-number">3</span> Separate files using a consistent subfolder structure</h2>
-<p>Within your project’s directory hierarchy, you should use a consistent subfolder structure to separate different kinds of files – for example, you should separate:</p>
-<ul>
-<li>Code</li>
-<li>Raw data</li>
-<li>Results (including “processed data”)</li>
-</ul>
-<p>Additionally, you should use plenty of subfolders to separate different kinds of results, and so on. While the specifics can depend a lot on what kind of data you have and how you are analyzing it, here is one good way of organizing a research project folder:</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/proj-ex_annot.svg" class="lightbox" data-gallery="quarto-lightbox-gallery-3" title="An example research project folder structure. (The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in doc.)"><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/proj-ex_annot.svg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="An example research project folder structure. (The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in doc.)"></a></p>
-</figure>
-</div>
-<figcaption><em>An example research project folder structure.<br>(The README file is your overall project documentation file, and additional documentation like lab notebooks are stored in <code>doc</code>.)</em></figcaption>
-</figure>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Related recommendations
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li>Treat raw data as read-only and as highly valuable</li>
-<li>Avoid manually editing intermediate results</li>
-</ul>
-</div>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="use-relative-paths-in-your-code" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="use-relative-paths-in-your-code"><span class="header-section-number">4</span> Use relative paths in your code</h2>
-<section id="key-terms" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="key-terms"><span class="header-section-number">4.1</span> Key terms</h3>
-<p>To understand the recommendation to use relative paths in your code, let’s start by going over the following terms:</p>
-<ol type="1">
-<li><p><strong>“Directory”</strong> (<strong>“dir”</strong> for short) is another word for folder that is commonly used in coding contexts.</p></li>
-<li><p>Your <strong>“working directory”</strong> is the directory where you are currently located. When you start R, it will always have a starting point at a specific location in your computer. You can see what your working directory is with the function <code>getwd()</code> (short for “get working dir”):</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">getwd</span>()</span></code></pre></div></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>[1] "/Users/poelstra.1/Library/CloudStorage/Dropbox/mcic/teach/codeclub/codeclub-site/posts/S10E03_reprod_03"</code></pre>
-</div>
-</div></li>
-<li><p>The output of <code>getwd()</code> is a <strong>path</strong>, which specifies the location of a file or folder on a computer. In R’s output, folders are separated by forward slashes, as shown above.</p></li>
-</ol>
-<hr style="height:1pt; visibility:hidden;">
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Native paths on Windows versus Mac and Linux
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Even though R will report paths with forward slashes regardless of the operating system, <strong>Windows natively uses backslashes</strong>. Additionally, there are multiple root directories on Windows, indicated by letters. Here is an example native Windows file path:</p>
-<pre class="bash-out-solo"><code>C:\Users\John Doe\Desktop\cats.png</code></pre>
-<p>Versus an example Mac (or Linux) file path:</p>
-<pre class="bash-out-solo"><code>/Users/John Doe/Desktop/cats.png</code></pre>
-<p><strong>If you are on Windows, we recommend you <em>specify</em> paths in R with forward slashes</strong>, because:</p>
-<ol type="1">
-<li>It makes the path specification universal, i.e.&nbsp;independent of the operating system.</li>
-<li>Because backslashes have a separate purpose in R, if you wanted to use backslashes, you’d actually need <strong>two</strong>. For example: <code>setwd("C:\\Users\\John Doe")</code>. This is confusing and error-prone!</li>
-</ol>
-</div>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="absolute-and-relative-paths" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="absolute-and-relative-paths"><span class="header-section-number">4.2</span> Absolute and relative paths</h3>
-<p>There are two types of paths:</p>
-<ul>
-<li><p><strong>Absolute paths</strong>, also referred to as full paths, start from (one of) the computer’s root (top-level) directory. They correctly point to a file or folder regardless of what your working dir is.</p>
-<p><em>If you think of a path as a way to point to a geographic location,</em> <em>then absolute paths are like GPS coordinates.</em></p></li>
-<li><p><strong>Relative paths</strong> start from a specific working dir, and won’t work if you’re located elsewhere.</p>
-<p><em>Again thinking of a path as a way to point to a geographic location,</em> <em>then relative paths are like directions like “Take the second left”.</em></p></li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/proj-paths1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4" title="The absolute versus a relative path to a file. The relative path has the project1 folder as the starting point."><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/proj-paths1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="The absolute versus a relative path to a file. The relative path has the project1 folder as the starting point."></a></p>
-</figure>
-</div>
-<figcaption>The absolute versus a relative path to a file. The relative path has the <code>project1</code> folder as the starting point.</figcaption>
-</figure>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-paths" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-paths"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: paths</h4>
-<ol type="1">
-<li>In the image below, what is the absolute path to <code>todo_list.txt</code>?</li>
-<li>If your working dir is <code>oneils</code>, what is the relative path to <code>todo_list.txt</code>?</li>
-<li>If your working dir is <code>documents</code>, what is the relative path to <code>todo_list.txt</code>?</li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/oneil_filesystem_ex2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5" title="Example dir structure on a Mac computer, from @oneil2019 (link to chapter)"><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/oneil_filesystem_ex2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="A diagram of an example dir structure on a Mac computer."></a></p>
-</figure>
-</div>
-<figcaption>Example dir structure on a Mac computer, from <span class="citation" data-cites="oneil2019">O’Neil (2019)</span> (<a href="https://open.oregonstate.education/computationalbiology/chapter/the-command-line-and-filesystem/">link to chapter</a>)</figcaption>
-</figure>
-</div>
-</section>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="why-you-should-prefer-relative-paths" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="why-you-should-prefer-relative-paths"><span class="header-section-number">4.3</span> Why you should prefer relative paths</h3>
-<p>Don’t absolute paths sound better? What could be a disadvantage of them?</p>
-<p>Absolute paths:</p>
-<ul>
-<li>Don’t generally work across computers</li>
-<li>Break when your move a project folder hierarchy to a a different place on your computer</li>
-</ul>
-<p>On the other hand, this does not apply to relative paths that use the root project folder as the working dir. Those paths keep working when moving the folder within and between computers:</p>
-<hr style="height:1pt; visibility:hidden;">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/proj-paths2.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6" title="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/proj-paths2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Compared to the earlier image, everything was moved into a folder OndeDrive. This resulted in a change in the absolute path, but not to this relative path."></a></p>
-</figure>
-</div>
-<figcaption>Compared to the earlier image, everything was moved into a folder <code>OndeDrive</code>.<br>This resulted in a change in the absolute path, but not to this relative path.</figcaption>
-</figure>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-<div class="exercise">
-<p>So, relative paths are preferred, <strong>but only when used in the following way:</strong></p>
-<ol type="1">
-<li>Your working directory is always your project’s root directory (<code>project1</code> in the example above)</li>
-<li>You use relative paths that start at this directory</li>
-</ol>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-</section>
-<section id="use-rstudio-projects-not-setwd" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="use-rstudio-projects-not-setwd"><span class="header-section-number">5</span> Use RStudio Projects, not <code>setwd()</code></h2>
-<p>If your R working directory is not where you want it to be, you can change it with the <code>setwd()</code> function. However, there is a better way – letting RStudio Projects set your working dir!</p>
-<section id="rstudio-projects" class="level3" data-number="5.1">
-<h3 data-number="5.1" class="anchored" data-anchor-id="rstudio-projects"><span class="header-section-number">5.1</span> RStudio Projects</h3>
-<p><strong>RStudio Projects are an RStudio-specific concept that create a special file</strong>, <code>.Rproj</code>, whose location designates the R working directory when you open that project.</p>
-<details>
-<summary>
-Given what we talked about so far, in which dir(s) do you think RStudio Projects should generally be created?
-</summary>
-In a project’s root directory! For example, in <code>project1</code> in the diagram above.
-</details>
-<p>Create a new RStudio Project:</p>
-<ol type="1">
-<li>Click <code>File</code> &gt; <code>New Project</code> &gt; <code>New Directory</code> &gt; <code>New project</code></li>
-<li>In the next window:
-<ul>
-<li>Type <code>codeclub-project-practice</code> as the “Directory name”.</li>
-<li>You may use the default location (parent dir) or change it – up to you.</li>
-<li>Don’t check any of the boxes</li>
-</ul></li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/new-rstudio-project.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/new-rstudio-project.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%"></a></p>
-</figure>
-</div>
-<p>After RStudio automatically reloads, <strong>the R working directory will be set to the dir in which your RStudio Project file is located.</strong> Therefore, you should see the file ending in <code>.Rproj</code> in the RStudio <code>Files</code> tab in the lower right pane. Also, you can check your working dir:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">getwd</span>()</span></code></pre></div></div>
-</div>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="why-rstudio-projects-are-useful" class="level3" data-number="5.2">
-<h3 data-number="5.2" class="anchored" data-anchor-id="why-rstudio-projects-are-useful"><span class="header-section-number">5.2</span> Why RStudio Projects are useful</h3>
-<p>In brief, RStudio Projects help you to organize your work and make it more reproducible:</p>
-<ul>
-<li><p>When using Projects, you can avoid manually setting your working directory altogether. To refer to files within the project, you <strong>can use relative file paths</strong>. This way, even if you move the project directory, or copy it to a different computer, the same paths will still work.</p></li>
-<li><p>Projects encourage you to organize research projects inside self-contained folder hierarchies exactly as recommended above.</p></li>
-<li><p>When you switch between Projects, R will restart — and this is a good thing, since you don’t want to randomly carry over objects and loaded packages across research projects.</p></li>
-</ul>
-<p>RStudio Projects are also convenient because:</p>
-<ul>
-<li>Projects record which scripts (and R Markdown files) are open in RStudio, and will reopen all of those when you reopen the project. This becomes quite handy, say, when you work on three different projects, each of which uses a number of different scripts.</li>
-<li>The Files tab will always be (or at least start) in sync with your working dir</li>
-</ul>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="using-relative-paths-to-refer-to-files-within-the-project" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="using-relative-paths-to-refer-to-files-within-the-project"><span class="header-section-number">5.3</span> Using relative paths to refer to files within the project</h3>
-<p>Let’s recall the aforementioned way you should use relative paths:</p>
-<ol type="1">
-<li>Your working directory should always be your project’s root directory <span style="color:darkgoldenrod"><em>=&gt; this is taken care of by using RStudio projects and avoiding <code>setwd()</code></em></span></li>
-<li>You should use relative paths that start at this directory <span style="color:darkgoldenrod"><em>=&gt; we’ll practice that now</em></span></li>
-</ol>
-<p>Here are a few examples of using relative paths in R:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># [Don't run - fictional examples]</span></span>
-<span id="cb6-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_tsv</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/experiment1.tsv"</span>)</span>
-<span id="cb6-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"results/figures/barplot.png"</span>)</span></code></pre></div></div>
-</div>
-<p>Two key aspects of specifying paths in R:</p>
-<ul>
-<li>You have to use quotes (either double or single quotes) around the path</li>
-<li>As soon as you open quotes, either in the console or in your script, R will assume that you are trying to specify a path, and you can use <strong>Tab completion</strong> to essentially browse through your files. Practice with that in the exercise below!</li>
-</ul>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><a href="img/tab-paths3.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8" title="When you open quotes in the R console, your script, or Quarto code blocks, and press Tab, you can essentially browse your files starting from your working dir."><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/img/tab-paths3.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="When you open quotes in the R console, your script, or Quarto code blocks, and press Tab, you can essentially browse your files starting from your working dir."></a></p>
-</figure>
-</div>
-<figcaption><em>When you open quotes in the R console, your script, or Quarto code blocks, and press Tab, you can essentially browse your files starting from your working dir.</em></figcaption>
-</figure>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Accessing files that aren’t in the project dir
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Occasionally, you may need to access a file that is outside of your project dir (but the less that happens, the better – and this comes down to proper file organization). In that case, you can either use an absolute path, or a relative path that starts by going “up” one or more levels. You can navigate up with the <code>..</code> notation, for example:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># [Don't run - fictional examples]</span></span>
-<span id="cb7-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># The file is located in the dir:</span></span>
-<span id="cb7-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_tsv</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"../myfile.tsv"</span>)</span>
-<span id="cb7-4"></span>
-<span id="cb7-5"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># The file is located in the dir Downloads, which is two levels up:</span></span>
-<span id="cb7-6"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">read_tsv</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"../../Downloads/myfile.tsv"</span>)</span></code></pre></div></div>
-</div>
-</div>
-</div>
-<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-file-organization-and-relative-paths" class="level4 exercise">
-<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-file-organization-and-relative-paths"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: File organization and relative paths</h4>
-<p>In this exercise, you are working on a mock research project within the folder that you created above (your RStudio Project folder). You will practice with file organization and using relative paths.</p>
-<ol type="1">
-<li><p>You will be writing to file some mock data, a computed summary of the data, a plot based on the data, and an R script. Create an appropriate dir structure for those files within your RStudio Project dir. It’s up to you how you do this: in the RStudio file panes, in your computer’s file explorer, or with R functions (<code>dir.create)</code>).</p>
-<details>
-<summary>
-<p>Click here to see a solution</p>
-</summary>
-<p>From the above description, it seems appropriate to create <code>data</code>, <code>results</code>, and <code>scripts</code> dirs. Here, I’m also choosing to create a dir <code>plots</code> within results for plots.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dir.create</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data"</span>)</span>
-<span id="cb8-2"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dir.create</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"results/plots"</span>, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">recursive =</span> <span class="cn" style="color: #8f5902;
-background-color: null;
-font-style: inherit;">TRUE</span>)</span>
-<span id="cb8-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">dir.create</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"scripts"</span>)</span></code></pre></div></div>
-</div>
-</details></li>
-<li><p>Open a new R script (<code>File</code> &gt; <code>New File</code> &gt; <code>R Script</code>) and save it in an appropriate location within your newly created dir structure. Then, add all the code for the next exercises in that script.</p>
-<details>
-<summary>
-<p>Click here to see a solution</p>
-</summary>
-<p>It would be appropriate to save the script in a dir specifically for script, which was called <code>scripts</code> in the answer above. E.g., you could save it as <code>scripts/exercise.R</code>.</p>
-</details></li>
-<li><p>Load the tidyverse as follows:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">library</span>(tidyverse)</span></code></pre></div></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-✔ dplyr     1.1.4     ✔ readr     2.1.5
-✔ forcats   1.0.0     ✔ stringr   1.5.1
-✔ ggplot2   3.5.2     ✔ tibble    3.3.0
-✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-✔ purrr     1.1.0     
-── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-✖ dplyr::filter() masks stats::filter()
-✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># If that produces an error, run the following command to install, then try again:</span></span>
-<span id="cb11-2"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># install.packages("tidyverse")</span></span>
-<span id="cb11-3"><span class="co" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;"># library(tidyverse)</span></span></code></pre></div></div>
-</div></li>
-<li><p>Now, you will have access to a dataset (data frame) called <code>diamonds</code>. Modify the code below to write that data to file in an approriate location.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">write_tsv</span>(diamonds, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;FILE-PATH&gt;"</span>)</span></code></pre></div></div>
-</div>
-<details>
-<summary>
-<p>Click here to see a solution</p>
-</summary>
-<p>Assuming that you store the raw data in a dir called <code>data</code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">write_tsv</span>(diamonds, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"data/diamonds.tsv"</span>)</span></code></pre></div></div>
-</div>
-</details></li>
-<li><p>Run the <code>ggplot()</code> code below to create a plot of the diamonds data, then modify the <code>ggsave()</code> line to save your plot to file in an appropriate location.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(diamonds, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> carat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> price)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb14-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>()</span>
-<span id="cb14-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;FILE-PATH&gt;"</span>)</span></code></pre></div></div>
-</div>
-<details>
-<summary>
-<p>Click here to see a solution</p>
-</summary>
-<p>Assuming that you store the plot in a dir called <code>results/plots</code>:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggplot</span>(diamonds, <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">aes</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">x =</span> carat, <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">y =</span> price)) <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">+</span></span>
-<span id="cb15-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">geom_point</span>()</span></code></pre></div></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S10E03_reprod_03/index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">ggsave</span>(<span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"results/plots/plot.png"</span>)  </span></code></pre></div></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Saving 7 x 5 in image</code></pre>
-</div>
-</div>
-</details></li>
-<li><p>Run the code below to summarize one aspect of the diamonds data, then modify the <code>write_tsv()</code> line to save your resulting data frame to file in an appropriate location.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1">data_summary <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb18-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean_price =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(price), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.by =</span> cut)</span>
-<span id="cb18-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">write_tsv</span>(data_summary, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"&lt;FILE-PATH&gt;"</span>)</span></code></pre></div></div>
-</div>
-<details>
-<summary>
-<p>Click here to see a solution</p>
-</summary>
-<p>Assuming that you store the results in a dir called `results``:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1">data_summary <span class="ot" style="color: #003B4F;
-background-color: null;
-font-style: inherit;">&lt;-</span> diamonds <span class="sc" style="color: #5E5E5E;
-background-color: null;
-font-style: inherit;">|&gt;</span></span>
-<span id="cb19-2">  <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">summarize</span>(<span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">mean_price =</span> <span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">mean</span>(price), <span class="at" style="color: #657422;
-background-color: null;
-font-style: inherit;">.by =</span> cut)</span>
-<span id="cb19-3"><span class="fu" style="color: #4758AB;
-background-color: null;
-font-style: inherit;">write_tsv</span>(data_summary, <span class="st" style="color: #20794D;
-background-color: null;
-font-style: inherit;">"results/data_summary.tsv"</span>)</span></code></pre></div></div>
-</div>
-</details></li>
-<li><p>In the RStudio files tab, take a look at the file (structure) you produced.</p></li>
-</ol>
-</section>
-<p><br></p>
-<hr>
-<hr>
-</section>
-</section>
-<section id="bonus-use-good-file-names" class="level2" data-number="6">
-<h2 data-number="6" class="anchored" data-anchor-id="bonus-use-good-file-names"><span class="header-section-number">6</span> Bonus: Use good file names</h2>
-<p>Here are three principles for good file names (<a href="https://speakerdeck.com/jennybc/how-to-name-files">from Jenny Bryan</a>) — good file names:</p>
-<ul>
-<li>Are machine-readable</li>
-<li>Are human-readable</li>
-<li>Play well with default file ordering</li>
-</ul>
-<hr style="height:1pt; visibility:hidden;">
-<section id="machine-readable" class="level3" data-number="6.1">
-<h3 data-number="6.1" class="anchored" data-anchor-id="machine-readable"><span class="header-section-number">6.1</span> Machine-readable</h3>
-<p>Consistent and informative naming helps you to programmatically find and process files.</p>
-<ul>
-<li>Avoid spaces in file names. More generally, only use the following in file names:
-<ul>
-<li>Alphanumeric characters <kbd>A-Z</kbd>, <kbd>a-z</kbd>, <kbd>0-9</kbd></li>
-<li>Underscores <kbd>_</kbd> and hyphens (dashes) <kbd>-</kbd></li>
-<li>Periods (dots) <kbd>.</kbd></li>
-</ul></li>
-<li>In file names, you may provide <strong>metadata</strong> like Sample ID and date – (allowing you to easily select samples from e.g.&nbsp;a certain month): <code>sample032_2016-05-03.txt</code></li>
-</ul>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="human-readable" class="level3" data-number="6.2">
-<h3 data-number="6.2" class="anchored" data-anchor-id="human-readable"><span class="header-section-number">6.2</span> Human-readable</h3>
-<p>One good way to combine machine- and human-readable (opinionated recommendations):</p>
-<ul>
-<li>Use <strong>underscores</strong> (<kbd>_</kbd>) to delimit units you may later want to separate on: sampleID, treatment, date.</li>
-<li>Within such units, use <strong>dashes</strong> (<kbd>-</kbd>) to delimit words: <code>grass-samples</code>.</li>
-<li>Limit the use of <strong>periods</strong> (<kbd>.</kbd>) to indicate file extensions.</li>
-<li>Generally <em>avoid capitals</em>.</li>
-</ul>
-<p>For example:</p>
-<pre class="bash-out-solo"><code>mmus001_treatmentA_filtered.tsv
-mmus002_treatmentA_filtered.tsv
-.
-.
-mmus086_treatmentA_filtered.tsv</code></pre>
-<hr style="height:1pt; visibility:hidden;">
-</section>
-<section id="play-well-with-default-file-ordering" class="level3" data-number="6.3">
-<h3 data-number="6.3" class="anchored" data-anchor-id="play-well-with-default-file-ordering"><span class="header-section-number">6.3</span> Play well with default file ordering</h3>
-<ul>
-<li>Use <strong>leading zeros</strong> for lexicographic sorting: <code>sample005</code>.</li>
-<li><strong>Dates</strong> should always be written as <code>YYYY-MM-DD</code>: <code>2020-10-11</code>.</li>
-<li><strong>Group similar files together</strong> by starting with same phrase, and <strong>number scripts</strong> by execution order:</li>
-</ul>
-<pre class="bash-out-solo"><code>DE-01_normalize.R
-DE-02_test.R
-DE-03_process-significant.R</code></pre>
-<hr style="height:1pt; visibility:hidden;">
-
-
-
-</section>
-</section>
-
-<a onclick="window.scrollTo(0, 0); return false;" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-turing2025" class="csl-entry">
-Community, The Turing Way. 2025. <em>The <span>Turing</span> <span>Way</span>: <span>A</span> Handbook for Reproducible, Ethical and Collaborative Research</em>. <a href="https://10.5281/ZENODO.15213042">10.5281/ZENODO.15213042</a>.
-</div>
-<div id="ref-oneil2019" class="csl-entry">
-O’Neil, Shawn T. 2019. <em>A Primer for Computational Biology</em>. Oregon State University. <a href="https://open.oregonstate.education/computationalbiology/">https://open.oregonstate.education/computationalbiology/</a>.
-</div>
-<div id="ref-wilson2017" class="csl-entry">
-Wilson, Greg, Jennifer Bryan, Karen Cranston, Justin Kitzes, Lex Nederbragt, and Tracy K. Teal. 2017. <span>“Good Enough Practices in Scientific Computing.”</span> <em>PLOS Computational Biology</em> 13 (6): e1005510. <a href="https://doi.org/10.1371/journal.pcbi.1005510">https://doi.org/10.1371/journal.pcbi.1005510</a>.
-</div>
-</div></section></div> ]]></description>
-  <category>reproducibility</category>
-  <guid>https://osu-codeclub.github.io/posts/S10E03_reprod_03/</guid>
-  <pubDate>Mon, 22 Sep 2025 04:00:00 GMT</pubDate>
 </item>
 </channel>
 </rss>

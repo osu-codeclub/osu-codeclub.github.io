@@ -1,4 +1,21 @@
 /* css styles */
+/* --------------------------------------------------------------------------/*
+/* Figure captions */
+h2 {
+  margin-top: 50px;
+}
+
+h3 {
+  margin-top: 40px;
+}
+
+h4 {
+  font-size: 1.25em;
+  margin-top: 30px;
+}
+
+/* --------------------------------------------------------------------------/*
+/* Figure captions */
 figure figcaption {
   text-align: center;
 }
@@ -7,88 +24,131 @@ figure figcaption {
 /* Callout boxes */
 
 .callout.callout-style-default .callout-body {
-  border-left-color: #A42B28; !important
+  border-left-color: #A42B28;
+  !important
 }
 
 /* --------------------------------------------------------------------------/*
 /* Code boxes */
 .cell-output {
-    background-color: #e4e7ed;
-    padding: 5px 5px 0px 10px;
-    border-radius: 0px;
-    border-style: none;
-    border-width: 1px;
-    border-left-width: 2px;
-    border-left-style: solid;
-    border-left-color: #030303;
-    margin: -18px 0px 15px 0px;
-    font-style: italic;
-    color: rgb(141, 141, 143); !important
+  background-color: #e4e7ed;
+  padding: 5px 5px 0px 10px;
+  border-radius: 0px;
+  border-style: none;
+  border-width: 1px;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: #030303;
+  margin: -18px 0px 15px 0px;
+  font-style: italic;
+  color: rgb(141, 141, 143);
+  !important
 }
 
 .styled-output {
-  color: rgb(141, 141, 143); !important
+  color: rgb(141, 141, 143);
+  !important
 }
 
 .bash-in-nocolor {
-    background-color: #f0f3f4;
-    padding: 5px 5px 5px 10px;
-    border-radius: 0px;
-    border-style: none;
-    border-width: 1px;
-    margin: 0px 0px 15px 0px;
+  background-color: #f0f3f4;
+  padding: 5px 5px 5px 10px;
+  border-radius: 0px;
+  border-style: none;
+  border-width: 1px;
+  margin: 0px 0px 15px 0px;
 }
 
 .bash-out {
-    background-color: #e4e7ed;
-    padding: 5px 5px 0px 10px;
-    border-radius: 0px;
-    border-style: none;
-    border-width: 1px;
-    border-left-width: 2px;
-    border-left-style: solid;
-    border-left-color: #030303;
-    margin: -18px 0px 15px 0px;
-    font-style: italic;
-    color: rgb(141, 141, 143);
+  background-color: #e4e7ed;
+  padding: 5px 5px 0px 10px;
+  border-radius: 0px;
+  border-style: none;
+  border-width: 1px;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: #030303;
+  margin: -18px 0px 15px 0px;
+  font-style: italic;
+  color: rgb(141, 141, 143);
 }
 
 .bash-out-solo {
-    background-color: #e4e7ed;
-    padding: 5px 5px 5px 10px;
-    border-radius: 0px;
-    border-style: none;
-    border-width: 1px;
-    border-left-width: 2px;
-    border-left-style: solid;
-    border-left-color: #030303;
-    margin: 0px 0px 15px 0px;
-    font-style: italic;
-    color: rgb(90, 90, 92);
+  background-color: #e4e7ed;
+  padding: 5px 5px 5px 10px;
+  border-radius: 0px;
+  border-style: none;
+  border-width: 1px;
+  border-left-width: 2px;
+  border-left-style: solid;
+  border-left-color: #030303;
+  margin: 0px 0px 15px 0px;
+  font-style: italic;
+  color: rgb(90, 90, 92);
 }
 
 /* --------------------------------------------------------------------------/*
 /* Exercise boxes */
 .exercise {
-  padding: 0.5em;
-  margin: 0.5em;
-  padding-left: 10px;
-  color: #12433A; /*#1f5386; */
-  border: solid 2px #7a767a;
+  padding: 0em 1em 0.5em 1em;
+  margin: 1.5em 0.5em 1.5em 0.5em;
+  color: #3a2c18;
+  border: solid 1.5px #B36D1F;
+  border-left: solid 4px #B36D1F;
   border-radius: 25px;
+  /* optional warm tint: */
+  /* background-color: #FCF8F2; */
+}
+
+.exercise h4:first-of-type {
+  color: #8B4A00;
+  border-bottom: 1.5px solid #B36D1F;
+  padding-bottom: 0.3em;
+  margin-top: 1em;
+  margin-bottom: 1.2em;
 }
 
 /* --------------------------------------------------------------------------/*
 /* details sections */
-details > summary {
+details>summary {
+  display: block;
+  position: relative;
   padding-top: 4px;
-  padding-right: 10px;
+  padding-right: 30px;
   padding-bottom: 4px;
-  padding-left: 10px;
-  background-color: #EDEFE8; /* #f1f6f1; F4F4F4;
+  padding-left: 16px;
+  margin-left: -6px;
+  background-color: #EDEFE8;
   border: none;
-  border-radius: 25px;
-  /*box-shadow: 3px 3px 4px black;*/
+  border-radius: 3px;
+}
+
+details[open]>summary {
+  margin-bottom: 10px;
+}
+
+/* A summary's native disclosure triangle only shows when its computed
+   display is list-item (the default), so display:block already suppresses
+   it -- no need for display:flex, which used to split summary's text and
+   any inline elements (e.g. `` `code` ``) into separate side-by-side flex
+   items instead of one flowing, wrapping paragraph. The chevron is redrawn
+   via ::after and absolutely positioned so it stays out of that flow,
+   matching details.details-quiz below */
+details>summary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  width: 0.6em;
+  height: 0.6em;
+  border-right: 2px solid #919091;
+  border-bottom: 2px solid #919091;
+  transform: translateY(-50%) rotate(-45deg);
+  transition: transform 0.2s ease;
+}
+
+details[open]>summary::after {
+  transform: translateY(-50%) rotate(45deg);
 }
 
 details {
@@ -98,7 +158,8 @@ details {
   padding-right: 0px;
   padding-bottom: 0px;
   padding-left: 6px;
-  margin-top: 0px;
+  margin-top: 25px;
+  margin-bottom: 25px;
   margin-left: 5px;
   border-width: 1px;
   border-left-width: 3px;
@@ -106,4 +167,34 @@ details {
   border-color: #d9d7d9;
   border-left-color: #919091;
   border-radius: 5px;
+}
+
+/* --------------------------------------------------------------------------/*
+/* Keyboard keys - make smaller*/
+kbd {
+  font-size: 1em;
+  padding: 0.05em 0.4em;
+  line-height: 1;
+  background-color: #eef0f2;
+  color: var(--color-tertiary);
+  border: 1px solid var(--color-secondary);
+  border-radius: 4px;
+  box-shadow: 0 1.5px 0 var(--color-secondary);
+}
+
+/* --------------------------------------------------------------------------/*
+/* Images: thin gray border around content images (not the navbar logo) */
+main img {
+  border: 1px solid #bcbcbc;
+  border-radius: 2px;
+}
+
+/* Opt-out for individual images (logos, transparent PNGs, etc.): add the
+   .no-border class in the Quarto image attributes, e.g.
+     ![](/img/logo.svg){.no-border width="50%"}
+   Both selectors are needed because Pandoc/Quarto sometimes puts the class
+   on the <img> itself and sometimes on a wrapping <figure>/<div>. */
+main img.no-border,
+main .no-border img {
+  border: none;
 }

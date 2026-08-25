@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jelmer Poelstra">
+<meta name="dcterms.date" content="2026-08-27">
+
+<title>Positron intro – OSU Code Club</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-eec68b17241c1efd3eae2de50d816e3e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ecc62b47060d78d36e77ec54c50f5197.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../img/codeclub_favicon.png" alt="" class="navbar-logo light-content">
+    <img src="../img/codeclub_favicon.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/schedule.html"> 
+<span class="menu-text">Upcoming</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/previous.html"> 
+<span class="menu-text">Previous</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-get-started" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Get Started</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-get-started">    
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../pages/setup.html">
+ <span class="dropdown-text">Computer setup for Code Club</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-aug-2026">
+ <span class="dropdown-text">R for beginners (workshop materials)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../pages/other.html"> 
+<span class="menu-text">Related activities</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-well-cover" id="toc-what-well-cover" class="nav-link" data-scroll-target="#what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</a></li>
+  <li><a href="#why-is-there-a-new-ide" id="toc-why-is-there-a-new-ide" class="nav-link" data-scroll-target="#why-is-there-a-new-ide"><span class="header-section-number">1.2</span> Why is there a new IDE?</a></li>
+  <li><a href="#before-we-start" id="toc-before-we-start" class="nav-link" data-scroll-target="#before-we-start"><span class="header-section-number">1.3</span> Before we start</a></li>
+  </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">2</span> Getting started</a>
+  <ul class="collapse">
+  <li><a href="#opening-a-folder-and-the-missing-.rproj" id="toc-opening-a-folder-and-the-missing-.rproj" class="nav-link" data-scroll-target="#opening-a-folder-and-the-missing-.rproj"><span class="header-section-number">2.1</span> Opening a folder — and the missing <code>.Rproj</code></a></li>
+  <li><a href="#starting-an-r-session" id="toc-starting-an-r-session" class="nav-link" data-scroll-target="#starting-an-r-session"><span class="header-section-number">2.2</span> Starting an R session</a></li>
+  <li><a href="#our-dataset-for-today" id="toc-our-dataset-for-today" class="nav-link" data-scroll-target="#our-dataset-for-today"><span class="header-section-number">2.3</span> Our dataset for today</a></li>
+  </ul></li>
+  <li><a href="#a-tour-of-the-interface" id="toc-a-tour-of-the-interface" class="nav-link" data-scroll-target="#a-tour-of-the-interface"><span class="header-section-number">3</span> A tour of the interface</a>
+  <ul class="collapse">
+  <li><a href="#the-five-regions" id="toc-the-five-regions" class="nav-link" data-scroll-target="#the-five-regions"><span class="header-section-number">3.1</span> The five regions</a></li>
+  <li><a href="#where-did-my-rstudio-pane-go" id="toc-where-did-my-rstudio-pane-go" class="nav-link" data-scroll-target="#where-did-my-rstudio-pane-go"><span class="header-section-number">3.2</span> Where did my RStudio pane go?</a></li>
+  <li><a href="#the-command-palette" id="toc-the-command-palette" class="nav-link" data-scroll-target="#the-command-palette"><span class="header-section-number">3.3</span> The Command Palette</a></li>
+  </ul></li>
+  <li><a href="#exploring-data" id="toc-exploring-data" class="nav-link" data-scroll-target="#exploring-data"><span class="header-section-number">4</span> Exploring data</a>
+  <ul class="collapse">
+  <li><a href="#the-variables-pane" id="toc-the-variables-pane" class="nav-link" data-scroll-target="#the-variables-pane"><span class="header-section-number">4.1</span> The Variables pane</a></li>
+  <li><a href="#the-data-explorer" id="toc-the-data-explorer" class="nav-link" data-scroll-target="#the-data-explorer"><span class="header-section-number">4.2</span> The Data Explorer</a></li>
+  <li><a href="#plots-and-help" id="toc-plots-and-help" class="nav-link" data-scroll-target="#plots-and-help"><span class="header-section-number">4.3</span> Plots and Help</a></li>
+  <li><a href="#the-packages-pane" id="toc-the-packages-pane" class="nav-link" data-scroll-target="#the-packages-pane"><span class="header-section-number">4.4</span> The Packages pane</a></li>
+  </ul></li>
+  <li><a href="#making-positron-feel-like-home" id="toc-making-positron-feel-like-home" class="nav-link" data-scroll-target="#making-positron-feel-like-home"><span class="header-section-number">5</span> Making Positron feel like home</a>
+  <ul class="collapse">
+  <li><a href="#get-your-rstudio-keybindings-back" id="toc-get-your-rstudio-keybindings-back" class="nav-link" data-scroll-target="#get-your-rstudio-keybindings-back"><span class="header-section-number">5.1</span> Get your RStudio keybindings back</a></li>
+  <li><a href="#settings-the-ui-and-the-json-file" id="toc-settings-the-ui-and-the-json-file" class="nav-link" data-scroll-target="#settings-the-ui-and-the-json-file"><span class="header-section-number">5.2</span> Settings: the UI and the JSON file</a></li>
+  <li><a href="#a-few-settings-worth-changing" id="toc-a-few-settings-worth-changing" class="nav-link" data-scroll-target="#a-few-settings-worth-changing"><span class="header-section-number">5.3</span> A few settings worth changing</a></li>
+  <li><a href="#extensions" id="toc-extensions" class="nav-link" data-scroll-target="#extensions"><span class="header-section-number">5.4</span> Extensions</a></li>
+  </ul></li>
+  <li><a href="#wrapping-up" id="toc-wrapping-up" class="nav-link" data-scroll-target="#wrapping-up"><span class="header-section-number">6</span> Wrapping up</a>
+  <ul class="collapse">
+  <li><a href="#what-we-didnt-cover" id="toc-what-we-didnt-cover" class="nav-link" data-scroll-target="#what-we-didnt-cover"><span class="header-section-number">6.1</span> What we didn’t cover</a></li>
+  <li><a href="#so-should-you-switch" id="toc-so-should-you-switch" class="nav-link" data-scroll-target="#so-should-you-switch"><span class="header-section-number">6.2</span> So, should you switch?</a></li>
+  <li><a href="#where-to-get-help" id="toc-where-to-get-help" class="nav-link" data-scroll-target="#where-to-get-help"><span class="header-section-number">6.3</span> Where to get help</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/S12E01_positron_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Getting Started with Positron</h1>
+<p class="subtitle lead">A guided tour of Posit’s new data science IDE – and what changes when you come from RStudio</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">positron</div>
+  </div>
+  </div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Jelmer Poelstra <a href="mailto:poelstra.1@osu.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-3514-7462" class="quarto-title-author-orcid" aria-label="ORCID profile for Jelmer Poelstra"> <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://go.osu.edu/bioinformatics-core">
+            CFAES Bioinformatics Core, Ohio State University
+            </a>
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Presented on</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">August 27, 2026</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Page last modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">August 22, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="what-well-cover" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</h3>
+<p>Every Code Club session so far has used <strong>RStudio</strong>. Today we’ll spend the session in a different program: <strong><a href="https://positron.posit.co/">Positron</a></strong>, a newer data science IDE from Posit — the same company that makes RStudio.</p>
+<p>The goal today is <em>orientation</em>, not mastery. By the end of the session you should be able to open your own work in Positron, find your way around, and decide for yourself whether you want to keep using it. Specifically, we’ll cover:</p>
+<ul>
+<li><strong>Installing Positron and opening a folder</strong> — including the fact that there is no equivalent of an <code>.Rproj</code> file</li>
+<li><strong>Touring the interface</strong> — what happened to each of your RStudio panes, and the one new habit that makes everything else easier</li>
+<li><strong>Exploring data</strong> — the Data Explorer, Variables pane, and Packages pane</li>
+<li><strong>Making Positron feel like home</strong> — keyboard shortcuts, settings, and extensions</li>
+</ul>
+<p>We’ll do all of this with a single dataset, so the session feels like doing actual work rather than clicking around an empty program.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="why-is-there-a-new-ide" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="why-is-there-a-new-ide"><span class="header-section-number">1.2</span> Why is there a new IDE?</h3>
+<p>RStudio was built, first and foremost, for R. That was a great decision in 2011, and it is why RStudio is so good at what it does. But a lot of data scientists now move between R, Python, and SQL in the same project, and retrofitting RStudio for that turned out to be harder than starting fresh.</p>
+<p>So Posit started fresh. <strong>Positron</strong> is built on <a href="https://github.com/microsoft/vscode">Code OSS</a>, the open-source core of Visual Studio Code, with data science features added on top. That gives it a modern editor, an enormous extension ecosystem, and first-class support for several languages at once — while keeping the things R users expect, like a Console, a Variables pane, and a Plots pane.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Is RStudio going away?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>No.</strong> Posit has committed to maintaining and updating RStudio.</p>
+<p>What <em>is</em> true is that major new features are now going to Positron first. So this is not “RStudio is being switched off next year”, it is more like “the interesting new stuff is happening over there”.</p>
+<p>You do not have to switch today, or ever. But it’s worth knowing what your options are.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="before-we-start" class="level3" data-number="1.3">
+<h3 data-number="1.3" class="anchored" data-anchor-id="before-we-start"><span class="header-section-number">1.3</span> Before we start</h3>
+<p>If you haven’t done so already, please:</p>
+<ol type="1">
+<li><p><strong>Install Positron</strong> from <a href="https://positron.posit.co/download.html" class="uri">https://positron.posit.co/download.html</a>. It’s free, and there are installers for Windows, macOS, and Linux.</p></li>
+<li><p><strong>Make sure you have a recent R</strong> (4.4.0 or higher) installed — the same R installation you already use for RStudio is fine. Positron does not come with its own copy of R.</p></li>
+<li><p><strong>Install two R packages</strong>, if you don’t have them. You can do this from RStudio, before the session:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"nycflights13"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Using an OSU-managed computer?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You may not have the administrative privileges needed to install software. Try the “Software Center” (Windows) or “Ohio State Application Self Service” (Mac) app on your computer first.</p>
+<p>Note that, unlike RStudio, <strong>Positron is not currently available at OSC</strong>, so there is no browser-based fallback. If you can’t get it installed, don’t worry — pair up with a neighbor, or just follow along and try it later. The material on this page will stay available.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="getting-started" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">2</span> Getting started</h2>
+<section id="opening-a-folder-and-the-missing-.rproj" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="opening-a-folder-and-the-missing-.rproj"><span class="header-section-number">2.1</span> Opening a folder — and the missing <code>.Rproj</code></h3>
+<p>Start Positron. You’ll get a Welcome screen with an <strong>Open Folder</strong> button (you can also use <code>File</code> &gt; <code>Open Folder...</code>).</p>
+<p>This is the first real difference from RStudio, and it’s worth pausing on. Back in <a href="../posts/S10E03_reprod_03/">our session on RStudio Projects</a>, we made a big deal of <code>.Rproj</code> files: they mark a folder as a project, and opening one sets your working directory and gives you a clean R session.</p>
+<p><strong>Positron has no <code>.Rproj</code> equivalent.</strong> Instead, <em>any folder you open is treated as the project</em>. Opening a folder sets your working directory to that folder and gives you a fresh R session — you just don’t need a special file to make it happen.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>The good news
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Everything you learned about <em>why</em> projects are useful still applies:</p>
+<ul>
+<li>Keep each analysis in its own self-contained folder</li>
+<li>Use paths relative to the folder root, never <code>setwd()</code></li>
+<li>The <a href="https://here.r-lib.org/"><code>here</code> package</a> still works exactly as before</li>
+</ul>
+<p>And if you open a folder that already contains an <code>.Rproj</code> file, nothing breaks — Positron simply ignores the file. So a folder can work as both an RStudio Project and a Positron workspace, which is handy while you’re trying Positron out.</p>
+</div>
+</div>
+<p>For today, <strong>make a new, empty folder</strong> somewhere sensible (e.g.&nbsp;<code>~/Documents/codeclub/positron</code>) and open it in Positron.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="starting-an-r-session" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="starting-an-r-session"><span class="header-section-number">2.2</span> Starting an R session</h3>
+<p>Look at the <strong>top-right corner</strong> of the window: that’s the <strong>interpreter picker</strong>. If Positron found your R installation, it may have started a session already. If not, click the picker and choose your version of R.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The picker lists <em>every</em> interpreter Positron can find — possibly several versions of R and Python. Switching between R versions is a single click here, which is considerably less painful than it is in RStudio.</p>
+<p>You can also have <strong>several sessions running at once</strong> (say, an R session and a Python session, or two R sessions on different R versions) and switch between them from this same menu.</p>
+</div>
+</div>
+</div>
+<p>Once a session is running, the <strong>Console</strong> works the way you’d expect. Try it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="our-dataset-for-today" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="our-dataset-for-today"><span class="header-section-number">2.3</span> Our dataset for today</h3>
+<p>We’ll use the <code>flights</code> dataset from the <strong>nycflights13</strong> package: every flight that departed New York City in 2013. It has about <strong>337,000 rows and 19 columns</strong>, which matters — several of the things we’ll look at today only become interesting once a dataset is too big to eyeball.</p>
+<p>Create a new R script (<code>File</code> &gt; <code>New File</code> &gt; <code>R File</code>, or <code>Cmd</code>/<code>Ctrl</code>+<code>N</code>), save it as <code>explore.R</code>, and add:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a copy of the data as a CSV file, so we have a data file to work with</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(flights, <span class="st">"data/flights.csv"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Read it back in</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>flights_df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/flights.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Run the code with <code>Cmd</code>/<code>Ctrl</code>+<code>Enter</code> — same shortcut as RStudio. As in RStudio, this runs the current line (or your selection) and moves the cursor down.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>That <code>write_csv()</code> line produces a ~30 MB file. We’re doing it deliberately: later on we’ll open that file <em>directly</em>, without any R code at all, which is something RStudio simply can’t do.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="a-tour-of-the-interface" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="a-tour-of-the-interface"><span class="header-section-number">3</span> A tour of the interface</h2>
+<p>Positron’s layout will feel broadly familiar — you write code in an editor, run it in a console, and look at results in panes — but things have moved, and there are two regions that have no RStudio equivalent.</p>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>📸 <strong>SCREENSHOT NEEDED</strong>: an annotated screenshot of the full Positron window with the five regions labeled. Save as <code>img/positron-layout.png</code>.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="the-five-regions" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="the-five-regions"><span class="header-section-number">3.1</span> The five regions</h3>
+<table class="table-striped caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Region</th>
+<th>Where</th>
+<th>What’s in it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Editor</strong></td>
+<td>Center</td>
+<td>Your scripts and documents, in tabs</td>
+</tr>
+<tr class="even">
+<td><strong>Console</strong></td>
+<td>Bottom</td>
+<td>The R console, plus the Terminal — as in RStudio</td>
+</tr>
+<tr class="odd">
+<td><strong>Activity Bar</strong></td>
+<td>Far left</td>
+<td>Icons that <em>switch</em> what the Primary Side Bar shows</td>
+</tr>
+<tr class="even">
+<td><strong>Primary Side Bar</strong></td>
+<td>Left</td>
+<td>Explorer (files), Search, Source Control (git), Extensions, Packages</td>
+</tr>
+<tr class="odd">
+<td><strong>Secondary Side Bar</strong></td>
+<td>Right</td>
+<td>Variables, Plots, Help, Viewer, Connections</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>Activity Bar</strong> is the genuinely new idea. In RStudio, every pane is visible at once in a fixed 2x2 grid. In Positron, the left-hand side bar shows <em>one thing at a time</em>, and you click an icon in the Activity Bar to change which. That feels cramped at first and spacious later, once you stop needing four things visible simultaneously.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Don’t like the layout? <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Almost every pane in Positron can be <strong>dragged somewhere else</strong>. If you want your Help pane down at the bottom next to the Console, just drag its tab there.</p>
+<p>There are also preset layouts: open the Command Palette (see below) and search for <code>Positron:</code> layout commands to try a couple of alternatives.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="where-did-my-rstudio-pane-go" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="where-did-my-rstudio-pane-go"><span class="header-section-number">3.2</span> Where did my RStudio pane go?</h3>
+<table class="table-striped table-hover caption-top table">
+<thead>
+<tr class="header">
+<th>In RStudio</th>
+<th>In Positron</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Source pane</td>
+<td>Editor (center)</td>
+</tr>
+<tr class="even">
+<td>Console</td>
+<td>Console (bottom)</td>
+</tr>
+<tr class="odd">
+<td>Environment</td>
+<td><strong>Variables</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Plots</td>
+<td><strong>Plots</strong> pane (right)</td>
+</tr>
+<tr class="odd">
+<td>Help</td>
+<td><strong>Help</strong> pane (right), or press <code>F1</code> on a function</td>
+</tr>
+<tr class="even">
+<td>Files</td>
+<td><strong>Explorer</strong> (Activity Bar, far left)</td>
+</tr>
+<tr class="odd">
+<td>Packages</td>
+<td><strong>Packages</strong> pane (Activity Bar)</td>
+</tr>
+<tr class="even">
+<td>Git</td>
+<td><strong>Source Control</strong> (Activity Bar)</td>
+</tr>
+<tr class="odd">
+<td>Viewer</td>
+<td><strong>Viewer</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Terminal</td>
+<td>A tab next to the Console</td>
+</tr>
+<tr class="odd">
+<td>History</td>
+<td><strong>History</strong> pane (right)</td>
+</tr>
+<tr class="even">
+<td>Build</td>
+<td><em>No pane</em> — use the Command Palette</td>
+</tr>
+<tr class="odd">
+<td><code>View(df)</code> data viewer</td>
+<td><strong>Data Explorer</strong> (opens as an editor tab)</td>
+</tr>
+</tbody>
+</table>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="the-command-palette" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="the-command-palette"><span class="header-section-number">3.3</span> The Command Palette</h3>
+<p>If you take one thing away from today, make it this one.</p>
+<p>Press <strong><code>Cmd</code>+<code>Shift</code>+<code>P</code></strong> (Mac) or <strong><code>Ctrl</code>+<code>Shift</code>+<code>P</code></strong> (Windows/Linux). A search box appears at the top of the window. Start typing what you want to do, and Positron will fuzzy-match it against <em>every command it knows</em>.</p>
+<p>This replaces a lot of RStudio’s buttons and menus. Rather than learning where things live, you learn to describe what you want:</p>
+<ul>
+<li>Type <code>restart</code> → <em>Interpreter: Restart Active Interpreter Session</em></li>
+<li>Type <code>packages</code> → <em>View: Packages</em></li>
+<li>Type <code>theme</code> → <em>Preferences: Color Theme</em></li>
+<li>Type <code>settings</code> → <em>Preferences: Open Settings (UI)</em></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>It teaches you shortcuts, too
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Command Palette shows the keyboard shortcut next to each command that has one. So it’s also how you <em>discover</em> shortcuts: find the command by name, notice the shortcut, and next time skip the palette.</p>
+<p>This is much more reliable than memorizing a list — and it’s why this page doesn’t give you one.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-1-find-your-way-around" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-1-find-your-way-around"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 1: Find your way around</h4>
+<p>Using <strong>only the Command Palette</strong> (no menus, no clicking around!), do the following:</p>
+<ol type="1">
+<li><p>Open the <strong>Packages</strong> pane</p></li>
+<li><p>Change the <strong>color theme</strong> to something you like better than the default</p></li>
+<li><p><strong>Restart your R session</strong>, then confirm in the Variables pane that your objects are gone</p></li>
+<li><p>Re-run your script to get <code>flights_df</code> back <em>(hint: there’s a command for running the whole file — find it!)</em></p></li>
+</ol>
+<details>
+<summary>
+<em>Click here to see hints</em>
+</summary>
+<p>For each of these, open the palette with <code>Cmd</code>/<code>Ctrl</code>+<code>Shift</code>+<code>P</code> and type:</p>
+<ol type="1">
+<li><code>packages</code> — look for <em>View: Packages</em></li>
+<li><code>theme</code> — look for <em>Preferences: Color Theme</em>, then use the arrow keys to preview themes live before hitting Enter</li>
+<li><code>restart</code> — look for <em>Interpreter: Restart Active Interpreter Session</em></li>
+<li><code>run</code> — look for <em>R: Run R File in Console</em> or similar</li>
+</ol>
+<p>Notice how each of these showed you a keyboard shortcut on the right-hand side.</p>
+</details>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="exploring-data" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="exploring-data"><span class="header-section-number">4</span> Exploring data</h2>
+<p>This is where Positron most clearly does something RStudio doesn’t.</p>
+<section id="the-variables-pane" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="the-variables-pane"><span class="header-section-number">4.1</span> The Variables pane</h3>
+<p>Look at the <strong>Variables</strong> pane on the right. It’s RStudio’s Environment pane, with one big improvement: you can <strong>expand objects</strong> to look inside them, by clicking the arrow next to an object’s name.</p>
+<p>Try expanding <code>flights_df</code>. You’ll see each column, its type, and a preview of its contents — without having to write <code>str()</code> or <code>glimpse()</code>.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="the-data-explorer" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="the-data-explorer"><span class="header-section-number">4.2</span> The Data Explorer</h3>
+<p>Now for the main event. In the Variables pane, find <code>flights_df</code> and click the small <strong>table icon</strong> next to it.</p>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>📸 <strong>SCREENSHOT NEEDED</strong>: the Data Explorer open on <code>flights_df</code>, with the summary panel and filter bar visible. Save as <code>img/data-explorer.png</code>.</p>
+</div>
+</div>
+</div>
+<p>The <strong>Data Explorer</strong> opens as a tab in the Editor, not as a small pane. It has three parts:</p>
+<ul>
+<li>The <strong>data grid</strong> — the spreadsheet-like view of your rows and columns</li>
+<li>The <strong>summary panel</strong> — per-column statistics and a small distribution plot</li>
+<li>The <strong>filter bar</strong> — for temporarily filtering rows</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>This is not <code>View()</code> with a new coat of paint
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>RStudio’s <code>View()</code> lets you sort and do simple per-column filtering. What it doesn’t give you is <strong>summary statistics</strong>, and that’s the real difference here.</p>
+<p>Scroll through the summary panel for <code>flights_df</code> and notice, for free: the percentage of missing values per column, min/median/max for numeric columns, and the number of distinct values for character columns. <code>dep_delay</code> and <code>arr_delay</code> have a few percent missing — those are the cancelled flights, and you found that out without writing any code.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="sorting-and-filtering" class="level4">
+<h4 class="anchored" data-anchor-id="sorting-and-filtering">Sorting and filtering</h4>
+<ul>
+<li><strong>Sort</strong> by clicking a column header</li>
+<li><strong>Filter</strong> by clicking <code>+ Add Filter</code> in the filter bar, picking a column, and choosing a condition</li>
+</ul>
+<p>Filters <em>stack</em>: add several and they combine. Crucially, <strong>none of this modifies your data</strong> — it’s a temporary view, so you can explore freely without worrying about messing something up. When you’ve worked out what you want, you write the actual <code>filter()</code> call in your script.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="opening-data-files-directly" class="level4">
+<h4 class="anchored" data-anchor-id="opening-data-files-directly">Opening data files directly</h4>
+<p>Here’s the part with no RStudio equivalent at all.</p>
+<p>Open the <strong>Explorer</strong> in the Activity Bar (the top icon, looks like documents), find <code>data/flights.csv</code>, and <strong>double-click it</strong>.</p>
+<p>It opens in the Data Explorer. No R session involved, no <code>read_csv()</code>, no waiting for a 30 MB file to load into memory.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Which file types?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>.csv</code>, <code>.tsv</code>, <code>.parquet</code>, and <code>.xlsx</code> — plus <strong>compressed</strong> versions of CSV, TSV, and Parquet.</p>
+<p>This is genuinely useful for the “what <em>is</em> this file someone sent me?” problem, especially when the file is too big to open in Excel.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="plots-and-help" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="plots-and-help"><span class="header-section-number">4.3</span> Plots and Help</h3>
+<p>Make a plot, so we have something to look at:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>flights_df <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(arr_delay)) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> arr_delay)) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>) <span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">300</span>)) <span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Arrival delay (minutes)"</span>, <span class="at">y =</span> <span class="st">"Number of flights"</span>) <span class="sc">+</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The <strong>Plots</strong> pane behaves much like RStudio’s, including the back/forward arrows through your plot history. Two things to try: the <strong>expand</strong> button, which pops the plot out into a large editor tab, and the <strong>size</strong> controls, which let you set specific plot dimensions rather than resizing a pane by hand.</p>
+<p>For <strong>Help</strong>: put your cursor inside a function name in your script — say, <code>geom_histogram</code> — and press <strong><code>F1</code></strong>. The Help pane opens with the documentation. <code>?geom_histogram</code> in the Console still works too.</p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="the-packages-pane" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="the-packages-pane"><span class="header-section-number">4.4</span> The Packages pane</h3>
+<p>Open the <strong>Packages</strong> pane from the Activity Bar.</p>
+<p>This is a recent addition and a nice one. It lists every package installed in your current session’s library, with:</p>
+<ul>
+<li>its <strong>version</strong>, and whether it’s <strong>attached</strong> (i.e.&nbsp;you ran <code>library()</code> on it)</li>
+<li>a filter to show only <strong>outdated</strong> packages</li>
+<li>buttons to <strong>install</strong>, <strong>update</strong>, and <strong>remove</strong> packages</li>
+<li>links to each package’s documentation and website</li>
+</ul>
+<p>Try filtering to outdated packages to see what you’ve been neglecting.</p>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>After installing or updating a package, Positron will offer to <strong>restart your session</strong>. Say yes — this is the same reason RStudio asks you to restart R after updating a package that’s currently loaded.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-2-explore-the-flights-data" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-2-explore-the-flights-data"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 2: Explore the flights data</h4>
+<p>Use the <strong>Data Explorer</strong> — not R code — to answer these:</p>
+<ol type="1">
+<li><p>Which column has the <strong>most missing values</strong>? <em>(Hint: the summary panel shows a missing-value percentage per column.)</em></p></li>
+<li><p>How many <strong>distinct airline carriers</strong> (<code>carrier</code>) are in the data?</p></li>
+<li><p>Filter to flights that departed from <code>JFK</code> <strong>and</strong> had a departure delay (<code>dep_delay</code>) of more than 120 minutes. Roughly how many rows are left? <em>(Look for the row count displayed in the Data Explorer — it reflects your active filters.)</em></p></li>
+<li><p>Sort those filtered flights by <code>dep_delay</code>, descending. What was the single worst departure delay out of JFK, in hours?</p></li>
+</ol>
+<p><strong>Then</strong>: write the R code that reproduces your filter from step 3, and check that you get the same number of rows.</p>
+<details>
+<summary>
+<em>Click here to see the solution to the last part</em>
+</summary>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>flights_df <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(origin <span class="sc">==</span> <span class="st">"JFK"</span>, dep_delay <span class="sc">&gt;</span> <span class="dv">120</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This is a workflow worth getting used to: <strong>explore interactively in the Data Explorer, then write the code that makes it reproducible.</strong> The clicking is for figuring out what you want; the code is what goes in your script.</p>
+</details>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="making-positron-feel-like-home" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="making-positron-feel-like-home"><span class="header-section-number">5</span> Making Positron feel like home</h2>
+<p>The single biggest complaint from RStudio users trying Positron is “my keyboard shortcuts don’t work”. Let’s fix that, and a few other things.</p>
+<section id="get-your-rstudio-keybindings-back" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="get-your-rstudio-keybindings-back"><span class="header-section-number">5.1</span> Get your RStudio keybindings back</h3>
+<p>Many RStudio shortcuts already work in Positron — <code>Cmd</code>/<code>Ctrl</code>+<code>Enter</code> to run code, <code>Cmd</code>/<code>Ctrl</code>+<code>L</code> to clear the console. But plenty don’t, because Positron inherits VS Code’s shortcuts, which sometimes conflict.</p>
+<p>There’s a single setting that fixes most of this. Open the Command Palette and run <em>Preferences: Open Settings (UI)</em>, then search for <code>rstudioKeybindings</code> and check the box:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="st">"workbench.keybindings.rstudioKeybindings"</span><span class="er">:</span> <span class="kw">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Restart Positron</strong> for it to take effect.</p>
+<p>This turns on a large set of RStudio shortcuts, including:</p>
+<table class="table-striped caption-top table">
+<thead>
+<tr class="header">
+<th>Shortcut</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>Ctrl</code>+<code>1</code></td>
+<td>Focus the Source/Editor pane</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code>+<code>2</code></td>
+<td>Focus the Console</td>
+</tr>
+<tr class="odd">
+<td><code>F2</code></td>
+<td>Go to definition</td>
+</tr>
+<tr class="even">
+<td><code>Ctrl</code>+<code>Shift</code>+<code>R</code></td>
+<td>Insert a section header</td>
+</tr>
+</tbody>
+</table>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="settings-the-ui-and-the-json-file" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="settings-the-ui-and-the-json-file"><span class="header-section-number">5.2</span> Settings: the UI and the JSON file</h3>
+<p>Positron has <em>a lot</em> of settings — inherited from VS Code, plus its own. There are two ways to change them, and they edit the same thing:</p>
+<ul>
+<li><strong>Settings UI</strong> — <em>Preferences: Open Settings (UI)</em>. Searchable, with checkboxes and dropdowns. Start here.</li>
+<li><strong><code>settings.json</code></strong> — <em>Preferences: Open User Settings (JSON)</em>. The raw file. Faster once you know what you’re looking for, and easy to copy between computers.</li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>User settings vs.&nbsp;workspace settings
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Settings come in two levels:</p>
+<ul>
+<li><strong>User</strong> settings apply everywhere — your personal preferences</li>
+<li><strong>Workspace</strong> settings apply only to the current folder, and get saved in a <code>.vscode/settings.json</code> file inside it</li>
+</ul>
+<p>The workspace level is genuinely useful for collaborative projects: you can commit a <code>.vscode/settings.json</code> so everyone working on the project gets the same formatting behavior.</p>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="a-few-settings-worth-changing" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="a-few-settings-worth-changing"><span class="header-section-number">5.3</span> A few settings worth changing</h3>
+<p>These are the ones RStudio refugees most often want:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"workbench.keybindings.rstudioKeybindings"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"files.trimTrailingWhitespace"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"files.insertFinalNewline"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"editor.wordWrap"</span><span class="fu">:</span> <span class="st">"on"</span><span class="fu">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"files.autoSave"</span><span class="fu">:</span> <span class="st">"afterDelay"</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<ul>
+<li><code>trimTrailingWhitespace</code> / <code>insertFinalNewline</code> — tidier files, and <em>much</em> cleaner git diffs</li>
+<li><code>editor.wordWrap</code> — soft-wrap long lines instead of scrolling sideways</li>
+<li><code>files.autoSave</code> — saves automatically; some people love this, others hate it, try it and see</li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="extensions" class="level3" data-number="5.4">
+<h3 data-number="5.4" class="anchored" data-anchor-id="extensions"><span class="header-section-number">5.4</span> Extensions</h3>
+<p>Positron can install <strong>VS Code extensions</strong>, which is a large part of the appeal. Open the <strong>Extensions</strong> view from the Activity Bar and search.</p>
+<p>Some worth knowing about:</p>
+<table class="table-striped caption-top table">
+<thead>
+<tr class="header">
+<th>Extension</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Quarto</strong></td>
+<td>Quarto support (usually installed already)</td>
+</tr>
+<tr class="even">
+<td><strong>Shiny</strong></td>
+<td>Run and debug Shiny apps</td>
+</tr>
+<tr class="odd">
+<td><strong>Rainbow CSV</strong></td>
+<td>Colorizes CSV columns when viewing as plain text</td>
+</tr>
+<tr class="even">
+<td><strong>Indent Rainbow</strong></td>
+<td>Colorizes indentation levels</td>
+</tr>
+<tr class="odd">
+<td><strong>Tomorrow Night Bright (R Classic)</strong></td>
+<td>The RStudio theme, ported</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-simple callout-warning">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>Not everything transfers. <strong>RStudio add-ins are not compatible</strong> with Positron — if you rely on something like <code>datapasta</code> or <code>styler</code>’s add-in buttons, check whether a Positron/VS Code equivalent exists before you switch.</p>
+</div>
+</div>
+</div>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-3-make-it-yours" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-3-make-it-yours"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise 3: Make it yours</h4>
+<p>Spend a few minutes setting Positron up the way <em>you</em> would want it:</p>
+<ol type="1">
+<li><p>Turn on <strong>RStudio keybindings</strong> (and restart Positron)</p></li>
+<li><p>Pick a <strong>color theme</strong> you actually like</p></li>
+<li><p>Change at least <strong>two other settings</strong> from the list above — or find your own by browsing the Settings UI</p></li>
+<li><p>Install <strong>one extension</strong> that looks useful to you</p></li>
+</ol>
+<p>Then compare with the person next to you: what did they change that you didn’t think of?</p>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-bring-your-own-project" class="level4 exercise">
+<h4 class="anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-bring-your-own-project"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise: Bring your own project</h4>
+<p>If you finish early — or want something to do afterwards — this is the real test:</p>
+<ol type="1">
+<li><p>Open <strong>one of your own project folders</strong> in Positron (<code>File</code> &gt; <code>Open Folder...</code>). An existing RStudio Project folder is fine.</p></li>
+<li><p>Run one of your own scripts.</p></li>
+<li><p>Note down anything that <strong>doesn’t work</strong> or that you can’t find.</p></li>
+</ol>
+<p>Bring that list to a future Code Club session or email it to us — it’s exactly the kind of thing worth working through as a group.</p>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+</section>
+<section id="wrapping-up" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="wrapping-up"><span class="header-section-number">6</span> Wrapping up</h2>
+<section id="what-we-didnt-cover" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="what-we-didnt-cover"><span class="header-section-number">6.1</span> What we didn’t cover</h3>
+<p>Positron does considerably more than we had time for today:</p>
+<ul>
+<li><strong>AI assistance</strong> with <strong>Posit Assistant</strong> — chat, code generation, and agentic tools, built right into Positron. This is the topic of <strong>our next session on September 17</strong>, with Jess!</li>
+<li><strong>Quarto</strong> — rendering, and inline output for <code>.qmd</code> files</li>
+<li><strong>Git</strong> — via the Source Control view in the Activity Bar</li>
+<li><strong>Notebooks</strong> — Positron has its own Jupyter notebook editor</li>
+<li><strong>Databases</strong> — the Connections pane, for DuckDB, PostgreSQL, SQLite and more</li>
+<li><strong>Python</strong> — the whole other half of what Positron is for</li>
+</ul>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="so-should-you-switch" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="so-should-you-switch"><span class="header-section-number">6.2</span> So, should you switch?</h3>
+<p>An honest summary.</p>
+<p><strong>Reasons to switch:</strong></p>
+<ul>
+<li>The <strong>Data Explorer</strong> is a real improvement over <code>View()</code></li>
+<li>Effortless handling of <strong>multiple R versions</strong> and <strong>multiple sessions</strong></li>
+<li>If you use <strong>Python</strong> at all, one IDE instead of two</li>
+<li>The <strong>extension ecosystem</strong> is enormous</li>
+<li>New Posit features land here first</li>
+</ul>
+<p><strong>Reasons to wait:</strong></p>
+<ul>
+<li><strong>R Markdown</strong> support is thinner than in RStudio (Positron favors Quarto), and <strong>Sweave</strong> is not supported</li>
+<li><strong>RStudio add-ins don’t work</strong></li>
+<li>Some R-specific niceties are still RStudio-only</li>
+<li>Your muscle memory is worth real money, and rebuilding it costs a few weeks</li>
+</ul>
+<p>There’s no wrong answer, and no deadline. A reasonable middle path: <strong>keep using RStudio for your real deadlines, and open Positron for your next new project.</strong></p>
+<hr style="height:1pt; visibility:hidden;">
+</section>
+<section id="where-to-get-help" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="where-to-get-help"><span class="header-section-number">6.3</span> Where to get help</h3>
+<ul>
+<li>The <a href="https://positron.posit.co/">Positron documentation</a> — and note that most <strong>VS Code documentation also applies</strong>, since Positron is built on it</li>
+<li>The <a href="https://positron.posit.co/migrate-rstudio.html">migration guide for RStudio users</a></li>
+<li>An <strong>in-product walkthrough</strong>: open the Command Palette, run <em>Welcome: Open Walkthrough…</em>, and pick “Migrating from RStudio to Positron”</li>
+<li>The <a href="https://github.com/posit-dev/positron">Positron GitHub repo</a>, where you can report bugs and see what’s coming</li>
+<li>Any of the <a href="../about.html#organizers">Code Club organizers</a> — do ask!</li>
+</ul>
+
+
+</section>
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/S12E01_positron_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

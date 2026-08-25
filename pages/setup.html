@@ -2,20 +2,23 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.9.37">
+<meta name="generator" content="quarto-1.10.18">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Computer Setup (installations) for Code Club – OSU Code Club</title>
+<title>Installation Guide for Code Club – OSU Code Club</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
 */
-code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
-div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: auto; overflow-x: auto;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -75,10 +78,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-4e5466e430b1db38349d513585fd1d59.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-eec68b17241c1efd3eae2de50d816e3e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-6674eb65b78ad71451215b9ed42ac63e.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ecc62b47060d78d36e77ec54c50f5197.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -160,7 +163,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
   </li>  
         <li>
     <a class="dropdown-item" href="../pages/setup.html">
- <span class="dropdown-text">Computer setup for Code Club</span></a>
+ <span class="dropdown-text">Installation guide</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-aug-2026">
@@ -199,11 +202,16 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#install-r" id="toc-install-r" class="nav-link active" data-scroll-target="#install-r"><span class="header-section-number">1</span> Install R</a></li>
-  <li><a href="#install-rstudio" id="toc-install-rstudio" class="nav-link" data-scroll-target="#install-rstudio"><span class="header-section-number">2</span> Install RStudio</a></li>
-  <li><a href="#osc" id="toc-osc" class="nav-link" data-scroll-target="#osc"><span class="header-section-number">3</span> Alternative: Use RStudio Server at OSC</a></li>
-  <li><a href="#alternative-update-an-existing-r-installation" id="toc-alternative-update-an-existing-r-installation" class="nav-link" data-scroll-target="#alternative-update-an-existing-r-installation"><span class="header-section-number">4</span> Alternative: Update an existing R installation</a></li>
-  <li><a href="#new-to-r" id="toc-new-to-r" class="nav-link" data-scroll-target="#new-to-r"><span class="header-section-number">5</span> New to R?</a></li>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview"><span class="header-section-number">1</span> Overview</a></li>
+  <li><a href="#install-r" id="toc-install-r" class="nav-link" data-scroll-target="#install-r"><span class="header-section-number">2</span> Install R</a></li>
+  <li><a href="#install-positron" id="toc-install-positron" class="nav-link" data-scroll-target="#install-positron"><span class="header-section-number">3</span> Install Positron</a></li>
+  <li><a href="#appendix" id="toc-appendix" class="nav-link" data-scroll-target="#appendix"><span class="header-section-number">4</span> Appendix</a>
+  <ul class="collapse">
+  <li><a href="#install-rstudio" id="toc-install-rstudio" class="nav-link" data-scroll-target="#install-rstudio"><span class="header-section-number">4.1</span> Install RStudio</a></li>
+  <li><a href="#osc" id="toc-osc" class="nav-link" data-scroll-target="#osc"><span class="header-section-number">4.2</span> Use RStudio Server at OSC</a></li>
+  <li><a href="#posit-cloud" id="toc-posit-cloud" class="nav-link" data-scroll-target="#posit-cloud"><span class="header-section-number">4.3</span> Use RStudio via Posit Cloud</a></li>
+  <li><a href="#updating-r" id="toc-updating-r" class="nav-link" data-scroll-target="#updating-r"><span class="header-section-number">4.4</span> Update an existing R installation</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/pages/setup.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -212,7 +220,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Computer Setup (installations) for Code Club</h1>
+<h1 class="title">Installation Guide for Code Club</h1>
 </div>
 
 
@@ -224,7 +232,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">January 21, 2026</p>
+      <p class="date-modified">August 22, 2026</p>
     </div>
   </div>
     
@@ -236,64 +244,106 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 
 
 <hr>
-<p><br></p>
-<p>Here, you will find general information about software installations you should do before joining Code Club.</p>
-<p>In summary, you only need to be able to <strong>access to R and RStudio</strong>, preferably via a local installation, and optionally via the Ohio Supercomputer Center (OSC).</p>
+<hr style="height:1pt; visibility:hidden;">
+<section id="overview" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1</span> Overview</h2>
+<p>Here, you will find information about software installations you should do before joining a Code Club session.</p>
+<p>In summary, you need <strong>R</strong> (the programming language itself) and an <strong>IDE</strong> (an editor to write and run R code in). In fall 2026, we will be using <strong>Positron</strong> as our IDE, so you won’t need RStudio.</p>
 <p>If you <strong>run into issues or have questions</strong>, don’t hesitate to contact one of the <a href="../about.html#organizers">Code Club organizers</a>.</p>
-<section id="install-r" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="install-r"><span class="header-section-number">1</span> Install R</h2>
-<ul>
-<li><p><strong>Windows</strong>: Download and run the <code>.exe</code> file for the latest version of R from <a href="https://cran.r-project.org/bin/windows/base/" class="uri">https://cran.r-project.org/bin/windows/base/</a>, by clicking the large <code>Download R [version-number] for Windows</code> link at the top of the gray box.</p></li>
-<li><p><strong>Mac</strong>: Download and run the <code>.pkg</code> file for the latest version of R from <a href="https://cran.r-project.org/bin/macosx/" class="uri">https://cran.r-project.org/bin/macosx/</a>, by clicking the link just below <code>Latest release</code>.</p></li>
-</ul>
 <div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Using an OSU-managed computer? <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>If you are using an OSU computer, you may not have the “administrative privileges” that are needed to install some software on your computer “the regular way”, via installers.</p>
+<p>However, you should have an OSU application on your computer that allows you to install a selection of approved software, and that selection should include R, RStudio, and (increasingly) Positron. On Windows, this app is called “<strong>Software Center</strong>”, whereas on Mac, it is called “<strong>Ohio State Application Self Service</strong>” (names may vary).</p>
+<p>If you can’t find that application, or have trouble installing the software this way, you should contact OSU IT to help you.</p>
+<p>Note that both RStudio and Positron can also be installed <em>for your user account only</em>, which does not require administrative privileges — see the sections below.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="install-r" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="install-r"><span class="header-section-number">2</span> Install R</h2>
+<ul>
+<li><p><strong>Windows</strong> — Download and run <a href="https://cran.r-project.org/bin/windows/base/release.htm">this <code>.exe</code> file</a> for the latest version of R from <a href="https://cran.r-project.org/index.html">CRAN</a>.</p></li>
+<li><p><strong>Mac</strong> — Download and run <a href="https://cran.r-project.org/bin/macosx/R-latest.pkg">this <code>.pkg</code> file</a> for the latest version of R from <a href="https://cran.r-project.org/index.html">CRAN</a>.</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Already have R installed? <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Check your version of R: this information is printed to the console when you start R, and you can also get it by typing <code>sessionInfo()</code> and checking the first line of the output.</p></li>
+<li><p>Currently (Fall 2026), we would recommend R version <code>4.4.0</code> or higher. (Positron requires at least R <code>4.2</code>.)</p></li>
+<li><p>To update R, <a href="#updating-r">see the bottom of this page for instructions</a>.</p></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="install-positron" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="install-positron"><span class="header-section-number">3</span> Install Positron</h2>
+<p><a href="https://positron.posit.co/">Positron</a> is the newer data science IDE (Integrated Development Environment) by Posit (the company behind RStudio). <strong>This is the IDE we will use in Code Club in fall 2026.</strong></p>
+<p>To install it, go to the <a href="https://positron.posit.co/download.html">Positron download page</a> and download and run the installer for your operating system:</p>
+<ul>
+<li><p><strong>Windows</strong> — pick the <strong>“User install”</strong> installer (the “System install” is for machine-wide installations and <em>does</em> require administrative privileges). Choose the <code>x64</code> version unless you have an ARM64 machine.</p></li>
+<li><p><strong>Mac</strong> — pick the <strong>Apple Silicon</strong> version if you have an M-series Mac (M1/M2/M3/M4), and the <strong>Intel</strong> version otherwise. macOS 11.0 or higher is required.</p></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Using an OSU-managed computer?
+<span class="screen-reader-only">Warning</span>Positron does not come with R!
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>If you are using an OSU computer, you may not have the “administrative privileges” that are needed to install software on your computer the regular way.</p>
-<p>However, you should in that case have an OSU application on your computer that allows you to install a selection of approved software, and that selection should include R and RStudio. On Windows, this app seems to be simply called “Software Center”, whereas on Mac, it is called “Ohio State Application Self Service” (names likely vary).</p>
-<p>If you can’t find that application, or have trouble installing R and RStudio this way, you should contact OSU IT to help you.</p>
+<p>Positron is “just” an editor: it needs a separate R installation to run your code. So make sure you have <a href="#install-r">installed R</a> as well — the same R installation that you may already be using with RStudio is fine.</p>
 </div>
 </div>
+</section>
+<section id="appendix" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="appendix"><span class="header-section-number">4</span> Appendix</h2>
+<section id="install-rstudio" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="install-rstudio"><span class="header-section-number">4.1</span> Install RStudio</h3>
+<p>RStudio is Posit’s original IDE for R, and it has long been the de facto standard way of working with R.</p>
+<p>To install RStudio, go to the <a href="https://docs.posit.co/ide/user/#rstudio-ide-oss-downloads">RStudio download page</a> and download and run the installer file for your operating system (<code>.exe</code> for Windows, <code>.dmg</code> for Mac).</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Already have R installed?
+<span class="screen-reader-only">Note</span>No administrator rights needed
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ul>
-<li><p>Please check your version of R – this information is printed to the console when you start R, and you can also get it by typing <code>sessionInfo()</code> and checking the first line of the output.</p></li>
-<li><p>Currently (Spring 2026), we would recommend R version <code>4.4.0</code> or higher.</p></li>
-<li><p>To update R, <a href="#updating-r">see the bottom of this page for instructions</a>.</p></li>
-</ul>
+<p>RStudio is now installed at the <strong>user level only</strong>, i.e.&nbsp;inside your own user account. This means you don’t need administrative privileges to install it, and there is no longer any reason to run the installer “as administrator” (older instructions, including previous versions of this page, said you should).</p>
 </div>
 </div>
 </section>
-<section id="install-rstudio" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="install-rstudio"><span class="header-section-number">2</span> Install RStudio</h2>
-<p>RStudio is a so-called Integrated Development Environment (IDE) for R, with side-by-side panes for an R script, an R concole, plots, help documents, and much more. While it is possible to use R without RStudio, RStudio has become the de facto standard for working with R and we can highly recommend it.</p>
-<p>To install RStudio, go to the <a href="https://rstudio.com/products/rstudio/download/#download">RStudio download page</a> and download and run the installer file for your operating system.</p>
-</section>
-<section id="osc" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="osc"><span class="header-section-number">3</span> Alternative: Use RStudio Server at OSC</h2>
+<section id="osc" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="osc"><span class="header-section-number">4.2</span> Use RStudio Server at OSC</h3>
 <p>Upon request (<a href="mailto:poelstra.1@osu.edu">contact Jelmer</a>), you can get access to the <a href="http://osc.edu">Ohio Supercomputer Center (OSC)</a> Classroom Project for Code Club (<code>PAS1838</code>). This way, you can code in RStudio from your browser rather than with a local installation. This is a good option if you prefer not to install anything or if you run into problems during installations.</p>
-<p><strong>After you asked for access to the OSC project, you should receive an email from OSC that you have been added to the Code Club OSC project.</strong></p>
-<ul>
-<li><p><em>If you already have an OSC account</em>, you shouldn’t need to do anything to gain access, although the email may ask you to confirm/accept your being added to project.</p></li>
-<li><p><em>If you do not yet have an OSC account</em>, the email you received from OSC should have a link to do so. Alternatively, follow the instructions below to sign up and get access to the project.</p></li>
-</ul>
 <div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -302,7 +352,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><a href="https://ondemand.osc.edu/">OSC OnDemand</a> lets you access OSC resources through your browser and run applications like RStudio.</p>
 <ol type="1">
@@ -316,8 +366,19 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 </section>
-<section id="alternative-update-an-existing-r-installation" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="alternative-update-an-existing-r-installation"><span class="header-section-number">4</span> Alternative: Update an existing R installation</h2>
+<section id="posit-cloud" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="posit-cloud"><span class="header-section-number">4.3</span> Use RStudio via Posit Cloud</h3>
+<p>Having trouble getting R and an IDE to work on your computer? You can also run RStudio in your browser with <a href="https://posit.cloud/">Posit Cloud</a>, using their free tier:</p>
+<ol type="1">
+<li><p>Go to <a href="https://posit.cloud" class="uri">https://posit.cloud</a> and click “Get Started”.</p></li>
+<li><p>Select “Learn more” under “Cloud Free”.</p></li>
+<li><p>Sign up for Cloud Free by creating an account, or by signing in with Google, GitHub, or Clever.</p></li>
+<li><p>Create a new project with “New Project” &gt; “New RStudio Project”.</p></li>
+<li><p>You can now use R through RStudio on Posit Cloud!</p></li>
+</ol>
+</section>
+<section id="updating-r" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="updating-r"><span class="header-section-number">4.4</span> Update an existing R installation</h3>
 <p>Consider updating R if you have an older version of R installed. You can check which version of R you have by looking at the first lines of output when running the following command inside R:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>To update R</strong>:</p>
@@ -337,13 +398,10 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>my_packages <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"CurrentPackages.rds"</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(my_packages[<span class="dv">1</span>, ])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>This will only work for packages available on CRAN. Of course, you can check your list for Github-only and Bioconductor packages and then install those with their respective commands (see below). Yes, this can be a bit of a hassle!</p>
-</section>
-</section>
-<section id="new-to-r" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="new-to-r"><span class="header-section-number">5</span> New to R?</h2>
-<p>If you are completely new to R, we recommend that you go through the <a href="https://osu-codeclub.github.io/carpentries-feb-2025/">online material</a> of a one-day workshop that the Code Club organizers taught in February 2025.</p>
 
 
+</section>
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
