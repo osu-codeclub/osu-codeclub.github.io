@@ -1,7 +1,7 @@
 ---
-title: "Computer Setup (installations) for Code Club"
+title: "Installation Guide for Code Club"
 toc: true
-date-modified: 2026-01-21
+date-modified: 2026-08-22
 ---
 
 ```{r knitr_options, echo=FALSE}
@@ -10,72 +10,116 @@ knitr::opts_chunk$set(eval = FALSE)
 
 ----
 
-<br>
+<hr style="height:1pt; visibility:hidden;" />
 
-Here, you will find general information about software installations you should
-do before joining Code Club.
+## Overview
 
-In summary, you only need to be able to **access to R and RStudio**,
-preferably via a local installation,
-and optionally via the Ohio Supercomputer Center (OSC).
+Here, you will find information about software installations you should
+do before joining a Code Club session.
+
+In summary, you need **R** (the programming language itself) and an
+**IDE** (an editor to write and run R code in).
+In fall 2026, we will be using **Positron** as our IDE, so you won't need RStudio.
 
 If you **run into issues or have questions**, don't hesitate to contact one of the
 [Code Club organizers](/about.qmd#organizers).
 
-## Install R {#install-r}
-
-- **Windows**: Download and run the `.exe` file for the latest version of R from <https://cran.r-project.org/bin/windows/base/>,
-  by clicking the large `Download R [version-number] for Windows` link at the top of the gray box.
-
-- **Mac**: Download and run the `.pkg` file for the latest version of R from <https://cran.r-project.org/bin/macosx/>,
-  by clicking the link just below `Latest release`.
-
-::: {.callout-important}
-### Using an OSU-managed computer?
+::: {.callout-important collapse="true"}
+### Using an OSU-managed computer? _(Click to expand)_
 
 If you are using an OSU computer,
-you may not have the "administrative privileges" that are needed to install software
-on your computer the regular way.
+you may not have the "administrative privileges" that are needed to install some 
+software on your computer "the regular way", via installers.
 
-However, you should in that case have an OSU application on your computer that
+However, you should have an OSU application on your computer that
 allows you to install a selection of approved software,
-and that selection should include R and RStudio.
-On Windows, this app seems to be simply called "Software Center",
-whereas on Mac, it is called "Ohio State Application Self Service"
-(names likely vary).
+and that selection should include R, RStudio, and (increasingly) Positron.
+On Windows, this app is called "**Software Center**",
+whereas on Mac, it is called "**Ohio State Application Self Service**"
+(names may vary).
 
 If you can't find that application,
-or have trouble installing R and RStudio this way,
+or have trouble installing the software this way,
 you should contact OSU IT to help you.
+
+Note that both RStudio and Positron can also be installed *for your user account
+only*, which does not require administrative privileges --- see the sections below.
 :::
 
-::: {.callout-note}
-### Already have R installed?
+## Install R {#install-r}
 
-- Please check your version of R -- this information is printed to the console
-  when you start R, and you can also get it by typing `sessionInfo()` and checking
+- **Windows** --- 
+  Download and run [this `.exe` file](https://cran.r-project.org/bin/windows/base/release.htm)
+  for the latest version of R from [CRAN](https://cran.r-project.org/index.html).
+
+- **Mac** --- 
+  Download and run [this `.pkg` file](https://cran.r-project.org/bin/macosx/R-latest.pkg)
+  for the latest version of R from [CRAN](https://cran.r-project.org/index.html).
+
+::: {.callout-note collapse="true"}
+### Already have R installed? _(Click to expand)_
+
+- Check your version of R:
+  this information is printed to the console when you start R,
+  and you can also get it by typing `sessionInfo()` and checking
   the first line of the output.
-  
-- Currently (Spring 2026), we would recommend R version `4.4.0` or higher.
-  
+
+- Currently (Fall 2026), we would recommend R version `4.4.0` or higher.
+  (Positron requires at least R `4.2`.)
+
 - To update R, [see the bottom of this page for instructions](#updating-r).
 
-:::  
+:::
 
-## Install RStudio {#install-rstudio}
+## Install Positron {#install-positron}
 
-RStudio is a so-called Integrated Development Environment (IDE) for R,
-with side-by-side panes for an R script, an R concole, plots, help documents,
-and much more.
-While it is possible to use R without RStudio,
-RStudio has become the de facto standard for working with R and we can highly
-recommend it.
+[Positron](https://positron.posit.co/) is the newer data science IDE
+(Integrated Development Environment) by Posit (the company behind RStudio).
+**This is the IDE we will use in Code Club in fall 2026.**
+
+To install it, go to the
+[Positron download page](https://positron.posit.co/download.html)
+and download and run the installer for your operating system:
+
+- **Windows** --- pick the **"User install"** installer
+  (the "System install" is for machine-wide installations and _does_ require
+  administrative privileges).
+  Choose the `x64` version unless you have an ARM64 machine.
+
+- **Mac** --- pick the **Apple Silicon** version if you have an M-series Mac
+  (M1/M2/M3/M4), and the **Intel** version otherwise.
+  macOS 11.0 or higher is required.
+
+::: {.callout-warning}
+### Positron does not come with R!
+
+Positron is "just" an editor: it needs a separate R installation to run your code.
+So make sure you have [installed R](#install-r) as well --- the same R installation
+that you may already be using with RStudio is fine.
+:::
+
+## Appendix
+
+### Install RStudio {#install-rstudio}
+
+RStudio is Posit's original IDE for R,
+and it has long been the de facto standard way of working with R.
 
 To install RStudio, go to the
-[RStudio download page](https://rstudio.com/products/rstudio/download/#download)
-and download and run the installer file for your operating system. 
+[RStudio download page](https://docs.posit.co/ide/user/#rstudio-ide-oss-downloads)
+and download and run the installer file for your operating system
+(`.exe` for Windows, `.dmg` for Mac).
 
-## Alternative: Use RStudio Server at OSC {#osc}
+::: {.callout-note}
+### No administrator rights needed
+
+RStudio is now installed at the **user level only**, i.e. inside your own user
+account. This means you don't need administrative privileges to install it,
+and there is no longer any reason to run the installer "as administrator"
+(older instructions, including previous versions of this page, said you should).
+:::
+
+### Use RStudio Server at OSC {#osc}
 
 Upon request ([contact Jelmer](mailto:poelstra.1@osu.edu)),
 you can get access to the [Ohio Supercomputer Center (OSC)](http://osc.edu)
@@ -84,19 +128,7 @@ This way, you can code in RStudio from your browser rather than with a local ins
 This is a good option if you prefer not to install anything or if you run
 into problems during installations.
 
-**After you asked for access to the OSC project,
-you should receive an email from OSC that you have been added to the Code Club OSC project.**
-
-- *If you already have an OSC account*,
-  you shouldn't need to do anything to gain access,
-  although the email may ask you to confirm/accept your being added to project.
-
-- *If you do not yet have an OSC account*,
-  the email you received from OSC should have a link to do so.
-  Alternatively, follow the instructions below to sign up and get access to the project.
-
 ::: {.callout-tip collapse="true"}
-
 #### Run RStudio Server from the OSC OnDemand website (Click to expand) {#osc-run-rstudio}
 
 [OSC OnDemand](https://ondemand.osc.edu/) lets you access OSC resources through your
@@ -116,10 +148,26 @@ browser and run applications like RStudio.
    
 5. Click "Connect to RStudio Server" at the bottom of the box,
    and an RStudio Server instance will open.
-
 :::
 
-## Alternative: Update an existing R installation
+### Use RStudio via Posit Cloud {#posit-cloud}
+
+Having trouble getting R and an IDE to work on your computer?
+You can also run RStudio in your browser with
+[Posit Cloud](https://posit.cloud/), using their free tier:
+
+1. Go to <https://posit.cloud> and click "Get Started".
+
+2. Select "Learn more" under "Cloud Free".
+
+3. Sign up for Cloud Free by creating an account,
+   or by signing in with Google, GitHub, or Clever.
+
+4. Create a new project with "New Project" > "New RStudio Project".
+
+5. You can now use R through RStudio on Posit Cloud!
+
+### Update an existing R installation {#updating-r}
 
 Consider updating R if you have an older version of R installed.
 You can check which version of R you have by looking at the first lines of
@@ -165,9 +213,3 @@ install.packages(my_packages[1, ])
 This will only work for packages available on CRAN. Of course, you can check your list
 for Github-only and Bioconductor packages and then install those with their respective commands
 (see below). Yes, this can be a bit of a hassle!
-
-## New to R?
-
-If you are completely new to R, we recommend that you go through the
-[online material](https://osu-codeclub.github.io/carpentries-feb-2025/)
-of a one-day workshop that the Code Club organizers taught in February 2025.
