@@ -215,7 +215,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
   </ul></li>
   <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">2</span> Getting started</a>
   <ul class="collapse">
-  <li><a href="#opening-a-folder-replaces-rstudio-projects" id="toc-opening-a-folder-replaces-rstudio-projects" class="nav-link" data-scroll-target="#opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects!)</a></li>
+  <li><a href="#opening-a-folder-replaces-rstudio-projects" id="toc-opening-a-folder-replaces-rstudio-projects" class="nav-link" data-scroll-target="#opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects)</a></li>
   <li><a href="#starting-an-r-session" id="toc-starting-an-r-session" class="nav-link" data-scroll-target="#starting-an-r-session"><span class="header-section-number">2.2</span> Starting an R session</a></li>
   <li><a href="#packages-and-a-script" id="toc-packages-and-a-script" class="nav-link" data-scroll-target="#packages-and-a-script"><span class="header-section-number">2.3</span> Packages and a script</a></li>
   <li><a href="#the-command-palette" id="toc-the-command-palette" class="nav-link" data-scroll-target="#the-command-palette"><span class="header-section-number">2.4</span> The Command Palette</a></li>
@@ -231,12 +231,11 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
   <li><a href="#the-data-explorer" id="toc-the-data-explorer" class="nav-link" data-scroll-target="#the-data-explorer"><span class="header-section-number">4.2</span> The Data Explorer</a></li>
   <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots"><span class="header-section-number">4.3</span> Plots</a></li>
   </ul></li>
-  <li><a href="#customize-positron" id="toc-customize-positron" class="nav-link" data-scroll-target="#customize-positron"><span class="header-section-number">5</span> Customize Positron</a>
+  <li><a href="#customizing-positron" id="toc-customizing-positron" class="nav-link" data-scroll-target="#customizing-positron"><span class="header-section-number">5</span> Customizing Positron</a>
   <ul class="collapse">
   <li><a href="#extensions" id="toc-extensions" class="nav-link" data-scroll-target="#extensions"><span class="header-section-number">5.1</span> Extensions</a></li>
   <li><a href="#settings-the-ui-and-the-json-file" id="toc-settings-the-ui-and-the-json-file" class="nav-link" data-scroll-target="#settings-the-ui-and-the-json-file"><span class="header-section-number">5.2</span> Settings: the UI and the JSON file</a></li>
-  <li><a href="#editor-features-and-settings" id="toc-editor-features-and-settings" class="nav-link" data-scroll-target="#editor-features-and-settings"><span class="header-section-number">5.3</span> Editor features and settings</a></li>
-  <li><a href="#keyboard-shortcuts-keybindings" id="toc-keyboard-shortcuts-keybindings" class="nav-link" data-scroll-target="#keyboard-shortcuts-keybindings"><span class="header-section-number">5.4</span> Keyboard shortcuts (keybindings)</a></li>
+  <li><a href="#keyboard-shortcuts-keybindings" id="toc-keyboard-shortcuts-keybindings" class="nav-link" data-scroll-target="#keyboard-shortcuts-keybindings"><span class="header-section-number">5.3</span> Keyboard shortcuts (keybindings)</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S12E01_positron_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -283,7 +282,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
     <div>
     <div class="quarto-title-meta-heading">Page last modified</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">August 25, 2026</p>
+      <p class="date-modified">August 27, 2026</p>
     </div>
   </div>
     
@@ -303,20 +302,22 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>Every Code Club session so far has used <strong>RStudio</strong>. Today we’ll spend the session in a different program: <strong><a href="https://positron.posit.co/">Positron</a></strong>, a newer data science IDE from Posit, the same company that makes RStudio.</p>
 <p>By the end of the session, you should be able to open your own work in Positron, find your way around, and decide for yourself whether you want to keep using it. Specifically, we’ll cover:</p>
 <ul>
-<li><strong>Installing Positron and opening a folder</strong></li>
+<li><strong>Installing Positron</strong></li>
+<li><strong>Positron’s open folder feature</strong></li>
+<li><strong>Running code and the Command Palette</strong></li>
 <li><strong>Touring the interface</strong></li>
-<li><strong>Exploring data</strong> — the Data Explorer, Variables pane, and Plots pane</li>
-<li><strong>Customizing Positron</strong> — keyboard shortcuts, settings, and extensions</li>
+<li><strong>Exploring data</strong> with the Data Explorer and more</li>
+<li><strong>Customizing Positron</strong></li>
 </ul>
 </section>
 <section id="why-is-there-a-new-ide" class="level3" data-number="1.2">
 <h3 data-number="1.2" class="anchored" data-anchor-id="why-is-there-a-new-ide"><span class="header-section-number">1.2</span> Why is there a new IDE?</h3>
-<p>Basically, Posit wanted better support for other programming languages, particularly Python, alongside R. This turned out to be harder with RStudio than starting fresh, so they created a new IDE: Positron.</p>
-<p>Positron is built on <a href="https://github.com/microsoft/vscode">Code OSS</a>, the open-source version of the popular general-purpose code IDE called Visual Studio Code (<strong>VS Code</strong>). It adds data science features that RStudio has but VS Code does not, such as a Variables pane, a Plots pane, and a Data Explorer.</p>
+<p>Basically, Posit wanted better support for other programming languages, particularly Python, alongside R. This turned out to be harder to retrofit into RStudio than to start fresh, so they created a new IDE: Positron.</p>
+<p>Positron is built on <a href="https://github.com/microsoft/vscode">Code OSS</a>, the open-source base of Microsoft’s popular general-purpose code editor, Visual Studio Code (<strong>VS Code</strong>). It adds data science features that RStudio has but VS Code does not, such as a Variables pane, a Plots pane, and a Data Explorer.</p>
 <section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion" class="level4 unnumbered exercise">
 <h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Discussion</h4>
 <ul>
-<li>Which languages do you use besides R — Python, bash, SQL, none?</li>
+<li>Which languages do you use besides R — Python, Bash, SQL, none?</li>
 <li>Has anyone tried Positron already? Did you stick with it?</li>
 <li>Do you consider yourself familiar with the basics of RStudio?</li>
 </ul>
@@ -327,13 +328,14 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>If you use Python alongside R, or are already familiar with VS Code, Positron is a natural choice and I’d strongly recommend switching.</p>
 <p>If you use R only, you may not need to switch, but should still consider it, because:</p>
 <ul>
-<li><p><strong>New features</strong>: While Posit has committed to maintaining and updating RStudio, major new features are now going to Positron first. And some features may never make it to RStudio, because Positron is more adaptable.</p></li>
+<li><p><strong>Future new features</strong>: While Posit has committed to maintaining and updating RStudio, major new features are now going to Positron first. And some features may never make it to RStudio, because Positron is more adaptable.</p></li>
 <li><p><strong>AI support</strong>: This is much more flexible in Positron, where you can connect to different model providers and subscriptions, and even use Claude Code. In RStudio, you can only use AI via a Posit AI subscription. We’ll demonstrate using AI assistance in Positron in the next session!</p></li>
+<li><p><strong>Customization</strong>: Positron is more customizable than RStudio.</p></li>
 </ul>
 <p>And two more minor points:</p>
 <ul>
 <li><p><strong>Data Explorer</strong>: Positron’s Data Explorer can open data files (CSV, Excel, etc.) directly, without having to load them in R at all.</p></li>
-<li><p><strong>Remote connections</strong>: A niche feature, but it was important to me: Positron can be connected to the Ohio Supercomputer Center and any other remote server. This isn’t possible with RStudio and while you can use RStudio directly at OSC through OSC OnDemand, this has its downsides. (Happy to expand on this for any OSC users!)</p></li>
+<li><p><strong>Remote connections</strong>: a niche feature, but one that was important to me. Positron can connect to the Ohio Supercomputer Center, or any other remote server. That isn’t possible with RStudio — and while you can run RStudio directly at OSC through OSC OnDemand, that has its downsides. (Happy to expand on this for any OSC users!)</p></li>
 </ul>
 </section>
 <section id="before-we-start" class="level3" data-number="1.4">
@@ -353,9 +355,9 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>You should still be able to install Positron, just do so at the user level rather than system-wide.</p>
-<p>On a Mac, this involves dragging the Positron app into your <strong>User</strong> Applications folder, <code>/Users/&lt;username&gt;/Applications</code> (i.e.&nbsp;this Applications folder is in the same parent folder as your Documents, Downloads, and Desktop folder).</p>
-<p>On Windows, the Positron installer has a <strong>“User install”</strong> option. Look for a checkbox or dropdown labeled <strong>“Install for me only”</strong> (vs.&nbsp;“for all users”) during setup — that keeps the install in your user profile without needing admin rights.</p>
+<p>You should still be able to install Positron, just do so at the <strong>user level rather than system-wide</strong>.</p>
+<p>On a Mac, this involves dragging the Positron app into your <strong>User</strong> Applications folder, <code>/Users/&lt;username&gt;/Applications</code> (i.e.&nbsp;this Applications folder is in the same parent folder as your Documents, Downloads, and Desktop folders).</p>
+<p>On Windows, the Positron installer has a <strong>“User install”</strong> option. Look for a checkbox or dropdown labeled “Install for me only” (vs.&nbsp;“for all users”) during setup — that keeps the install in your user profile without needing admin rights.</p>
 </div>
 </div>
 </section>
@@ -369,31 +371,30 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </figure>
 </div>
 <section id="opening-a-folder-replaces-rstudio-projects" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects!)</h3>
+<h3 data-number="2.1" class="anchored" data-anchor-id="opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects)</h3>
 <div class="columns">
 <div class="column" style="width:45%;">
-<p>When you first start Positron, you should see something like what’s shown in the screenshot on the right, prompting you to <strong>open a folder</strong>.</p>
+<p>On the left side of the Positron window, you should see something similar to what’s shown in the screenshot on the right, prompting you to <strong>open a folder</strong>.</p>
 <p>“Opening a folder” is Positron’s <strong>equivalent of opening an RStudio Project</strong>. The idea is the same: a folder is a self-contained workspace, and opening it sets your working directory and gives you a fresh R session.</p>
 <p>But instead of requiring the special <code>.Rproj</code> file that is created when you make an RStudio Project, Positron simply <strong>treats any folder you open as a project</strong>.</p>
-<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Let’s create and open a new folder for today’s session:</p>
 </div><div class="column" style="width:55%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/open-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Positron welcome screen, with a button to open a folder"></p>
+<p><img src="img/open-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Positron welcome screen, with a button to open a folder"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Let’s create and open a new folder for today’s session:</p>
 <ol type="1">
-<li><p>Create a new folder on your computer. You can create it in any way, such as with your File Explorer / Finder.</p>
-<p>I would suggest putting this folder within a folder for Code Club, for example: <code>Documents</code> &gt; <code>codeclub</code> &gt; <code>positron</code> (or put another way: <code>~/Documents/codeclub/positron</code>).</p></li>
-<li><p>Open this folder in Positron by clicking the <strong>Open Folder</strong> button shown above<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p></li>
+<li><p>Create a new folder on your computer. You can create it in any way, such as with your computer’s File Explorer / Finder. I would suggest putting this folder within a folder for Code Club, for example: <code>Documents</code> &gt; <code>codeclub</code> &gt; <code>positron</code> (or put another way: <code>~/Documents/codeclub/positron</code>).</p></li>
+<li><p>Open your new folder in Positron by clicking the <strong>Open Folder</strong> button shown above<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p></li>
 <li><p>Positron will reload and ask whether you want to trust the folder. Click <strong>Yes, I trust the authors</strong> and optionally check the box above it.</p></li>
 </ol>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/trust.png" class="img-fluid figure-img" style="width:70.0%" alt="Positron dialog asking whether to trust the folder you just opened"></p>
-<figcaption>The dialog for trusting a folder.</figcaption>
+<p><img src="img/trust.png" class="img-fluid figure-img" style="width:60.0%" alt="Positron dialog asking whether to trust the folder you just opened"></p>
+<figcaption>The dialog for “trusting” a folder.<br>Opening folder in restricted mode is also possible but not relevant for most users.</figcaption>
 </figure>
 </div>
 <p><strong>Why are Projects or open folders needed?</strong> These encourage good practices:</p>
@@ -402,7 +403,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <li>Use paths <em>relative</em> to the folder root, not absolute paths</li>
 <li>Avoid using <code>setwd()</code></li>
 </ul>
-<p>They also make a lot of Positron’s features work better, such as the Explorer, Search, and version control support.</p>
+<p>They also <em>make a lot of Positron’s features work better</em>, such as the Explorer, Search, and version control support.</p>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -414,7 +415,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <div class="callout-body-container callout-body">
 <p>If you open a folder that already contains an <code>.Rproj</code> file, Positron simply ignores the file. So a folder can work as both an RStudio Project and a Positron workspace, which is perhaps handy while you’re trying Positron out.</p>
-<p>The good thing about Positron’s mechanism is that you’re practically forced to use it, whereas in RStudio using Projects is optional and easy to skip or not know about.</p>
+<p>The good thing about Positron’s mechanism is that you’re practically forced to use it, whereas in RStudio using Projects is easy to skip or not even know about.</p>
 </div>
 </div>
 </section>
@@ -423,7 +424,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <div class="columns">
 <div class="column" style="width:60%;">
 <p>Near the <strong>top-right corner</strong> of the Positron window is the so-called <strong>interpreter picker</strong>, which lets you choose which installation of R (or Python) to use for your session.</p>
-<p>If Positron found your R installation, it may have started a session already — then it would look like something on the right (with the R version number corresponding to what you have installed).</p>
+<p>If Positron found your R installation, it may have started a session already — in that case, it will <em>look similar to what’s shown in the screenshot on the right</em> (but with the R version number corresponding to what <em>you</em> have installed).</p>
 </div><div class="column" style="width:40%;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -433,7 +434,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-<p><strong>If not, click the picker</strong>, and choose your version of R (you may have to click <strong>New Console Session</strong> before you see the options).</p>
+<p><strong>If not, click the picker</strong>, and choose your version of R (you may have to click <strong>New Console Session</strong> before you see the available options):</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/interpreter-pick.png" class="img-fluid figure-img" style="width:80.0%" alt="Screenshot of the Positron interpreter picker with options"></p>
@@ -450,8 +451,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>The picker lists <em>every</em> interpreter Positron can find, which could include several versions of R and Python.</p>
-<p>Two nice features of Positron:</p>
+<p>The picker lists <em>every</em> interpreter Positron can find, which could include several versions of R and especially Python. Two nice features of Positron:</p>
 <ul>
 <li>Switching between R versions is a single click here, which is considerably easier than in RStudio.</li>
 <li>You can also have several sessions running at once. Say, an R session and a Python session, or two R sessions on different R versions.</li>
@@ -461,7 +461,8 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <p>Once a session is running, the R <strong>Console</strong> works just like in RStudio. Try it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R is even better than AI and will consistently get this right! Impressive stuff.</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">+</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 2</code></pre>
 </div>
@@ -478,6 +479,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 6          5.4         3.9          1.7         0.4  setosa</code></pre>
 </div>
 </div>
+<p>Here’s what that will look like in Positron:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/console.png" class="img-fluid figure-img" style="width:90.0%" alt="Screenshot of the Positron console, showing a simple calculation and the head of the iris dataset"></p>
@@ -490,8 +492,8 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p><strong>A) Confirm your working directory</strong></p>
 <p>Confirm that opening a folder really did set your working directory: run <code>getwd()</code> and check that the path matches the folder you opened.</p>
 <p><strong>B) Try running two sessions</strong></p>
-<p>Start a <em>second</em> R session from the interpreter picker (click the picker, then <strong>New Console Session</strong>). You likely only have a single R version installed, and can pick the same version for the second session.</p>
-<p>You should now have two Console sessions, and you can see this as shown in the screenshot:</p>
+<p>Start a <em>second</em> R session from the interpreter picker: click the picker, then <strong>New Console Session</strong>. (Most likely, you only have a single R version installed, and can pick the same version for the second session. If you have multiple, you can choose to use a different version for the second session.)</p>
+<p>You should now have two Console sessions, which should look something like this — pay attention to the right-hand side:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="img/two-sessions.png" class="img-fluid figure-img" style="width:80.0%" alt="Screenshot of Positron with two console sessions"></p>
@@ -515,8 +517,8 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </section>
 <section id="packages-and-a-script" class="level3" data-number="2.3">
 <h3 data-number="2.3" class="anchored" data-anchor-id="packages-and-a-script"><span class="header-section-number">2.3</span> Packages and a script</h3>
-<p>We’ll use the <code>flights</code> dataset from the <strong>nycflights13</strong> package: every flight that departed New York City in 2013. I picked a relatively large dataset, so we can see some of the nice features of the Data Explorer later.</p>
-<p>First, let’s install the packages we need:</p>
+<p>In the Exploring data section below, we’ll use the <code>flights</code> dataset from the <strong>nycflights13</strong> package. This data frame has every flight that departed New York City in 2013. For now, we’ll get it installed and loaded, and will create a script to hold our code.</p>
+<p>First, let’s install the two packages we’ll need, <strong>tidyverse</strong> and <strong>nycflights13</strong>:</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"nycflights13"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -536,22 +538,43 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <p>Now, let’s <strong>create a new R script</strong>:</p>
 <ul>
-<li><p>This can be done in several ways, but here is one: Click <code>File</code> (or the “New” button) &gt; <code>New File...</code>, then select “R File”.</p></li>
+<li><p>Click <code>File</code> (or the “New” button) &gt; <code>New File...</code>, then select “R File” (one of several ways to do this).</p></li>
 <li><p>Save it right away (<code>File</code> &gt; <code>Save</code> or <code>Save As</code>, or <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>S</kbd>) in your current folder as <code>explore.R</code>.</p></li>
 </ul>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
 <p>I recommend that you <strong>add all the code below to this script</strong>, and run it from the script (instead of typing it into the console).</p>
+</div>
+</div>
+</div>
 <p>Load the two packages we’ll use:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.1     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.3     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<p>Run the code with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Enter</kbd> — the same shortcut as in RStudio. Also as in RStudio, this moves the cursor down after running the current line (or your selection of a part of a line or multiple lines).</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Run the code with <kbd>Cmd</kbd>+<kbd>Enter</kbd> (Mac) or <kbd>Ctrl</kbd>+<kbd>Enter</kbd> (Windows) — the same shortcut as in RStudio.</p>
 </section>
 <section id="the-command-palette" class="level3" data-number="2.4">
 <h3 data-number="2.4" class="anchored" data-anchor-id="the-command-palette"><span class="header-section-number">2.4</span> The Command Palette</h3>
 <p>The Command Palette is Positron’s <strong>main way to access the program’s functionality</strong>. It may take some getting used to, but is very handy and powerful.</p>
 <p>To open the Command Palette, press <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Mac) or <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd> (Windows).</p>
-<p>A search box will appear at the top of the window: start typing what you want to do, and Positron will fuzzy-match it against every piece of functionality (command) it knows. Here are some things you might think of looking for in the Command Palette:</p>
+<p>A search box will appear at the top of the window: start typing what you want to do, and Positron will fuzzy-match it against every piece of its functionality (actions/commands). Here are some things you might think of looking for in the Command Palette:</p>
 <ul>
 <li>Type <code>theme</code> → <em>Preferences: Color Theme</em></li>
 <li>Type <code>restart</code> → <em>Interpreter: Restart Active Interpreter Session</em></li>
@@ -568,7 +591,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <div class="callout-body-container callout-body">
 <p>Pay attention to the keyboard shortcuts it shows next to each command that has one. For commonly used commands, it’s worth learning the shortcut so you can skip the palette next time.</p>
-<p>Side note: RStudio has a Command Palette as well, but it’s more essential in Positron, because Positron has fewer menus and buttons, but more options.</p>
+<p>Side note: RStudio has a Command Palette as well, but it’s more essential in Positron. That’s because Positron has fewer menus and buttons, but more options.</p>
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
@@ -577,7 +600,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>Use the Command Palette to do the following:</p>
 <ol type="1">
 <li><p>Change the <strong>color theme</strong> to something you like better than the default.</p></li>
-<li><p><strong>Restart your R session</strong>, then run <code>ls()</code> in the console to confirm that your workspace is now empty.</p></li>
+<li><p><strong>Restart your R session</strong>.</p></li>
 <li><p>Run your whole script <em>(there’s a command for this — find it!)</em>.</p></li>
 </ol>
 <details>
@@ -627,12 +650,12 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <tbody>
 <tr class="odd">
 <td><strong>Editor</strong></td>
-<td>Center - top</td>
+<td>Center (top)</td>
 <td>Open scripts and other documents, in tabs</td>
 </tr>
 <tr class="even">
 <td><strong>Panel</strong></td>
-<td>Center - bottom</td>
+<td>Center (bottom)</td>
 <td>R console and Terminal</td>
 </tr>
 <tr class="odd">
@@ -654,12 +677,15 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </table>
 <hr style="height:1pt; visibility:hidden;">
 <p>Almost every pane in Positron can be <strong>resized</strong> (like in RStudio) and <strong>dragged somewhere else</strong> (much more flexible than in RStudio). There are also layout presets.</p>
+<p>I’ll demonstrate:</p>
+<ul>
+<li><p>Resizing panes such as the Primary Side Bar and the Editor.</p></li>
+<li><p>Dragging the <strong>Help</strong> tab down to the bottom, next to the Console, and dragging it back.</p></li>
+</ul>
 <hr style="height:1pt; visibility:hidden;">
 <section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-modify-the-layout" class="level4 unnumbered exercise">
 <h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-modify-the-layout"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Modify the layout</h4>
 <ul>
-<li><p>Resize panes such as the Primary Side Bar and the Editor.</p></li>
-<li><p>Drag the <strong>Help</strong> tab down to the bottom, next to the Console, and see whether you prefer it there. Drag it back if you want.</p></li>
 <li><p>Try moving something else. If you make a mess of things, you can always get back to the default layout with the <em>View: Reset View Locations</em> command.</p></li>
 <li><p><strong>Explore the presets</strong>: Open the Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) and type <code>layout</code>. Select “<strong>Customize Layout…</strong>” and you should see several options for layout presets. Try them.</p></li>
 <li><p>The Customize Layout dialog also lets you <strong>hide or move regions</strong> — these options are below the presets. For example, try clicking on Activity Bar to hide it.</p></li>
@@ -760,8 +786,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>The <strong>Activity Bar</strong> is the strip of icons on the far left. Clicking an icon swaps out what’s shown in the <strong>Primary Side Bar</strong> right next to it. Among the options are:</p>
 <section id="explorer" class="level4" data-number="3.2.1">
 <h4 data-number="3.2.1" class="anchored" data-anchor-id="explorer"><span class="header-section-number">3.2.1</span> Explorer</h4>
-<p>The <strong>Explorer</strong> (the top icon, looks like stacked documents) shows the folders and files in your currently open folder. Clicking a file will open it in the Editor.</p>
-<p>This is Positron’s equivalent of RStudio’s <strong>Files</strong> pane, but a bit nicer as you can see the whole project’s structure at once and expand/collapse subfolders.</p>
+<p>The <strong>Explorer</strong> (the top icon, looks like stacked documents) shows the folders and files in your currently open folder. Clicking a file will open it in the Editor. This is Positron’s equivalent of RStudio’s <strong>Files</strong> pane, but a bit nicer as you can see the whole project’s structure at once and expand/collapse subfolders.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -777,8 +802,8 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 </section>
-<section id="search" class="level4" data-number="3.2.2">
-<h4 data-number="3.2.2" class="anchored" data-anchor-id="search"><span class="header-section-number">3.2.2</span> Search</h4>
+<section id="search-for-text-across-your-entire-project" class="level4" data-number="3.2.2">
+<h4 data-number="3.2.2" class="anchored" data-anchor-id="search-for-text-across-your-entire-project"><span class="header-section-number">3.2.2</span> Search for text across your entire project</h4>
 <p>The <strong>Search</strong> pane lets you search, and optionally replace, text across <em>every file</em> in your open folder.</p>
 <p>Try it: open Search by clicking the <strong>Search</strong> icon (magnifying glass) in the Activity Bar, then type <code>tidyverse</code> in the search box. Currently, there’s only one match, but we’ll see more later. Note that you can click on a result to jump straight to that line.</p>
 <p>This is especially useful once your project grows to span multiple scripts. For example, finding every place you reference a column name before renaming it, or every script that loads a particular package.</p>
@@ -793,11 +818,11 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-search-and-replace"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Search and replace</h4>
 <ol type="1">
 <li><p>Create a second script in your folder, <code>plots.R</code> with these two lines in it:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: plot the distribution of arr_delay for the flights data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">TODO</span><span class="co">: plot the distribution of arr_delay for the flights data</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
 <li><p>Now that your project has two files, use <strong>Search</strong> to look for <code>tidyverse</code> again, paying attention to how the results are reported and organized.</p></li>
-<li><p>Type <code>tidymodels</code> in the search box’s <strong>replace</strong> field: Positron previews every change it <em>would</em> make, right in the results list. Have a look — then clear the replace field, since we don’t actually want to rename anything.</p></li>
+<li><p>Type <code>tidymodels</code> in the <strong>replace</strong> field below the search box: Positron previews every change it <em>would</em> make, right in the results list. Have a look, and then clear the replace field, since we don’t actually want to rename anything.</p></li>
 </ol>
 </section>
 <section id="other-sidebar-options" class="level4" data-number="3.2.3">
@@ -807,7 +832,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <li><strong>Source Control</strong>: for Git (also much improved over RStudio’s Git pane!)</li>
 <li><strong>Run and Debug</strong>: for debugging code</li>
 <li><strong>Remote Explorer</strong>: for remote connections</li>
-<li><strong>Extensions</strong>: for installing add-ons — more on that in a minute</li>
+<li><strong>Extensions</strong>: for installing add-ins — more on that in a minute</li>
 <li><strong>Testing</strong>: for running tests on your code</li>
 <li><strong>Packages</strong>: lists installed R/Python packages (Positron’s equivalent of RStudio’s Packages pane)</li>
 </ul>
@@ -827,42 +852,69 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </section>
 <section id="exploring-data" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="exploring-data"><span class="header-section-number">4</span> Exploring data</h2>
-<p>Now, we’ll use the flights data to explore some of Positron’s data exploration features.</p>
+<p>Now, we’ll use the flights data to try out some of Positron’s data exploration features.</p>
 <p>To start, <code>nycflights13</code> provides the <code>flights</code> data frame, but it won’t show up as an object in your environment yet. Add the following line to <code>explore.R</code> and run it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> flights</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>flights <span class="ot">&lt;-</span> flights</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="the-variables-pane" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="the-variables-pane"><span class="header-section-number">4.1</span> The Variables pane</h3>
-<p>Look at the <strong>Variables</strong> pane on the right: <code>flights</code> should now be listed there. It’s the equivalent of RStudio’s Environment pane, and like there, you can <strong>expand objects</strong> to look inside them by clicking the arrow next to an object’s name.</p>
+<p>Look at the <strong>Variables</strong> pane on the right: <code>flights</code> should now be listed there. It’s the equivalent of RStudio’s Environment pane, and as in RStudio, you can <strong>expand objects</strong> to look inside them by clicking the arrow next to an object’s name.</p>
 <p>Try expanding <code>flights</code>. You should see each column, its type, and a preview of its contents.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/flights_var.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:55.0%" alt="Screenshot of the Positron Variables pane, showing the flights data frame"></p>
+<p><img src="img/flights_var.png" class="img-fluid figure-img" style="width:55.0%" alt="Screenshot of the Positron Variables pane, showing the flights data frame"></p>
+<figcaption>The variables pane, with the <code>flights</code> object expanded.</figcaption>
 </figure>
 </div>
 </section>
 <section id="the-data-explorer" class="level3" data-number="4.2">
 <h3 data-number="4.2" class="anchored" data-anchor-id="the-data-explorer"><span class="header-section-number">4.2</span> The Data Explorer</h3>
-<p>The Data Explorer is Positron’s equivalent of RStudio’s <code>View()</code> function, but with a lot more functionality. Click the small <strong>table icon</strong> next to <code>flights</code> in the Variables pane, and it should open <em>as an editor Tab</em> and look something like this:</p>
+<p>The Data Explorer is Positron’s equivalent of RStudio’s <code>View()</code> function, but with a lot more functionality. Click the small <strong>table icon</strong> next to <code>flights</code> in the Variables pane, and it should open <em>as an editor tab</em> and look something like this:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/data-explorer.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:85.0%" alt="Screenshot of the Positron Variables pane, showing the flights data frame with a small table icon next to it"></p>
+<p><img src="img/data-explorer.png" class="img-fluid figure-img" style="width:85.0%" alt="Screenshot of the Positron Data Explorer, showing the flights data frame in a spreadsheet-like grid"></p>
+<figcaption>The Data Explorer, showing the <code>flights</code> data frame.</figcaption>
 </figure>
 </div>
 <p>The Data Explorer has three parts:</p>
 <ul>
-<li>The <strong>data grid</strong> — the spreadsheet-like view of your rows and columns</li>
-<li>The <strong>summary panel</strong> — per-column statistics and a small distribution plot. <em><span style="color: salmon;">May be hidden by default: if you don’t see it, look for an arrow on the left-hand side of the spreadsheet view.</span></em></li>
-<li>The <strong>filter bar</strong> — for temporarily filtering rows</li>
+<li>The <strong>data grid</strong> — the spreadsheet-like view of your rows and columns.</li>
+<li>The <strong>summary panel</strong> — per-column statistics and a small distribution plot.</li>
+<li>The <strong>filter bar</strong> — for temporarily filtering rows.</li>
 </ul>
-<section id="sorting-and-filtering" class="level4" data-number="4.2.1">
-<h4 data-number="4.2.1" class="anchored" data-anchor-id="sorting-and-filtering"><span class="header-section-number">4.2.1</span> Sorting and filtering</h4>
+<section id="the-summary-panel" class="level4" data-number="4.2.1">
+<h4 data-number="4.2.1" class="anchored" data-anchor-id="the-summary-panel"><span class="header-section-number">4.2.1</span> The summary panel</h4>
+<div class="callout callout-style-simple callout-important">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p>The summary panel may be hidden by default: if you don’t see it (look at the screenshot above for reference), then look for an arrow on the left-hand side of the spreadsheet view, and click it to expand the summary panel.</p>
+</div>
+</div>
+</div>
+<p>I’ll demonstrate the summary panel, including:</p>
+<ul>
+<li>Expanding information about individual columns</li>
+<li>The percent missing data indicator on the right</li>
+<li>Tooltips that appear when you hover over the histograms</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/summary-panel.png" class="img-fluid figure-img" style="width:50.0%" alt="Screenshot of the Positron Data Explorer, showing the summary panel with column statistics and a small histogram for each column"></p>
+<figcaption>The summary panel in the Data Explorer, with info about the column <code>sched_dep_time</code> (scheduled departure time) expanded.</figcaption>
+</figure>
+</div>
+</section>
+<section id="sorting-and-filtering-in-the-data-grid" class="level4" data-number="4.2.2">
+<h4 data-number="4.2.2" class="anchored" data-anchor-id="sorting-and-filtering-in-the-data-grid"><span class="header-section-number">4.2.2</span> Sorting and filtering in the data grid</h4>
 <ul>
 <li><p><strong>Sort</strong> by clicking the three dots in the column header and picking <code>Sort Ascending</code> or <code>Sort Descending</code>.</p></li>
 <li><p><strong>Filter</strong> by clicking <code>+ Add Filter</code> in the filter bar, picking a column, and choosing a condition. You can add several filters, and they will combine.</p></li>
 </ul>
-<p>Sorting and filtering in the Data Explorer <strong>does not</strong> change the dataframe in your R session, but there is a <strong>“Convert to Code” button (!)</strong> that generates the R code to reproduce your filter and sort.</p>
+<p>Sorting and filtering in the Data Explorer <strong>does not</strong> change the data frame in your R session, but there is a <strong>“Convert to Code” button (!)</strong> that generates the R code to reproduce your filter and sort.</p>
 <div class="columns">
 <div class="column">
 <div class="quarto-figure quarto-figure-center">
@@ -891,13 +943,13 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <li><p>Use the Convert to Code button to get code corresponding to what you did in steps 3 and 4, and copy it into your <code>explore.R</code> script.</p></li>
 </ol>
 </section>
-<section id="opening-data-files-directly-in-the-data-explorer" class="level4" data-number="4.2.2">
-<h4 data-number="4.2.2" class="anchored" data-anchor-id="opening-data-files-directly-in-the-data-explorer"><span class="header-section-number">4.2.2</span> Opening data files directly in the Data Explorer</h4>
+<section id="opening-data-files-directly-in-the-data-explorer" class="level4" data-number="4.2.3">
+<h4 data-number="4.2.3" class="anchored" data-anchor-id="opening-data-files-directly-in-the-data-explorer"><span class="header-section-number">4.2.3</span> Opening data files directly in the Data Explorer</h4>
 <p>You can <strong>open a data file directly in the Data Explorer</strong>, without any R code (this is a feature RStudio does not have at all). Let’s start by creating a CSV file from the <code>flights</code> dataset, so we have a data file to work with:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a copy of the data as a CSV file, so we have a data file to work with</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(flights, <span class="st">"data/flights.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Make a copy of the data as a CSV file, so we have a data file to work with</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(flights, <span class="st">"data/flights.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Next, open <code>data/flights.csv</code> via the Explorer or with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>P</kbd>. The file will open directly in the Data Explorer! And this will also work for <code>.tsv</code> and <strong>even <code>.xlsx</code> (Excel) files</strong>.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -913,7 +965,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <p>For plain-text files, if you want to see the raw text instead of the Data Explorer, click the “Open as Plain Text File” button:</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/data-explorer-show-plaintext.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Screenshot of the Positron Data Explorer, showing the Show Plain Text button"></p>
+<p><img src="img/data-explorer-show-plaintext.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:70.0%" alt="Screenshot of the Positron Data Explorer, showing the Open as Plain Text File button"></p>
 </figure>
 </div>
 </div>
@@ -922,19 +974,19 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </section>
 <section id="plots" class="level3" data-number="4.3">
 <h3 data-number="4.3" class="anchored" data-anchor-id="plots"><span class="header-section-number">4.3</span> Plots</h3>
-<p>Let’s create a plot, so we can see where it appears. Copy the following code into the <code>plots.R</code> script and run it:</p>
+<p>Let’s create a plot, so we can see where it appears. Copy the following code into <code>plots.R</code> and run it:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flights, <span class="fu">aes</span>(<span class="at">x =</span> arr_delay)) <span class="sc">+</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>) <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"tomato1"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">300</span>)) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>()</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Arrival delay (minutes)"</span>, <span class="at">y =</span> <span class="st">"Number of flights"</span>) <span class="sc">+</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flights, <span class="fu">aes</span>(<span class="at">x =</span> arr_delay)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"tomato1"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">100</span>, <span class="dv">300</span>)) <span class="sc">+</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>()</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Arrival delay (minutes)"</span>, <span class="at">y =</span> <span class="st">"Number of flights"</span>) <span class="sc">+</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">14</span>) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: Removed 10041 rows containing non-finite outside the scale range
 (`stat_bin()`).</code></pre>
@@ -962,6 +1014,24 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Side-by-side editors
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Drag a tab to the left or right edge of the Editor area (or use <em>View: Split Editor</em> from the Command Palette) to view two files at once, side by side. This is useful for comparing two scripts, or keeping a script and a data file’s Data Explorer view open together.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/side-by-side-editor.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%" alt="Screenshot of the Positron IDE, showing two editor tabs side by side"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
 <span class="screen-reader-only">Note</span>The Help pane
 </div>
 </div>
@@ -971,12 +1041,12 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </section>
 </section>
-<section id="customize-positron" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="customize-positron"><span class="header-section-number">5</span> Customize Positron</h2>
+<section id="customizing-positron" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="customizing-positron"><span class="header-section-number">5</span> Customizing Positron</h2>
 <p>Let’s finish by looking at some ways to customize Positron to your liking.</p>
 <section id="extensions" class="level3" data-number="5.1">
 <h3 data-number="5.1" class="anchored" data-anchor-id="extensions"><span class="header-section-number">5.1</span> Extensions</h3>
-<p>Positron has <em>many</em> extensions (add-ins) that you can install, in large part because most <strong>VS Code extensions</strong> are compatible with Positron. To find and install extensions, click the <strong>Extensions</strong> icon in the Activity Bar (four blocks, with one set apart from the other three). Some useful ones:</p>
+<p>Positron has <em>many</em> extensions (add-ins) that you can install, in large part because most <strong>VS Code extensions</strong> are compatible with Positron. Some useful ones:</p>
 <table class="table-striped caption-top table">
 <colgroup>
 <col style="width: 37%">
@@ -999,7 +1069,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </tr>
 <tr class="odd">
 <td><strong>Pastum</strong></td>
-<td>Converts a table copied to your clipboard (!) <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
+<td>Converts a table on your clipboard into code (!) <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a></td>
 </tr>
 <tr class="even">
 <td><strong>Indent Rainbow</strong></td>
@@ -1023,37 +1093,76 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </tr>
 <tr class="odd">
 <td><strong>SVG Preview</strong></td>
-<td>Enables viewing of <code>.svg</code> files</td>
+<td>Enables viewing of <code>.svg</code> figures</td>
 </tr>
 </tbody>
 </table>
-<section id="automatic-code-formatting" class="level4" data-number="5.1.1">
-<h4 data-number="5.1.1" class="anchored" data-anchor-id="automatic-code-formatting"><span class="header-section-number">5.1.1</span> Automatic code formatting</h4>
-<p>Let’s try the <strong>Air</strong> extension: find it in the Extensions marketplace and install it. Then, type some deliberately messy code into <code>explore.R</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,   <span class="dv">3</span>,<span class="dv">4</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>y   <span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Open the Command Palette and run <em>Format Document</em>.</p>
-<p>Let’s try it with one other example — add this to <code>plots.R</code>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flights, <span class="fu">aes</span>(<span class="at">x =</span> arr_delay)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)), <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
+<section id="air-for-automatic-code-formatting" class="level4" data-number="5.1.1">
+<h4 data-number="5.1.1" class="anchored" data-anchor-id="air-for-automatic-code-formatting"><span class="header-section-number">5.1.1</span> Air for automatic code formatting</h4>
+<p>First, let’s try the <strong>Air</strong> extension:</p>
+<ul>
+<li><p>Click the <strong>Extensions</strong> icon in the Activity Bar (four blocks, with one set apart from the other three).</p></li>
+<li><p>Type “air” in the search bar, and you should see the Air extension appear.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/air-extension-install.png" class="img-fluid figure-img" style="width:50.0%" alt="Screenshot of the Positron Extensions view, showing the Air extension"></p>
+<figcaption>After typing “air” in the Extensions view, the Air extension should be listed among the results (here, as the second result).</figcaption>
+</figure>
+</div></li>
+<li><p>Click the blue “Install” button to install it.</p></li>
+<li><p>Type some deliberately messy code into <code>explore.R</code>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>x<span class="ot">=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,   <span class="dv">3</span>,<span class="dv">4</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>y   <span class="ot">&lt;-</span><span class="dv">1</span><span class="sc">:</span><span class="dv">10</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>Open the Command Palette and run <em>Format Document</em>. What changed?</p></li>
+</ul>
+<p>What if you wanted to format your code automatically every time you save a file? This is possible with a Positron <strong>setting</strong>, which we’ll see in the next section.</p>
+</section>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-try-two-extensions" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-try-two-extensions"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Try two extensions</h4>
+<ul>
+<li><p>Install the <strong>Better Comments</strong> extension, and add a few comments to your script that start with <code>!</code>, <code>?</code>, or <code>TODO:</code> to see how they are color-coded.</p></li>
+<li><p>Install the <strong>Code Spell Checker</strong> extension, and add a misspelled word or two to a comment in your script to see how they are underlined.</p>
+<p>(You should notice that the spell check unfortunately also underlines valid code syntax, but you can add words to the dictionary to avoid that.)</p></li>
+</ul>
+<details>
+<summary>
+<em>Click here to see an example screenshot</em>
+</summary>
+<p>Below:</p>
+<ul>
+<li>Better Comments has color-coded the comments starting with <code># TODO</code> and <code>#?</code></li>
+<li>Code Spell Checker has underlined (what it thinks are) misspelled words with blue squiggly lines.</li>
+</ul>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/bettercomments-spellchecker.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Screenshot of the Positron IDE, showing the Better Comments and Code Spell Checker extensions"></p>
+</figure>
 </div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Want to always format code when you save a file?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Look for <code>editor.formatOnSave</code> further down on this page.</p>
-</div>
-</div>
+</details>
 </section>
 </section>
 <section id="settings-the-ui-and-the-json-file" class="level3" data-number="5.2">
 <h3 data-number="5.2" class="anchored" data-anchor-id="settings-the-ui-and-the-json-file"><span class="header-section-number">5.2</span> Settings: the UI and the JSON file</h3>
-<p>The main way to change Positron’s settings is the <strong>Settings UI</strong>: open the Command Palette and run <em>Preferences: Open Settings (UI)</em>. We’ll explore some Editor-related settings next.</p>
+<p>The main way to change Positron’s settings is the <strong>Settings UI</strong>.</p>
+<p>As a first example, let’s find the option to automatically format code on save:</p>
+<ul>
+<li><p>Open the Settings UI by either:</p>
+<ul>
+<li>Using the keyboard shortcut <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>,</kbd></li>
+<li>Clicking the gear icon <i class="fa-solid fa-gear" aria-label="gear"></i> in the lower-left corner, then <em>Settings</em></li>
+<li>Opening the Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>) and running <em>Preferences: Open Settings (UI)</em></li>
+</ul></li>
+<li><p>Type “format” in the search bar, and you should see <code>editor.formatOnSave</code> at the top of the list (if not, add “on save” to your search):</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/settings-format.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Screenshot of the Positron Settings UI, showing the search bar and the editor.formatOnSave setting"></p>
+</figure>
+</div></li>
+<li><p>Check the box as shown in the screenshot above to turn on automatic formatting on save.</p></li>
+<li><p>Test it by adding the following code to <code>plots.R</code> and saving the file:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(flights, <span class="fu">aes</span>(<span class="at">x =</span> arr_delay)) <span class="sc">+</span> <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">100</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">color =</span> <span class="st">"grey20"</span>) <span class="sc">+</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">expand =</span> <span class="fu">expansion</span>(<span class="at">mult =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.05</span>)), <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">comma_format</span>())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -1078,93 +1187,73 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 </div>
-</section>
-<section id="editor-features-and-settings" class="level3" data-number="5.3">
-<h3 data-number="5.3" class="anchored" data-anchor-id="editor-features-and-settings"><span class="header-section-number">5.3</span> Editor features and settings</h3>
-<section id="side-by-side-editors" class="level4" data-number="5.3.1">
-<h4 data-number="5.3.1" class="anchored" data-anchor-id="side-by-side-editors"><span class="header-section-number">5.3.1</span> Side-by-side editors</h4>
-<p>Drag a tab to the left or right edge of the Editor area (or use <em>View: Split Editor</em> from the Command Palette) to view two files at once, side by side. This is useful for comparing two scripts, or keeping a script and a data file’s Data Explorer view open together.</p>
+<section id="editor-ruler" class="level4" data-number="5.2.1">
+<h4 data-number="5.2.1" class="anchored" data-anchor-id="editor-ruler"><span class="header-section-number">5.2.1</span> Editor ruler</h4>
+<p>Next, let’s see a setting that I highly recommend changing: adding a <strong>ruler</strong> to the editor at 80 characters. Why a ruler? It is good practice to keep lines of code reasonably short, and this visual guide helps you do that: if your code goes past the ruler, consider breaking it into multiple lines.</p>
+<p>Open the settings UI as above and search for “ruler”: you should see the option “Editor: Rulers”.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="img/side-by-side-editor.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:95.0%" alt="Screenshot of the Positron IDE, showing two editor tabs side by side"></p>
+<p><img src="img/ruler-setting.png" class="img-fluid figure-img" style="width:80.0%" alt="Screenshot of the Positron Settings UI, showing the editor.rulers setting"></p>
+<figcaption>The Positron Settings UI, showing the “Editor: Rulers” setting.</figcaption>
+</figure>
+</div>
+<p>This option can’t be changed in the UI, but you can click the <strong>Edit in settings.json</strong> link to open the JSON file and add these lines:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="st">"editor.rulers"</span><span class="er">:</span> <span class="ot">[</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dv">80</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ot">]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><em>(It’s set up this way so you can add multiple rulers if you want.)</em></p>
+<p>In the screenshot below, you can see the vertical ruler — and a line that is too long:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/ruler-example.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Screenshot of the Positron editor, showing a vertical ruler at 80 characters"></p>
+</figure>
+</div>
+<p>You should reformat that line as follows, which the Air formatter would also do:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/ruler-example2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Screenshot of the Positron editor, showing the long line reformatted to fit within the 80-character ruler"></p>
 </figure>
 </div>
 </section>
-<section id="preview-mode" class="level4" data-number="5.3.2">
-<h4 data-number="5.3.2" class="anchored" data-anchor-id="preview-mode"><span class="header-section-number">5.3.2</span> Preview mode</h4>
+<section id="preview-mode-in-the-editor" class="level4" data-number="5.2.2">
+<h4 data-number="5.2.2" class="anchored" data-anchor-id="preview-mode-in-the-editor"><span class="header-section-number">5.2.2</span> Preview mode in the editor</h4>
 <p>By default, clicking a file opens it in <strong>preview mode</strong>: the tab title shows in italics, and opening a <em>different</em> file this way reuses that same tab instead of opening a new one. This can be handy to prevent your tab bar from filling up with files you only glance at, but takes some getting used to.</p>
-<p>Once you start editing a file, the tab becomes permanent and is no longer in preview mode. But sometimes you want to keep a file open even if you haven’t edited it yet. You can do this in two ways:</p>
+<p>Once you start editing a file, the tab becomes permanent and is no longer in preview mode. But sometimes you want to keep a file open even if you haven’t edited it yet. You can do this in one of two ways:</p>
 <ul>
-<li><strong>Double-click</strong> the file to open it in a permanent tab to begin with, or</li>
-<li>For a file in preview mode, with your cursor in the file, use the <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd> <kbd>P</kbd> shortcut to make it permanent.</li>
+<li><strong>Double-click</strong> the file to open it in a permanent tab to begin with.</li>
+<li>For a file in preview mode, with your cursor in the file, use the <em>sequential</em> keybinding, <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd> followed by <kbd>Enter</kbd>.</li>
 </ul>
-<p>If you really don’t like preview mode, you can turn it off entirely with the setting <code>workbench.editor.enablePreview: false</code>.</p>
+<p>If you really don’t like preview mode, you can turn it off entirely by setting <code>workbench.editor.enablePreview</code> to <code>false</code>.</p>
 </section>
-<section id="a-few-more-settings-and-features" class="level4" data-number="5.3.3">
-<h4 data-number="5.3.3" class="anchored" data-anchor-id="a-few-more-settings-and-features"><span class="header-section-number">5.3.3</span> A few more settings and features</h4>
+<section id="a-few-more-settings" class="level4" data-number="5.2.3">
+<h4 data-number="5.2.3" class="anchored" data-anchor-id="a-few-more-settings"><span class="header-section-number">5.2.3</span> A few more settings</h4>
 <ul>
-<li><p><code>files.autoSave</code> — saves files automatically; some people love this, others hate it, try it and see.</p></li>
-<li><p><code>editor.rulers: [80]</code> — draws a thin vertical guide line at column 80, helping you keep lines from getting too long (a common style convention in R). Off by default; add more numbers to the list for multiple guides.</p></li>
-<li><p><code>editor.formatOnSave</code> — automatically formats code when you save a file, if you have a formatter installed (we do — we installed Air above).</p></li>
+<li><p><code>files.autoSave</code><br>
+saves files automatically; some people love this, others hate it, try it and see.</p></li>
+<li><p><code>workbench.activityBar.location</code><br>
+If you want to maximize the horizontal space for your editor and panes, setting this to <code>"top"</code> moves the Activity Bar from the left side to the top of the window.</p></li>
+<li><p><code>editor.emptySelectionClipboard</code><br>
+If you press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd> with no text selected, Positron (like VS Code) copies the <strong>entire current line</strong> instead of doing nothing. This is quite handy but can also catch you off guard. If you don’t want this behavior, set this option to <code>false</code>.</p></li>
 </ul>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>Watch out: copying with nothing selected
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd> with no text selected, Positron (like VS Code) copies the <strong>entire current line</strong> instead of doing nothing. This is quite handy but can also catch you off guard. <strong>Try it</strong>: click somewhere in a line of your script <em>without selecting anything</em>, press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd>, and then paste on an empty line below.</p>
-<p>If you don’t want this behavior, you can turn it off with:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="st">"editor.emptySelectionClipboard"</span><span class="er">:</span> <span class="kw">false</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</div>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Want more space for your editor and panes?
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>If you want to maximize the horizontal space for your editor and panes, you can move the Activity Bar from the left side to the top of the window, next to the menu bar, with the setting <code>workbench.activityBar.location: "top"</code>. Try it!</p>
-</div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>Multiple cursors <em>(Click to expand)</em>
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Multiple cursors work much as in RStudio (<kbd>Alt</kbd>+click, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+arrow keys), but Positron adds a handy way to build a multi-cursor selection from <em>matching text</em>:</p>
+</section>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-try-out-these-settings" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-try-out-these-settings"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Try out these settings</h4>
 <ul>
-<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>D</kbd> adds the <strong>next occurrence</strong> of whatever you have selected — press it repeatedly to build up the selection one match at a time.</li>
-<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> selects <strong>all occurrences</strong> in the file at once.</li>
-<li><kbd>Esc</kbd> returns you to a single cursor.</li>
+<li><p><strong>Empty selection behavior</strong><br>
+Click somewhere in a line of your script <em>without selecting anything</em>, press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd>, and then paste on an empty line below.</p></li>
+<li><p><strong>Preview mode</strong><br>
+Close both scripts, then click on <code>explore.R</code> in the Explorer to open it in preview mode. Then click on <code>plots.R</code> in the Explorer. What happens?</p>
+<p>Now double-click <code>explore.R</code> in the Explorer to open it in a permanent tab. Then click on <code>plots.R</code> in the Explorer. What happens now?</p></li>
+<li><p>Feel free to change another setting or try another extension we talked about.</p></li>
 </ul>
-<p>This is a quick way to rename a variable or column throughout a script, without a find-and-replace.</p>
-</div>
-</div>
-</div>
 </section>
 </section>
-<section id="keyboard-shortcuts-keybindings" class="level3" data-number="5.4">
-<h3 data-number="5.4" class="anchored" data-anchor-id="keyboard-shortcuts-keybindings"><span class="header-section-number">5.4</span> Keyboard shortcuts (keybindings)</h3>
-<p>Open the Command Palette and run <em>Preferences: Open Keyboard Shortcuts</em> to see every action (command) you can perform in Positron, and their current shortcut (if it has one) in a searchable list — type a command name or describe the action you want (e.g.&nbsp;<code>run line</code>) to find it.</p>
+<section id="keyboard-shortcuts-keybindings" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="keyboard-shortcuts-keybindings"><span class="header-section-number">5.3</span> Keyboard shortcuts (keybindings)</h3>
+<p>Open the Command Palette and run <em>Preferences: Open Keyboard Shortcuts</em> to see, in a searchable list, every action (command) you can perform in Positron along with its current shortcut (if it has one) — type a command name or describe the action you want (e.g.&nbsp;<code>run line</code>) to find it.</p>
 <p>You can click any row to record a new shortcut, and right-click to reset it back to default.</p>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -1173,11 +1262,11 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Many RStudio shortcuts already work in Positron, but others don’t, because Positron inherits VS Code’s shortcuts, which sometimes conflict. But if you’re really used to the RStudio keybindings, and want to keep using those, you can essentially restore them.</p>
 <p>Open the Command Palette and run <em>Preferences: Open Settings (UI)</em>, then search for <code>rstudioKeybindings</code> and check the box:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="st">"workbench.keybindings.rstudioKeybindings"</span><span class="er">:</span> <span class="kw">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="st">"workbench.keybindings.rstudioKeybindings"</span><span class="er">:</span> <span class="kw">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>Restart Positron</strong> for it to take effect. This turns on a large set of RStudio shortcuts, including:</p>
 <table class="table-striped caption-top table">
 <colgroup>
@@ -1209,15 +1298,28 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 </div>
 </div>
 <hr style="height:1pt; visibility:hidden;">
-<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-customize-positron" class="level4 unnumbered exercise">
-<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-exercise-customize-positron"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Exercise: Customize Positron</h4>
-<p>Spend a few minutes setting Positron up the way you like it. For example:</p>
-<ol type="1">
-<li><p>Turn on <strong>RStudio keybindings</strong>.</p></li>
-<li><p>Change some <strong>settings</strong> from the list above or find your own by browsing the Settings UI.</p></li>
-<li><p>Install an <strong>extension</strong> that looks useful to you.</p></li>
-</ol>
-</section>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Multiple cursors <em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Multiple cursors work much as in RStudio (<kbd>Alt</kbd>+click, <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+arrow keys), but Positron adds a handy way to build a multi-cursor selection from <em>matching text</em>:</p>
+<ul>
+<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>D</kbd> adds the <strong>next occurrence</strong> of whatever you have selected — press it repeatedly to build up the selection one match at a time.</li>
+<li><kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> selects <strong>all occurrences</strong> in the file at once.</li>
+<li><kbd>Esc</kbd> returns you to a single cursor.</li>
+</ul>
+<p>This is a quick way to rename a variable or column throughout a script, without a find-and-replace.</p>
+</div>
+</div>
+</div>
 <hr style="height:1pt; visibility:hidden;">
 <section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects" class="level4 unnumbered exercise">
 <h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise: Open one of your own projects</h4>
@@ -1242,7 +1344,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 <ul>
 <li>The <a href="https://positron.posit.co/" target="_blank">Positron documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
 <li>The <a href="https://positron.posit.co/migrate-rstudio.html" target="_blank">migration guide for RStudio users <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
-<li>An walkthrough within VS Code: open the Command Palette, run <em>Welcome: Open Walkthrough…</em>, and pick one, such as “Migrating from RStudio to Positron”.</li>
+<li>A walkthrough within Positron: open the Command Palette, run <em>Welcome: Open Walkthrough…</em>, and pick one, such as “Migrating from RStudio to Positron”.</li>
 <li><a href="https://www.youtube.com/watch?v=7Tog8OkrIWI" target="_blank">Video: Tips &amp; tricks from the maintainers of Positron <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
 <li><a href="https://www.youtube.com/watch?v=QIYyeuZ_ISY" target="_blank">Video: Exploring Positron settings <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
 <li>The <a href="https://code.visualstudio.com/docs" target="_blank">VS Code documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a> — note that most VS Code documentation applies, since Positron is built on it.</li>
@@ -1259,7 +1361,7 @@ gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
 
 <ol>
 <li id="fn1"><p> Or if that’s somehow not showing, by using the menu <code>File</code> &gt; <code>Open Folder...</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>For example, a table copied from a webpage directly into R, Python, Julia, SQL, or Markdown code.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>For example, paste a table copied from a web page straight into your script as R, Python, Julia, SQL, or Markdown.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
