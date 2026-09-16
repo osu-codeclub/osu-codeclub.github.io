@@ -9,6 +9,12 @@ author:
     affiliation:
       - name: Horticulture and Crop Science, Ohio State University
         url: https://www.cooperstonelab.com 
+  - name: Jelmer Poelstra
+    orcid: 0000-0002-3514-7462
+    email: poelstra.1@osu.edu
+    affiliation:
+      - name: CFAES Bioinformatics Core, Ohio State University
+        url: https://go.osu.edu/bioinformatics-core  
 date: "2026-09-17"
 date-modified: last-modified
 # image: 
@@ -27,9 +33,9 @@ language:
 
 <br>
 
-## Introduction
+# Introduction
 
-### What we'll cover
+## What we'll cover
 
 Developments in generative artificial intelligence (AI) using large language models (LLMs) is revolutizing the way the people code. We have covered in [many past Code Clubs](https://osu-codeclub.github.io/#category=ggplot2) how to use `ggplot2` in R to make the plots of your dreams, and today we are going to talk about aiding that process using AI.
 
@@ -41,14 +47,14 @@ By the end of the session, you should be more comfortable with using AI to aid i
 -   Prompting to make a much more complicated figure
 
 ::: exercise
-#### {{< fa user-edit >}} Discussion {.unnumbered}
+### {{< fa user-edit >}} Discussion {.unnumbered}
 
 -   Do you currently use AI to help with your plotting?
 -   If yes, how do you integrate AI into your workflow?
 -   Do you consider yourself familiar with the basics `ggplot2`?
 :::
 
-### Before we start
+## Before we start
 
 We are going to be working in Positron for the rest of the semester. If you haven't done so already, please:
 
@@ -57,7 +63,7 @@ We are going to be working in Positron for the rest of the semester. If you have
 2.  **Make sure you have a recent R** (4.4.0 or higher) installed; Positron does not come with its own copy of R.
 
 ::: callout-important
-#### Using an OSU-managed computer and have no admin rights?
+### Using an OSU-managed computer and have no admin rights?
 
 You should still be able to install Positron, just do so at the user level rather than system-wide.
 
@@ -66,13 +72,13 @@ On a Mac, this involves dragging the Positron app into your **User** Application
 On Windows, the Positron installer has a **"User install"** option. Look for a checkbox or dropdown labeled **"Install for me only"** (vs. "for all users") during setup --- that keeps the install in your user profile without needing admin rights.
 :::
 
-## Getting started
+# Getting started
 
 Go ahead and start Positron! It should look something like this:
 
 ![](img/positron-whole.png){fig-align="center" width="98%" fig-alt="Screenshot of the Positron IDE, with the Editor, Console, and various panes"}
 
-### Opening a folder (replaces RStudio Projects)
+## Opening a folder (replaces RStudio Projects)
 
 ::::: columns
 ::: {.column width="45%"}
@@ -110,9 +116,9 @@ But instead of requiring the special `.Rproj` file that is created when you make
 
 They also make a lot of Positron's features work better, such as the Explorer, Search, and version control support.
 
-### Setting up Posit Assistant 
+## Setting up Posit Assistant 
 
-#### Get a GitHub account if you don't have one
+### Get a GitHub account if you don't have one
 
 In order to use GitHub Copilot, you must have a GitHub account.
 
@@ -130,18 +136,41 @@ Create a GitHub account by going to [github.com/join](www.github.com/join).
 You can sign up for GitHub education with your OSU email by confirming your status as a student [GitHub Education page](https://github.com/education).
 :::
 
-You have access to Copilot free with your GitHub account.
+Anyone with a GitHub account will be automatically enrolled in the free GitHub Copilot plan,
+which has a limit of 2,000 code completions per month and ~50 chat requests.
+That's not enough for most people to use GitHub Copilot in a sustained way ---
+but as students and teachers/faculty, we can get additional free access after applying for it.
+In summary (see also this [GitHub page](https://docs.github.com/en/copilot/concepts/billing/individual-plans)):
 
-#### Set your LLM provider to GitHub Copilot
+| Plan | Free for whom | How to get it | Code completions | Chat requests |
+|------|----------|------------------|---------------|---------------|
+| **Free** | Everyone | Automatically | 2,000 per month | ~50 |
+| **Student** | Students | Apply for education benefits | Unlimited | 200 |
+| **Pro** | Teachers/Faculty | Apply for education benefits | Unlimited | 1,500 |
 
-In order to set up the Posit Assistant for AI-assisted plotting, you will need to install the Posit Assistant extension.
+To apply for educational benefits,
+the following link will work for teachers/faculty and students alike ---
+just select the appropriate option in the form:
+
+1. Go to <https://github.com/settings/education/benefits>.
+
+2. Click "**Start an application**":
+
+![](img/github-edu-benefits.png){fig-align="center" width="90%"}
+
+3. Fill out the form as needed.
+   _(You will likely need a document that proves your current status at the university.)_
+
+### Set your LLM provider to GitHub Copilot
+
+In order to set up the Posit Assistant for AI-assisted plotting, you will need to configure the Posit Assistant extension.
 
 To do that, call up your Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), and we are going to configure which LLMs our Posit Assistant can use. Type in "*Authentication: Configure Language Model Providers*" and select it.
 
 ![](img/authentication-configure-llm.png){fig-align="center" width="80%" fig-alt="Authentication: Configure Language Model Providers"}
 
 ::: {.callout-note collapse="true"}
-#### Don't see Authentication: Configure Language Model Providers as an option?_(Click to expand)_
+### Don't see Authentication: Configure Language Model Providers as an option?_(Click to expand)_
 
 This may be because:
 
@@ -196,7 +225,7 @@ Now you should be connected.
 ![](img/github-07-congratulations-github-connected.png){fig-align="center" width="50%" fig-alt="Congratulations! You have successfully connected to GitHub Copilot!"}
 
 ::: {.callout-note collapse="true"}
-#### Getting indications you have not finished authorizing?  There are some instructions below to authorize by creating a Personal Access Token (PAT)_(Click to expand)_
+### Getting a popup that you have not finished authorizing GitHub?  There are some instructions below to authorize by creating a Personal Access Token (PAT) _(Click to expand)_
 
 While preparing the material for today's session, I set up GitHub Copilot in Positron about 5 times. Sometimes when I would set up, I would get the pop up on the bottom right of my Positron window:
 
@@ -210,7 +239,7 @@ You should next get a popup asking "Do you want Positron to open the external we
 
 ![](img/github-10-positron-open-website.png){fig-align="center" width="50%" fig-alt="Positron is asking if you want Positron to open the external website."}
 
-This will bring you to your GitHub account online where you can create a Personal Access Token (PAT). You can do this with all the defaults, and you will need to set an expiration date. GitHub recommends you set at 30 days but you can do longer.
+This will bring you to your GitHub account online where you can create a Personal Access Token (PAT). You can do this with all the defaults, and you will need to set an expiration date. GitHub recommends you set at 30 days but you can do longer. If you scroll to the bottom of hte page, you will find a green `Generate token` button - go ahead and click that.
 
 Your PAT will then be created and you can see it. Be sure to copy this, and I like to save this token also in my password manager. Then you can navigate back to Postrion where there should be a prompt asking you for this PAT.
 
@@ -220,13 +249,13 @@ Paste your PAT and press `Enter`. You should now be connected to GitHub Copilot 
 
 :::
 
-### Starting an R session
+## Starting an R session
 
 Near the **top-right corner** of the Positron window is the so-called **interpreter picker**, which lets you choose which installation of R (or Python) to use for your session.
 
 If Positron found your R installation, it may have started a session already --- then it would *look similar to what's shown in the screenshot on the right* (with the R version number corresponding to what *you* have installed).
 
-## Re-familiarizing ourself with `ggplot2` syntax
+# Re-familiarizing ourself with `ggplot2` syntax
 
 Perhaps it is possible now to use AI to make your plots without understanding any `ggplot2` or `R` syntax, but I do think it is much easier, and you'll have a better time if you understand the basics.
 
@@ -240,48 +269,147 @@ library(tidyverse)
 We are going to use the `penguins` dataset that comes preloaded with base R. If you want to see all of these datasets, you can run `library(help = "datasets")`
 
 ```{r}
-glimpse(penguins)
+glimpse(datasets::penguins)
 ```
+
+I am clipping below a bit of the []`ggplot2` cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf) to see how the developesr explain the basis of plotting.
 
 ![The basics of `ggplot2` from the RStudio ggplot2 cheatsheet](img/ggplot-basics.png)
 
-Let's start with an example and then we'll go through it.
+The general syntax is like this:
 
-```{r}
-penguins |> 
-  ggplot(aes(x = bill_len, y = bill_dep)) +
-    geom_point()
+```{r eval = FALSE}
+data |> # start with dataframe and pipe to ggplot()
+  ggplot(aes(x = _x-variable_, # inside aes set variables mapped to visual aspects
+             y = _y-variable_, 
+             color = _color-variable)) + 
+    geom_*() + # add a geometry - the type of plot
+    scale_*() + # set how data maps to visual aspects 
+    theme_*() + # adjust the overall look of the plot
+    labs() + # add labels - title, axes, legend
 ```
 
-## Making a simple plot
+You can find the full `ggplot2` [cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-visualization.pdf) also for reference.
 
-Before we can make any plots, let's read in some data.
+# Simple plots
 
-<hr style="height:1pt; visibility:hidden;" />
+Let's start with with asking the Posit Assistant for help with a plot. Let's ask for:
+
+> "Create a plot using the penguins dataset that plots flipper length versus bill length."
+
+When I did this for the first time, I got a pop up asking "Can Posit Assistant use executeCode?" This would mean that the Posit Assistant would like to actually run this code, versus just provide the code for me to run.
+
+![](img/posit-AI_01-executeCode-allow.png){fig-align="center" width="50%" fig-alt="Posit Assistant asking if it can execute code."}
+
+I am going to click `Allow` and see what happens. Alternatively you could click `Deny` and the Posit Assistant will provide you with code that you can copy and paste into your script or `.qmd` file to run.
+
+When I do this, I get the following code, which I can see in my console:
+
+```{r}
+library(ggplot2)
+library(palmerpenguins)
+ 
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm)) +
+  geom_point()
+```
+
+There are a few things to note here, Posit AI has:
+
+1. loaded the packages it needs to run the code its specified.
+2. decided that the data we want is in the package `palmerpenguins` even though I was expecting it to pull from the base R `penguins` dataset. This is fine, but it is something to be aware of as these two datasets are not identical. For example, the variable names in `palmerpenguins::penguins` are different than in `datasets::penguins`. 
+3. not used the pipe `|>` operator which is a more modern way to write code that is considered best practice. This approach is fine but it is something to be aware of.
+
+While this is a very good start, let's see if different prompting can get us a different result. I am now going to ask for:
+
+> "Create a plot using the penguins dataset embedded in base R that plots flipper length versus bill length. Use the pipe operator and add code annotations so I can follow what each line is doing."
+
+When I do this, I get the following code:
+
+```{r, eval = FALSE}
+# Load the penguins dataset from datasets package
+datasets::penguins |>
+  # Extract the columns we need for plotting
+  (\(d) data.frame(
+    bill_length = d$bill_length_mm,
+    flipper_length = d$flipper_length_mm
+  ))() |>
+  # Remove rows with missing values
+  (\(d) d[complete.cases(d), ])() |>
+  # Create the plot with bill_length on x-axis and flipper_length on y-axis
+  with(plot(
+    x = bill_length,
+    y = flipper_length,
+    main = "Penguin Measurements",
+    xlab = "Bill Length (mm)",
+    ylab = "Flipper Length (mm)",
+    pch = 19,
+    col = rgb(0, 0, 0, 0.6)
+  ))
+```
+
+This code has a number of problems, is actually worse than my first attempt, and does not work for me at all. I notice a few problems:
+
+1. I asked for the `penguins` dataset which is a part of base R, and Posit AI has given me a fully base R plot, which is not what I want. I can change my prompt to fix this problem.
+2. Because the assistant thinks I want a base R plot, this leads to addition code which is fully not necessary. There are some steps that aim to extract the columns from the data, which is needed for base R plotting, but this is also done incorrectly. The code we've received is (trying) to extract `bill_length_mm` and `flipper_length_mm` from `penguins` but those are not the correct variable names.
+
+Let's try a new prompt:
+
+> "Create a plot using the data datasets::penguins using ggplot2 that plots flipper length versus bill length. Use the pipe operator and add code annotations so I can follow what each line is doing."
+
+Now I get this code:
+
+```{r eval = FALSE}
+library(ggplot2)
+
+# Load the penguins dataset from the datasets package
+datasets::penguins |>
+  # Initialize ggplot with bill_length_mm on x-axis and flipper_length_mm on y-axis
+  ggplot(aes(x = bill_length_mm, y = flipper_length_mm)) +
+  # Add a scatter plot layer with semi-transparent points
+  geom_point(alpha = 0.6, size = 3) +
+  # Add labels for the axes and title
+  labs(
+    title = "Penguin Measurements",
+    x = "Bill Length (mm)",
+    y = "Flipper Length (mm)"
+  )
+```
+
+Better but still I have the wrong variable names. What if I try and give the prompt information about my dataset? I am going to paste the output of `glimpse(datasets::penguins)` into the end of my prompt such that the AI can see exactly what my data looks like.
+
+> Create a plot using the data datasets::penguins using ggplot2 that plots flipper length versus bill length. Use the pipe operator and add code annotations so I can follow what each line is doing. I am pasting below the output of glimpse(datasets::penguins) so you can see what the data looks like.
+
+```{r}
+glimpse(datasets::penguins)
+```
+
+Ok now I am getting a functional plot:
+
+```{r}
+library(ggplot2)
+
+# Load the penguins dataset from the datasets package
+datasets::penguins |>
+  # Initialize ggplot with bill_len on x-axis and flipper_len on y-axis
+  ggplot(aes(x = bill_len, y = flipper_len)) +
+  # Add a scatter plot layer with semi-transparent points
+  geom_point(alpha = 0.6, size = 3) +
+  # Add labels for the axes and title
+  labs(
+    title = "Penguin Measurements",
+    x = "Bill Length (mm)",
+    y = "Flipper Length (mm)"
+  )
+```
+
+I have gotten a little bit more than I asked for - Posit AI decided that the points should be better (`size = 3`) and be a bit transparent (`alpha = 0.6`) which I think is ok. I also have gotten x- and y-axis labels along with a title even though I didn't ask for that.
 
 ::: exercise
-#### {{< fa user-edit >}} Bonus exercise: Open one of your own projects {.unnumbered}
+## {{< fa user-edit >}} Exercise: Try it yourself
 
-1.  Use `File` \> `Open Folder...` to open a folder that corresponds to one of your own projects with R scripts and data files.
+1. Try on your own to prompt Posit AI to make you a new plot with this same data.  Play around and then we will all share our experiences.
 
-2.  Open a script you know well, and run the first few lines of it.
-
-3.  Open one of your own data objects in the **Data Explorer**.
-
-Does anything stand out?
+2. What have you learned about what makes a successful prompt?
 :::
 
-<hr style="height:1pt; visibility:hidden;" />
-
-::: callout-note
-#### Further resources
-
--   The [Positron documentation {{< fa external-link >}}](https://positron.posit.co/){target="_blank"}
--   The [migration guide for RStudio users {{< fa external-link >}}](https://positron.posit.co/migrate-rstudio.html){target="_blank"}
--   An walkthrough within VS Code: open the Command Palette, run *Welcome: Open Walkthrough...*, and pick one, such as "Migrating from RStudio to Positron".
--   [Video: Tips & tricks from the maintainers of Positron {{< fa external-link >}}](https://www.youtube.com/watch?v=7Tog8OkrIWI){target="_blank"}
--   [Video: Exploring Positron settings {{< fa external-link >}}](https://www.youtube.com/watch?v=QIYyeuZ_ISY){target="_blank"}
--   The [VS Code documentation {{< fa external-link >}}](https://code.visualstudio.com/docs){target="_blank"} --- note that most VS Code documentation applies, since Positron is built on it.
-:::
-:::::
-::::::
+# More complicated plots
