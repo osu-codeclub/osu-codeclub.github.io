@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.10.18">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Jessica Cooperstone">
+<meta name="dcterms.date" content="2026-09-17">
+
+<title>AI plotting 01 – OSU Code Club</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: 1.5em;}
+div.column{flex: auto;}
+@media screen {
+div.columns{gap: min(4vw, 1.5em);}
+div.column{overflow-x: auto;}
+}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../img/codeclub_favicon_cc.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-eec68b17241c1efd3eae2de50d816e3e.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-ecc62b47060d78d36e77ec54c50f5197.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/all.css" rel="stylesheet">
+<link href="../../site_libs/quarto-contrib/fontawesome6-0.1.0/latex-fontsize.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-6C8GZCJTLH"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-6C8GZCJTLH', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo light-content">
+    <img src="../../img/codeclub_favicon.png" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">OSU Code Club</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/schedule.html"> 
+<span class="menu-text">Upcoming</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/previous.html"> 
+<span class="menu-text">Previous</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-get-started" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Get Started</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-get-started">    
+        <li>
+    <a class="dropdown-item" href="https://forms.gle/eYkMvmJShrcANUrt5">
+ <span class="dropdown-text">Sign up!</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../pages/setup.html">
+ <span class="dropdown-text">Installation guide</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="https://osu-codeclub.github.io/carpentries-aug-2026">
+ <span class="dropdown-text">R for beginners (workshop materials)</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../pages/other.html"> 
+<span class="menu-text">Related activities</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="../../index.xml"> <i class="bi bi-rss" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a>
+  <ul class="collapse">
+  <li><a href="#what-well-cover" id="toc-what-well-cover" class="nav-link" data-scroll-target="#what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</a></li>
+  <li><a href="#before-we-start" id="toc-before-we-start" class="nav-link" data-scroll-target="#before-we-start"><span class="header-section-number">1.2</span> Before we start</a></li>
+  </ul></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started"><span class="header-section-number">2</span> Getting started</a>
+  <ul class="collapse">
+  <li><a href="#opening-a-folder-replaces-rstudio-projects" id="toc-opening-a-folder-replaces-rstudio-projects" class="nav-link" data-scroll-target="#opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects)</a></li>
+  <li><a href="#setting-up-posit-assistant" id="toc-setting-up-posit-assistant" class="nav-link" data-scroll-target="#setting-up-posit-assistant"><span class="header-section-number">2.2</span> Setting up Posit Assistant</a></li>
+  <li><a href="#starting-an-r-session" id="toc-starting-an-r-session" class="nav-link" data-scroll-target="#starting-an-r-session"><span class="header-section-number">2.3</span> Starting an R session</a></li>
+  </ul></li>
+  <li><a href="#re-familiarizing-ourself-with-ggplot2-syntax" id="toc-re-familiarizing-ourself-with-ggplot2-syntax" class="nav-link" data-scroll-target="#re-familiarizing-ourself-with-ggplot2-syntax"><span class="header-section-number">3</span> Re-familiarizing ourself with <code>ggplot2</code> syntax</a>
+  <ul class="collapse">
+  <li><a href="#installing-and-loading-the-tidyverse" id="toc-installing-and-loading-the-tidyverse" class="nav-link" data-scroll-target="#installing-and-loading-the-tidyverse"><span class="header-section-number">3.1</span> Installing and loading the <code>tidyverse</code></a></li>
+  </ul></li>
+  <li><a href="#making-a-simple-plot" id="toc-making-a-simple-plot" class="nav-link" data-scroll-target="#making-a-simple-plot"><span class="header-section-number">4</span> Making a simple plot</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S12E02_plotting_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">AI-assisted plotting with R and Positron</h1>
+<p class="subtitle lead">Using GitHub Copilot integrated with Positron to improve your plots</p>
+  <div class="quarto-categories">
+    <div class="quarto-category">ggplot2</div>
+    <div class="quarto-category">GitHub Copilot</div>
+    <div class="quarto-category">LLM</div>
+    <div class="quarto-category">AI</div>
+    <div class="quarto-category">dataviz</div>
+    <div class="quarto-category">plotting</div>
+    <div class="quarto-category">tidyverse</div>
+  </div>
+  </div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Author</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Jessica Cooperstone <a href="mailto:cooperstone.1@osu.edu" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-7920-0088" class="quarto-title-author-orcid" aria-label="ORCID profile for Jessica Cooperstone"> <img alt="" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            <a href="https://www.cooperstonelab.com">
+            Horticulture and Crop Science, Ohio State University
+            </a>
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Presented on</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 17, 2026</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Page last modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">September 16, 2026</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<hr>
+<p><br></p>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<section id="what-well-cover" class="level3" data-number="1.1">
+<h3 data-number="1.1" class="anchored" data-anchor-id="what-well-cover"><span class="header-section-number">1.1</span> What we’ll cover</h3>
+<p>Developments in generative artificial intelligence (AI) using large language models (LLMs) is revolutizing the way the people code. We have covered in <a href="https://osu-codeclub.github.io/#category=ggplot2">many past Code Clubs</a> how to use <code>ggplot2</code> in R to make the plots of your dreams, and today we are going to talk about aiding that process using AI.</p>
+<p>By the end of the session, you should be more comfortable with using AI to aid in your plotting. Specifically, we’ll cover:</p>
+<ul>
+<li>The basics of <code>ggplot2</code> syntax</li>
+<li>Using AI to make a simple plot</li>
+<li>Using prompts to refine that plot more</li>
+<li>Prompting to make a much more complicated figure</li>
+</ul>
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-discussion"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Discussion</h4>
+<ul>
+<li>Do you currently use AI to help with your plotting?</li>
+<li>If yes, how do you integrate AI into your workflow?</li>
+<li>Do you consider yourself familiar with the basics <code>ggplot2</code>?</li>
+</ul>
+</section>
+</section>
+<section id="before-we-start" class="level3" data-number="1.2">
+<h3 data-number="1.2" class="anchored" data-anchor-id="before-we-start"><span class="header-section-number">1.2</span> Before we start</h3>
+<p>We are going to be working in Positron for the rest of the semester. If you haven’t done so already, please:</p>
+<ol type="1">
+<li><p><strong>Install Positron</strong>: download the appropriate installer from the <a href="https://positron.posit.co/download.html" target="_blank">download page</a>, and run it. There are installers for Windows, macOS, and Linux.</p></li>
+<li><p><strong>Make sure you have a recent R</strong> (4.4.0 or higher) installed; Positron does not come with its own copy of R.</p></li>
+</ol>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Using an OSU-managed computer and have no admin rights?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You should still be able to install Positron, just do so at the user level rather than system-wide.</p>
+<p>On a Mac, this involves dragging the Positron app into your <strong>User</strong> Applications folder, <code>/Users/&lt;username&gt;/Applications</code> (i.e.&nbsp;this Applications folder is in the same parent folder as your Documents, Downloads, and Desktop folder).</p>
+<p>On Windows, the Positron installer has a <strong>“User install”</strong> option. Look for a checkbox or dropdown labeled <strong>“Install for me only”</strong> (vs.&nbsp;“for all users”) during setup — that keeps the install in your user profile without needing admin rights.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="getting-started" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="getting-started"><span class="header-section-number">2</span> Getting started</h2>
+<p>Go ahead and start Positron! It should look something like this:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/positron-whole.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:98.0%" alt="Screenshot of the Positron IDE, with the Editor, Console, and various panes"></p>
+</figure>
+</div>
+<section id="opening-a-folder-replaces-rstudio-projects" class="level3" data-number="2.1">
+<h3 data-number="2.1" class="anchored" data-anchor-id="opening-a-folder-replaces-rstudio-projects"><span class="header-section-number">2.1</span> Opening a folder (replaces RStudio Projects)</h3>
+<div class="columns">
+<div class="column" style="width:45%;">
+<p>On the left side of the Positron window, you should see something similar to what’s shown in the screenshot on the right, prompting you to <strong>open a folder</strong>.</p>
+<p>“Opening a folder” is Positron’s <strong>equivalent of opening an RStudio Project</strong>. The idea is the same: a folder is a self-contained workspace, and opening it sets your working directory and gives you a fresh R session.</p>
+<p>But instead of requiring the special <code>.Rproj</code> file that is created when you make an RStudio Project, Positron simply <strong>treats any folder you open as a project</strong>.</p>
+</div><div class="column" style="width:55%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/open-folder.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Positron welcome screen, with a button to open a folder"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Let’s open a new folder for today’s session:</p>
+<ol type="1">
+<li><p>You can use the folder you created last month when you <a href="https://osu-codeclub.github.io/posts/S12E01_positron_01/">learned about Positron from Jelmer</a>, or you can create a new folder to use today. You can create it in any way, such as with your computer’s File Explorer / Finder.</p>
+<p>I would suggest putting this folder within a folder for Code Club, for example: <code>Documents</code> &gt; <code>codeclub</code> &gt; <code>26-au</code> (or put another way: <code>~/Documents/codeclub/26-au</code>). Again, it would be fine to use the same folder from our August session.</p></li>
+<li><p>Open this folder in Positron by clicking the <strong>Open Folder</strong> button shown above<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p></li>
+<li><p>Positron will reload and ask whether you want to trust the folder. Click <strong>Yes, I trust the authors</strong> and optionally check the box above it.</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/trust.png" class="img-fluid figure-img" style="width:60.0%" alt="Positron dialog asking whether to trust the folder you just opened"></p>
+<figcaption>The dialog for trusting a folder.</figcaption>
+</figure>
+</div>
+<p><strong>Why are Projects or open folders needed?</strong> These encourage good practices:</p>
+<ul>
+<li>Keep each research project in its own self-contained folder</li>
+<li>Use paths <em>relative</em> to the folder root, not absolute paths</li>
+<li>Avoid using <code>setwd()</code></li>
+</ul>
+<p>They also make a lot of Positron’s features work better, such as the Explorer, Search, and version control support.</p>
+</section>
+<section id="setting-up-posit-assistant" class="level3" data-number="2.2">
+<h3 data-number="2.2" class="anchored" data-anchor-id="setting-up-posit-assistant"><span class="header-section-number">2.2</span> Setting up Posit Assistant</h3>
+<section id="get-a-github-account-if-you-dont-have-one" class="level4" data-number="2.2.1">
+<h4 data-number="2.2.1" class="anchored" data-anchor-id="get-a-github-account-if-you-dont-have-one"><span class="header-section-number">2.2.1</span> Get a GitHub account if you don’t have one</h4>
+<p>In order to use GitHub Copilot, you must have a GitHub account.</p>
+<p>Create a GitHub account by going to <a href="www.github.com/join">github.com/join</a>.</p>
+<ul>
+<li>You will have to link to an email address. You can use your OSU email or a personal one, it doesn’t matter.</li>
+<li>You will have to pick a username. Some <a href="https://happygitwithr.com/github-acct.html">advice for picking a username</a>:
+<ul>
+<li>Incorporate your actual name - it’s useful for seeing who you are</li>
+<li>Pick a username you’d be comfortable with an employer seeing</li>
+<li>Shorter is better</li>
+<li>Recommend to use all lower case letters</li>
+<li>Your username can be changed but its annoying so try and get it right the first time</li>
+</ul></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You can sign up for GitHub education with your OSU email by confirming your status as a student <a href="https://github.com/education">GitHub Education page</a>.</p>
+</div>
+</div>
+<p>You have access to Copilot free with your GitHub account.</p>
+</section>
+<section id="set-your-llm-provider-to-github-copilot" class="level4" data-number="2.2.2">
+<h4 data-number="2.2.2" class="anchored" data-anchor-id="set-your-llm-provider-to-github-copilot"><span class="header-section-number">2.2.2</span> Set your LLM provider to GitHub Copilot</h4>
+<p>In order to set up the Posit Assistant for AI-assisted plotting, you will need to install the Posit Assistant extension.</p>
+<p>To do that, call up your Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), and we are going to configure which LLMs our Posit Assistant can use. Type in “<em>Authentication: COnfigure Language Model Providers</em>” and select it.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/authentication-configure-llm.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Authentication: Configure Language Model Providers"></p>
+</figure>
+</div>
+<p>This will prompt opening a new window where you can select which LLM provider you want to use. There are more options than what you can see in the screenshot below.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/configure-llm-providers.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Configure Language Model Providers"></p>
+</figure>
+</div>
+<p>Today we are going to select GitHub Copilot, which is free to use for students and academics. You will need to have a GitHub account and sign in to GitHub Copilot. Go ahead and click the orange <code>Connect</code> Positron to GitHub Copilot. A new pop up with open that says “The extension ‘Authentication’ wants to sign in using GitHub. Click the blue <code>Allow</code>. This will open a new browser window where you can sign in to GitHub and authorize Posit Assistant to use GitHub Copilot.</p>
+<div class="columns">
+<div class="column" style="width:70%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-01-copilot-connect.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Connect to GitHub Copilot"></p>
+</figure>
+</div>
+</div><div class="column" style="width:30%;">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-02-authenticate-to-github.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="The extension 'Authentication' wants to sign in using GitHub"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next you will get popup that includes a code for authenticating in your browser. You can click <code>Copy &amp; Continue to Browser</code> and the 8 digit code will be added to your clipboard and a browser will open.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-03-code-to-browser.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="A pop up including your code for authenticating with GitHub."></p>
+</figure>
+</div>
+<p>You will need to be logged into a GitHub account to do this - you can see that mine shows up below. You might also have the option here to log in.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-04-device-activation.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="Selecting a log in for activating your device with GitHub"></p>
+</figure>
+</div>
+<p>Now you can authorize your device to use GitHub Copilot with Positron. Your code should be ready in your clipboard, you can paste it here using (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>V</kbd>)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-05-device-authorization.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="Authorize your device by entering the code you previously copied to your clipboard. It also says what GitHub user you are signed in as"></p>
+</figure>
+</div>
+<p>Now you can authorize VS code to access items within your GitHub account. Yours might look different than mine depending on what groups you are involved with. You can press the green button to <code>Authorize Visual-Studio-Code</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-06-authorize-vs-code.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="Authorize yVS Code to access your GitHub account with the username you've previously indicated. This allows existing access to reading user profile data, controlling private repos, access user email address and update github action workflows. along with some community access."></p>
+</figure>
+</div>
+<p>Now you should be connected.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-07-congratulations-github-connected.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="Congratulations! You have successfully connected to GitHub Copilot!"></p>
+</figure>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Getting indications you have not finished authorizing? There are some instructions below to authorize by creating a Personal Access Token (PAT)<em>(Click to expand)</em>
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>While preparing the material for today’s session, I set up GitHub Copilot in Positron about 5 times. Sometimes when I would set up, I would get the pop up on the bottom right of my Positron window:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-08-authorization-pat.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="You have not yet finished authorizing this extension to use GitHub. Would you like to try a different way? (personal access token)."></p>
+</figure>
+</div>
+<p>If you get this prompt, you can click the orange <code>Yes</code>. This will initiate a new popup that asks if you want to Continue to GitHub to create a Personal Access Token (PAT). You can click the blue <code>Continue to GitHub</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-09-create-pat.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="A pop up asking if you want to Continue to GitHub to create a Personal Access Token (PAT)."></p>
+</figure>
+</div>
+<p>You should next get a popup asking “Do you want Positron to open the external website?” and you can click the blue <code>Open</code>.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/github-10-positron-open-website.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:50.0%" alt="Positron is asking if you want Positron to open the external website."></p>
+</figure>
+</div>
+<p>This will bring you to your GitHub account online where you can create a Personal Access Token (PAT). You can do this with all the defaults, and you will need to set an expiration date. GitHub recommends you set at 30 days but you can do longer.</p>
+<p>Your PAT will then be created and you can see it. Be sure to copy this, and I like to save this token also in my password manager. Then you can navigate back to Postrion where there should be a prompt asking you for this PAT.</p>
+<p><img src="img/github-11-enter-pat-positron.png" class="img-fluid"></p>
+<p>Paste your PAT and press <code>Enter</code>. You should now be connected to GitHub Copilot through Positron.</p>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="starting-an-r-session" class="level3" data-number="2.3">
+<h3 data-number="2.3" class="anchored" data-anchor-id="starting-an-r-session"><span class="header-section-number">2.3</span> Starting an R session</h3>
+<p>Near the <strong>top-right corner</strong> of the Positron window is the so-called <strong>interpreter picker</strong>, which lets you choose which installation of R (or Python) to use for your session.</p>
+<p>If Positron found your R installation, it may have started a session already — then it would <em>look similar to what’s shown in the screenshot on the right</em> (with the R version number corresponding to what <em>you</em> have installed).</p>
+</section>
+</section>
+<section id="re-familiarizing-ourself-with-ggplot2-syntax" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="re-familiarizing-ourself-with-ggplot2-syntax"><span class="header-section-number">3</span> Re-familiarizing ourself with <code>ggplot2</code> syntax</h2>
+<p>Perhaps it is possible now to use AI to make your plots without understanding any <code>ggplot2</code> or <code>R</code> syntax, but I do think it is much easier, and you’ll have a better time if you understand the basics.</p>
+<section id="installing-and-loading-the-tidyverse" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="installing-and-loading-the-tidyverse"><span class="header-section-number">3.1</span> Installing and loading the <code>tidyverse</code></h3>
+<p>Before we start going through the syntactical basics, we need to have <code>ggplot2</code> installed in R. If you were here last time, you’ll already have the <code>tidyverse</code> (and <code>ggplot2</code> is one of the packages contain in this meta-package), but if you weren’t then you will need to first download it using <code>install.packages()</code>. Then you can load the <code>tidyverse</code> by calling it with the function <code>library()</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'ggplot2' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyr' was built under R version 4.5.2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.2
+✔ purrr     1.2.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+</div>
+<p>We are going to use the <code>penguins</code> dataset that comes preloaded with base R. If you want to see all of these datasets, you can run <code>library(help = "datasets")</code></p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(penguins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 344
+Columns: 8
+$ species     &lt;fct&gt; Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Adelie, Ad…
+$ island      &lt;fct&gt; Torgersen, Torgersen, Torgersen, Torgersen, Torgersen, Tor…
+$ bill_len    &lt;dbl&gt; 39.1, 39.5, 40.3, NA, 36.7, 39.3, 38.9, 39.2, 34.1, 42.0, …
+$ bill_dep    &lt;dbl&gt; 18.7, 17.4, 18.0, NA, 19.3, 20.6, 17.8, 19.6, 18.1, 20.2, …
+$ flipper_len &lt;int&gt; 181, 186, 195, NA, 193, 190, 181, 195, 193, 190, 186, 180,…
+$ body_mass   &lt;int&gt; 3750, 3800, 3250, NA, 3450, 3650, 3625, 4675, 3475, 4250, …
+$ sex         &lt;fct&gt; male, female, female, NA, female, male, female, male, NA, …
+$ year        &lt;int&gt; 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007, 2007…</code></pre>
+</div>
+</div>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="img/ggplot-basics.png" class="img-fluid figure-img"></p>
+<figcaption>The basics of <code>ggplot2</code> from the RStudio ggplot2 cheatsheet</figcaption>
+</figure>
+</div>
+<p>Let’s start with an example and then we’ll go through it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bill_len, <span class="at">y =</span> bill_dep)) <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="making-a-simple-plot" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="making-a-simple-plot"><span class="header-section-number">4</span> Making a simple plot</h2>
+<p>Before we can make any plots, let’s read in some data.</p>
+<hr style="height:1pt; visibility:hidden;">
+<section id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects" class="level4 unnumbered exercise">
+<h4 class="unnumbered anchored" data-anchor-id="b58fc729-690b-4000-b19f-365a4093b2ff7b7b3c20666120757365722d65646974203e7d7d-bonus-exercise-open-one-of-your-own-projects"><i class="fa-solid fa-user-edit" aria-label="user-edit"></i> Bonus exercise: Open one of your own projects</h4>
+<ol type="1">
+<li><p>Use <code>File</code> &gt; <code>Open Folder...</code> to open a folder that corresponds to one of your own projects with R scripts and data files.</p></li>
+<li><p>Open a script you know well, and run the first few lines of it.</p></li>
+<li><p>Open one of your own data objects in the <strong>Data Explorer</strong>.</p></li>
+</ol>
+<p>Does anything stand out?</p>
+</section>
+<hr style="height:1pt; visibility:hidden;">
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Further resources
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>The <a href="https://positron.posit.co/" target="_blank">Positron documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>The <a href="https://positron.posit.co/migrate-rstudio.html" target="_blank">migration guide for RStudio users <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>An walkthrough within VS Code: open the Command Palette, run <em>Welcome: Open Walkthrough…</em>, and pick one, such as “Migrating from RStudio to Positron”.</li>
+<li><a href="https://www.youtube.com/watch?v=7Tog8OkrIWI" target="_blank">Video: Tips &amp; tricks from the maintainers of Positron <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li><a href="https://www.youtube.com/watch?v=QIYyeuZ_ISY" target="_blank">Video: Exploring Positron settings <i class="fa-solid fa-external-link" aria-label="external-link"></i></a></li>
+<li>The <a href="https://code.visualstudio.com/docs" target="_blank">VS Code documentation <i class="fa-solid fa-external-link" aria-label="external-link"></i></a> — note that most VS Code documentation applies, since Positron is built on it.</li>
+</ul>
+</div>
+</div>
+<p>::::: ::::::</p>
+
+
+</section>
+
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a><div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Or if that’s somehow not showing, by using the menu <code>File</code> &gt; <code>Open Folder...</code>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/osu-codeclub\.github\.io\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/edit/main/posts/S12E02_plotting_01/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/osu-codeclub/osu-codeclub.github.io/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
