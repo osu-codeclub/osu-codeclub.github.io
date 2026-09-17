@@ -116,11 +116,18 @@ But instead of requiring the special `.Rproj` file that is created when you make
 
 They also make a lot of Positron's features work better, such as the Explorer, Search, and version control support.
 
-## Setting up Posit Assistant 
+## Setting up Positron to use GitHub Copilot with Posit Assistant 
+
+You can set up Posit Assistant to work with a variety of different LLMs. Today we will set it up for using GitHub Copilot. 
+
+The two main AI tools we have are:
+
+1. Code completions where you get AI suggested completions as you type
+2. Agentic chat using Posit Assistant where you can both get code suggestions and have the agent run the code for you.
 
 ### Get a GitHub account if you don't have one
 
-In order to use GitHub Copilot, you must have a GitHub account.
+In order to use GitHub Copilot with Posit Assistant, you must have a GitHub account.
 
 Create a GitHub account by going to [github.com/join](www.github.com/join).
 
@@ -156,14 +163,17 @@ just select the appropriate option in the form:
 
 2. Click "**Start an application**":
 
-![](img/github-edu-benefits.png){fig-align="center" width="90%"}
-
 3. Fill out the form as needed.
    _(You will likely need a document that proves your current status at the university.)_
 
 ### Set your LLM provider to GitHub Copilot
 
-In order to set up the Posit Assistant for AI-assisted plotting, you will need to configure the Posit Assistant extension.
+In order to set up the Posit Assistant for AI-assisted plotting, you will need to configure the Posit Assistant extension. We will configure it to use GitHub Copilot.
+
+:::{.callout-note}
+# Want to set up with a different LLM? 
+Jelmer has created [some intructions](https://cfaes-bioinfo.github.io/agentic-ai-workshop/o3-positron-install.html#authentication-via-the-osu-litellm-api) for how to set up Claude Code using your OSU LiteLLM API 
+:::
 
 To do that, call up your Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), and we are going to configure which LLMs our Posit Assistant can use. Type in "*Authentication: Configure Language Model Providers*" and select it.
 
@@ -259,12 +269,18 @@ If Positron found your R installation, it may have started a session already ---
 
 Perhaps it is possible now to use AI to make your plots without understanding any `ggplot2` or `R` syntax, but I do think it is much easier, and you'll have a better time if you understand the basics.
 
-### Installing and loading the `tidyverse`
+## Installing and loading the `tidyverse`
 Before we start going through the syntactical basics, we need to have `ggplot2` installed in R. If you were here last time, you'll already have the `tidyverse` (and `ggplot2` is one of the packages contain in this meta-package), but if you weren't then you will need to first download it using `install.packages()`. Then you can load the `tidyverse` by calling it with the function `library()`.
 
 ```{r}
 library(tidyverse)
 ```
+
+::: {.callout-tip}
+### Prefer that your output be displayed in the source editor?
+If you liked that output would be shown in the source editor, directly below code, like you might be used to in RStudio, you can enable inline output by turning on [quarto.inlineOutput.enabled](positron://settings/quarto.inlineOutput.enabled). 
+
+:::
 
 We are going to use the `penguins` dataset that comes preloaded with base R. If you want to see all of these datasets, you can run `library(help = "datasets")`
 
@@ -412,4 +428,107 @@ I have gotten a little bit more than I asked for - Posit AI decided that the poi
 2. What have you learned about what makes a successful prompt?
 :::
 
-# More complicated plots
+# More complicated plots/involved requests
+
+We've done some simple plots but what if we want to make something much more complicated? We could think about this in two ways:
+
+1. We could ask for a much more customized plot
+2. We could see how well we think Posit AI can select a visualization tool without providing that information explicitly.
+
+Let's pick a more involved dataset, one we've used in Code Club before to have more variables to interrogate. The data we are going to download can be found [here](https://www.cia.gov/stories/story/spotlighting-the-world-factbook-as-we-bid-a-fond-farewell/), though I have saved the file, added it to our Code Club Github, and included some code below for you to download it.
+
+```{r eval = FALSE}
+download.file(
+  url = "https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv",
+  destfile = "factbook_download.csv"
+)
+```
+
+Let's see if we can get Posit AI to read the data in for us. I am going to start with a minimal prompt so we can see how that goes:
+
+> "Read in factbook_download.csv".
+
+Posit AI gave me the following message:
+
+![](img/read-in-factbook.png){fig-align="center" width="80%" fig-alt="Posit AI message that it is locating the CSV in the project so it can load it into the current R session correctly.."}
+
+```{r eval = FALSE}
+factbook <- read.csv("posts/S12E02_plotting_01/factbook_download.csv")
+factbook
+```
+
+```{r echo = FALSE}
+factbook <- read.csv("factbook_download.csv")
+```
+
+Let's look at this data, using `glimpse()` (to get a summary).
+
+```{r}
+glimpse(factbook)
+```
+
+We have some problems here:
+
+1. All data is read in as characters, even those that aren't of the type `character`
+2. Since R by default doesn't allow column names to start with a number, an `X` has been added to the beginning of all columns that begin with a number.
+
+Let's see if we can get Posit AI to help us fix this. I am going to prompt:
+
+> "Read in factbook_download.csv. The first four columns should be character type and the rest of the columns are numeric. I want the year columns to start just with the number of the year, with no X preceeding."
+
+![](img/read-in-fail1.png){fig-align="center" width="80%" fig-alt="Posit AI message that it is trying to read in my data"}
+
+This is the output I get - and this code doesn't work for me.
+
+```{r eval = FALSE}
+factbook <- read.csv(
+  "factbook_download.csv",
+  check.names = FALSE,
+  stringsAsFactors = FALSE,
+  na.strings = c("", ".."),
+  colClasses = c(
+    rep("character", 4),
+    rep("numeric", 16)
+  )
+)
+```
+
+In my Quarto document, I have a "Fix" option - and I'm going to try that and see how it works.
+
+![](img/fix1.png){fig-align="center" width="80%" fig-alt="Posit AI message that it is trying to read in my data"}
+
+We get the following code, which runs. Let's look at the message and then we can look at the data to see how it all went.
+
+```{r}
+factbook <- read.csv(
+  "factbook_download.csv",
+  check.names = FALSE,
+  stringsAsFactors = FALSE,
+  na.strings = c("", ".."),
+  colClasses = c(
+    rep("character", 4),
+    rep("numeric", 16)
+  )
+)
+```
+
+The message we get is:
+
+![](img/fix2.png){fig-align="center" width="80%"}
+
+
+```{r}
+glimpse(factbook)
+```
+
+I am an experienced R user, if I was going to read in this data, I would just have used the code below -- all of our issues are stemming from the fact that missing values are denoted with a non-standard notation of "..". I can just pass to `read_csv()` that the missing values are denoted with ".." and it will read in the data correctly.
+
+
+```{r}
+factbook_jess <- read_csv("factbook_download.csv",
+                          na = c("", ".."))
+
+glimpse(factbook_jess)
+```
+
+Ok, now that we have data read in - let's play around with prompting for an interesting and progressingly more complicated plot. Let's do this together.
