@@ -112,11 +112,17 @@
 </ul>
 <p>They also make a lot of Positron’s features work better, such as the Explorer, Search, and version control support.</p>
 </section>
-<section id="setting-up-posit-assistant" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="setting-up-posit-assistant"><span class="header-section-number">2.2</span> Setting up Posit Assistant</h2>
+<section id="setting-up-positron-to-use-github-copilot-with-posit-assistant" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="setting-up-positron-to-use-github-copilot-with-posit-assistant"><span class="header-section-number">2.2</span> Setting up Positron to use GitHub Copilot with Posit Assistant</h2>
+<p>You can set up Posit Assistant to work with a variety of different LLMs. Today we will set it up for using GitHub Copilot.</p>
+<p>The two main AI tools we have are:</p>
+<ol type="1">
+<li>Code completions where you get AI suggested completions as you type</li>
+<li>Agentic chat using Posit Assistant where you can both get code suggestions and have the agent run the code for you.</li>
+</ol>
 <section id="get-a-github-account-if-you-dont-have-one" class="level3" data-number="2.2.1">
 <h3 data-number="2.2.1" class="anchored" data-anchor-id="get-a-github-account-if-you-dont-have-one"><span class="header-section-number">2.2.1</span> Get a GitHub account if you don’t have one</h3>
-<p>In order to use GitHub Copilot, you must have a GitHub account.</p>
+<p>In order to use GitHub Copilot with Posit Assistant, you must have a GitHub account.</p>
 <p>Create a GitHub account by going to <a href="www.github.com/join">github.com/join</a>.</p>
 <ul>
 <li>You will have to link to an email address. You can use your OSU email or a personal one, it doesn’t matter.</li>
@@ -188,19 +194,25 @@ Tip
 <ol type="1">
 <li><p>Go to <a href="https://github.com/settings/education/benefits" class="uri">https://github.com/settings/education/benefits</a>.</p></li>
 <li><p>Click “<strong>Start an application</strong>”:</p></li>
-</ol>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="https://osu-codeclub.github.io/posts/S12E02_plotting_01/img/github-edu-benefits.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:90.0%"></p>
-</figure>
-</div>
-<ol start="3" type="1">
-<li>Fill out the form as needed. <em>(You will likely need a document that proves your current status at the university.)</em></li>
+<li><p>Fill out the form as needed. <em>(You will likely need a document that proves your current status at the university.)</em></p></li>
 </ol>
 </section>
 <section id="set-your-llm-provider-to-github-copilot" class="level3" data-number="2.2.2">
 <h3 data-number="2.2.2" class="anchored" data-anchor-id="set-your-llm-provider-to-github-copilot"><span class="header-section-number">2.2.2</span> Set your LLM provider to GitHub Copilot</h3>
-<p>In order to set up the Posit Assistant for AI-assisted plotting, you will need to configure the Posit Assistant extension.</p>
+<p>In order to set up the Posit Assistant for AI-assisted plotting, you will need to configure the Posit Assistant extension. We will configure it to use GitHub Copilot.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Want to set up with a different LLM?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Jelmer has created <a href="https://cfaes-bioinfo.github.io/agentic-ai-workshop/o3-positron-install.html#authentication-via-the-osu-litellm-api">some intructions</a> for how to set up Claude Code using your OSU LiteLLM API</p>
+</div>
+</div>
 <p>To do that, call up your Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>), and we are going to configure which LLMs our Posit Assistant can use. Type in “<em>Authentication: Configure Language Model Providers</em>” and select it.</p>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -208,7 +220,7 @@ Tip
 </figure>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -217,7 +229,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>This may be because:</p>
 <ul>
@@ -290,7 +302,7 @@ Tip
 </figure>
 </div>
 <div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-5-contents" aria-controls="callout-5" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
@@ -299,7 +311,7 @@ Tip
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div id="callout-5" class="callout-5-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>While preparing the material for today’s session, I set up GitHub Copilot in Positron about 5 times. Sometimes when I would set up, I would get the pop up on the bottom right of my Positron window:</p>
 <div class="quarto-figure quarto-figure-center">
@@ -337,13 +349,26 @@ Tip
 <section id="re-familiarizing-ourself-with-ggplot2-syntax" class="level1" data-number="3">
 <h1 data-number="3"><span class="header-section-number">3</span> Re-familiarizing ourself with <code>ggplot2</code> syntax</h1>
 <p>Perhaps it is possible now to use AI to make your plots without understanding any <code>ggplot2</code> or <code>R</code> syntax, but I do think it is much easier, and you’ll have a better time if you understand the basics.</p>
-<section id="installing-and-loading-the-tidyverse" class="level3" data-number="3.0.1">
-<h3 data-number="3.0.1" class="anchored" data-anchor-id="installing-and-loading-the-tidyverse"><span class="header-section-number">3.0.1</span> Installing and loading the <code>tidyverse</code></h3>
+<section id="installing-and-loading-the-tidyverse" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="installing-and-loading-the-tidyverse"><span class="header-section-number">3.1</span> Installing and loading the <code>tidyverse</code></h2>
 <p>Before we start going through the syntactical basics, we need to have <code>ggplot2</code> installed in R. If you were here last time, you’ll already have the <code>tidyverse</code> (and <code>ggplot2</code> is one of the packages contain in this meta-package), but if you weren’t then you will need to first download it using <code>install.packages()</code>. Then you can load the <code>tidyverse</code> by calling it with the function <code>library()</code>.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><span class="fu" style="color: #4758AB;
 background-color: null;
 font-style: inherit;">library</span>(tidyverse)</span></code></pre></div></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Prefer that your output be displayed in the source editor?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you liked that output would be shown in the source editor, directly below code, like you might be used to in RStudio, you can enable inline output by turning on <a href="positron://settings/quarto.inlineOutput.enabled">quarto.inlineOutput.enabled</a>.</p>
+</div>
 </div>
 <p>We are going to use the <code>penguins</code> dataset that comes preloaded with base R. If you want to see all of these datasets, you can run <code>library(help = "datasets")</code></p>
 <div class="cell">
@@ -772,8 +797,294 @@ font-style: inherit;">"Flipper Length (mm)"</span></span>
 </ol>
 </section>
 </section>
-<section id="more-complicated-plots" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> More complicated plots</h1>
+<section id="more-complicated-plotsinvolved-requests" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> More complicated plots/involved requests</h1>
+<p>We’ve done some simple plots but what if we want to make something much more complicated? We could think about this in two ways:</p>
+<ol type="1">
+<li>We could ask for a much more customized plot</li>
+<li>We could see how well we think Posit AI can select a visualization tool without providing that information explicitly.</li>
+</ol>
+<p>Let’s pick a more involved dataset, one we’ve used in Code Club before to have more variables to interrogate. The data we are going to download can be found <a href="https://www.cia.gov/stories/story/spotlighting-the-world-factbook-as-we-bid-a-fond-farewell/">here</a>, though I have saved the file, added it to our Code Club Github, and included some code below for you to download it.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">download.file</span>(</span>
+<span id="cb16-2">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">url =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"https://github.com/osu-codeclub/osu-codeclub.github.io/raw/refs/heads/main/posts/S08E01_wrangling_01/data/factbook.csv"</span>,</span>
+<span id="cb16-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">destfile =</span> <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span></span>
+<span id="cb16-4">)</span></code></pre></div></div>
+</div>
+<p>Let’s see if we can get Posit AI to read the data in for us. I am going to start with a minimal prompt so we can see how that goes:</p>
+<blockquote class="blockquote">
+<p>“Read in factbook_download.csv”.</p>
+</blockquote>
+<p>Posit AI gave me the following message:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E02_plotting_01/img/read-in-factbook.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Posit AI message that it is locating the CSV in the project so it can load it into the current R session correctly.."></p>
+</figure>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1">factbook <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read.csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"posts/S12E02_plotting_01/factbook_download.csv"</span>)</span>
+<span id="cb17-2">factbook</span></code></pre></div></div>
+</div>
+<p>Let’s look at this data, using <code>glimpse()</code> (to get a summary).</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 11,072
+Columns: 20
+$ Series.Name    &lt;chr&gt; "Population, total", "Population, total", "Population, …
+$ Series.Code    &lt;chr&gt; "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.TO…
+$ Country.Name   &lt;chr&gt; "Afghanistan", "Albania", "Algeria", "American Samoa", …
+$ Country.Code   &lt;chr&gt; "AFG", "ALB", "DZA", "ASM", "AND", "AGO", "ATG", "ARG",…
+$ X2000..YR2000. &lt;chr&gt; "19542982", "3089027", "30774621", "58230", "66097", "1…
+$ X2001..YR2001. &lt;chr&gt; "19688632", "3060173", "31200985", "58324", "67820", "1…
+$ X2002..YR2002. &lt;chr&gt; "21000256", "3051010", "31624696", "58177", "70849", "1…
+$ X2003..YR2003. &lt;chr&gt; "22645130", "3039616", "32055883", "57941", "73907", "1…
+$ X2004..YR2004. &lt;chr&gt; "23553551", "3026939", "32510186", "57626", "76933", "1…
+$ X2005..YR2005. &lt;chr&gt; "24411191", "3011487", "32956690", "57254", "79826", "1…
+$ X2006..YR2006. &lt;chr&gt; "25442944", "2992547", "33435080", "56837", "80221", "2…
+$ X2007..YR2007. &lt;chr&gt; "25903301", "2970017", "33983827", "56383", "78168", "2…
+$ X2008..YR2008. &lt;chr&gt; "26427199", "2947314", "34569592", "55891", "76055", "2…
+$ X2009..YR2009. &lt;chr&gt; "27385307", "2927519", "35196037", "55366", "73852", "2…
+$ X2010..YR2010. &lt;chr&gt; "28189672", "2913021", "35856344", "54849", "71519", "2…
+$ X2011..YR2011. &lt;chr&gt; "29249157", "2905195", "36543541", "54310", "70567", "2…
+$ X2012..YR2012. &lt;chr&gt; "30466479", "2900401", "37260563", "53691", "71013", "2…
+$ X2013..YR2013. &lt;chr&gt; "31541209", "2895092", "38000626", "52995", "71367", "2…
+$ X2014..YR2014. &lt;chr&gt; "32716210", "2889104", "38760168", "52217", "71621", "2…
+$ X2015..YR2015. &lt;chr&gt; "33753499", "2880703", "39543154", "51368", "71746", "2…</code></pre>
+</div>
+</div>
+<p>We have some problems here:</p>
+<ol type="1">
+<li>All data is read in as characters, even those that aren’t of the type <code>character</code></li>
+<li>Since R by default doesn’t allow column names to start with a number, an <code>X</code> has been added to the beginning of all columns that begin with a number.</li>
+</ol>
+<p>Let’s see if we can get Posit AI to help us fix this. I am going to prompt:</p>
+<blockquote class="blockquote">
+<p>“Read in factbook_download.csv. The first four columns should be character type and the rest of the columns are numeric. I want the year columns to start just with the number of the year, with no X preceeding.”</p>
+</blockquote>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E02_plotting_01/img/read-in-fail1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Posit AI message that it is trying to read in my data"></p>
+</figure>
+</div>
+<p>This is the output I get - and this code doesn’t work for me.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1">factbook <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read.csv</span>(</span>
+<span id="cb20-2">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span>,</span>
+<span id="cb20-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">check.names =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>,</span>
+<span id="cb20-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stringsAsFactors =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>,</span>
+<span id="cb20-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.strings =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".."</span>),</span>
+<span id="cb20-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colClasses =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb20-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"character"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>),</span>
+<span id="cb20-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"numeric"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="cb20-9">  )</span>
+<span id="cb20-10">)</span></code></pre></div></div>
+</div>
+<p>In my Quarto document, I have a “Fix” option - and I’m going to try that and see how it works.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E02_plotting_01/img/fix1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Posit AI message that it is trying to read in my data"></p>
+</figure>
+</div>
+<p>We get the following code, which runs. Let’s look at the message and then we can look at the data to see how it all went.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1">factbook <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read.csv</span>(</span>
+<span id="cb21-2">  <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span>,</span>
+<span id="cb21-3">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">check.names =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>,</span>
+<span id="cb21-4">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">stringsAsFactors =</span> <span class="cn" style="color: #8f5902;
+background-color: null;
+font-style: inherit;">FALSE</span>,</span>
+<span id="cb21-5">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na.strings =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".."</span>),</span>
+<span id="cb21-6">  <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">colClasses =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(</span>
+<span id="cb21-7">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"character"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">4</span>),</span>
+<span id="cb21-8">    <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">rep</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"numeric"</span>, <span class="dv" style="color: #AD0000;
+background-color: null;
+font-style: inherit;">16</span>)</span>
+<span id="cb21-9">  )</span>
+<span id="cb21-10">)</span></code></pre></div></div>
+</div>
+<p>The message we get is:</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://osu-codeclub.github.io/posts/S12E02_plotting_01/img/fix2.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 11,072
+Columns: 20
+$ `Series Name`   &lt;chr&gt; "Population, total", "Population, total", "Population,…
+$ `Series Code`   &lt;chr&gt; "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.T…
+$ `Country Name`  &lt;chr&gt; "Afghanistan", "Albania", "Algeria", "American Samoa",…
+$ `Country Code`  &lt;chr&gt; "AFG", "ALB", "DZA", "ASM", "AND", "AGO", "ATG", "ARG"…
+$ `2000 [YR2000]` &lt;dbl&gt; 19542982, 3089027, 30774621, 58230, 66097, 16394062, 7…
+$ `2001 [YR2001]` &lt;dbl&gt; 19688632, 3060173, 31200985, 58324, 67820, 16941587, 7…
+$ `2002 [YR2002]` &lt;dbl&gt; 21000256, 3051010, 31624696, 58177, 70849, 17516139, 7…
+$ `2003 [YR2003]` &lt;dbl&gt; 22645130, 3039616, 32055883, 57941, 73907, 18124342, 7…
+$ `2004 [YR2004]` &lt;dbl&gt; 23553551, 3026939, 32510186, 57626, 76933, 18771125, 7…
+$ `2005 [YR2005]` &lt;dbl&gt; 24411191, 3011487, 32956690, 57254, 79826, 19450959, 7…
+$ `2006 [YR2006]` &lt;dbl&gt; 25442944, 2992547, 33435080, 56837, 80221, 20162340, 8…
+$ `2007 [YR2007]` &lt;dbl&gt; 25903301, 2970017, 33983827, 56383, 78168, 20909684, 8…
+$ `2008 [YR2008]` &lt;dbl&gt; 26427199, 2947314, 34569592, 55891, 76055, 21691522, 8…
+$ `2009 [YR2009]` &lt;dbl&gt; 27385307, 2927519, 35196037, 55366, 73852, 22507674, 8…
+$ `2010 [YR2010]` &lt;dbl&gt; 28189672, 2913021, 35856344, 54849, 71519, 23364185, 8…
+$ `2011 [YR2011]` &lt;dbl&gt; 29249157, 2905195, 36543541, 54310, 70567, 24259111, 8…
+$ `2012 [YR2012]` &lt;dbl&gt; 30466479, 2900401, 37260563, 53691, 71013, 25188292, 8…
+$ `2013 [YR2013]` &lt;dbl&gt; 31541209, 2895092, 38000626, 52995, 71367, 26147002, 8…
+$ `2014 [YR2014]` &lt;dbl&gt; 32716210, 2889104, 38760168, 52217, 71621, 27128337, 8…
+$ `2015 [YR2015]` &lt;dbl&gt; 33753499, 2880703, 39543154, 51368, 71746, 28127721, 8…</code></pre>
+</div>
+</div>
+<p>I am an experienced R user, if I was going to read in this data, I would just have used the code below – all of our issues are stemming from the fact that missing values are denoted with a non-standard notation of “..”. I can just pass to <code>read_csv()</code> that the missing values are denoted with “..” and it will read in the data correctly.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1">factbook_jess <span class="ot" style="color: #003B4F;
+background-color: null;
+font-style: inherit;">&lt;-</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">read_csv</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">"factbook_download.csv"</span>,</span>
+<span id="cb24-2">                          <span class="at" style="color: #657422;
+background-color: null;
+font-style: inherit;">na =</span> <span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">c</span>(<span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">""</span>, <span class="st" style="color: #20794D;
+background-color: null;
+font-style: inherit;">".."</span>))</span></code></pre></div></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 11072 Columns: 20
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (4): Series Name, Series Code, Country Name, Country Code
+dbl (16): 2000 [YR2000], 2001 [YR2001], 2002 [YR2002], 2003 [YR2003], 2004 [...
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26" style="background: #f1f3f5;"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><span class="fu" style="color: #4758AB;
+background-color: null;
+font-style: inherit;">glimpse</span>(factbook_jess)</span></code></pre></div></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 11,072
+Columns: 20
+$ `Series Name`   &lt;chr&gt; "Population, total", "Population, total", "Population,…
+$ `Series Code`   &lt;chr&gt; "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.TOTL", "SP.POP.T…
+$ `Country Name`  &lt;chr&gt; "Afghanistan", "Albania", "Algeria", "American Samoa",…
+$ `Country Code`  &lt;chr&gt; "AFG", "ALB", "DZA", "ASM", "AND", "AGO", "ATG", "ARG"…
+$ `2000 [YR2000]` &lt;dbl&gt; 19542982, 3089027, 30774621, 58230, 66097, 16394062, 7…
+$ `2001 [YR2001]` &lt;dbl&gt; 19688632, 3060173, 31200985, 58324, 67820, 16941587, 7…
+$ `2002 [YR2002]` &lt;dbl&gt; 21000256, 3051010, 31624696, 58177, 70849, 17516139, 7…
+$ `2003 [YR2003]` &lt;dbl&gt; 22645130, 3039616, 32055883, 57941, 73907, 18124342, 7…
+$ `2004 [YR2004]` &lt;dbl&gt; 23553551, 3026939, 32510186, 57626, 76933, 18771125, 7…
+$ `2005 [YR2005]` &lt;dbl&gt; 24411191, 3011487, 32956690, 57254, 79826, 19450959, 7…
+$ `2006 [YR2006]` &lt;dbl&gt; 25442944, 2992547, 33435080, 56837, 80221, 20162340, 8…
+$ `2007 [YR2007]` &lt;dbl&gt; 25903301, 2970017, 33983827, 56383, 78168, 20909684, 8…
+$ `2008 [YR2008]` &lt;dbl&gt; 26427199, 2947314, 34569592, 55891, 76055, 21691522, 8…
+$ `2009 [YR2009]` &lt;dbl&gt; 27385307, 2927519, 35196037, 55366, 73852, 22507674, 8…
+$ `2010 [YR2010]` &lt;dbl&gt; 28189672, 2913021, 35856344, 54849, 71519, 23364185, 8…
+$ `2011 [YR2011]` &lt;dbl&gt; 29249157, 2905195, 36543541, 54310, 70567, 24259111, 8…
+$ `2012 [YR2012]` &lt;dbl&gt; 30466479, 2900401, 37260563, 53691, 71013, 25188292, 8…
+$ `2013 [YR2013]` &lt;dbl&gt; 31541209, 2895092, 38000626, 52995, 71367, 26147002, 8…
+$ `2014 [YR2014]` &lt;dbl&gt; 32716210, 2889104, 38760168, 52217, 71621, 27128337, 8…
+$ `2015 [YR2015]` &lt;dbl&gt; 33753499, 2880703, 39543154, 51368, 71746, 28127721, 8…</code></pre>
+</div>
+</div>
+<p>Ok, now that we have data read in - let’s play around with prompting for an interesting and progressingly more complicated plot. Let’s do this together.</p>
 
 
 </section>
