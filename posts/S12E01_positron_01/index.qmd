@@ -17,7 +17,7 @@ title-block-banner: false
 number-depth: 4
 execute:
   eval: true
-  cache: true
+  cache: false
 language:
   title-block-published: "Presented on"
   title-block-modified: "Page last modified"
@@ -40,20 +40,22 @@ By the end of the session, you should be able to open your own work in Positron,
 find your way around, and decide for yourself whether you want to keep using it.
 Specifically, we'll cover:
 
-- **Installing Positron and opening a folder**
+- **Installing Positron**
+- **Positron's open folder feature**
+- **Running code and the Command Palette**
 - **Touring the interface**
-- **Exploring data** --- the Data Explorer, Variables pane, and Plots pane
-- **Customizing Positron** --- keyboard shortcuts, settings, and extensions
+- **Exploring data** with the Data Explorer and more
+- **Customizing Positron**
 
 ### Why is there a new IDE?
 
 Basically, Posit wanted better support for other programming languages,
 particularly Python, alongside R.
-This turned out to be harder with RStudio than starting fresh,
+This turned out to be harder to retrofit into RStudio than to start fresh,
 so they created a new IDE: Positron.
 
 Positron is built on [Code OSS](https://github.com/microsoft/vscode),
-the open-source version of the popular general-purpose code IDE called
+the open-source base of Microsoft's popular general-purpose code editor,
 Visual Studio Code (**VS Code**).
 It adds data science features that RStudio has but VS Code does not,
 such as a Variables pane, a Plots pane, and a Data Explorer.
@@ -61,7 +63,7 @@ such as a Variables pane, a Plots pane, and a Data Explorer.
 ::: exercise
 #### {{< fa user-edit >}} Discussion {-}
 
-- Which languages do you use besides R --- Python, bash, SQL, none?
+- Which languages do you use besides R --- Python, Bash, SQL, none?
 - Has anyone tried Positron already? Did you stick with it?
 - Do you consider yourself familiar with the basics of RStudio?
 :::
@@ -74,7 +76,7 @@ Positron is a natural choice and I'd strongly recommend switching.
 If you use R only, you may not need to switch, but should still consider it,
 because:
 
-- **New features**: While Posit has committed to maintaining and updating RStudio,
+- **Future new features**: While Posit has committed to maintaining and updating RStudio,
   major new features are now going to Positron first.
   And some features may never make it to RStudio, because Positron is more adaptable.
 
@@ -84,16 +86,18 @@ because:
   In RStudio, you can only use AI via a Posit AI subscription.
   We'll demonstrate using AI assistance in Positron in the next session!
 
+- **Customization**: Positron is more customizable than RStudio.
+
 And two more minor points:
 
 - **Data Explorer**: Positron's Data Explorer can open data files (CSV, Excel, etc.)
   directly, without having to load them in R at all.
 
-- **Remote connections**: A niche feature, but it was important to me:
-  Positron can be connected to the Ohio Supercomputer Center
-  and any other remote server.
-  This isn't possible with RStudio and while you can use RStudio directly at OSC
-  through OSC OnDemand, this has its downsides.
+- **Remote connections**: a niche feature, but one that was important to me.
+  Positron can connect to the Ohio Supercomputer Center,
+  or any other remote server.
+  That isn't possible with RStudio --- and while you can run RStudio directly
+  at OSC through OSC OnDemand, that has its downsides.
   (Happy to expand on this for any OSC users!)
 
 ### Before we start
@@ -111,16 +115,16 @@ If you haven't done so already, please:
 #### Using an OSU-managed computer and have no admin rights?
 
 You should still be able to install Positron,
-just do so at the user level rather than system-wide.
+just do so at the **user level rather than system-wide**.
 
 On a Mac, this involves dragging the Positron app into your **User** Applications folder,
 `/Users/<username>/Applications` (i.e. this Applications folder is in the same
-parent folder as your Documents, Downloads, and Desktop folder).
+parent folder as your Documents, Downloads, and Desktop folders).
 
 On Windows, the Positron installer has a **"User install"** option.
-Look for a checkbox or dropdown labeled **"Install for me only"** (vs. "for
-all users") during setup --- that keeps the install in your user profile
-without needing admin rights.
+Look for a checkbox or dropdown labeled "Install for me only" (vs. "for
+all users") during setup ---
+that keeps the install in your user profile without needing admin rights.
 :::
 
 ## Getting started
@@ -152,22 +156,21 @@ an RStudio Project, Positron simply **treats any folder you open as a project**.
 :::
 :::
 
-{{< fa user-edit >}} Let's create and open a new folder for today's session:
+Let's create and open a new folder for today's session:
 
 1. Create a new folder on your computer.
    You can create it in any way, such as with your computer's File Explorer / Finder.
-
    I would suggest putting this folder within a folder for Code Club, for example:
    `Documents` > `codeclub` > `positron`
    (or put another way: `~/Documents/codeclub/positron`).
 
-2. Open this folder in Positron by clicking the **Open Folder** button shown above^[
+2. Open your new folder in Positron by clicking the **Open Folder** button shown above^[
    Or if that's somehow not showing, by using the menu `File` > `Open Folder...`.].
 
 3. Positron will reload and ask whether you want to trust the folder.
    Click **Yes, I trust the authors** and optionally check the box above it.
 
-![The dialog for trusting a folder.](img/trust.png){fig-align="center" width="60%" fig-alt="Positron dialog asking whether to trust the folder you just opened"}
+![The dialog for "trusting" a folder.<br>Opening folder in restricted mode is also possible but not relevant for most users.](img/trust.png){fig-align="center" width="60%" fig-alt="Positron dialog asking whether to trust the folder you just opened"}
 
 **Why are Projects or open folders needed?**
 These encourage good practices:
@@ -176,8 +179,8 @@ These encourage good practices:
 - Use paths _relative_ to the folder root, not absolute paths
 - Avoid using `setwd()`
 
-They also make a lot of Positron's features work better, such as the Explorer,
-Search, and version control support.
+They also *make a lot of Positron's features work better*,
+such as the Explorer, Search, and version control support.
 
 ::: {.callout-note}
 #### More on RStudio Projects vs. Positron folders
@@ -188,7 +191,7 @@ So a folder can work as both an RStudio Project and a Positron workspace,
 which is perhaps handy while you're trying Positron out.
 
 The good thing about Positron's mechanism is that you're practically forced to use it,
-whereas in RStudio using Projects is optional and easy to skip or not know about.
+whereas in RStudio using Projects is easy to skip or not even know about.
 :::
 
 ### Starting an R session
@@ -200,8 +203,8 @@ Near the **top-right corner** of the Positron window is the so-called **interpre
 which lets you choose which installation of R (or Python) to use for your session.
 
 If Positron found your R installation, it may have started a session already ---
-then it would _look similar to what's shown in the screenshot on the right_
-(with the R version number corresponding to what _you_ have installed).
+in that case, it will _look similar to what's shown in the screenshot on the right_
+(but with the R version number corresponding to what _you_ have installed).
 
 :::
 ::: {.column width="40%"}
@@ -220,7 +223,7 @@ then it would _look similar to what's shown in the screenshot on the right_
 ::: {.callout-note}
 #### More on R and Python sessions in Positron
 The picker lists *every* interpreter Positron can find,
-which could include several versions of R and Python.
+which could include several versions of R and especially Python.
 Two nice features of Positron:
 
 - Switching between R versions is a single click here,
@@ -237,12 +240,15 @@ Once a session is running, the R **Console** works just like in RStudio.
 Try it:
 
 ```{r}
+# R is even better than AI and will consistently get this right! Impressive stuff.
 1 + 1
 ```
 
 ```{r}
 head(iris)
 ```
+
+Here's what that will look like in Positron:
 
 ![The Positron console.](img/console.png){fig-align="center" width="90%" fig-alt="Screenshot of the Positron console, showing a simple calculation and the head of the iris dataset"}
 
@@ -258,12 +264,14 @@ run `getwd()` and check that the path matches the folder you opened.
 
 **B) Try running two sessions**
 
-Start a *second* R session from the interpreter picker
-(click the picker, then **New Console Session**).
-You likely only have a single R version installed,
+Start a *second* R session from the interpreter picker:
+click the picker, then **New Console Session**.
+(Most likely, you only have a single R version installed,
 and can pick the same version for the second session.
+If you have multiple, you can choose to use a different version for the second session.)
 
-You should now have two Console sessions, and you can see this as shown in the screenshot:
+You should now have two Console sessions,
+which should look something like this --- pay attention to the right-hand side:
 
 ![Two console sessions in Positron: R 4.6.0 is shown twice, and each of these is a session.](img/two-sessions.png){fig-align="center" width="80%" fig-alt="Screenshot of Positron with two console sessions"}
 
@@ -285,12 +293,13 @@ objects created in one session do not exist in the other.
 
 ### Packages and a script
 
-We'll use the `flights` dataset from the **nycflights13** package:
-every flight that departed New York City in 2013.
-I picked a relatively large dataset,
-so we can see some of the nice features of the Data Explorer later.
+In the Exploring data section below,
+we'll use the `flights` dataset from the **nycflights13** package.
+This data frame has every flight that departed New York City in 2013.
+For now, we'll get it installed and loaded, and will create a script to hold our code.
 
-First, let's install the packages we need:
+First, let's install the two packages we'll need,
+**tidyverse** and **nycflights13**:
 
 ```{r, eval=FALSE}
 install.packages("tidyverse")
@@ -307,15 +316,17 @@ R will simply check that you have the latest version and skip the installation i
 
 Now, let's **create a new R script**:
 
-- This can be done in several ways, but here is one:
-  Click `File` (or the "New" button) > `New File...`, then select "R File".
+- Click `File` (or the "New" button) > `New File...`, then select "R File"
+  (one of several ways to do this).
 
 - Save it right away
   (`File` > `Save` or `Save As`, or <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>S</kbd>)
   in your current folder as `explore.R`.
 
+::: {.callout-note appearance="simple"}
 I recommend that you **add all the code below to this script**,
 and run it from the script (instead of typing it into the console).
+:::
 
 Load the two packages we'll use:
 
@@ -324,9 +335,9 @@ library(tidyverse)
 library(nycflights13)
 ```
 
-Run the code with <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Enter</kbd> --- the same shortcut as in RStudio.
-Also as in RStudio, this moves the cursor down after running the current line
-(or your selection of a part of a line or multiple lines).
+Run the code with <kbd>Cmd</kbd>+<kbd>Enter</kbd> (Mac)
+or <kbd>Ctrl</kbd>+<kbd>Enter</kbd> (Windows)
+--- the same shortcut as in RStudio.
 
 ### The Command Palette
 
@@ -351,8 +362,8 @@ Pay attention to the keyboard shortcuts it shows next to each command that has o
 For commonly used commands,
 it's worth learning the shortcut so you can skip the palette next time.
 
-Side note: RStudio has a Command Palette as well, but it's more essential in Positron,
-because Positron has fewer menus and buttons, but more options.
+Side note: RStudio has a Command Palette as well, but it's more essential in Positron.
+That's because Positron has fewer menus and buttons, but more options.
 :::
 
 <hr style="height:1pt; visibility:hidden;" />
@@ -364,8 +375,7 @@ Use the Command Palette to do the following:
 
 1. Change the **color theme** to something you like better than the default.
 
-2. **Restart your R session**, then run `ls()` in the console to confirm
-   that your workspace is now empty.
+2. **Restart your R session**.
 
 3. Run your whole script *(there's a command for this --- find it!)*.
 
@@ -399,11 +409,11 @@ Your interface should currently look something like this:
 
 | Region                 | Where           | What's in it                                                   |
 | ---------------------- | --------------- | -------------------------------------------------------------- |
-| **Editor**             | Center - top    | Open scripts and other documents, in tabs                      |
-| **Panel**              | Center - bottom | R console and Terminal                                         |
+| **Editor**             | Center (top)    | Open scripts and other documents, in tabs                      |
+| **Panel**              | Center (bottom) | R console and Terminal                                         |
 | **Activity Bar**       | Far left        | Icons that *switch* what the Primary Side Bar shows            |
 | **Primary Side Bar**   | Left            | Explorer (files), Search, Source Control, Extensions, Packages |
-| **Secondary Side Bar** | Right           | Variables, Plots, Help, Viewer, History, Connections                    |
+| **Secondary Side Bar** | Right           | Variables, Plots, Help, Viewer, History, Connections           |
 
 : {.striped tbl-colwidths="[20, 18, 62]"}
 
@@ -413,15 +423,17 @@ Almost every pane in Positron can be **resized** (like in RStudio) and
 **dragged somewhere else** (much more flexible than in RStudio).
 There are also layout presets.
 
+I'll demonstrate:
+
+- Resizing panes such as the Primary Side Bar and the Editor.
+
+- Dragging the **Help** tab down to the bottom, next to the Console,
+  and dragging it back.
+
 <hr style="height:1pt; visibility:hidden;" />
 
 ::: exercise
 #### {{< fa user-edit >}} Exercise: Modify the layout {-}
-
-- Resize panes such as the Primary Side Bar and the Editor.
-
-- Drag the **Help** tab down to the bottom, next to the Console,
-  and see whether you prefer it there. Drag it back if you want.
 
 - Try moving something else. If you make a mess of things,
   you can always get back to the default layout with the
@@ -476,7 +488,6 @@ Among the options are:
 The **Explorer** (the top icon, looks like stacked documents) shows the
 folders and files in your currently open folder.
 Clicking a file will open it in the Editor.
-
 This is Positron's equivalent of RStudio's **Files** pane,
 but a bit nicer as you can see the whole project's structure at once and
 expand/collapse subfolders.
@@ -526,9 +537,9 @@ before renaming it, or every script that loads a particular package.
    use **Search** to look for `tidyverse` again,
    paying attention to how the results are reported and organized.
 
-3. Type `tidymodels` in the search box's **replace** field:
+3. Type `tidymodels` in the **replace** field below the search box:
    Positron previews every change it *would* make, right in the results list.
-   Have a look --- then clear the replace field,
+   Have a look, and then clear the replace field,
    since we don't actually want to rename anything.
 
 :::
@@ -540,7 +551,7 @@ There are a few more icons in the Activity Bar:
 - **Source Control**: for Git (also much improved over RStudio's Git pane!)
 - **Run and Debug**: for debugging code
 - **Remote Explorer**: for remote connections
-- **Extensions**: for installing add-ons --- more on that in a minute
+- **Extensions**: for installing add-ins --- more on that in a minute
 - **Testing**: for running tests on your code
 - **Packages**: lists installed R/Python packages
   (Positron's equivalent of RStudio's Packages pane)
@@ -562,7 +573,7 @@ to filter to outdated packages (if any), and optionally update one or two of the
 
 ## Exploring data
 
-Now, we'll use the flights data to explore some of Positron's data exploration features.
+Now, we'll use the flights data to try out some of Positron's data exploration features.
 
 To start, `nycflights13` provides the `flights` data frame,
 but it won't show up as an object in your environment yet.
@@ -575,7 +586,7 @@ flights <- flights
 ### The Variables pane
 
 Look at the **Variables** pane on the right: `flights` should now be listed there.
-It's the equivalent of RStudio's Environment pane, and like there,
+It's the equivalent of RStudio's Environment pane, and as in RStudio,
 you can **expand objects** to look inside them by clicking the arrow next to an
 object's name.
 
@@ -589,9 +600,9 @@ You should see each column, its type, and a preview of its contents.
 The Data Explorer is Positron's equivalent of RStudio's `View()` function,
 but with a lot more functionality.
 Click the small **table icon** next to `flights` in the Variables pane,
-and it should open _as an editor Tab_ and look something like this:
+and it should open _as an editor tab_ and look something like this:
 
-![The Data Explorer, showing the `flights` data frame.](img/data-explorer.png){fig-align="center" width="85%" fig-alt="Screenshot of the Positron Variables pane, showing the flights data frame with a small table icon next to it"}
+![The Data Explorer, showing the `flights` data frame.](img/data-explorer.png){fig-align="center" width="85%" fig-alt="Screenshot of the Positron Data Explorer, showing the flights data frame in a spreadsheet-like grid"}
 
 The Data Explorer has three parts:
 
@@ -599,14 +610,24 @@ The Data Explorer has three parts:
 - The **summary panel** --- per-column statistics and a small distribution plot.
 - The **filter bar** --- for temporarily filtering rows.
 
-::: {.callout-important appearance="minimal"}
+#### The summary panel
+
+::: {.callout-important appearance="simple"}
 The summary panel may be hidden by default:
 if you don't see it (look at the screenshot above for reference),
 then look for an arrow on the left-hand side of the spreadsheet view,
 and click it to expand the summary panel.
 :::
 
-#### Sorting and filtering
+I'll demonstrate the summary panel, including:
+
+- Expanding information about individual columns
+- The percent missing data indicator on the right
+- Tooltips that appear when you hover over the histograms
+
+![The summary panel in the Data Explorer, with info about the column `sched_dep_time` (scheduled departure time) expanded.](img/summary-panel.png){fig-align="center" width="50%" fig-alt="Screenshot of the Positron Data Explorer, showing the summary panel with column statistics and a small histogram for each column"}
+
+#### Sorting and filtering in the data grid
 
 - **Sort** by clicking the three dots in the column header and picking
   `Sort Ascending` or `Sort Descending`.
@@ -615,7 +636,7 @@ and click it to expand the summary panel.
   picking a column, and choosing a condition.
   You can add several filters, and they will combine.
 
-Sorting and filtering in the Data Explorer **does not** change the dataframe in your R session,
+Sorting and filtering in the Data Explorer **does not** change the data frame in your R session,
 but there is a **"Convert to Code" button (!)** that generates the R code to reproduce your filter and sort.
 
 ::: {.columns}
@@ -662,7 +683,7 @@ You can **open a data file directly in the Data Explorer**, without any R code
 Let's start by creating a CSV file from the `flights` dataset,
 so we have a data file to work with:
 
-```{r, warning=FALSE}
+```{r, eval=FALSE}
 # Make a copy of the data as a CSV file, so we have a data file to work with
 dir.create("data")
 write_csv(flights, "data/flights.csv")
@@ -678,13 +699,13 @@ And this will also work for `.tsv` and **even `.xlsx` (Excel) files**.
 For plain-text files, if you want to see the raw text instead of the Data
 Explorer, click the "Open as Plain Text File" button:
 
-![](img/data-explorer-show-plaintext.png){fig-align="center" width="70%" fig-alt="Screenshot of the Positron Data Explorer, showing the Show Plain Text button"}
+![](img/data-explorer-show-plaintext.png){fig-align="center" width="70%" fig-alt="Screenshot of the Positron Data Explorer, showing the Open as Plain Text File button"}
 :::
 
 ### Plots
 
 Let's create a plot, so we can see where it appears.
-Copy the following code into the `plots.R` script and run it:
+Copy the following code into `plots.R` and run it:
 
 ```{r}
 ggplot(flights, aes(x = arr_delay)) +
@@ -711,13 +732,25 @@ Two things to try:
   match your color theme. Handy for those who prefer a dark theme for their IDE!
 
 ::: callout-note
+#### Side-by-side editors
+
+Drag a tab to the left or right edge of the Editor area
+(or use *View: Split Editor* from the Command Palette)
+to view two files at once, side by side.
+This is useful for comparing two scripts,
+or keeping a script and a data file's Data Explorer view open together.
+
+![](img/side-by-side-editor.png){fig-align="center" width="95%" fig-alt="Screenshot of the Positron IDE, showing two editor tabs side by side"}
+:::
+
+::: callout-note
 #### The Help pane
 Like in RStudio, you can get help on a function by typing `?function_name` in the console,
 or by putting your cursor inside a function name in your script and pressing <kbd>F1</kbd>.
 Give one or both methods a go with `geom_histogram`.
 :::
 
-## Customize Positron
+## Customizing Positron
 
 Let's finish by looking at some ways to customize Positron to your liking.
 
@@ -725,55 +758,101 @@ Let's finish by looking at some ways to customize Positron to your liking.
 
 Positron has _many_ extensions (add-ins) that you can install,
 in large part because most **VS Code extensions** are compatible with Positron.
-To find and install extensions, click the **Extensions** icon in the Activity Bar
-(four blocks, with one set apart from the other three).
 Some useful ones:
 
 | Extension                             | What it does                                                  |
 | ------------------------------------- | ------------------------------------------------------------- |
 | **Code Spell Checker**                | Underlines misspelled words in code and prose                 |
 | **Better Comments**                   | Color-codes certain comments by type (TODOs, questions, etc.) |
-| **Pastum**                            | Converts a table copied to your clipboard (!) [^1]            |
+| **Pastum**                            | Converts a table on your clipboard into code (!) [^1]         |
 | **Indent Rainbow**                    | Colorizes indentation levels in scripts                       |
 | **Rainbow CSV**                       | Colorizes CSV columns when viewing as plain text              |
 | **Air**                               | R code formatter                                              |
 | **Quarto**                            | Quarto support                                                |
 | **Tomorrow Night Bright (R Classic)** | The RStudio color theme                                       |
-| **SVG Preview**                       | Enables viewing of `.svg` files                               |
+| **SVG Preview**                       | Enables viewing of `.svg` figures                             |
 
 : {.striped}
 
-[^1]: For example, a table copied from a webpage directly into R, Python, Julia, SQL, or Markdown code.
+[^1]: For example, paste a table copied from a web page straight into your script as R, Python, Julia, SQL, or Markdown.
 
-#### Automatic code formatting
+#### Air for automatic code formatting
 
-Let's try the **Air** extension: find it in the Extensions marketplace and install it.
-Then, type some deliberately messy code into `explore.R`:
+First, let's try the **Air** extension:
 
-```r
-x=c(1,2,   3,4)
-y   <-1:10
-```
+- Click the **Extensions** icon in the Activity Bar
+  (four blocks, with one set apart from the other three).
 
-Open the Command Palette and run *Format Document*.
+- Type "air" in the search bar, and you should see the Air extension appear.
 
-Let's try it with one other example --- add this to `plots.R`:
+  ![After typing "air" in the Extensions view, the Air extension should be listed among the results (here, as the second result).](img/air-extension-install.png){fig-align="center" width="50%" fig-alt="Screenshot of the Positron Extensions view, showing the Air extension"}
 
-```r
-ggplot(flights, aes(x = arr_delay)) + geom_histogram(bins = 100, fill = "steelblue", color = "grey20") +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma_format())
-```
+- Click the blue "Install" button to install it.
 
-::: callout-tip
-#### Want to always format code when you save a file?
-Look for `editor.formatOnSave` further down on this page.
+- Type some deliberately messy code into `explore.R`:
+
+  ```r
+  x=c(1,2,   3,4)
+  y   <-1:10
+  ```
+
+- Open the Command Palette and run *Format Document*. What changed?
+
+What if you wanted to format your code automatically every time you save a file?
+This is possible with a Positron **setting**, which we'll see in the next section.
+
+::: exercise
+#### {{< fa user-edit >}} Try two extensions {-}
+
+- Install the **Better Comments** extension, and add a few comments to your script
+  that start with `!`, `?`, or `TODO:` to see how they are color-coded.
+
+- Install the **Code Spell Checker** extension,
+  and add a misspelled word or two to a comment in your script to see how they
+  are underlined.
+
+  (You should notice that the spell check unfortunately also underlines valid code syntax,
+  but you can add words to the dictionary to avoid that.)
+
+<details><summary>_Click here to see an example screenshot_</summary>
+
+Below:
+
+- Better Comments has color-coded the comments starting with `# TODO` and `#?`
+- Code Spell Checker has underlined (what it thinks are) misspelled words with
+  blue squiggly lines.
+
+![](img/bettercomments-spellchecker.png){fig-align="center" width="80%" fig-alt="Screenshot of the Positron IDE, showing the Better Comments and Code Spell Checker extensions"}
+
+</details>
+
 :::
 
 ### Settings: the UI and the JSON file
 
-The main way to change Positron's settings is the **Settings UI**:
-open the Command Palette and run *Preferences: Open Settings (UI)*.
-We'll explore some Editor-related settings next.
+The main way to change Positron's settings is the **Settings UI**.
+
+As a first example, let's find the option to automatically format code on save:
+
+- Open the Settings UI by either:
+  - Using the keyboard shortcut <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>,</kbd>
+  - Clicking the gear icon {{< fa gear >}} in the lower-left corner, then *Settings*
+  - Opening the Command Palette (<kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>P</kbd>)
+    and running *Preferences: Open Settings (UI)*
+
+- Type "format" in the search bar, and you should see `editor.formatOnSave` at
+  the top of the list (if not, add "on save" to your search):
+
+  ![](img/settings-format.png){fig-align="center" width="80%" fig-alt="Screenshot of the Positron Settings UI, showing the search bar and the editor.formatOnSave setting"}
+
+- Check the box as shown in the screenshot above to turn on automatic formatting on save.
+
+- Test it by adding the following code to `plots.R` and saving the file:
+
+  ```r
+  ggplot(flights, aes(x = arr_delay)) + geom_histogram(bins = 100, fill = "steelblue", color = "grey20") +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = scales::comma_format())
+  ```
 
 ::: {.callout-note collapse="true"}
 #### `settings.json` and user vs. workspace settings _(Click to expand)_
@@ -802,19 +881,41 @@ change **user** settings by default,
 so your preferences carry over to every new folder you open.
 :::
 
-### Editor features and settings
+#### Editor ruler
 
-#### Side-by-side editors
+Next, let's see a setting that I highly recommend changing:
+adding a **ruler** to the editor at 80 characters.
+Why a ruler?
+It is good practice to keep lines of code reasonably short,
+and this visual guide helps you do that:
+if your code goes past the ruler, consider breaking it into multiple lines.
 
-Drag a tab to the left or right edge of the Editor area
-(or use *View: Split Editor* from the Command Palette)
-to view two files at once, side by side.
-This is useful for comparing two scripts,
-or keeping a script and a data file's Data Explorer view open together.
+Open the settings UI as above and search for "ruler": you should see the option
+"Editor: Rulers".
 
-![](img/side-by-side-editor.png){fig-align="center" width="95%" fig-alt="Screenshot of the Positron IDE, showing two editor tabs side by side"}
+![The Positron Settings UI, showing the "Editor: Rulers" setting.](img/ruler-setting.png){fig-align="center" width="80%" fig-alt="Screenshot of the Positron Settings UI, showing the editor.rulers setting"}
 
-#### Preview mode
+This option can't be changed in the UI, but you can click the **Edit in settings.json**
+link to open the JSON file and add these lines:
+
+```json
+"editor.rulers": [
+  80
+]
+```
+
+_(It's set up this way so you can add multiple rulers if you want.)_
+
+In the screenshot below, you can see the vertical ruler ---
+and a line that is too long:
+
+![](img/ruler-example.png){fig-align="center" width="80%" fig-alt="Screenshot of the Positron editor, showing a vertical ruler at 80 characters"}
+
+You should reformat that line as follows, which the Air formatter would also do:
+
+![](img/ruler-example2.png){fig-align="center" width="80%" fig-alt="Screenshot of the Positron editor, showing the long line reformatted to fit within the 80-character ruler"}
+
+#### Preview mode in the editor
 
 By default, clicking a file opens it in **preview mode**:
 the tab title shows in italics, and opening a *different*
@@ -824,77 +925,54 @@ but takes some getting used to.
 
 Once you start editing a file, the tab becomes permanent and is no longer in preview mode.
 But sometimes you want to keep a file open even if you haven't edited it yet.
-You can do this in two ways:
+You can do this in one of two ways:
 
-- **Double-click** the file to open it in a permanent tab to begin with, or
+- **Double-click** the file to open it in a permanent tab to begin with.
 - For a file in preview mode, with your cursor in the file,
-  use the <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd> <kbd>P</kbd> shortcut to
-  make it permanent.
+  use the _sequential_ keybinding, <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>K</kbd>
+  followed by <kbd>Enter</kbd>.
 
-If you really don't like preview mode, you can turn it off entirely with the setting
-`workbench.editor.enablePreview: false`.
+If you really don't like preview mode, you can turn it off entirely by setting
+`workbench.editor.enablePreview` to `false`.
 
-#### A few more settings and features
+#### A few more settings
 
-- `files.autoSave` ---
+- `files.autoSave`\
   saves files automatically; some people love this, others hate it, try it and see.
 
-- `editor.rulers: [80]` --- draws a thin vertical guide line at column 80,
-  helping you keep lines from getting too long (a common style convention
-  in R). Off by default; add more numbers to the list for multiple guides.
+- `workbench.activityBar.location`\
+  If you want to maximize the horizontal space for your editor and panes,
+  setting this to `"top"` moves the Activity Bar from the left side to the top
+  of the window.
 
-- `editor.formatOnSave` ---
-  automatically formats code when you save a file, if you have a formatter installed
-  (we do --- we installed Air above).
+- `editor.emptySelectionClipboard`\
+  If you press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd> with no text selected,
+  Positron (like VS Code) copies the **entire current line** instead of doing nothing.
+  This is quite handy but can also catch you off guard.
+  If you don't want this behavior, set this option to `false`.
 
-::: {.callout-warning}
-#### Watch out: copying with nothing selected
+::: exercise
+#### {{< fa user-edit >}} Exercise: Try out these settings {-}
 
-If you press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd> with no text selected, Positron (like VS Code)
-copies the **entire current line** instead of doing nothing.
-This is quite handy but can also catch you off guard.
-**Try it**: click somewhere in a line of your script *without selecting anything*,
-press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd>, and then paste on an empty line below.
+- **Empty selection behavior**\
+  Click somewhere in a line of your script *without selecting anything*,
+  press <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>C</kbd>, and then paste on an empty line below.
 
-If you don't want this behavior, you can turn it off with:
+- **Preview mode**\
+  Close both scripts, then click on `explore.R` in the Explorer to open it in preview mode.
+  Then click on `plots.R` in the Explorer. What happens?
 
-```json
-"editor.emptySelectionClipboard": false
-```
-:::
+  Now double-click `explore.R` in the Explorer to open it in a permanent tab.
+  Then click on `plots.R` in the Explorer. What happens now?
 
-::: callout-tip
-#### Want more space for your editor and panes?
-If you want to maximize the horizontal space for your editor and panes,
-you can move the Activity Bar from the left side to the top of the window,
-next to the menu bar, with the setting `workbench.activityBar.location: "top"`.
-Try it!
-:::
-
-
-::: {.callout-note collapse="true"}
-#### Multiple cursors _(Click to expand)_
-
-Multiple cursors work much as in RStudio (<kbd>Alt</kbd>+click,
-<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+arrow keys),
-but Positron adds a handy way to build a multi-cursor selection from *matching text*:
-
-- <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>D</kbd> adds the **next occurrence**
-  of whatever you have selected --- press it repeatedly to build up the
-  selection one match at a time.
-- <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> selects
-  **all occurrences** in the file at once.
-- <kbd>Esc</kbd> returns you to a single cursor.
-
-This is a quick way to rename a variable or column throughout a script,
-without a find-and-replace.
+- Feel free to change another setting or try another extension we talked about.
 :::
 
 ### Keyboard shortcuts (keybindings)
 
-Open the Command Palette and run *Preferences: Open Keyboard Shortcuts* to see
-every action (command) you can perform in Positron,
-and their current shortcut (if it has one) in a searchable list ---
+Open the Command Palette and run *Preferences: Open Keyboard Shortcuts* to see,
+in a searchable list, every action (command) you can perform in Positron
+along with its current shortcut (if it has one) ---
 type a command name or describe the action you want (e.g. `run line`) to find it.
 
 You can click any row to record a new shortcut, and right-click to reset it back to default.
@@ -917,11 +995,11 @@ then search for `rstudioKeybindings` and check the box:
 **Restart Positron** for it to take effect.
 This turns on a large set of RStudio shortcuts, including:
 
-| Shortcut                                  | Action                       |
-| ----------------------------------------- | ---------------------------- |
-| <kbd>Ctrl</kbd>+<kbd>1</kbd>              | Focus the Source/Editor pane |
-| <kbd>Ctrl</kbd>+<kbd>2</kbd>              | Focus the Console            |
-| <kbd>F2</kbd>                             | Go to definition             |
+| Shortcut                     | Action                       |
+| ---------------------------- | ---------------------------- |
+| <kbd>Ctrl</kbd>+<kbd>1</kbd> | Focus the Source/Editor pane |
+| <kbd>Ctrl</kbd>+<kbd>2</kbd> | Focus the Console            |
+| <kbd>F2</kbd>                | Go to definition             |
 
 : {.striped tbl-colwidths="[20, 80]"}
 
@@ -929,17 +1007,22 @@ This turns on a large set of RStudio shortcuts, including:
 
 <hr style="height:1pt; visibility:hidden;" />
 
-::: exercise
-#### {{< fa user-edit >}} Exercise: Customize Positron {-}
+::: {.callout-note collapse="true"}
+#### Multiple cursors _(Click to expand)_
 
-Spend a few minutes setting Positron up the way you like it. For example:
+Multiple cursors work much as in RStudio (<kbd>Alt</kbd>+click,
+<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+arrow keys),
+but Positron adds a handy way to build a multi-cursor selection from *matching text*:
 
-1. Turn on **RStudio keybindings**.
+- <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>D</kbd> adds the **next occurrence**
+  of whatever you have selected --- press it repeatedly to build up the
+  selection one match at a time.
+- <kbd>Cmd</kbd>/<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>L</kbd> selects
+  **all occurrences** in the file at once.
+- <kbd>Esc</kbd> returns you to a single cursor.
 
-2. Change some **settings** from the list above
-   or find your own by browsing the Settings UI.
-
-3. Install an **extension** that looks useful to you.
+This is a quick way to rename a variable or column throughout a script,
+without a find-and-replace.
 :::
 
 <hr style="height:1pt; visibility:hidden;" />
@@ -959,12 +1042,12 @@ Does anything stand out?
 
 <hr style="height:1pt; visibility:hidden;" />
 
-:::: callout-note
+::: callout-note
 #### Further resources
 
 - The [Positron documentation {{< fa external-link >}}](https://positron.posit.co/){target="_blank"}
 - The [migration guide for RStudio users {{< fa external-link >}}](https://positron.posit.co/migrate-rstudio.html){target="_blank"}
-- An walkthrough within VS Code:
+- A walkthrough within Positron:
   open the Command Palette, run *Welcome: Open Walkthrough...*,
   and pick one, such as "Migrating from RStudio to Positron".
 - [Video: Tips & tricks from the maintainers of Positron {{< fa external-link >}}](https://www.youtube.com/watch?v=7Tog8OkrIWI){target="_blank"}
