@@ -11,7 +11,7 @@ author:
         url: https://go.osu.edu/bioinformatics-core
 date: "2026-10-22"
 date-modified: last-modified
-#image: img/TODO.png
+image: img/quarto-report-table2.png
 categories: [positron, genAI, Claude Code, quarto, shiny, gt]
 title-block-banner: false
 number-depth: 4
@@ -44,17 +44,31 @@ Specifically, we'll cover:
 
 - **Setting up Claude Code** in Positron with an OSU API key
 - **Having Claude write, run, and check R code**
-- **Your files as context**, and letting Claude find and fix bugs
+- **Giving Claude your files as context**
+- **Stopping, steering, and rewinding** Claude while it works
 - **Persistent instructions** with a `CLAUDE.md` file
 - **A mini-project**: from a messy CSV to a branded Quarto report and a Shiny app
-- **Managing context and cost**, and good habits when working with an agent
+
+The [appendix](#managing-context-and-cost) covers managing context and cost,
+good habits when working with an agent,
+and a bonus exercise in which Claude finds and fixes bugs.
+
+We picked these tasks because they are a sweet spot for AI help:
+**hard to write, but easy to check**.
+Polished tables, interactive plots, and Shiny apps take a lot of code,
+using packages and syntax that most of us don't use often enough to remember.
+But you can tell at a glance whether a plot, a table, or an app looks and works
+the way you want.
+Compare this with, say, a statistical analysis,
+where code can run without errors and still give subtly wrong results
+that are hard to spot.
 
 ### From chat to agents
 
 When you use AI through a browser-based chat,
 the model can't see your files unless you paste or upload them,
 and it can't check whether the code it writes actually works.
-**AI agents** remove those limitations. Working inside your editor, they can:
+**AI agents**, on the other hand, can work inside your editor and:
 
 - **Read** the files in your project, so you don't have to explain or paste them
 - **Edit and create** files, showing you each change for approval
@@ -66,18 +80,18 @@ and it can't check whether the code it writes actually works.
 
 Posit Assistant, which we used in the previous session, is also an agent.
 In fact, it has a key built-in strength that Claude Code does not have:
-it is connected to your **live R session**, so it can can see your objects and
+it is connected to your **live R session**, so it can see your objects and
 run code in your console^[
 Positron does make it possible to expose the same functionality for Claude Code,
 but that requires some setup and I have not yet tried that.].
 
-On the other hand, Claude Code has the edge in ther areas:
+On the other hand, Claude Code has the edge in other areas:
 
-- It is a **general-purpose** coding agent and is better at longer-running,
-  multi-step tasks.
-- It is a more **mature product** overall. Specifically, in Positron,
-  we've experienced issues with authentication both via GitHub and an API key,
-  that we have not with Claude Code.
+- It is a **general-purpose** coding agent and is designed also with longer-running,
+  multi-step tasks in mind.
+- It is a more **mature product** overall. For example,
+  we've had authentication problems with Posit Assistant,
+  both via GitHub and with an API key, but not with Claude Code.
 
 (Claude Code also comes in other forms, like a command-line program and a desktop app.
 Here, we'll use its VS Code extension in Positron.)
@@ -87,22 +101,37 @@ Here, we'll use its VS Code extension in Positron.)
 Rather than using a personal account,
 we'll authenticate through an API key from OSU's
 [Generative AI Service {{< fa external-link >}}](https://it.osu.edu/generative-ai-service){target="_blank"},
-which is **approved for use with restricted institutional data (S2--S4)**.
-
-(As implied above, Positron Assistant also allows API key authentication,
-but its authentication sometimes acts up,
-and we didn't want to risk technical problems for this session.)
-
+which is **approved for use with restricted institutional data (S2--S4)**^[
+  Posit Assistant can also use an API key, but as mentioned above,
+  its authentication sometimes acts up.].
 We'll give you a **personal API key** for this session with limited credit.
-If you'd like to continue using Claude Code or Positron Assistant in this manner
-after today's Code Club, you'll have to set this up via the link above ---
-but keep in mind that it isn't free,
-so you're PI (or similar) would need to have funds that can be used for this purpose.
 
-Alternatively or additionally,
-you could consider getting a personal Anthropic subscription.
+If you'd like to continue using Claude Code or Posit Assistant in this manner
+**after today's Code Club**, you'll have to set this up via the link above ---
+but keep in mind that it isn't free,
+so your PI (or similar) would need to have funds that can be used for this purpose.
+
+Alternatively (or additionally),
+you could get a personal Anthropic subscription.
 Per token, this is a _lot_ cheaper than usage with an API key,
 but you'll need to pay personally _and_ you shouldn't use it with institutional data.
+
+::: callout-note
+#### Learn more
+
+Parts of this session are adapted from my PLNTPTH 5006
+("Practical Computing Skills for Omics Data") course material,
+which is [publicly available](https://cfaes-bioinfo.github.io/pracs-au26)
+(weeks 8 and 9 cover genAI).
+
+The [lecture slides](https://cfaes-bioinfo.github.io/pracs-au26/week08/w8a_genAI.html)
+cover the use of Generative AI in research and coding more broadly,
+whereas the [practical part](https://cfaes-bioinfo.github.io/pracs-au26/week09/w9a_claude.html)
+focuses on using Claude Code in VS Code for Unix shell scripting tasks.
+There are also links to further resources and pages on
+[GitHub Copilot](https://cfaes-bioinfo.github.io/pracs-au26/bonus/copilot.html) and more
+[advanced Claude Code features](https://cfaes-bioinfo.github.io/pracs-au26/bonus/claude-code.html).
+:::
 
 ## Getting set up
 
@@ -124,10 +153,13 @@ If you haven't done so already, please:
    ```{r}
    install.packages("tidyverse")
    install.packages("gt")
-   install.packages("countrycode")
    install.packages("shiny")
    install.packages("bslib")
    ```
+
+   We'll leave a few other packages that Claude will likely want to use uninstalled
+   (`countrycode`, `gtExtras`, and `ggiraph`),
+   so you can see how Claude asks before installing packages.
 
 ::: {.callout-note collapse="true"}
 #### Windows users: Git for Windows (optional) _(Click to expand)_
@@ -150,10 +182,8 @@ The folder contains the following files:
 
 ```bash-out-solo
 codeclub-claude
-├── data
-│   └── factbook.csv        # World Bank data from the previous session
-└── R
-    └── penguin_summary.R   # A script with some problems...
+├── factbook.csv        # World Bank data from the previous session
+└── penguin_summary.R   # A script with some problems...
 ```
 
 ::: {.callout-note appearance="simple"}
@@ -185,7 +215,7 @@ Let's set this up:
 1. Create the folder and the (empty) file, and open the file in the editor,
    by copying the code below into the Positron **console** and pressing <kbd>Enter</kbd>
    ^[All of this can also be done without code, in a perhaps more intuitive way,
-   but the interface will differ between computers, so this is less likely to fail here]:
+   but the interface will differ between computers, so this is less likely to fail here.]:
 
    ```{r}
    # Get your Home folder (on Windows, R's "~" points to Documents instead)
@@ -244,9 +274,12 @@ A single missing quote or comma breaks the whole file
   directly to Anthropic.
 - `ANTHROPIC_AUTH_TOKEN` is the API key.
 - The `MODEL` lines specify which model versions to use.
+- `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS` turns off experimental features
+  that OSU's service doesn't support, and that would otherwise cause errors.
 - `model` and `effortLevel` set the default model (Sonnet) and effort level (Medium).
 - `outputStyle` makes Claude's answers shorter and more to the point
   (remove this line if you prefer longer explanations).
+- `theme` makes Claude's colors follow your computer's light or dark mode.
 :::
 
 ::: {.callout-important collapse="true"}
@@ -259,30 +292,35 @@ and not in a project folder that others may see.
 
 ### Open Claude
 
-::: {.columns}
-::: {.column width="70%"}
+Open Claude Code by clicking the Claude icon at the top of the secondary (right-hand)
+side bar --- the one with the blue line under it in the screenshot below:
 
-Open Claude Code by clicking the orange "splash" **Claude icon**
-in the top-right corner of the editor.
-This opens Claude as a **tab in the editor**^[
-  You can also open it in the secondary side bar on the right,
-  but that's already busy with the Variables, Plots, and Help panes,
-  so I like to keep Claude in the editor.],
-by default side-by-side with scripts and other files.
+![](img/claude-in-sec-sidebar.png){fig-align="center" width="50%" fig-alt="A screenshot of the VS Code editor with the Claude icon in the secondary side bar." .lightbox}
 
-In the Claude Panel, you may initially see various login options
+::: {.callout-tip collapse="true"}
+#### Alternatively, open it in the editor pane _(Click to expand)_
+
+You can also click the **orange** Claude icon in the top-right corner of the editor.
+This opens Claude as a **tab in the editor**, which has two potential advantages:
+
+- You can have multiple Claude tabs, i.e. multiple conversations, open at the same time,
+  instead of having to switch between conversations in the same tab.
+
+- You don't have to switch back and forth between Claude and the Variables,
+  Plots, and Help panes, which share the secondary side bar.
+
+On the other hand, things can get a bit more chaotic with Claude as a tab,
+and it has less vertical space than the secondary side bar.
+
+![](img/claude-icon-in-editor-positron.png){fig-align="center" width="45%" fig-alt="A screenshot of the VS Code editor with the Claude icon in the top-right corner of the editor." .lightbox}
+
+:::
+
+In the Claude panel, you may initially see various login options
 (left screenshot below), but if you **simply wait**,
 Claude should read your settings file,
 and you should see a **prompt box** at the bottom of the Claude tab
 (right screenshot below):
-
-:::
-::: {.column width="30%"}
-
-![](img/vscode-claude-secondary-side-bar-annot3.png){fig-align="center" width="90%" fig-alt="A screenshot of the top-right of the VS Code editor pane, with the orange Claude icon encircled." .lightbox}
-
-:::
-:::
 
 ::: {.columns}
 ::: {.column width="43%"}
@@ -294,11 +332,15 @@ Simply wait, and Claude should read your settings file automatically.](img/claud
 ::: {.column width="57%"}
 
 ![If the panel looks something like this, you're good to go!
-The important thing is that you see a **prompt box** at the bottom of the panel,
-whereas the message shown in the center is just one of many "tips" Claude may show.](img/claude-first-window.png){fig-align="center" width="95%" fig-alt="A screenshot of the Claude Code panel ready for a first prompt." .lightbox}
+You should see a **prompt box** at the bottom of the panel (the message shown in the center is just one of many "tips" Claude may show).](img/claude-first-window.png){fig-align="center" width="95%" fig-alt="A screenshot of the Claude Code panel ready for a first prompt." .lightbox}
 
 :::
 :::
+
+<hr style="height:1pt; visibility:hidden;" />
+
+::: {.columns}
+::: {.column width="45%"}
 
 To check that Claude works, type the following prompt in the box and press <kbd>Enter</kbd>:
 
@@ -306,13 +348,21 @@ To check that Claude works, type the following prompt in the box and press <kbd>
 
 If you get a horoscope back, Claude is set up correctly.
 
-If you get an error instead, or it **merely keeps printing verbs** like "Brewing"
+If you get an error instead, or Claude **merely keeps printing verbs** like "Brewing"
 and "Deliberating" (Claude's variant on a spinning wheel) but nothing else,
 let us know, and we'll help you troubleshoot.
 
+:::
+::: {.column width="55%"}
+
+![](img/claude-horoscope.png){fig-align="center" width="85%" .no-border fig-alt="A screenshot of the Claude Code prompt box with a prompt asking for a horoscope for a dataset with 40% missing values." .lightbox}
+
+:::
+:::
+
 ## Basics of the interface
 
-![](img/claude-prompt-box2.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![](img/claude-prompt-box2.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the Claude Code prompt box, with buttons for adding files, the command menu, the model and effort level, and the permission mode." .lightbox}
 
 The buttons across the bottom of the prompt box are, from left to right:
 
@@ -356,7 +406,7 @@ and it's easy to start clicking "Yes" without reading what you approve.
 At that point, Auto mode is a good alternative.
 :::
 
-## A first example: a single plot
+## A first example: a script for a single plot
 
 ### Ask Claude to write a script
 
@@ -370,58 +420,85 @@ Claude will show you what it's doing as it goes, and will **ask you for permissi
 to create the script, showing you its proposed contents.
 Take a quick look and accept it.
 
-![](img/claude-make-script1.png){fig-align="center" width="85%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![On the left, the proposed script contents before approving it (hence the background colors), and on the right, the Claude Code panel, where at the bottom, it's asking for approval to write to the script file.](img/claude-make-script1.png){fig-align="center" width="98%" .no-border fig-alt="A screenshot of Positron with the proposed contents of penguin_plot.R in the editor, and Claude asking for permission to create the file." .lightbox}
+
+::: {.columns}
+::: {.column}
 
 Next, it may want to **run the script** to check that it works,
 using a command like `Rscript penguin_plot.R`.
-`Rscript` is a way to run an R script from the terminal (rather than from the console).
+`Rscript` is a way to run an R script from the terminal rather than from the console.
 Click **Yes** to let it run the command.
+(On Windows, if Claude can't find `Rscript`, see [this box](#windows-rscript).)
 
-![](img/claude-make-script2.png){fig-align="center" width="50%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+:::
+::: {.column}
+
+![](img/claude-make-script2.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of Claude asking for permission to run the script with Rscript." .lightbox}
+
+:::
+:::
+
+::: {.columns}
+::: {.column width="30%"}
 
 Finally, it will print some kind of summary of what it's done:
 
-![](img/claude-make-script3.png){fig-align="center" width="65%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+:::
+::: {.column width="70%"}
 
-Here's the plot I got:
+![](img/claude-make-script3.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of Claude's summary of the script it wrote and ran." .lightbox}
 
-![](img/penguins_take1.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+:::
+:::
+
+::: {.columns}
+::: {.column width="30%"}
+
+You should see `penguins.png` in the file explorer on the left, and can click
+on it to view it. Here's the plot I got:
+
+:::
+::: {.column width="70%"}
+
+![](img/penguins_take1.png){fig-align="center" width="96%" .no-border fig-alt="A scatterplot of penguin flipper length vs. body mass, colored by species, with default ggplot2 styling." .lightbox}
+
+:::
+:::
 
 Now, let's ask it to improve the plot, in the same conversation:
 
 > ***Look at the plot you saved and suggest three improvements, then make them***
 
 Claude will propose to make changes and present you with a "diff",
-where deletions are in highlighted in red and additions in green^[
+where deletions are highlighted in red and additions in green^[
 The previous view, of the initial script, was also a diff,
 but this wasn't as obvious because there were only additions]:
 
-![(The full diff I got was larger than this.)](img/claude-diff.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![(The full diff I got was larger than this.)](img/claude-diff.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of a diff of penguin_plot.R, with deleted lines in red and added lines in green." .lightbox}
 
-Once you've approved its requests of editing the file and running the script,
+Once you've approved its requests to edit the file and running the script,
 look back at what is printed in the panel.
 You should see that Claude **read the PNG file and looked at it** before suggesting
 improvements: it can "see" images.
 (More broadly, this is a big difference from chat-based AI:
 Claude can check its own work, and iterate on it.)
 
-![](img/claude-read-png.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![](img/claude-read-png.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude panel showing that Claude read the penguins.png file." .lightbox}
 
 Here's what mine changed in a test-run:
 
-![](img/claude-changes-summary.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![](img/claude-changes-summary.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of Claude's summary of the three improvements it made to the plot." .lightbox}
 
-Did you get similar changes?
+Did you get similar changes? And here's the resulting plot:
 
-Here's the plot I got:
-
-![](img/penguins_take2.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![](img/penguins_take2.png){fig-align="center" width="75%" .no-border fig-alt="The improved penguin scatterplot, with a viridis color palette, point shapes by species, axis labels with units, a title, and the legend at the bottom." .lightbox}
 
 Let's also take a look at the code in the script.
 Is there anything you find striking or that you don't understand?
 Is your code substantially different from mine?
 
-<details><summary>Click to see the code I got</summary>
+<details><summary>{{< fa circle-info >}} &nbsp; Click to see the code I got</summary>
 
 ```{.R .file filename="penguin_plot.R"}
 library(ggplot2)
@@ -456,9 +533,9 @@ Let's try one more:
 
 Here's the plot I got:
 
-![](img/penguins_economist.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![](img/penguins_economist.png){fig-align="center" width="70%" .no-border fig-alt="The penguin scatterplot restyled to look like a chart from The Economist, with a light blue-gray background, a bold title, and a small red tag in the top-left corner." .lightbox}
 
-<details><summary>Click to see the code I got</summary>
+<details><summary>{{< fa circle-info >}} &nbsp; Click to see the code I got</summary>
 
 ```{.R .file filename="penguin_plot.R"}
 library(ggplot2)
@@ -538,9 +615,9 @@ which means that:
 To see the results in Positron, simply run the script yourself.
 :::
 
-## Your files as context
+## File context, and interrupting Claude
 
-### Your workspace is the context
+### Giving Claude your files as context
 
 A key advantage of using AI inside your editor is that your files are readily available.
 Your entire **workspace** (the folder you opened in Positron) is "implicit" context:
@@ -557,119 +634,6 @@ That's faster and cheaper, and avoids Claude guessing which files you mean:
 - To add **multiple files**, type `@` for each,
   or press <kbd>Alt/Option</kbd>+<kbd>K</kbd> with a file active in the editor.
 
-### Letting Claude find and fix bugs
-
-::: exercise
-#### {{< fa user-edit >}} Exercise: Fix a script {-}
-
-The script `penguin_summary.R` should compute the number of penguins and their
-mean body mass, for Adelie and Gentoo penguins, but it has **two** problems.
-
-<details><summary>Click to see the script's code</summary>
-
-```{.R .file filename="penguin_summary.R"}
-# Summarize body mass for Adelie and Gentoo penguins
-# (uses the penguins data that is built into R 4.5.0 and later)
-
-library(tidyverse)
-
-# Keep only Adelie and Gentoo penguins
-two_species <- penguins |>
-  filter(species == c("Adelie", "Gentoo"))
-
-# Number of penguins and mean body mass per species
-two_species |>
-  group_by(species) |>
-  summarize(
-    n = n(),
-    mean_mass_g = mean(body_mass)
-  )
-```
-
-</details>
-
-1. Open the script and run it. What's wrong with the output?
-
-   <details><summary>Click to see the output</summary>
-
-   ```bash-out-solo
-   # A tibble: 2 × 3
-   species     n mean_mass_g
-   <fct>   <int>       <dbl>
-   1 Adelie     76       3407.
-   2 Gentoo     62         NA
-   ```
-
-   </details>
-
-2. Start a new conversation, and with the script open, ask Claude:
-
-   > ***Explain what this script does***
-
-   Does its explanation match your own understanding?
-
-   It may well have pointed out one or two problems with the script,
-   and if it did, it may have proposed to fix it if.
-   If so, affirm that you want it to fix the problem(s) it found.
-
-3. In case Claude didn't note the problem that produces the `NA` in the output, ask:
-
-   > ***I ran this and the mean body mass for Gentoo is NA. Fix it.***
-
-   It should be able to identify and fix this problem,
-   and if it hadn't already fixed the other problem, it may fix that too.
-
-4. Run the script yourself. If the results are like this, the problems are fixed:
-
-   ```bash-out-solo
-   # A tibble: 2 × 3
-   species     n mean_mass_g
-   <fct>   <int>       <dbl>
-   1 Adelie    152       3701.
-   2 Gentoo    124       5076.
-   ```
-
-   If not, press it on detecting another potential problem.
-
-<details><summary> {{< fa check-circle >}} Click here for the solution</summary>
-
-The script contains two errors:
-
-- `mean()` returns `NA` when there are any missing values, unless you use `na.rm = TRUE`.
-  This is easy to spot, because the output contains an `NA`.
-
-- `species == c("Adelie", "Gentoo")` does not check whether `species` is one of these two values.
-  Instead, R "recycles" the two-element vector along all rows,
-  comparing row 1 to `"Adelie"`, row 2 to `"Gentoo"`, row 3 to `"Adelie"`, and so on.
-  As a result, about **half** of the Adelie and Gentoo penguins are silently dropped.
-  The fix is to use `%in%` instead of `==`.
-
-The second error is the more dangerous one, because it **silently** produces wrong results:
-there is no error or warning, and the output looks plausible.
-Before the fix, the script reports 76 Adelie and 62 Gentoo penguins,
-whereas there are 152 and 124.
-
-```{r}
-two_species <- penguins |>
-  filter(species %in% c("Adelie", "Gentoo"))
-
-two_species |>
-  group_by(species) |>
-  summarize(
-    n = n(),
-    mean_mass_g = mean(body_mass, na.rm = TRUE)
-  )
-```
-
-Did Claude catch the second error?
-It may have noticed it while reading the script, after running it and seeing
-suspicious counts, or not at all.
-This shows why code that runs without errors still needs to be checked,
-whether you or Claude wrote or fixed it.
-
-</details>
-:::
-
 ### Stopping, steering, and rewinding
 
 Sometimes you need to adjust what Claude is doing while it's working:
@@ -683,6 +647,7 @@ Sometimes you need to adjust what Claude is doing while it's working:
   to go back to an earlier point in the conversation and optionally undo file changes.
   (Claude is also good at undoing things when you simply ask it to.)
 
+<!-----
 ::: exercise
 #### {{< fa user-edit >}} Bonus exercise: Steer, stop, and rewind {-}
 
@@ -706,10 +671,11 @@ Go back to your `penguin_plot.R` conversation
    Then, rewind to before that message, and choose to also undo the file changes.
    Is the script back to how it was?
 :::
+---->
 
 ## Persistent instructions with `CLAUDE.md`
 
-### Why persistent instructions?
+### Persistent instructions: why and how
 
 Each new conversation with Claude starts from scratch:
 it doesn't see what you discussed in earlier conversations.
@@ -723,9 +689,8 @@ you can simply consider it a plain text file when you write in it).
 There is no required structure for its contents,
 but it should be concise and easy to read, for you as well as for Claude.
 
-### First example: pirate-speak
-
-Create a new file `CLAUDE.md` in your project folder,
+As a first example,
+create a new file `CLAUDE.md` in your project folder,
 add the following line to it, and save it:
 
 ```{.markdown .file filename="CLAUDE.md"}
@@ -733,17 +698,15 @@ add the following line to it, and save it:
 ```
 
 Then, **close the file** (because any active file would be added to the prompt
-anyway, even if wasn't a `CLAUDE.md` file!),  start a new conversation, and ask:
+anyway, even if it wasn't a `CLAUDE.md` file!), start a new conversation, and ask:
 
 > ***What's the difference between <- and = in R?***
 
-### Second example: more serious instructions
+### Our instructions for this project
 
 Replace the sports commentator line with the following:
 
 ```{.markdown .file filename="CLAUDE.md"}
-# Code Club practice project
-
 ## R conventions
 
 - Use paths relative to the project folder, and never use `setwd()`
@@ -757,19 +720,32 @@ Replace the sports commentator line with the following:
 
 We're leaving out any information about our data here,
 so we can see what Claude figures out by itself in the mini-project below.
-In a real research project, though, it's worth adding a section
-that briefly describes your data files and your project's file structure.
+In a real research project, though, it's worth adding sections
+that briefly describe your data files, your project's file structure, and so on.
+As another example, you may want all your plots to have a certain theme,
+or to use a certain color palette, and you can put that in `CLAUDE.md` too.
+
+::: {.columns}
+::: {.column width="40%"}
 
 Close the file again, and to check that Claude picks up the new instructions,
 start a new conversation and ask:
 
 > ***What rules should you follow in this project?***
 
-![](img/claude-md-rules-question.png){fig-align="center" width="78%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+The response I got is in the screenshot on the right.
+
+:::
+::: {.column width="60%"}
+
+![](img/claude-md-rules-question.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of Claude listing the rules from CLAUDE.md that it follows in this project." .lightbox}
+
+:::
+:::
 
 We'll see these instructions in action in the mini-project below.
 
-::: {.callout-important collapse="true"}
+::: {#windows-rscript .callout-important collapse="true"}
 #### Windows users: tell Claude where `Rscript` is _(Click to expand)_
 On Windows, R's installer doesn't make `Rscript` available to commands run outside of R,
 so Claude may struggle to find it.
@@ -823,7 +799,7 @@ and then build a report and an app on top of the cleaned data.
 
 ### A quick look at the data
 
-First, let's remind ourselves what the data looks like:
+First, let's take a quick look at the data:
 click on `factbook.csv` in the Explorer pane to open it in the Data Explorer.
 
 ![](img/factbook-data-explorer.png){fig-align="center" width="95%" .no-border fig-alt="A screenshot of the Data Explorer showing the factbook.csv file." .lightbox}
@@ -851,17 +827,14 @@ it doesn't need to remember the previous conversation.
 > ***to factbook_tidy.csv with columns country, country_code, indicator,***
 > ***year (numeric), and value. Check the result.***
 
-Some things to watch for:
+Some things to watch for in its reply, the code, and the resulting `factbook_tidy.csv`:
 
 - How does Claude look at the data before writing code?
-  (Notice that it doesn't read the entire 2 MB file,
-  but runs a command to peek at the first few lines, like `head` on Mac and Linux.)
 - Did it figure out the `..` missing values and the odd year column names by itself?
 - Did it notice the notes at the bottom of the file, which aren't data?
   (Check the last rows of the tidy file.)
 - How did it "check the result"?
-
-Once it's done, click `factbook_tidy.csv` to open it in the Data Explorer.
+- Is the code clear and does it have explanatory comments?
 
 ![](img/factbook-tidy.png){fig-align="center" width="80%" .no-border fig-alt="A screenshot of the Data Explorer showing the factbook_tidy.csv file." .lightbox}
 
@@ -873,12 +846,66 @@ It's likely that Claude will want to use the `countrycode` package to do this,
 and following our `CLAUDE.md` instructions,
 it will ask for permission to install the package first:
 
-![](img/factbook-add-continent.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude Code prompt box." .lightbox}
+![Claude will sometimes use this so-called AskUserQuestion tool to ask you for input, especially when it has more options than just a "Yes" or "No" choice. Here, its "recommended" solution is to use the `countrycode` package, but it offers to alternatively add the continents from its own knowledge.](img/factbook-add-continent.png){fig-align="center" width="60%" fig-alt="A screenshot of Claude asking whether to install the countrycode package to add continents, or to add them from its own knowledge instead." .lightbox}
 
 Let's take another quick look at the data in the Data Explorer,
 to see if the continent column looks right.
 
-### A Quarto report with gt tables
+<details><summary>{{< fa circle-info >}} &nbsp; Click to see the final version of the script I got</summary>
+
+```{.R .file filename="clean-factbook.R"}
+library(tidyverse)
+library(countrycode)
+
+# Read everything as character first, because the `..` missing-value
+# code would otherwise turn the year columns into text anyway
+factbook <- read_csv("factbook.csv", col_types = cols(.default = "c"))
+
+factbook_tidy <- factbook |>
+  # The file ends with blank and footnote rows that have no country: remove them
+  filter(!is.na(`Country Code`)) |>
+  # Drop the series code; keep the readable indicator name
+  select(
+    country = `Country Name`,
+    country_code = `Country Code`,
+    indicator = `Series Name`,
+    starts_with("20")
+  ) |>
+  # Wide -> long: one row per country x indicator x year
+  pivot_longer(
+    cols = starts_with("20"),
+    names_to = "year",
+    values_to = "value"
+  ) |>
+  mutate(
+    # Column names look like "2000 [YR2000]": keep the first 4 characters
+    year = as.numeric(str_sub(year, 1, 4)),
+    # `..` marks missing values: turn into NA, then convert to numbers
+    value = as.numeric(na_if(value, "..")),
+    # Look up the continent from the ISO3 country code; Kosovo (XKX) and the
+    # Channel Islands (CHI) have no standard match, so we set them manually
+    continent = countrycode(
+      country_code,
+      origin = "iso3c",
+      destination = "continent",
+      custom_match = c(XKX = "Europe", CHI = "Europe")
+    ),
+    .after = country_code
+  )
+
+write_csv(factbook_tidy, "factbook_tidy.csv")
+```
+</details>
+
+### A Quarto report with *gt* tables
+
+The [*gt*](https://gt.rstudio.com/){target="_blank"} package ("grammar of tables")
+lets you build tables from data frames, much like ggplot2 does for plots.
+A report with nicely formatted tables is a good example of a
+"hard to write, easy to check" task.
+Things like color-coded cells or a small trend plot in each row of a *gt* table
+take many lines of code with options you'd probably have to look up every time,
+but one look at the rendered table tells you whether it worked.
 
 This is a bigger task, so we'll first ask Claude for a **plan**.
 Start a new conversation, click on the permission mode, and select **Plan** mode.
@@ -889,48 +916,189 @@ Then, submit:
 > ***a gt table of the 10 countries with the largest growth in GDP per capita,***
 > ***with color-coded cells and a small plot of the trend in each row,***
 > ***and a short narrative for each section.***
-> ***Make the plots and table attractive but also readable***
-> ***Render it to HTML and fix any errors.***
+> ***Make the plots and table attractive but also readable.***
+> ***Render the report to HTML and fix any errors.***
 
 Claude will explore the files and then present a plan as a Markdown document.
-Read it: for example, how did Claude interpret "largest growth in GDP per capita":
+Take a look at the plan.
+For example, how did Claude interpret "largest growth in GDP per capita":
 in dollars or in percent?
-If you want to change anything, tell Claude --- or edit the plan directly.
-Then approve the plan, choosing the option to approve edits manually
-(this switches Claude back to **Manual** mode), and let Claude get to work.
 
+![](img/claude-plan1.png){fig-align="center" width="85%" fig-alt="A screenshot of the plan that Claude wrote for the Quarto report." .lightbox}
+
+::: {.columns}
+::: {.column}
+
+If you want to **change** anything, you can leave comments in the plan or provide
+feedback in the Claude Code panel, either in the "Tell Claude what to do instead" box
+or by clicking "No, keep planning" and asking Claude to revise the plan
+(top screenshot on the right).
+
+For example, I noticed in the plan above that Claude implied the table could
+turn out better with *gtExtras*,
+but that it wouldn't use it because it wasn't installed.
+So I said "No, keep planning" and asked it to install the package and use it
+(bottom screenshot on the right).
+
+When you're happy with the plan, **approve** it,
+choosing the option to approve edits **automatically**, and let Claude get to work.
 When it's done, open `report.html` (e.g. right-click it in the Explorer and
 open it in the Viewer, or in your browser).
 
-<!-- TODO screenshot: img/report.png (the rendered report, incl. the gt table) -->
+:::
+::: {.column}
+
+![](img/claude-plan2.png){fig-align="center" width="90%" fig-alt="A screenshot of the options to approve Claude's plan, keep planning, or tell Claude what to do instead." .lightbox}
+
+![](img/claude-plan3.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of feedback asking Claude to install and use the gtExtras package." .lightbox}
+
+:::
+:::
+
+Let's look through the report. Are the plots and the table sensible?
+Below are some screenshots of the report I got, but your report may look different.
+
+![](img/quarto-report-front.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of the top of the rendered Quarto report." .lightbox}
+
+::: {.panel-tabset}
+
+## Table -- version 1
+
+![](img/quarto-report-table2.png){fig-align="center" width="95%" .no-border fig-alt="A gt table of the ten countries with the largest growth in GDP per capita from 2000 to 2015, with blue-shaded GDP cells, green-shaded growth cells, and a small trend line in each row." .lightbox}
+
+## Table -- version 2
+
+![](img/quarto-report-table.png){fig-align="center" width="95%" .no-border fig-alt="A gt table of the ten countries with the largest growth in GDP per capita from 2000 to 2015, with blue-shaded 2015 GDP cells, red-shaded growth cells, and a small trend line in each row." .lightbox}
+
+:::
+
+::: {.panel-tabset}
+
+## Plot ex. 1
+
+![](img/quarto-report-fig.png){fig-align="center" width="90%" .no-border fig-alt="Boxplots with jittered points of the growth in GDP per capita from 2000 to 2015 by continent, titled 'Income growth varied widely within every continent'." .lightbox}
+
+## Plot ex. 2
+
+![](img/quarto-report-fig2.png){fig-align="center" width="90%" .no-border fig-alt="A dumbbell plot of median GDP per capita by continent in 2000 and 2015, on a log scale, titled 'Incomes rose on every continent'." .lightbox}
+
+## Plot ex. 3
+
+![](img/quarto-report-fig3.png){fig-align="center" width="90%" .no-border fig-alt="A scatterplot of child mortality in 2015 vs. 2000 on log scales, colored by continent, with a dashed line of no change, titled 'Almost every country cut child mortality'." .lightbox}
+
+## Plot ex. 4
+
+![](img/quarto-report-fig4.png){fig-align="center" width="90%" .no-border fig-alt="Arrows showing each country's change in life expectancy and births per woman from 2000 to 2015, colored by continent, titled 'Longer lives, fewer births'." .lightbox}
+
+## Plot ex. 5
+
+![](img/quarto-report-fig5.png){fig-align="center" width="90%" .no-border fig-alt="A line plot of median mobile phone subscriptions per 100 people by continent from 2000 to 2015, titled 'The mobile phone boom'." .lightbox}
+
+:::
+
+Finally, let's ask Claude for a change.
+I will go with interactive plots, but you can ask for any change you like.
+Interactive plots are another good fit:
+packages like ggiraph have their own functions and options you'd otherwise
+have to learn, while checking the result only takes some hovering and clicking.
+
+> ***Make one of the plots interactive with ggiraph, adding tooltips and hover effects***
+
+(As with `countrycode`, Claude should first ask to install `ggiraph`.)
+
+For me, Claude made the life expectancy plot interactive.
+Hover over a point to see the country's values,
+and to highlight all countries on the same continent:
+
+```{r}
+#| eval: true
+#| code-fold: true
+#| code-summary: "Show the code"
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggiraph)
+
+factbook <- read_csv("factbook_tidy.csv")
+
+# One colour-blind-safe colour per continent
+continent_cols <- c(
+  Africa = "#D55E00",
+  Americas = "#0072B2",
+  Asia = "#009E73",
+  Europe = "#CC79A7",
+  Oceania = "#E69F00"
+)
+
+# One row per country with the 2000 and 2015 life expectancy
+life <- factbook |>
+  filter(
+    indicator == "Life expectancy at birth, total (years)",
+    year %in% c(2000, 2015)
+  ) |>
+  select(country, continent, year, value) |>
+  pivot_wider(names_from = year, values_from = value, names_prefix = "y") |>
+  drop_na(y2000, y2015) |>
+  mutate(
+    tip = str_glue(
+      "{country} ({continent})\n2000: {round(y2000, 1)} years\n2015: {round(y2015, 1)} years\nGain: {round(y2015 - y2000, 1)} years"
+    )
+  )
+
+p_life <- ggplot(life, aes(y2000, y2015, colour = continent)) +
+  geom_abline(
+    slope = 1,
+    intercept = 0,
+    linetype = "dashed",
+    colour = "grey40"
+  ) +
+  # data_id = continent: hovering one country highlights its whole continent
+  geom_point_interactive(
+    aes(tooltip = tip, data_id = continent),
+    alpha = 0.8,
+    size = 2.2
+  ) +
+  scale_colour_manual(values = continent_cols, name = NULL) +
+  labs(
+    title = "Almost every country gained years of life",
+    subtitle = "Dashed line = no change",
+    x = "Life expectancy in 2000 (years)",
+    y = "Life expectancy in 2015 (years)"
+  ) +
+  theme_minimal(base_size = 13) +
+  theme(
+    plot.title = element_text(face = "bold"),
+    plot.title.position = "plot",
+    panel.grid.minor = element_blank(),
+    legend.position = "bottom"
+  )
+
+girafe(
+  ggobj = p_life,
+  width_svg = 8,
+  height_svg = 5,
+  options = list(
+    opts_hover(css = "fill-opacity:1; stroke-opacity:1; stroke-width:2px;"),
+    opts_hover_inv(css = "opacity:0.2;"),
+    opts_tooltip(
+      css = "background:white; color:#222; padding:6px 8px;
+                        border-radius:4px; box-shadow:0 1px 4px #0006;"
+    )
+  )
+)
+```
 
 ::: exercise
-#### {{< fa user-edit >}} Exercise: Check the report {-}
-
-1. Look through the report. Are the plots and the table sensible?
-
-2. Check one number in the narrative text:
-   is it computed in an R code chunk, or did Claude type it in?
-   If the latter, check it against the data.
-
-3. Ask Claude for a change of your choice,
-   e.g. a different indicator, an extra figure, or a different table layout.
-:::
-
-::: {.callout-warning}
-#### Verify, don't trust
-Agents can write confident text about numbers they never computed.
-In a real report, numbers in the text should come from code
-(e.g. with [inline R code](https://quarto.org/docs/computations/inline-code.html){target="_blank"}),
-so that you can check, rerun, and update them.
-You could add this as a rule to your `CLAUDE.md`!
-:::
-
-### Ohio State branding with `_brand.yml`
+#### {{< fa user-edit >}} Exercise: Ohio State branding with a `_brand.yml` {-}
 
 [brand.yml](https://posit-dev.github.io/brand-yml/){target="_blank"} is a format
 to define your organization's colors, fonts, and logos in a single file, `_brand.yml`,
 which Quarto (and Shiny) then use to style your documents.
+
+A `_brand.yml` is **automatically used by Quarto** to define the **overall** look
+(fonts, colors of headings and links) of the report,
+but it (understandably) won't style the plots and tables according to brand colors ---
+that's where Claude comes in.
 
 Download [this `_brand.yml` for Ohio State](osu_brand.yml){download="_brand.yml"}
 and save it in your `codeclub-claude` folder as `_brand.yml`
@@ -938,8 +1106,7 @@ and save it in your `codeclub-claude` folder as `_brand.yml`
 Alternatively, create the file yourself and paste in the contents from the box below.
 Then, have a look at the file.
 
-::: {.callout-note collapse="true"}
-#### Contents of `_brand.yml` _(Click to expand)_
+<details><summary> {{< fa circle-info >}} &nbsp; Click to see the contents of \_brand.yml</summary>
 
 ```{.yaml .file filename="_brand.yml"}
 # A _brand.yml for Ohio State-styled Quarto documents and Shiny apps
@@ -989,20 +1156,47 @@ typography:
   link:
     color: scarlet
 ```
+</details>
+
+In a new conversation, ask Claude:
+
+> ***Use the colors from @_brand.yml in the plots and tables of @report.qmd where appropriate***
+
+This is a good place to practice with adding files as context using `@`:
+
+![](img/claude-using-at-to-add-context.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the Claude prompt box with _brand.yml and report.qmd added as context with @." .lightbox}
+
+The Ohio State colors are quite limiting, consisting only of scarlet and shades of gray,
+so they may not work well for all plots and tables,
+hence the "where appropriate" hedge in the prompt.
+
+Then, check how it did!
+
+<details><summary> {{< fa circle-info >}} &nbsp; Click to see what I got</summary>
+
+Probably for the best, Claude decided to keep its main color palette the way it was,
+but use Ohio State colors for plot titles, labels, and so on:
+
+![](img/claude-using-brand-response.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of Claude's summary of how it applied the Ohio State colors to the report." .lightbox}
+
+Overall, this report doesn't necessarily look better, I think ---
+but you may simply want or have to use the branding anyway:
+
+![](img/claude-branded-report.png){fig-align="center" width="90%" fig-alt="A screenshot of the Quarto report with Ohio State branding, with scarlet headings." .lightbox}
+
+At any rate, the table came out quite nice:
+
+![](img/claude-branded-table.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of the gt table in the report with Ohio State branding." .lightbox}
+
+</details>
+
 :::
-
-In a new conversation:
-
-> ***Apply the \_brand.yml in this folder to the report***
-
-Quarto picks up a `_brand.yml` automatically for the overall look (fonts, colors of
-headings and links), but the plots and tables need to be told about the brand colors,
-which is where Claude comes in.
 
 ::: {.callout-note collapse="true"}
 #### Having Claude create a `_brand.yml` _(Click to expand)_
 
-You can also ask Claude to create a `_brand.yml` from scratch, for example:
+So how do you get a `_brand.yml` in the first place?
+You can just ask Claude! For example:
 
 > ***Create a \_brand.yml for Ohio State, using scarlet #BA0C2F and gray #A7B1B7***
 
@@ -1011,49 +1205,68 @@ Or point it to your lab's or organization's style guide (e.g., a PDF).
 
 ### A small Shiny app
 
+[Shiny](https://shiny.posit.co/) lets you build interactive web apps
+(dropdowns, sliders, plots and tables that update as you click)
+using only R or Python code.
+Shiny apps are perhaps the best example of a "hard to write, easy to check" task:
+they need a lot of boilerplate code with an unusual "reactive" logic
+that many people find hard to learn and rarely write often enough to remember.
+But to check the result,
+you just run the app and click around to see whether it does what you want.
+
 In a new conversation, submit:
 
 > ***Create a small Shiny app app.R using bslib and our \_brand.yml, where I can pick***
-> ***a country and an indicator, and see a line plot over 2000-2015 and a gt table***
+> ***a country and an indicator, and see a line plot over 2000-2015 and a wide-format gt table***
 > ***of the values. Keep it under 100 lines.***
 
 Because of our `CLAUDE.md` instruction, Claude should not try to run the app itself.
 Instead, open `app.R` and click the **Run App** button at the top of the editor:
 the app will open in Positron's Viewer pane.
+It may look something like this:
+
+![](img/shiny-app.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of the Shiny app." .lightbox}
 
 If you have time, ask for a follow-up change:
 
 > ***Add the option to select a second country to compare against***
 
-Also try to "break" the app: pick a country and indicator combination
-for which there is no data. What happens?
-If the app shows an error or an empty plot, ask Claude to handle this more gracefully.
-
-<!-- TODO screenshot: img/shiny-app.png -->
+Also try to "break" the app:
+pick a country and indicator combination for which there is no data. What happens?
+If the app shows an error or an empty plot, ask Claude to handle this better.
 
 ### More ideas to try
 
-Some other tasks that Claude Code is good at, and that are not too expensive:
+#### With this data
+
+Some other examples of good tasks for Claude Code that are not too expensive:
 
 - **Parameterized report**:
   "Turn report.qmd into a one-page country profile with the country as a parameter,
-  and render it for Ghana, Peru, and Viet Nam"
+  and render it for Ghana, Peru, and Armenia"
 - **Slides**:
-  "Turn the report into a short revealjs presentation with the same branding"
-- **Functions and tests**:
-  "Write a function that computes the percent change in an indicator between two
-  years, with testthat tests, and run the tests"
-- **Explain unfamiliar code**:
-  open a script of your own (or an old one from someone else) and ask
-  "Explain this script, and add comments where needed"
+  "Turn the report into a short Quarto revealjs slide deck with the same branding"
 - **Translate code**:
-  "Rewrite this base R code with the tidyverse" or
-  "Translate this Python code to R"
-- **A map**: "Make a world map of CO2 emissions per capita in 2015"
+  "Rewrite this to use base R code instead" or "Translate R code to Python"
+- **A map**:
+  "Using factbook_tidy.csv, make a world map of life expectancy in 2015, colored by country"
 - **Code review**:
-  "Review clean_factbook.R for bugs, unclear code, and hard-coded values"
+  "Review clean-factbook.R for bugs, unclear code, and hard-coded values"
 - **README**:
   "Write a README.md that explains what this project does and how to reproduce the results"
+
+#### Other
+
+Not for now, but here are some other things you can try with Claude Code:
+
+- Troubleshoot your code, software installations, and so on
+- Turn your code into a package
+- Document your code or write a tutorial based on your code
+- Draft Methods bullet points from code
+- Review Word documents: Claude can read _and_ edit Word documents,
+  and it can do so with Tracked Changes and leave comments, just like a human reviewer.
+  You can also add so-called "skills" to Claude, such as ones to review scientific
+  manuscripts ([example repo](https://github.com/k-dense-ai/scientific-agent-skills)).
 
 ## Appendix {#managing-context-and-cost}
 
@@ -1152,6 +1365,117 @@ by adding something like this to your `CLAUDE.md`:
   and any key decisions (including alternatives that were rejected)
 - Keep entries short
 ```
+:::
+
+::: exercise
+#### {{< fa user-edit >}} Bonus exercise: Fix a script {-}
+
+The script `penguin_summary.R` should compute the number of penguins and their
+mean body mass, for Adelie and Gentoo penguins, but it has **two** problems.
+
+<details><summary>{{< fa circle-info >}} &nbsp; Click to see the script's code</summary>
+
+```{.R .file filename="penguin_summary.R"}
+# Summarize body mass for Adelie and Gentoo penguins
+# (uses the penguins data that is built into R 4.5.0 and later)
+
+library(tidyverse)
+
+# Keep only Adelie and Gentoo penguins
+two_species <- penguins |>
+  filter(species == c("Adelie", "Gentoo"))
+
+# Number of penguins and mean body mass per species
+two_species |>
+  group_by(species) |>
+  summarize(
+    n = n(),
+    mean_mass_g = mean(body_mass)
+  )
+```
+
+</details>
+
+1. Open the script and run it. What's wrong with the output?
+
+   <details><summary>{{< fa circle-info >}} &nbsp; Click to see the output</summary>
+
+   ```bash-out-solo
+   # A tibble: 2 × 3
+   species     n mean_mass_g
+   <fct>   <int>       <dbl>
+   1 Adelie     76       3407.
+   2 Gentoo     62         NA
+   ```
+
+   </details>
+
+2. Start a new conversation, and with the script open, ask Claude:
+
+   > ***Explain what this script does***
+
+   Does its explanation match your own understanding?
+
+   It may well have pointed out one or two problems with the script,
+   and if it did, it may have offered to fix them.
+   If so, affirm that you want it to fix the problem(s) it found.
+
+3. In case Claude didn't note the problem that produces the `NA` in the output, ask:
+
+   > ***I ran this and the mean body mass for Gentoo is NA. Fix it.***
+
+   It should be able to identify and fix this problem,
+   and if it hadn't already fixed the other problem, it may fix that too.
+
+4. Run the script yourself. If the results are like this, the problems are fixed:
+
+   ```bash-out-solo
+   # A tibble: 2 × 3
+   species     n mean_mass_g
+   <fct>   <int>       <dbl>
+   1 Adelie    152       3701.
+   2 Gentoo    124       5076.
+   ```
+
+   If not, ask Claude to look for another problem.
+
+<details><summary> {{< fa check-circle >}} Click here for the solution</summary>
+
+The script contains two errors:
+
+- `mean()` returns `NA` when there are any missing values, unless you use `na.rm = TRUE`.
+  This is easy to spot, because the output contains an `NA`.
+
+- `species == c("Adelie", "Gentoo")` does not check whether `species` is one of these two values.
+  Instead, R "recycles" the two-element vector along all rows,
+  comparing row 1 to `"Adelie"`, row 2 to `"Gentoo"`, row 3 to `"Adelie"`, and so on.
+  As a result, about **half** of the Adelie and Gentoo penguins are silently dropped.
+  The fix is to use `%in%` instead of `==`.
+
+The second error is the more dangerous one, because it **silently** produces wrong results:
+there is no error or warning, and the output looks plausible.
+Before the fix, the script reports 76 Adelie and 62 Gentoo penguins,
+whereas there are 152 and 124.
+
+```{r}
+two_species <- penguins |>
+  filter(species %in% c("Adelie", "Gentoo"))
+
+two_species |>
+  group_by(species) |>
+  summarize(
+    n = n(),
+    mean_mass_g = mean(body_mass, na.rm = TRUE)
+  )
+```
+
+Did Claude catch the second error?
+It may have noticed it while reading the script, after running it and seeing
+suspicious counts, or not at all.
+This shows why code that runs without errors still needs to be checked,
+whether you or Claude wrote or fixed it.
+
+</details>
 :::
 
 <hr style="height:1pt; visibility:hidden;" />
