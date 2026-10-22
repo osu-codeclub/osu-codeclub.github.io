@@ -176,10 +176,10 @@ kbd {
   padding: 0.05em 0.4em;
   line-height: 1;
   background-color: #eef0f2;
-  color: var(--color-tertiary);
-  border: 1px solid var(--color-secondary);
+  color: #121212;
+  border: 1px solid #A7B1B7;
   border-radius: 4px;
-  box-shadow: 0 1.5px 0 var(--color-secondary);
+  box-shadow: 0 1.5px 0 #A7B1B7;
 }
 
 /* --------------------------------------------------------------------------/*
@@ -197,4 +197,93 @@ main img {
 main img.no-border,
 main .no-border img {
   border: none;
+}
+
+/* File contents: what's inside a file (e.g. a .gitignore or a script),
+   as opposed to commands to type. Looks like an editor tab: a header bar
+   with a file icon and the file name, above a white "page" with a solid
+   frame -- set apart from gray runnable code, dashed .norun, and italic
+   .bash-out output. The header comes from Quarto's own `filename`
+   attribute; the .file class only restyles it. filters/file-code.lua
+   makes blocks without a language copyable and gives unnamed ones a
+   generic "file" header.
+   Usage: ```{.file filename=".gitignore"} ... ``` (plain text), or
+          ```{.bash .file filename="script.sh"} ... ``` (highlighted), or
+          ```{.file} ... ``` (no name: header reads "file").
+   All get a copy button; add .numberLines for line numbers. */
+.code-with-filename:has(.file) {
+  margin: 0 0 1rem 0;
+  border: 1px solid #b6bec7;
+  border-radius: 6px;
+  background-color: #fff;
+  overflow: hidden;
+}
+
+/* Header bar */
+.code-with-filename:has(.file) .code-with-filename-file {
+  margin: 0;
+  padding: 0.3em 0.8em;
+  border: none;
+  border-bottom: 1px solid #b6bec7;
+  border-radius: 0;
+  background-color: #e9edf1;
+}
+
+.code-with-filename:has(.file) .code-with-filename-file pre {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  color: #3a4148;
+}
+
+.code-with-filename:has(.file) .code-with-filename-file strong {
+  font-weight: 600;
+}
+
+/* Unnamed file (label added by the Lua filter): a label, not a name */
+.code-with-filename:has([data-filename="file"]) .code-with-filename-file strong {
+  font-weight: normal;
+}
+
+/* File icon (Bootstrap Icons "file-earmark-text", bundled with Quarto) */
+.code-with-filename:has(.file) .code-with-filename-file pre::before {
+  font-family: "bootstrap-icons";
+  content: "\F38B";
+  margin-right: 0.45em;
+  color: var(--bs-blue);
+  vertical-align: -0.1em;
+}
+
+/* Body: white page instead of the gray code background */
+.code-with-filename:has(.file) div.sourceCode {
+  margin: 0;
+  padding: 0.6em 0.8em;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.code-with-filename:has(.file) pre.file {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+}
+
+/* .numberLines: restore Pandoc's gutter for the line numbers, which the
+   margin reset above would otherwise push out of the frame. The left
+   border is a divider between the numbers (which sit in that margin) and
+   the file contents; padding-left sets the gap between divider and text.
+   startFrom="N" works as for regular code blocks. */
+.code-with-filename:has(.file) pre.file.numberSource {
+  margin-left: 3em;
+  padding-left: 0.6em;
+  border-left: 1px solid #b6bec7;
+}
+
+/* Line numbers: pale gray, and moved further left than Pandoc's
+   `left: -1em` to leave more room before the divider */
+.code-with-filename:has(.file) pre.numberSource code>span>a:first-child::before {
+  color: #8b949e;
+  left: -2em;
 }
