@@ -32,7 +32,7 @@ language:
 
 In the [previous session](../S12E02_plotting_01/index.qmd),
 we used AI through Posit Assistant and GitHub Copilot in Positron
-to help you make plots.
+to help us make plots.
 Today, we'll use a different kind of AI tool: **Claude Code**, Anthropic's
 "agentic" coding tool, which we'll run inside Positron.
 
@@ -79,7 +79,7 @@ and it can't check whether the code it writes actually works.
 ### Posit Assistant vs. Claude Code
 
 Posit Assistant, which we used in the previous session, is also an agent.
-In fact, it has a key built-in strength that Claude Code does not have:
+And it has a key built-in strength that Claude Code does not have:
 it is connected to your **live R session**, so it can see your objects and
 run code in your console^[
 Positron does make it possible to expose the same functionality for Claude Code,
@@ -87,7 +87,7 @@ but that requires some setup and I have not yet tried that.].
 
 On the other hand, Claude Code has the edge in other areas:
 
-- It is a **general-purpose** coding agent and is designed also with longer-running,
+- It is a **general-purpose** coding agent and is designed with longer-running,
   multi-step tasks in mind.
 - It is a more **mature product** overall. For example,
   we've had authentication problems with Posit Assistant,
@@ -101,7 +101,7 @@ Here, we'll use its VS Code extension in Positron.)
 Rather than using a personal account,
 we'll authenticate through an API key from OSU's
 [Generative AI Service {{< fa external-link >}}](https://it.osu.edu/generative-ai-service){target="_blank"},
-which is **approved for use with restricted institutional data (S2--S4)**^[
+which is **approved for institutional data up to and including restricted (S4) data**^[
   Posit Assistant can also use an API key, but as mentioned above,
   its authentication sometimes acts up.].
 We'll give you a **personal API key** for this session with limited credit.
@@ -121,16 +121,16 @@ but you'll need to pay personally _and_ you shouldn't use it with institutional 
 
 Parts of this session are adapted from my PLNTPTH 5006
 ("Practical Computing Skills for Omics Data") course material,
-which is [publicly available](https://cfaes-bioinfo.github.io/pracs-au26)
+which is [publicly available](https://cfaes-bioinfo.github.io/pracs-au26){target="_blank"}
 (weeks 8 and 9 cover genAI).
 
-The [lecture slides](https://cfaes-bioinfo.github.io/pracs-au26/week08/w8a_genAI.html)
+The [lecture slides](https://cfaes-bioinfo.github.io/pracs-au26/week08/w8a_genAI.html){target="_blank"}
 cover the use of Generative AI in research and coding more broadly,
-whereas the [practical part](https://cfaes-bioinfo.github.io/pracs-au26/week09/w9a_claude.html)
+whereas the [practical part](https://cfaes-bioinfo.github.io/pracs-au26/week09/w9a_claude.html){target="_blank"}
 focuses on using Claude Code in VS Code for Unix shell scripting tasks.
 There are also links to further resources and pages on
-[GitHub Copilot](https://cfaes-bioinfo.github.io/pracs-au26/bonus/copilot.html) and more
-[advanced Claude Code features](https://cfaes-bioinfo.github.io/pracs-au26/bonus/claude-code.html).
+[GitHub Copilot](https://cfaes-bioinfo.github.io/pracs-au26/bonus/copilot.html){target="_blank"} and more
+[advanced Claude Code features](https://cfaes-bioinfo.github.io/pracs-au26/bonus/claude-code.html){target="_blank"}.
 :::
 
 ## Getting set up
@@ -157,7 +157,7 @@ If you haven't done so already, please:
    install.packages("bslib")
    ```
 
-   We'll leave a few other packages that Claude will likely want to use uninstalled
+   We'll deliberately not install a few other packages that Claude will likely want to use
    (`countrycode`, `gtExtras`, and `ggiraph`),
    so you can see how Claude asks before installing packages.
 
@@ -171,8 +171,8 @@ Both work for today, so there's no need to install Git for Windows just for this
 
 ### Create a folder for this session and download the data
 
-1. Create a new folder for this session called (e.g.) `codeclub-claude`,
-   for example inside a folder for Code Club: `Documents/codeclub/codeclub-claude`.
+1. Create a new folder for this session called, e.g., `codeclub-claude`,
+   perhaps inside a folder for Code Club: `Documents/codeclub/codeclub-claude`.
 
 2. Download [this CSV file](factbook.csv){download="factbook.csv"}
    with World Bank data from the previous session,
@@ -192,7 +192,7 @@ and by default the only place where it can make changes.
 1. In the **Extensions** view in the Activity Bar, search for "claude",
    and click **Install** for the extension "**Claude Code for VS Code**" by Anthropic.
 
-   ![](img/vscode-claude-extension-install1.png){fig-align="center" width="50%" fig-alt="A screenshot of the VS Code Extensions side bar showing the Claude Code for VS Code extension by Anthropic with an Install button." .lightbox}
+   ![](img/vscode-claude-extension-install1.png){fig-align="center" width="50%" fig-alt="A screenshot of the Extensions side bar showing the Claude Code for VS Code extension by Anthropic with an Install button." .lightbox}
 
 2. If asked whether you trust the publisher "Anthropic",
    click **Trust Publisher & Install**.
@@ -208,8 +208,7 @@ Claude reads this file every time it starts up.
 Let's set this up:
 
 1. Create the folder and the (empty) file, and open the file in the editor,
-   by copying the code below into the Positron **console** and pressing <kbd>Enter</kbd>
-   ^[All of this can also be done without code, in a perhaps more intuitive way,
+   by copying the code below into the Positron **console** and pressing <kbd>Enter</kbd>^[All of this can also be done without code, in a perhaps more intuitive way,
    but the interface will differ between computers, so this is less likely to fail here.]:
 
    ```{r}
@@ -230,7 +229,9 @@ Let's set this up:
    file.edit(settings_file)
    ```
 
-2. Paste the following contents into the file that opened in the editor:
+2. Paste the following contents into the file that opened in the editor
+   (if the file isn't empty because you've used Claude Code before, let us know:
+   you'll need to merge the two):
 
    ```{.json .file filename="&#126;/.claude/settings.json"}
    {
@@ -238,7 +239,7 @@ Let's set this up:
        "ANTHROPIC_BASE_URL": "https://litellm.cloud.osu.edu",
        "ANTHROPIC_AUTH_TOKEN": "API-KEY",
        "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5-5",
-       "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5",
+       "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5-5",
        "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-5-5",
        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS": "1"
      },
@@ -290,7 +291,7 @@ and not in a project folder that others may see.
 Open Claude Code by clicking the Claude icon at the top of the secondary (right-hand)
 side bar --- the one with the blue line under it in the screenshot below:
 
-![](img/claude-in-sec-sidebar.png){fig-align="center" width="50%" fig-alt="A screenshot of the VS Code editor with the Claude icon in the secondary side bar." .lightbox}
+![](img/claude-in-sec-sidebar.png){fig-align="center" width="50%" fig-alt="A screenshot of Positron with the Claude icon in the secondary side bar." .lightbox}
 
 ::: {.callout-tip collapse="true"}
 #### Alternatively, open Claude in the editor pane _(Click to expand)_
@@ -307,14 +308,14 @@ This opens Claude as a **tab in the editor**, which has two potential advantages
 On the other hand, things can get a bit more chaotic with Claude as a tab,
 and it has less vertical space than the secondary side bar.
 
-![](img/claude-icon-in-editor-positron.png){fig-align="center" width="45%" fig-alt="A screenshot of the VS Code editor with the Claude icon in the top-right corner of the editor." .lightbox}
+![](img/claude-icon-in-editor-positron.png){fig-align="center" width="45%" fig-alt="A screenshot of Positron with the Claude icon in the top-right corner of the editor." .lightbox}
 
 :::
 
 In the Claude panel, you may initially see various login options
 (left screenshot below), but if you **simply wait**,
 Claude should read your settings file,
-and you should see a **prompt box** at the bottom of the Claude tab
+and you should see a **prompt box** at the bottom of the Claude panel
 (right screenshot below):
 
 ::: {.columns}
@@ -366,17 +367,17 @@ The buttons across the bottom of the prompt box are, from left to right:
 - **`/`** opens the **command menu**, with nearly all of Claude Code's options and settings.
 
 - A **clock icon** with a number of minutes appears once Claude has responded
-  (see the [section on cost](#managing-context-and-cost)).
+  (see [Start fresh often](#start-fresh)).
 
-- **`Sonnet 5 Medium`** is the current **model** and **effort level**.
+- **`Sonnet 5.5 Medium`** is the current **model** and **effort level**.
   Keep it at that, and don't select "_Default (recommended)_",
   which switches to the much more expensive Opus model.
 
 - **`Manual`** is the current **permission mode** (what Claude is allowed to do
   without asking you first).
 
-At the top of the Claude tab, there are buttons to see your **previous conversations**
-(clock icon) and to start a **new conversation** (chat icon with a `+`).
+At the top of the Claude panel, there are buttons to see your **previous conversations**
+(a different clock icon) and to start a **new conversation** (chat icon with a `+`).
 We'll start a new conversation for each new task --- you'll see why [later](#start-fresh).
 
 ::: {.callout-note collapse="true"}
@@ -407,21 +408,21 @@ At that point, Auto mode is a good alternative.
 
 Start a new conversation, and submit the following prompt:
 
-> ***Write a script penguin_plot.R that makes a simple scatterplot of flipper length***
+> ***Write a script penguin-plot.R that makes a simple scatterplot of flipper length***
 > ***vs. body mass for R's built-in penguins data, colored by species.***
-> ***It should print the plot and save it to penguins.png.***
+> ***It should save the plot to penguins.png.***
 
 Claude will show you what it's doing as it goes, and will **ask you for permission**
 to create the script, showing you its proposed contents.
 Take a quick look and accept it.
 
-![On the left, the proposed script contents before approving it (hence the background colors), and on the right, the Claude Code panel, where at the bottom, it's asking for approval to write to the script file.](img/claude-make-script1.png){fig-align="center" width="98%" .no-border fig-alt="A screenshot of Positron with the proposed contents of penguin_plot.R in the editor, and Claude asking for permission to create the file." .lightbox}
+![Left: the proposed contents of the script, before you approve them (hence the green background). Right: the Claude Code panel, where Claude asks for approval to create the file.](img/claude-make-script1.png){fig-align="center" width="98%" .no-border fig-alt="A screenshot of Positron with the proposed contents of penguin-plot.R in the editor, and Claude asking for permission to create the file." .lightbox}
 
 ::: {.columns}
 ::: {.column}
 
 Next, it may want to **run the script** to check that it works,
-using a command like `Rscript penguin_plot.R`.
+using a command like `Rscript penguin-plot.R`.
 `Rscript` is a way to run an R script from the terminal rather than from the console.
 Click **Yes** to let it run the command.
 (On Windows, if Claude can't find `Rscript`, see [this box](#windows-rscript).)
@@ -468,11 +469,11 @@ Now, let's ask it to improve the plot, in the same conversation:
 Claude will propose to make changes and present you with a "diff",
 where deletions are highlighted in red and additions in green^[
 The previous view, of the initial script, was also a diff,
-but this wasn't as obvious because there were only additions]:
+but this wasn't as obvious because there were only additions.]:
 
-![(The full diff I got was larger than this.)](img/claude-diff.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of a diff of penguin_plot.R, with deleted lines in red and added lines in green." .lightbox}
+![(The full diff I got was larger than this.)](img/claude-diff.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of a diff of penguin-plot.R, with deleted lines in red and added lines in green." .lightbox}
 
-Once you've approved its requests to edit the file and running the script,
+Once you've approved its requests to edit the file and run the script,
 look back at what is printed in the panel.
 You should see that Claude **read the PNG file and looked at it** before suggesting
 improvements: it can "see" images.
@@ -481,7 +482,7 @@ Claude can check its own work, and iterate on it.)
 
 ![](img/claude-read-png.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of the Claude panel showing that Claude read the penguins.png file." .lightbox}
 
-Here's what mine changed in a test-run:
+Here's what mine changed in a test run:
 
 ![](img/claude-changes-summary.png){fig-align="center" width="70%" .no-border fig-alt="A screenshot of Claude's summary of the three improvements it made to the plot." .lightbox}
 
@@ -491,11 +492,12 @@ Did you get similar changes? And here's the resulting plot:
 
 Let's also take a look at the code in the script.
 Is there anything you find striking or that you don't understand?
+If so, ask Claude to explain it!
 Is your code substantially different from mine?
 
 <details><summary>{{< fa circle-info >}} &nbsp; Click to see the code I got</summary>
 
-```{.R .file filename="penguin_plot.R"}
+```{.R .file filename="penguin-plot.R"}
 library(ggplot2)
 
 # `penguins` is built into R (datasets package) as of R 4.5.0
@@ -532,7 +534,7 @@ Here's the plot I got:
 
 <details><summary>{{< fa circle-info >}} &nbsp; Click to see the code I got</summary>
 
-```{.R .file filename="penguin_plot.R"}
+```{.R .file filename="penguin-plot.R"}
 library(ggplot2)
 library(grid)
 
@@ -595,6 +597,8 @@ draw_plot()
 invisible(dev.off())
 ```
 
+</details>
+
 ::: {.callout-important}
 #### Claude runs its own R
 
@@ -610,7 +614,7 @@ which means that:
 To see the results in Positron, simply run the script yourself.
 :::
 
-## File context, and interrupting Claude
+## File context and steering Claude
 
 ### Giving Claude your files as context
 
@@ -627,7 +631,8 @@ That's faster and cheaper, and avoids Claude guessing which files you mean:
 - You can also **select specific lines** in the active file, to focus Claude's attention on them.
 - **Type `@`** followed by part of a file name to add any file in your workspace.
 - To add **multiple files**, type `@` for each,
-  or press <kbd>Alt/Option</kbd>+<kbd>K</kbd> with a file active in the editor.
+  or open each file in turn and press <kbd>Alt/Option</kbd>+<kbd>K</kbd>
+  to insert a reference to it.
 
 ### Stopping, steering, and rewinding
 
@@ -642,31 +647,10 @@ Sometimes you need to adjust what Claude is doing while it's working:
   to go back to an earlier point in the conversation and optionally undo file changes.
   (Claude is also good at undoing things when you simply ask it to.)
 
-<!-----
-::: exercise
-#### {{< fa user-edit >}} Bonus exercise: Steer, stop, and rewind {-}
+For example, triggering the rewind option after the 3-part conversation
+about the penguin plot looks like this:
 
-Go back to your `penguin_plot.R` conversation
-(click the clock icon at the top of the Claude tab), and try the following:
-
-1. **Steer**: ask for a multi-step change:
-
-   > ***Make the same plot for bill length and bill depth too***
-
-   While Claude is working, send: ***Actually, only bill length***.
-   Did it change course?
-
-2. **Stop**: ask for any other change,
-   and press <kbd>Esc</kbd> before Claude asks you to approve an edit.
-
-3. **Rewind**: ask for an over-the-top change, and accept the edit:
-
-   > ***Make the plot look like a 1990s website***
-
-   Then, rewind to before that message, and choose to also undo the file changes.
-   Is the script back to how it was?
-:::
----->
+![](img/claude-rewind-r.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the rewind menu, listing earlier messages in the conversation to rewind to, with options to also restore the code." .lightbox}
 
 ## Persistent instructions with `CLAUDE.md`
 
@@ -692,10 +676,13 @@ add the following line to it, and save it:
 - Always answer like an overexcited sports commentator
 ```
 
-Then, **close the file** (because any active file would be added to the prompt
-anyway, even if it wasn't a `CLAUDE.md` file!), start a new conversation, and ask:
+Then, **close the file** (otherwise it would be added to your prompt as the active file,
+and you couldn't tell whether Claude read it automatically),
+start a **new conversation**, and ask:
 
 > ***What's the difference between <- and = in R?***
+
+Did Claude answer like an overexcited sports commentator? Then it read your `CLAUDE.md`!
 
 ### Our instructions for this project
 
@@ -756,6 +743,9 @@ And add the resulting path to the "R conventions" section of your `CLAUDE.md`, e
 - Rscript is at `C:/Program Files/R/R-4.5.1/bin/Rscript.exe`
 ```
 
+If you run into this problem in the first example, before you've created a `CLAUDE.md`,
+simply paste the path into your prompt for now.
+
 <hr style="height:1pt; visibility:hidden;" />
 :::
 
@@ -776,7 +766,7 @@ Keep it short, though: it's read at the start of every conversation,
 so it uses up tokens (and money) each time.
 
 **Instructions are not strict rules**\
-Claude will usually but not always follow the instructions in `CLAUDE.md`.
+Claude will usually, but not always, follow the instructions in `CLAUDE.md`.
 
 **Claude's memory**\
 Claude also keeps **memory** notes for itself:
@@ -822,6 +812,9 @@ it doesn't need to remember the previous conversation.
 > ***to factbook_tidy.csv with columns country, country_code, indicator,***
 > ***year (numeric), and value. Check the result.***
 
+Data cleaning is less "easy to check" than the other tasks today:
+mistakes can be silent.
+So it's worth looking carefully at both the code and the result.
 Some things to watch for in its reply, the code, and the resulting `factbook_tidy.csv`:
 
 - How does Claude look at the data before writing code?
@@ -833,7 +826,7 @@ Some things to watch for in its reply, the code, and the resulting `factbook_tid
 
 ![](img/factbook-tidy.png){fig-align="center" width="80%" .no-border fig-alt="A screenshot of the Data Explorer showing the factbook_tidy.csv file." .lightbox}
 
-Let's ask for one follow-up change:
+Let's ask for one follow-up change, in the same conversation:
 
 > ***Add a continent column***
 
@@ -991,7 +984,7 @@ Below are some screenshots of the report I got, but your report may look differe
 
 :::
 
-Finally, let's ask Claude for a change.
+Finally, let's ask Claude for a change in the same conversation.
 I will go with interactive plots, but you can ask for any change you like.
 Interactive plots are another good fit:
 packages like ggiraph have their own functions and options you'd otherwise
@@ -1153,6 +1146,9 @@ typography:
 ```
 </details>
 
+The Ohio State colors are quite limiting, consisting only of scarlet and shades of gray,
+so they may not work well for all plots and tables ---
+hence the "where appropriate" hedge in the prompt below.
 In a new conversation, ask Claude:
 
 > ***Use the colors from @_brand.yml in the plots and tables of @report.qmd where appropriate***
@@ -1160,10 +1156,6 @@ In a new conversation, ask Claude:
 This is a good place to practice with adding files as context using `@`:
 
 ![](img/claude-using-at-to-add-context.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of the Claude prompt box with _brand.yml and report.qmd added as context with @." .lightbox}
-
-The Ohio State colors are quite limiting, consisting only of scarlet and shades of gray,
-so they may not work well for all plots and tables,
-hence the "where appropriate" hedge in the prompt.
 
 Then, check how it did!
 
@@ -1174,12 +1166,12 @@ but use Ohio State colors for plot titles, labels, and so on:
 
 ![](img/claude-using-brand-response.png){fig-align="center" width="60%" .no-border fig-alt="A screenshot of Claude's summary of how it applied the Ohio State colors to the report." .lightbox}
 
-Overall, this report doesn't necessarily look better, I think ---
-but you may simply want or have to use the branding anyway:
+I don't think the branded report necessarily looks better,
+but you may want or need to use your institution's branding anyway:
 
 ![](img/claude-branded-report.png){fig-align="center" width="90%" fig-alt="A screenshot of the Quarto report with Ohio State branding, with scarlet headings." .lightbox}
 
-At any rate, the table came out quite nice:
+At any rate, the table came out quite nicely:
 
 ![](img/claude-branded-table.png){fig-align="center" width="90%" .no-border fig-alt="A screenshot of the gt table in the report with Ohio State branding." .lightbox}
 
@@ -1200,7 +1192,7 @@ Or point it to your lab's or organization's style guide (e.g., a PDF).
 
 ### A small Shiny app
 
-[Shiny](https://shiny.posit.co/) lets you build interactive web apps
+[Shiny](https://shiny.posit.co/){target="_blank"} lets you build interactive web apps
 (dropdowns, sliders, plots and tables that update as you click)
 using only R or Python code.
 Shiny apps are perhaps the best example of a "hard to write, easy to check" task:
@@ -1209,7 +1201,9 @@ that many people find hard to learn and rarely write often enough to remember.
 But to check the result,
 you just run the app and click around to see whether it does what you want.
 
-In a new conversation, submit:
+Now that you've seen what Claude asks permission for, let's try **Auto** mode,
+where Claude only asks about risky actions.
+In a new conversation, set the permission mode to **Auto**, and submit:
 
 > ***Create a small Shiny app app.R using bslib and our \_brand.yml, where I can pick***
 > ***a country and an indicator, and see a line plot over 2000-2015 and a wide-format gt table***
@@ -1262,7 +1256,7 @@ Not for now, but here are some other things you can try with Claude Code:
 - Review Word documents: Claude can read _and_ edit Word documents,
   and it can do so with Tracked Changes and leave comments, just like a human reviewer.
   You can also add so-called "skills" to Claude, such as ones to review scientific
-  manuscripts ([example repo](https://github.com/k-dense-ai/scientific-agent-skills)).
+  manuscripts ([example repo](https://github.com/k-dense-ai/scientific-agent-skills){target="_blank"}).
 
 ## Appendix {#managing-context-and-cost}
 
@@ -1309,15 +1303,6 @@ To keep costs down:
 - For general questions, like explaining a concept or a function,
   a browser-based chat (e.g. Gemini or Copilot through your OSU account)
   works just as well and doesn't use your API key's budget.
-
-::: {.callout-note collapse="true"}
-#### API pricing vs. personal subscriptions _(Click to expand)_
-Paying per token through an API key, as we do here, is **much** more expensive than
-a personal subscription to a service like Claude, which has a fixed monthly fee.
-A day of heavy agentic coding through an API can easily cost more than a month's subscription.
-However, personal accounts are not approved for institutional data,
-which includes your unpublished research data.
-:::
 
 ### Good habits when working with an agent
 
@@ -1366,12 +1351,12 @@ by adding something like this to your `CLAUDE.md`:
 ::: exercise
 #### {{< fa user-edit >}} Bonus exercise: Fix a script {-}
 
-The script `penguin_summary.R` should compute the number of penguins and their
+The script `penguin-summary.R` should compute the number of penguins and their
 mean body mass, for Adelie and Gentoo penguins, but it has **two** problems.
 
 <details><summary>{{< fa circle-info >}} &nbsp; Click to see the script's code</summary>
 
-```{.R .file filename="penguin_summary.R"}
+```{.R .file filename="penguin-summary.R"}
 # Summarize body mass for Adelie and Gentoo penguins
 # (uses the penguins data that is built into R 4.5.0 and later)
 
@@ -1392,7 +1377,7 @@ two_species |>
 
 </details>
 
-1. Download [the script](penguin_summary.R){download="penguin_summary.R"}
+1. Download [the script](penguin-summary.R){download="penguin-summary.R"}
    and save it in your `codeclub-claude` folder.
 
 2. Open the script and run it. What's wrong with the output?
@@ -1401,8 +1386,8 @@ two_species |>
 
    ```bash-out-solo
    # A tibble: 2 × 3
-   species     n mean_mass_g
-   <fct>   <int>       <dbl>
+     species     n mean_mass_g
+     <fct>   <int>       <dbl>
    1 Adelie     76       3407.
    2 Gentoo     62         NA
    ```
@@ -1430,8 +1415,8 @@ two_species |>
 
    ```bash-out-solo
    # A tibble: 2 × 3
-   species     n mean_mass_g
-   <fct>   <int>       <dbl>
+     species     n mean_mass_g
+     <fct>   <int>       <dbl>
    1 Adelie    152       3701.
    2 Gentoo    124       5076.
    ```
